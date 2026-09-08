@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($window) {
+    /* widget controller */
+    var c = this;
+
+    // Clear browser storage to protect student privacy
+    if ($window.localStorage) {
+        $window.localStorage.clear();
+    }
+    if ($window.sessionStorage) {
+        $window.sessionStorage.clear();
+    }
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.vg-logout-page {
+    min-height: 85vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 48px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(20, 145, 255, 0.22), transparent 28%),
+        linear-gradient(135deg, #020817 0%, #061a35 48%, #020814 100%);
+}
+
+.vg-logout-shell {
+    width: 100%;
+    max-width: 520px;
+    padding: 44px 38px 34px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid rgba(45, 149, 255, 0.28);
+    border-radius: 18px;
+    background: rgba(5, 19, 43, 0.86);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(14px);
+}
+
+.vg-logout-badge {
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(41, 210, 145, 0.65);
+    border-radius: 50%;
+    color: #25d891;
+    background: rgba(37, 216, 145, 0.08);
+}
+
+.vg-logout-badge .glyphicon {
+    font-size: 30px;
+}
+
+.vg-logout-shell h1 {
+    margin: 0 0 12px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: #f6f9ff;
+}
+
+.vg-logout-copy {
+    max-width: 380px;
+    margin: 0 auto 22px;
+    color: #a9bad0;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.vg-logout-status {
+    width: fit-content;
+    margin: 0 auto 28px;
+    padding: 9px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(37, 216, 145, 0.28);
+    border-radius: 999px;
+    color: #72e2b6;
+    background: rgba(37, 216, 145, 0.08);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.vg-logout-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.vg-primary-action,
+.vg-secondary-action {
+    min-width: 145px;
+    height: 46px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.vg-primary-action {
+    color: #ffffff;
+    background: linear-gradient(90deg, #096fe9, #1556dc, #28a6d8);
+    box-shadow: 0 10px 28px rgba(20, 108, 230, 0.25);
+}
+
+.vg-secondary-action {
+    color: #c8d8ec;
+    border: 1px solid rgba(144, 171, 205, 0.3);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.vg-primary-action:hover,
+.vg-secondary-action:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.vg-primary-action:hover {
+    color: #ffffff;
+    box-shadow: 0 14px 34px rgba(20, 108, 230, 0.36);
+}
+
+.vg-secondary-action:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.vg-logout-note {
+    margin: 0;
+    padding-top: 20px;
+    border-top: 1px solid rgba(135, 162, 195, 0.14);
+    color: #778aa3;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media (max-width: 560px) {
+    .vg-logout-page {
+        padding: 28px 14px;
+    }
+
+    .vg-logout-shell {
+        padding: 34px 22px 28px;
+    }
+
+    .vg-logout-shell h1 {
+        font-size: 26px;
+    }
+
+    .vg-logout-actions {
+        flex-direction: column;
+    }
+
+    .vg-primary-action,
+    .vg-secondary-action {
+        width: 100%;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>student_log_out</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Student Log out</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 02:24:57</sys_created_on>
+        <sys_id>7fd0f732596203107f44df2ba8a19bd1</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Student Log out</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_7fd0f732596203107f44df2ba8a19bd1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 02:49:17</sys_updated_on>
+        <template><![CDATA[<div class="vg-logout-page">
+    <div class="vg-logout-shell">
+
+        <div class="vg-logout-badge">
+            <span class="glyphicon glyphicon-lock"></span>
+        </div>
+
+        <h1>You have been signed out</h1>
+
+        <p class="vg-logout-copy">
+            Your VisaGuardian AI student portal session has ended securely.
+        </p>
+
+        <div class="vg-logout-status">
+            <span class="glyphicon glyphicon-ok-circle"></span>
+            <span>Session protected</span>
+        </div>
+
+        <div class="vg-logout-actions">
+            <a class="vg-primary-action" href="student?id=login_page">
+                Sign in again
+            </a>
+
+            <a class="vg-secondary-action" href="student?id=visa_home_page">
+                Back to portal
+            </a>
+        </div>
+
+        <p class="vg-logout-note">
+            For your privacy, close this browser window if you are using a shared device.
+        </p>
+
+    </div>
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>7fd0f732596203107f44df2ba8a19bd1</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 02:24:57</sys_created_on>
+        <sys_id>7bd0f732596203107f44df2ba8a19bd5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 02:24:57</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

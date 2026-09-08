@@ -1,0 +1,3868 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $sce) {
+    var c = this;
+
+    // =====================================================
+    // INITIAL STATE & AI PANEL VARIABLES
+    // =====================================================
+    c.showAIPanel = false;
+    c.loadingAI = false;
+    c.aiSummaryHtml = "";
+    c.activeStudentName = "";
+    c.currentFilter = "ALL";
+    c.searchQuery = "";
+    c.selectedCase = null;
+
+    // =====================================================
+    // TRIGGER AI CASE SUMMARY
+    // =====================================================
+    c.generateSummary = function(sysId, studentName) {
+        c.showAIPanel = true;
+        c.loadingAI = true;
+        c.activeStudentName = studentName;
+        c.aiSummaryHtml = "";
+        
+        // Smoothly scroll down to the AI Panel
+        setTimeout(function() {
+            var el = document.querySelector('.ai-detail-panel');
+            if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 150);
+
+        // Call the Script Include via GlideAjax
+        var ga = new GlideAjax('x_snc_visaguardi_0.VisaGuardianAIUtils');
+        ga.addParam('sysparm_name', 'generateCaseSummary');
+        ga.addParam('sysparm_case_id', sysId);
+            
+        ga.getXMLAnswer(function(response) {
+            c.loadingAI = false;
+            console.log("AI Backend Response:", response);
+            
+            try {
+                var result = JSON.parse(response);
+                
+                if (result.success) {
+                    // Clean and parse Markdown into formatted HTML
+                    var rawText = result.content;
+                    var formattedHtml = rawText
+                        .replace(/^#### (.*?)$/gm, '<h5 style="color:#475569; margin-top:20px; margin-bottom:10px; font-weight:600;">$1</h5>')
+                        .replace(/^### (.*?)$/gm, '<h4>$1</h4>')
+                        .replace(/^## (.*?)$/gm, '<h3>$1</h3>')
+                        .replace(/^# (.*?)$/gm, '<h2>$1</h2>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/`(.*?)`/g, '<span style="background-color:#f1f5f9; border:1px solid #e2e8f0; padding:2px 6px; border-radius:4px; font-family:monospace; font-size:0.9em; color:#e11d48;">$1</span>')
+                        .replace(/^- \[\s?\] (.*?)$/gm, '<div style="margin-left:15px; margin-bottom:6px;"><i class="fa fa-square-o" style="color:#94a3b8; margin-right:8px; font-size:1.1em;"></i>$1</div>')
+                        .replace(/^- \[[xX]\] (.*?)$/gm, '<div style="margin-left:15px; margin-bottom:6px;"><i class="fa fa-check-square" style="color:#10b981; margin-right:8px; font-size:1.1em;"></i>$1</div>')
+                        .replace(/^[-*] (.*?)$/gm, '<li style="margin-left:25px; margin-bottom:5px;">$1</li>')
+                        .replace(/> \[!WARNING\]/g, '<strong><i class="fa fa-exclamation-triangle" style="color:#d97706;"></i> WARNING:</strong>')
+                        .replace(/^> (.*?)$/gm, '<div style="border-left:4px solid #f59e0b; background:#fef3c7; padding:12px; margin:15px 0; border-radius:0 6px 6px 0; color:#92400e;">$1</div>')
+                        .replace(/✓ (.*?)$/gm, '<span class="source-chip">✓ $1</span>')
+                        .replace(/^\|(.*)\|$/gm, '<div style="padding:4px 0; border-bottom:1px solid #f1f5f9;">$1</div>')
+                        .replace(/---/g, '<hr style="margin:20px 0; border-top:1px solid #e2e8f0;"/>')
+                        .replace(/\n/g, '<br/>')
+                        .replace(/(<br\/>)+<li/g, '<li')
+                        .replace(/<\/li>(<br\/>)+/g, '</li>')
+                        .replace(/(<br\/>)+<div/g, '<div')
+                        .replace(/<\/div>(<br\/>)+/g, '</div>');
+                        
+                    c.aiSummaryHtml = $sce.trustAsHtml(formattedHtml);
+                } else {
+                    c.aiSummaryHtml = $sce.trustAsHtml("<div class='alert alert-danger'>AI Error: " + result.error + "</div>");
+                }
+            } catch(e) {
+                c.aiSummaryHtml = $sce.trustAsHtml("<div class='alert alert-danger'>Failed to process AI response.</div>");
+            }
+            
+            $scope.$apply(); 
+        });
+    };
+
+    // Close the AI panel
+    c.closeAIPanel = function() {
+        c.showAIPanel = false;
+        c.activeStudentName = "";
+    };
+
+    // =====================================================
+    // METRICS & COUNTERS
+    // =====================================================
+    c.getHighRiskCount = function() {
+        return Number(c.data.high_risk_count || 0);
+    };
+
+    c.getMediumRiskCount = function() {
+        return Number(c.data.medium_risk_count || 0);
+    };
+
+    c.getComplianceRate = function() {
+        return Number(c.data.compliance_rate || 0) + "%";
+    };
+
+    // =====================================================
+    // FILTERS & SEARCH
+    // =====================================================
+    c.setFilter = function(filter) {
+        c.currentFilter = filter;
+    };
+
+    c.filterCases = function(item) {
+        if (!item) return false;
+
+        if (c.currentFilter === "High" && item.risk_level !== "High") return false;
+        if (c.currentFilter === "Medium" && item.risk_level !== "Medium") return false;
+        if (c.currentFilter === "Compliant" && item.risk_level !== "Low") return false;
+
+        var query = String(c.searchQuery || "").toLowerCase().trim();
+        if (!query) return true;
+
+        return (
+            String(item.student_name || "").toLowerCase().indexOf(query) >= 0 ||
+            String(item.student_id || "").toLowerCase().indexOf(query) >= 0 ||
+            String(item.category || "").toLowerCase().indexOf(query) >= 0 ||
+            String(item.rule_title || "").toLowerCase().indexOf(query) >= 0
+        );
+    };
+
+    // =====================================================
+    // MODAL AUDIT FUNCTIONS
+    // =====================================================
+    c.openAuditModal = function(item) {
+        c.selectedCase = angular.copy(item);
+        $timeout(function() {
+            if (typeof jQuery !== "undefined") {
+                jQuery("#riskAuditModal").modal("show");
+            }
+        }, 100);
+    };
+
+    c.closeAuditModal = function() {
+        if (typeof jQuery !== "undefined") {
+            jQuery("#riskAuditModal").modal("hide");
+        }
+        c.selectedCase = null;
+    };
+
+    c.exportReport = function() {
+        c.server.update().then(function(response) {
+            c.data = response.data;
+        });
+    };
+
+    c.updateStatus = function(status) {
+        if (!c.selectedCase || !c.selectedCase.sys_id) return;
+
+        c.server.get({
+            action: "update_status",
+            sys_id: c.selectedCase.sys_id,
+            new_status: status
+        }).then(function(response) {
+            c.data = response.data;
+            c.selectedCase = null;
+            $timeout(function() {
+                if (typeof jQuery !== "undefined") {
+                    jQuery("#riskAuditModal").modal("hide");
+                }
+            }, 100);
+        });
+    };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   ADVISOR RISK &amp; COMPLIANCE
+   PREMIUM ENTERPRISE UI
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL WORKSPACE
+   ========================================================= */
+
+.vg-workspace-container {
+
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    background: #f5f8fc;
+
+    color: #183b63;
+
+    font-family:
+        "Segoe UI",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   HERO BANNER
+   ========================================================= */
+
+.vg-workspace-container .vg-hero-banner {
+
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    padding: 30px 38px;
+
+    margin: 0 0 24px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #132e5b 0%,
+            #173f76 48%,
+            #1768a8 100%
+        );
+
+    color: #ffffff;
+
+    border-radius: 0 0 16px 16px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 10px 28px
+        rgba(18,56,99,.18);
+}
+
+
+/* Decorative glow */
+
+.vg-workspace-container .vg-hero-banner::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    right: -170px;
+    top: -220px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(87,173,255,.10);
+
+    pointer-events: none;
+}
+
+
+.vg-workspace-container .vg-hero-banner::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: 28%;
+    bottom: -190px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.035);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.vg-workspace-container .hero-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+.vg-workspace-container .hero-content h2 {
+
+    margin:
+        0 0 5px 0;
+
+    color:
+        #ffffff;
+
+    font-size:
+        28px;
+
+    line-height:
+        34px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.4px;
+}
+
+
+.vg-workspace-container .hero-content p {
+
+    margin:
+        0;
+
+    color:
+        rgba(255,255,255,.80);
+
+    font-size:
+        14px;
+
+    line-height:
+        20px;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   HERO ACTIONS
+   ========================================================= */
+
+.vg-workspace-container .hero-actions {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    flex-shrink:
+        0;
+}
+
+
+.vg-workspace-container .btn-hero-outline {
+
+    min-height:
+        42px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        9px 18px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border:
+        1px solid
+        rgba(255,255,255,.35);
+
+    color:
+        #ffffff;
+
+    border-radius:
+        9px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-workspace-container .btn-hero-outline:hover {
+
+    background:
+        #ffffff;
+
+    border-color:
+        #ffffff;
+
+    color:
+        #174678;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 14px
+        rgba(0,0,0,.12);
+}
+
+
+/* =========================================================
+   METRIC ROW
+   ========================================================= */
+
+.vg-workspace-container .metric-row {
+
+    margin:
+        0 0 4px 0;
+}
+
+
+/* =========================================================
+   METRIC CARD
+   ========================================================= */
+
+.vg-workspace-container .vg-metric-card {
+
+    position:
+        relative;
+
+    min-height:
+        122px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        17px;
+
+    padding:
+        22px;
+
+    box-sizing:
+        border-box;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #dfe7f0;
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(27,62,99,.055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-workspace-container .vg-metric-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #cbd9e7;
+
+    box-shadow:
+        0 12px 27px
+        rgba(27,62,99,.10);
+}
+
+
+/* =========================================================
+   METRIC ICON
+   ========================================================= */
+
+.vg-workspace-container .metric-icon {
+
+    width:
+        56px;
+
+    height:
+        56px;
+
+    min-width:
+        56px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        15px;
+
+    font-size:
+        21px;
+
+    flex-shrink:
+        0;
+}
+
+
+/* HIGH RISK */
+
+.vg-workspace-container .red-circle {
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff2f2,
+            #ffebeb
+        );
+
+    color:
+        #dc2626;
+
+    border:
+        1px solid
+        #f4d0d0;
+}
+
+
+/* PENDING */
+
+.vg-workspace-container .orange-circle {
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff8ec,
+            #fff2df
+        );
+
+    color:
+        #ea580c;
+
+    border:
+        1px solid
+        #f6dfbf;
+}
+
+
+/* COMPLIANT */
+
+.vg-workspace-container .green-circle {
+
+    background:
+        linear-gradient(
+            145deg,
+            #effcf5,
+            #e5f9ee
+        );
+
+    color:
+        #15965a;
+
+    border:
+        1px solid
+        #cdeedc;
+}
+
+
+/* BLUE */
+
+.vg-workspace-container .blue-circle {
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf5ff,
+            #e4efff
+        );
+
+    color:
+        #2563eb;
+
+    border:
+        1px solid
+        #d7e7ff;
+}
+
+
+/* =========================================================
+   METRIC DATA
+   ========================================================= */
+
+.vg-workspace-container .metric-data {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+}
+
+
+.vg-workspace-container .metric-number {
+
+    font-size:
+        29px;
+
+    line-height:
+        1;
+
+    margin:
+        0 0 6px 0;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.6px;
+}
+
+
+.vg-workspace-container .metric-label {
+
+    margin:
+        0 0 4px 0;
+
+    color:
+        #71839a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .7px;
+}
+
+
+.vg-workspace-container .metric-subtext {
+
+    margin:
+        0;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   STANDARD COLORS
+   ========================================================= */
+
+.vg-workspace-container .text-blue {
+
+    color:
+        #2563eb !important;
+}
+
+
+.vg-workspace-container .text-orange {
+
+    color:
+        #ea580c !important;
+}
+
+
+.vg-workspace-container .text-green {
+
+    color:
+        #15965a !important;
+}
+
+
+.vg-workspace-container .text-red {
+
+    color:
+        #dc2626 !important;
+}
+
+
+.vg-workspace-container .text-white {
+
+    color:
+        #ffffff !important;
+}
+
+
+.vg-workspace-container .font-bold {
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.vg-workspace-container .vg-card {
+
+    width:
+        100%;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #dce6f0;
+
+    border-radius:
+        15px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(27,62,99,.055);
+
+    padding:
+        22px 26px;
+
+    box-sizing:
+        border-box;
+
+    transition:
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-workspace-container .vg-card:hover {
+
+    border-color:
+        #d1dfeb;
+
+    box-shadow:
+        0 9px 25px
+        rgba(27,62,99,.075);
+}
+
+
+.vg-workspace-container .margin-top-lg {
+
+    margin-top:
+        22px;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-workspace-container .vg-card-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        0 0 17px 0;
+
+    margin:
+        0 0 17px 0;
+
+    border-bottom:
+        1px solid
+        #e5edf4;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        14px;
+}
+
+
+.vg-workspace-container .vg-card-header h4 {
+
+    margin:
+        0;
+
+    color:
+        #123f70;
+
+    font-size:
+        19px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.25px;
+}
+
+
+.vg-workspace-container .vg-card-header h4 i {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        28px;
+
+    height:
+        28px;
+
+    margin-right:
+        8px;
+
+    border-radius:
+        8px;
+
+    background:
+        #edf5ff;
+
+    color:
+        #2563eb;
+
+    font-size:
+        14px;
+}
+
+
+.vg-workspace-container .header-right {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        10px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+/* =========================================================
+   FILTER PILLS
+   ========================================================= */
+
+.vg-workspace-container .filter-pills {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        3px;
+
+    padding:
+        4px;
+
+    background:
+        #f1f5f9;
+
+    border:
+        1px solid
+        #e4eaf1;
+
+    border-radius:
+        9px;
+}
+
+
+.vg-workspace-container .filter-pills .btn {
+
+    min-height:
+        36px;
+
+    padding:
+        7px 14px;
+
+    background:
+        transparent;
+
+    border:
+        1px solid
+        transparent;
+
+    color:
+        #64778c;
+
+    border-radius:
+        7px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-workspace-container .filter-pills .btn:hover {
+
+    background:
+        #ffffff;
+
+    color:
+        #2563eb;
+
+    border-color:
+        #e0e8f1;
+}
+
+
+.vg-workspace-container .filter-pills .btn.active {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #2f70dd
+        );
+
+    color:
+        #ffffff;
+
+    border-color:
+        #2563eb;
+
+    box-shadow:
+        0 3px 8px
+        rgba(37,99,235,.20);
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.vg-workspace-container .search-wrapper {
+
+    position:
+        relative;
+
+    width:
+        260px;
+}
+
+
+.vg-workspace-container .search-icon {
+
+    position:
+        absolute;
+
+    left:
+        12px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        #9aaabd;
+
+    font-size:
+        13px;
+
+    pointer-events:
+        none;
+
+    z-index:
+        2;
+}
+
+
+.vg-workspace-container .search-input {
+
+    width:
+        100%;
+
+    height:
+        40px;
+
+    padding:
+        8px 12px 8px 34px;
+
+    box-sizing:
+        border-box;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #cedae6;
+
+    border-radius:
+        8px;
+
+    color:
+        #183b63;
+
+    font-size:
+        12px;
+
+    outline:
+        none;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-workspace-container .search-input::placeholder {
+
+    color:
+        #9aaabd;
+}
+
+
+.vg-workspace-container .search-input:hover {
+
+    border-color:
+        #b9cbdc;
+}
+
+
+.vg-workspace-container .search-input:focus {
+
+    border-color:
+        #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.09);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-workspace-container .vg-table {
+
+    width:
+        100%;
+
+    min-width:
+        1050px;
+
+    margin:
+        0;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+}
+
+
+.vg-workspace-container .vg-table th {
+
+    padding:
+        14px 10px;
+
+    background:
+        #f7fafd;
+
+    color:
+        #63778d;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .7px;
+
+    border-bottom:
+        1px solid
+        #dfe7ef;
+
+    white-space:
+        nowrap;
+}
+
+
+.vg-workspace-container .vg-table td {
+
+    padding:
+        16px 10px;
+
+    vertical-align:
+        middle;
+
+    color:
+        #37516b;
+
+    font-size:
+        13px;
+
+    border-bottom:
+        1px solid
+        #edf2f6;
+
+    background:
+        #ffffff;
+}
+
+
+.vg-workspace-container .vg-table tbody tr {
+
+    transition:
+        background .15s ease;
+}
+
+
+.vg-workspace-container .vg-table tbody tr:hover td {
+
+    background:
+        #f8fbff;
+}
+
+
+.vg-workspace-container .vg-table tbody tr:last-child td {
+
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   STUDENT
+   ========================================================= */
+
+.vg-workspace-container .student-cell {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+}
+
+
+.vg-workspace-container .student-name {
+
+    color:
+        #143d67;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+}
+
+
+.vg-workspace-container .student-id {
+
+    margin-top:
+        0;
+
+    color:
+        #7b8ea2;
+
+    font-size:
+        11px;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+.vg-workspace-container .category-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        6px 10px;
+
+    background:
+        #eef4ff;
+
+    color:
+        #2458c4;
+
+    border:
+        1px solid
+        #d9e7ff;
+
+    border-radius:
+        7px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   RULE / FLAG
+   ========================================================= */
+
+.vg-workspace-container .rule-title {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #36536e;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   DEADLINE
+   ========================================================= */
+
+.vg-workspace-container .deadline-tag {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #58738d;
+
+    font-size:
+        12px;
+
+    font-weight:
+        500;
+
+    white-space:
+        nowrap;
+}
+
+
+.vg-workspace-container .deadline-tag i {
+
+    color:
+        #2563eb;
+}
+
+
+/* =========================================================
+   RISK SCORE
+   ========================================================= */
+
+.vg-workspace-container .risk-score-pill {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        7px 10px;
+
+    border-radius:
+        7px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+/* HIGH */
+
+.vg-workspace-container .risk-high {
+
+    background:
+        #fff0f0;
+
+    color:
+        #c62828;
+
+    border:
+        1px solid
+        #f4cccc;
+}
+
+
+/* MEDIUM */
+
+.vg-workspace-container .risk-medium {
+
+    background:
+        #fff8e9;
+
+    color:
+        #a86b09;
+
+    border:
+        1px solid
+        #f2dba9;
+}
+
+
+/* LOW */
+
+.vg-workspace-container .risk-low {
+
+    background:
+        #eaf9f1;
+
+    color:
+        #087b4e;
+
+    border:
+        1px solid
+        #c5ecd8;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.vg-workspace-container .status-pill {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        7px 11px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+/* RED */
+
+.vg-workspace-container .pill-red {
+
+    background:
+        #fff0f0;
+
+    color:
+        #b42323;
+
+    border:
+        1px solid
+        #f1cccc;
+}
+
+
+/* ORANGE */
+
+.vg-workspace-container .pill-orange {
+
+    background:
+        #fff8e9;
+
+    color:
+        #a86b09;
+
+    border:
+        1px solid
+        #f2dba9;
+}
+
+
+/* GREEN */
+
+.vg-workspace-container .pill-green {
+
+    background:
+        #eaf9f1;
+
+    color:
+        #087b4e;
+
+    border:
+        1px solid
+        #bfe9d2;
+}
+
+
+/* BLUE */
+
+.vg-workspace-container .pill-blue {
+
+    background:
+        #eef5ff;
+
+    color:
+        #1d56c5;
+
+    border:
+        1px solid
+        #bfd8ff;
+}
+
+
+/* GRAY */
+
+.vg-workspace-container .pill-gray {
+
+    background:
+        #f3f6f9;
+
+    color:
+        #71839a;
+
+    border:
+        1px solid
+        #e1e7ed;
+}
+
+
+/* =========================================================
+   AI AUDIT CASE BUTTON
+   ========================================================= */
+
+.vg-workspace-container .btn-review {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    min-height:
+        37px;
+
+    padding:
+        7px 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3283cf,
+            #2570b6
+        );
+
+    color:
+        #ffffff;
+
+    border:
+        1px solid
+        #2b78bd;
+
+    border-radius:
+        8px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+    box-shadow:
+        0 3px 8px
+        rgba(37,112,182,.13);
+}
+
+
+.vg-workspace-container .btn-review:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563a9,
+            #1e5796
+        );
+
+    border-color:
+        #2563a9;
+
+    color:
+        #ffffff;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 12px
+        rgba(37,112,182,.20);
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.vg-workspace-container + .modal .modal-content {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #dbe5ee;
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(15,42,70,.20);
+}
+
+
+.vg-workspace-container + .modal .modal-header {
+
+    padding:
+        18px 22px;
+
+    border-bottom:
+        none;
+}
+
+
+.vg-workspace-container + .modal .modal-title {
+
+    font-size:
+        18px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-workspace-container + .modal .modal-body {
+
+    padding:
+        22px;
+}
+
+
+/* =========================================================
+   NAVY MODAL HEADER
+   ========================================================= */
+
+.vg-workspace-container .header-navy {
+
+    background:
+        linear-gradient(
+            135deg,
+            #132e5b 0%,
+            #173f76 50%,
+            #1768a8 100%
+        );
+
+    color:
+        #ffffff;
+}
+
+
+/* =========================================================
+   DETAILS CARD
+   ========================================================= */
+
+.vg-workspace-container .details-card {
+
+    padding:
+        18px;
+
+    background:
+        #f7fafd;
+
+    border:
+        1px solid
+        #e1e9f1;
+
+    border-radius:
+        10px;
+}
+
+
+.vg-workspace-container .details-card h5 {
+
+    margin:
+        0 0 15px 0;
+
+    color:
+        #143d67;
+
+    font-size:
+        15px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-workspace-container .details-card p {
+
+    margin:
+        0 0 7px 0;
+
+    color:
+        #37516b;
+
+    font-size:
+        13px;
+}
+
+
+.vg-workspace-container .details-card hr {
+
+    margin:
+        15px 0;
+
+    border-color:
+        #dfe7ef;
+}
+
+
+/* =========================================================
+   RISK ANALYSIS BOXES
+   ========================================================= */
+
+.vg-workspace-container .risk-analysis-box {
+
+    padding:
+        14px;
+
+    border-radius:
+        9px;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.55;
+
+    border:
+        1px solid
+        transparent;
+}
+
+
+.vg-workspace-container .box-danger {
+
+    background:
+        #fff1f1;
+
+    color:
+        #a82a2a;
+
+    border-color:
+        #f2cccc;
+}
+
+
+.vg-workspace-container .box-warning {
+
+    background:
+        #fff8e9;
+
+    color:
+        #9a650c;
+
+    border-color:
+        #f2dba9;
+}
+
+
+.vg-workspace-container .box-success {
+
+    background:
+        #eaf9f1;
+
+    color:
+        #087b4e;
+
+    border-color:
+        #c3ead5;
+}
+
+
+.vg-workspace-container .score-header {
+
+    margin-bottom:
+        6px;
+
+    font-size:
+        13px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-workspace-container .margin-top-xs {
+
+    margin-top:
+        8px;
+}
+
+
+/* =========================================================
+   RECOMMENDATION
+   ========================================================= */
+
+.vg-workspace-container .recommendation-box {
+
+    padding:
+        14px 15px;
+
+    background:
+        #eef5ff;
+
+    border:
+        1px solid
+        #d5e5fb;
+
+    border-left:
+        4px solid
+        #2563eb;
+
+    border-radius:
+        8px;
+
+    color:
+        #23476c;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.6;
+}
+
+
+.vg-workspace-container .recommendation-box p {
+
+    margin:
+        0;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.vg-workspace-container .vg-textarea {
+
+    width:
+        100%;
+
+    min-height:
+        105px;
+
+    padding:
+        11px 13px;
+
+    box-sizing:
+        border-box;
+
+    resize:
+        vertical;
+
+    background:
+        #ffffff;
+
+    color:
+        #183b63;
+
+    border:
+        1px solid
+        #cddae6;
+
+    border-radius:
+        8px;
+
+    font-size:
+        13px;
+
+    outline:
+        none;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-workspace-container .vg-textarea:focus {
+
+    border-color:
+        #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.09);
+}
+
+
+/* =========================================================
+   AUDIT INFO
+   ========================================================= */
+
+.vg-workspace-container .audit-info-box {
+
+    margin-top:
+        16px;
+
+    padding:
+        12px 14px;
+
+    background:
+        #f5f8fb;
+
+    border:
+        1px solid
+        #e1e8ef;
+
+    border-radius:
+        8px;
+
+    color:
+        #61768a;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+   ========================================================= */
+
+.vg-workspace-container .pad-lg {
+
+    padding:
+        55px 30px !important;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   AI DETAIL PANEL
+   ========================================================= */
+
+.vg-workspace-container .ai-detail-panel {
+
+    margin:
+        24px 0;
+
+    overflow:
+        hidden;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d7e3ee;
+
+    border-radius:
+        14px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(20,58,94,.10);
+
+    animation:
+        slideDown .35s ease-out forwards;
+}
+
+
+/* =========================================================
+   AI PANEL HEADER
+   ========================================================= */
+
+.vg-workspace-container .panel-header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        15px 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #132e5b,
+            #1768a8
+        );
+
+    color:
+        #ffffff;
+}
+
+
+.vg-workspace-container .panel-header h4 {
+
+    margin:
+        0;
+
+    font-size:
+        17px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-workspace-container .panel-header .btn-icon {
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        rgba(255,255,255,.08);
+
+    color:
+        rgba(255,255,255,.75);
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+    border-radius:
+        8px;
+
+    font-size:
+        15px;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-workspace-container .panel-header .btn-icon:hover {
+
+    background:
+        rgba(255,255,255,.16);
+
+    color:
+        #ffffff;
+}
+
+
+/* =========================================================
+   AI PANEL BODY
+   ========================================================= */
+
+.vg-workspace-container .panel-body {
+
+    padding:
+        26px;
+
+    background:
+        #f8fbfe;
+
+    color:
+        #334f69;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.65;
+}
+
+
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
+
+.vg-workspace-container .loading-state {
+
+    padding:
+        55px 20px;
+
+    text-align:
+        center;
+
+    color:
+        #71859a;
+}
+
+
+.vg-workspace-container .loading-state i {
+
+    margin-bottom:
+        15px;
+
+    color:
+        #2563eb;
+
+    font-size:
+        26px;
+}
+
+
+/* =========================================================
+   AI SUMMARY CONTENT
+   ========================================================= */
+
+.vg-workspace-container .ai-summary-content h3 {
+
+    margin:
+        24px 0 10px;
+
+    padding-bottom:
+        8px;
+
+    color:
+        #143d67;
+
+    font-size:
+        18px;
+
+    font-weight:
+        750;
+
+    border-bottom:
+        1px solid
+        #dfe7ef;
+}
+
+
+.vg-workspace-container .ai-summary-content h3:first-child {
+
+    margin-top:
+        0;
+}
+
+
+/* =========================================================
+   AI SOURCE CHIPS
+   ========================================================= */
+
+.vg-workspace-container .source-chip {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    margin:
+        0 7px 7px 0;
+
+    padding:
+        6px 13px;
+
+    background:
+        #eaf9f1;
+
+    color:
+        #087b4e;
+
+    border:
+        1px solid
+        #c3ead5;
+
+    border-radius:
+        20px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   AI ANIMATION
+   ========================================================= */
+
+@keyframes slideDown {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(-10px);
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
+
+.vg-workspace-container .table-responsive::-webkit-scrollbar {
+
+    height:
+        7px;
+}
+
+
+.vg-workspace-container .table-responsive::-webkit-scrollbar-track {
+
+    background:
+        #f1f5f9;
+}
+
+
+.vg-workspace-container .table-responsive::-webkit-scrollbar-thumb {
+
+    background:
+        #b8c9da;
+
+    border-radius:
+        10px;
+}
+
+
+.vg-workspace-container .table-responsive::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #91a9c0;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    .vg-workspace-container .vg-card-header {
+
+        align-items:
+            flex-start;
+    }
+
+
+    .vg-workspace-container .header-right {
+
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+    }
+
+
+    .vg-workspace-container .search-wrapper {
+
+        width:
+            240px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .vg-workspace-container .vg-hero-banner {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            18px;
+
+        padding:
+            22px;
+    }
+
+
+    .vg-workspace-container .hero-content {
+
+        width:
+            100%;
+
+        align-items:
+            flex-start;
+    }
+
+
+    .vg-workspace-container .hero-content h2 {
+
+        font-size:
+            21px;
+
+        line-height:
+            27px;
+    }
+
+
+    .vg-workspace-container .hero-content p {
+
+        font-size:
+            12px;
+    }
+
+
+    .vg-workspace-container .hero-actions {
+
+        width:
+            100%;
+    }
+
+
+    .vg-workspace-container .btn-hero-outline {
+
+        width:
+            100%;
+    }
+
+
+    .vg-workspace-container .vg-metric-card {
+
+        min-height:
+            105px;
+
+        margin-bottom:
+            12px;
+
+        padding:
+            18px;
+    }
+
+
+    .vg-workspace-container .metric-icon {
+
+        width:
+            50px;
+
+        height:
+            50px;
+
+        min-width:
+            50px;
+    }
+
+
+    .vg-workspace-container .metric-number {
+
+        font-size:
+            25px;
+    }
+
+
+    .vg-workspace-container .vg-card {
+
+        padding:
+            17px;
+    }
+
+
+    .vg-workspace-container .vg-card-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .vg-workspace-container .header-right {
+
+        width:
+            100%;
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+
+    .vg-workspace-container .filter-pills {
+
+        width:
+            100%;
+
+        overflow-x:
+            auto;
+    }
+
+
+    .vg-workspace-container .filter-pills .btn {
+
+        flex:
+            1;
+
+        white-space:
+            nowrap;
+    }
+
+
+    .vg-workspace-container .search-wrapper {
+
+        width:
+            100%;
+    }
+
+
+    .vg-workspace-container .search-input {
+
+        width:
+            100%;
+    }
+
+
+    .vg-workspace-container .panel-body {
+
+        padding:
+            18px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>adv_risk_compliance</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Adv Risk &amp; Compliance</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.risk_cases = [];
+    data.high_risk_count = 0;
+    data.medium_risk_count = 0;
+    data.low_risk_count = 0;
+    data.compliance_rate = 0;
+    data.error = "";
+
+    // =====================================================
+    // GET CURRENT ADVISOR
+    // SAME LOGIC AS WORKING ADVISOR DASHBOARD
+    // =====================================================
+
+    var userSysId = gs.getUserID();
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData("vg_advisor_sys_id");
+
+    if (sessionAdvisorSysId) {
+        userSysId = sessionAdvisorSysId;
+    }
+
+    if (!userSysId) {
+        data.error = "Advisor could not be identified.";
+        return;
+    }
+
+
+    // =====================================================
+    // GET EXACT SAME CASES AS ADVISOR DASHBOARD
+    // =====================================================
+
+    var caseGR = new GlideRecord(
+        "x_snc_visaguardi_0_visa_case"
+    );
+
+    caseGR.addQuery(
+        "advisor",
+        userSysId
+    );
+
+    caseGR.orderByDesc(
+        "sys_created_on"
+    );
+
+    caseGR.query();
+
+
+    // =====================================================
+    // PROCESS EVERY ADVISOR CASE
+    // =====================================================
+
+    while (caseGR.next()) {
+
+        var studentSysId =
+            caseGR.getValue("student");
+
+        var studentName =
+            caseGR.getDisplayValue("student") ||
+            "Unknown Student";
+
+        var studentId =
+            "N/A";
+
+
+        // =================================================
+        // GET STUDENT PROFILE
+        // =================================================
+
+        if (studentSysId) {
+
+            var studentGR = new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+            if (studentGR.get(studentSysId)) {
+
+                studentId =
+                    studentGR.getValue("student_id") ||
+                    "N/A";
+
+                var profileName =
+                    studentGR.getValue("name") || "";
+
+                if (profileName) {
+                    studentName = profileName;
+                }
+                else {
+
+                    var firstName =
+                        studentGR.getValue("first_name") || "";
+
+                    var lastName =
+                        studentGR.getValue("last_name") || "";
+
+                    var fullName =
+                        (
+                            firstName +
+                            " " +
+                            lastName
+                        ).trim();
+
+                    if (fullName) {
+                        studentName = fullName;
+                    }
+                }
+            }
+        }
+
+
+        // =================================================
+        // CASE TYPE
+        // =================================================
+
+        var category =
+            caseGR.getDisplayValue("case_type") ||
+            "Visa Case";
+
+
+        // =================================================
+        // CASE STAGE
+        // =================================================
+
+        var caseStage =
+            caseGR.getDisplayValue("case_stage") ||
+            "N/A";
+
+
+        // =================================================
+        // STATUS
+        // =================================================
+
+        var status =
+            caseGR.getDisplayValue("status") ||
+            caseStage ||
+            "Under Review";
+
+
+        // =================================================
+        // SIMPLE RISK CALCULATION
+        // =================================================
+
+        var riskScore = 30;
+
+        var riskLevel = "Low";
+
+
+        // Case stage based risk
+
+        var stage =
+            String(caseStage).toLowerCase();
+
+
+        if (
+            stage.indexOf("pending") >= 0
+        ) {
+
+            riskScore = 55;
+
+        }
+
+
+        if (
+            stage.indexOf("review") >= 0
+        ) {
+
+            riskScore = 65;
+
+        }
+
+
+        if (
+            stage.indexOf("risk") >= 0 ||
+            stage.indexOf("urgent") >= 0
+        ) {
+
+            riskScore = 80;
+
+        }
+
+
+        // Status based risk
+
+        var statusLower =
+            String(status).toLowerCase();
+
+
+        if (
+            statusLower.indexOf("pending") >= 0
+        ) {
+
+            riskScore = Math.max(
+                riskScore,
+                55
+            );
+
+        }
+
+
+        if (
+            statusLower.indexOf("review") >= 0
+        ) {
+
+            riskScore = Math.max(
+                riskScore,
+                65
+            );
+
+        }
+
+
+        if (
+            statusLower.indexOf("resolved") >= 0 ||
+            statusLower.indexOf("completed") >= 0 ||
+            statusLower.indexOf("closed") >= 0
+        ) {
+
+            riskScore = 15;
+
+        }
+
+
+        // =================================================
+        // RISK LEVEL
+        // =================================================
+
+        if (riskScore >= 70) {
+
+            riskLevel = "High";
+
+        }
+        else if (riskScore >= 40) {
+
+            riskLevel = "Medium";
+
+        }
+        else {
+
+            riskLevel = "Low";
+
+        }
+
+
+        // =================================================
+        // RULE
+        // =================================================
+
+        var ruleTitle =
+            "Routine compliance monitoring";
+
+
+        if (riskLevel === "High") {
+
+            ruleTitle =
+                "High risk compliance review";
+
+        }
+        else if (riskLevel === "Medium") {
+
+            ruleTitle =
+                "Compliance review required";
+
+        }
+
+
+        // =================================================
+        // DEADLINE
+        // =================================================
+
+        var deadline =
+            "No deadline";
+
+        var daysLeft =
+            999;
+
+
+        if (
+            caseGR.isValidField("due_date") &&
+            caseGR.getValue("due_date")
+        ) {
+
+            deadline =
+                caseGR.getDisplayValue("due_date");
+
+
+            var due =
+                new GlideDateTime(
+                    caseGR.getValue("due_date")
+                );
+
+            var now =
+                new GlideDateTime();
+
+
+            var diff =
+                due.getNumericValue() -
+                now.getNumericValue();
+
+
+            daysLeft =
+                Math.ceil(
+                    diff /
+                    86400000
+                );
+
+
+            if (daysLeft < 0) {
+
+                riskScore = 90;
+                riskLevel = "High";
+
+                ruleTitle =
+                    "SEVIS deadline overdue";
+
+            }
+            else if (daysLeft <= 5) {
+
+                riskScore =
+                    Math.max(
+                        riskScore,
+                        75
+                    );
+
+                riskLevel = "High";
+
+                ruleTitle =
+                    "SEVIS deadline approaching";
+
+            }
+
+        }
+
+
+        // =================================================
+        // DESCRIPTION
+        // =================================================
+
+        var description =
+            "This advisor case requires compliance monitoring.";
+
+
+        if (riskLevel === "High") {
+
+            description =
+                "This case requires immediate advisor attention.";
+
+        }
+        else if (riskLevel === "Medium") {
+
+            description =
+                "This case requires additional compliance review.";
+
+        }
+
+
+        // =================================================
+        // RECOMMENDATION
+        // =================================================
+
+        var recommendation =
+            "Review the case and verify all required student documentation.";
+
+
+        if (riskLevel === "High") {
+
+            recommendation =
+                "Perform an immediate compliance review and document the required advisor action.";
+
+        }
+        else if (riskLevel === "Medium") {
+
+            recommendation =
+                "Review the case and monitor the student's compliance requirements.";
+
+        }
+
+
+        // =================================================
+        // PUSH CASE
+        // =================================================
+
+        data.risk_cases.push({
+
+            sys_id:
+                caseGR.getUniqueValue(),
+
+            student_name:
+                studentName,
+
+            student_id:
+                studentId,
+
+            category:
+                category,
+
+            rule_title:
+                ruleTitle,
+
+            risk_score:
+                riskScore,
+
+            risk_level:
+                riskLevel,
+
+            deadline:
+                deadline,
+
+            days_left:
+                daysLeft,
+
+            status:
+                status,
+
+            case_stage:
+                caseStage,
+
+            description:
+                description,
+
+            recommendation:
+                recommendation,
+
+            advisor:
+                caseGR.getDisplayValue("advisor")
+
+        });
+
+
+        // =================================================
+        // COUNTERS
+        // =================================================
+
+        if (riskLevel === "High") {
+
+            data.high_risk_count++;
+
+        }
+        else if (riskLevel === "Medium") {
+
+            data.medium_risk_count++;
+
+        }
+        else {
+
+            data.low_risk_count++;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // COMPLIANCE RATE
+    // =====================================================
+
+    if (data.risk_cases.length > 0) {
+
+        data.compliance_rate =
+            Math.round(
+                (
+                    data.low_risk_count /
+                    data.risk_cases.length
+                ) * 100
+            );
+
+    }
+    else {
+
+        data.compliance_rate = 0;
+
+    }
+
+
+    // =====================================================
+    // DEBUG
+    // =====================================================
+
+    data.debug = {
+
+        advisor_sys_id:
+            userSysId,
+
+        advisor_name:
+            gs.getUserName(),
+
+        session_advisor:
+            sessionAdvisorSysId || "",
+
+        total_cases:
+            data.risk_cases.length
+
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 18:05:48</sys_created_on>
+        <sys_id>0ee7478359ee43107f44df2ba8a19bbc</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Adv Risk &amp; Compliance</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_0ee7478359ee43107f44df2ba8a19bbc</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 05:37:23</sys_updated_on>
+        <template><![CDATA[<div class="vg-workspace-container">
+
+    <!-- =====================================================
+         HERO BANNER
+    ====================================================== -->
+
+    <div class="vg-hero-banner">
+
+        <div class="hero-content">
+
+            <h2>
+                Risk &amp; Compliance Audit
+            </h2>
+
+            <p>
+                Visa Advisor | Real-time SEVIS compliance tracking,
+                risk scoring, and automated rule monitoring
+            </p>
+
+        </div>
+
+
+        <div class="hero-actions">
+
+           
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOP METRICS
+    ====================================================== -->
+
+    <div class="row metric-row">
+
+        <!-- HIGH RISK -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon red-circle">
+
+                    <i class="fa fa-exclamation-triangle"></i>
+
+                </div>
+
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-red">
+
+                        {{c.getHighRiskCount()}}
+
+                    </span>
+
+                    <span class="metric-label">
+
+                        HIGH RISK ALERTS
+
+                    </span>
+
+                    <span class="metric-subtext text-red">
+
+                        Immediate SEVIS action required
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- MEDIUM RISK -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon orange-circle">
+
+                    <i class="fa fa-clock-o"></i>
+
+                </div>
+
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-orange">
+
+                        {{c.getMediumRiskCount()}}
+
+                    </span>
+
+                    <span class="metric-label">
+
+                        PENDING AUDITS
+
+                    </span>
+
+                    <span class="metric-subtext text-orange">
+
+                        Cases requiring attention
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLIANCE -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon green-circle">
+
+                    <i class="fa fa-check-square-o"></i>
+
+                </div>
+
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-green">
+
+                        {{c.getComplianceRate()}}
+
+                    </span>
+
+                    <span class="metric-label">
+
+                        SEVIS COMPLIANCE RATE
+
+                    </span>
+
+                    <span class="metric-subtext text-green">
+
+                        Current advisor portfolio
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CARD
+    ====================================================== -->
+
+    <div class="vg-card margin-top-lg">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="vg-card-header">
+
+
+            <div class="header-left">
+
+                <h4>
+
+                    <i class="fa fa-balance-scale"></i>
+
+                    SEVIS Compliance &amp; Risk Monitoring
+
+                </h4>
+
+            </div>
+
+
+            <div class="header-right">
+
+
+                <!-- FILTERS -->
+
+                <div class="btn-group filter-pills">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                            c.currentFilter === 'ALL'
+                        }"
+                        ng-click="c.setFilter('ALL')">
+
+                        All Cases
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                            c.currentFilter === 'High'
+                        }"
+                        ng-click="c.setFilter('High')">
+
+                        High Risk
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                            c.currentFilter === 'Medium'
+                        }"
+                        ng-click="c.setFilter('Medium')">
+
+                        Medium Risk
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                            c.currentFilter === 'Compliant'
+                        }"
+                        ng-click="c.setFilter('Compliant')">
+
+                        Compliant
+
+                    </button>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search-wrapper">
+
+                    <i class="fa fa-search search-icon"></i>
+
+                    <input
+                        type="text"
+                        class="form-control input-sm search-input"
+                        placeholder="Search student, rule, or ID..."
+                        ng-model="c.searchQuery">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="table-responsive">
+
+            <table class="table vg-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Compliance Category
+                        </th>
+
+                        <th>
+                            Triggered Rule / Flag
+                        </th>
+
+                        <th>
+                            Risk Score
+                        </th>
+
+                        <th>
+                            SEVIS Deadline
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    <tr
+                        ng-repeat="
+                            item in c.data.risk_cases
+                            | filter:c.filterCases
+                        ">
+
+
+                        <!-- STUDENT -->
+
+                        <td>
+
+                            <div class="student-cell">
+
+                                <span class="student-name">
+
+                                    {{item.student_name}}
+
+                                </span>
+
+                                <span class="student-id">
+
+                                    {{item.student_id}}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                            <span class="category-badge">
+
+                                {{item.category}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- RULE -->
+
+                        <td>
+
+                            <span class="rule-title">
+
+                                <i class="fa fa-bell-o text-muted"></i>
+
+                                {{item.rule_title}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- RISK -->
+
+                        <td>
+
+                            <div
+                                class="risk-score-pill"
+                                ng-class="{
+                                    'risk-high':
+                                        item.risk_level === 'High',
+
+                                    'risk-medium':
+                                        item.risk_level === 'Medium',
+
+                                    'risk-low':
+                                        item.risk_level === 'Low'
+                                }">
+
+                                <i class="fa fa-bolt"></i>
+
+                                {{item.risk_score}}
+
+                                -
+
+                                {{item.risk_level}}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- DEADLINE -->
+
+                        <td>
+
+                            <span
+                                class="deadline-tag"
+                                ng-class="{
+                                    'text-red font-bold':
+                                        item.days_left <= 5
+                                }">
+
+                                <i class="fa fa-calendar"></i>
+
+                                {{item.deadline}}
+
+                                <span ng-if="item.days_left !== 999">
+
+                                    ({{item.days_left}}d left)
+
+                                </span>
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="status-pill"
+                                ng-class="{
+
+                                    'pill-red':
+                                        item.status === 'Under Review',
+
+                                    'pill-orange':
+                                        item.status === 'Notice Sent',
+
+                                    'pill-green':
+                                        item.status === 'Resolved',
+
+                                    'pill-gray':
+                                        item.status === 'Dismissed'
+
+                                }">
+
+                                {{item.status}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td class="text-right">
+
+                        <button class="btn btn-xs btn-primary" ng-click="c.generateSummary(item.sys_id, item.student_name)">
+    <i class="fa fa-magic"></i> AI Audit Case
+</button>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- EMPTY -->
+
+                    <tr
+                        ng-if="
+                            (c.data.risk_cases |
+                            filter:c.filterCases).length === 0
+                        ">
+
+                        <td
+                            colspan="7"
+                            class="text-center text-muted pad-lg">
+
+                            <em>
+                                No compliance records found
+                                matching the filter criteria.
+                            </em>
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     AI CASE SUMMARY PANEL (MASTER-DETAIL)
+========================================================= -->
+<div class="ai-detail-panel margin-top-lg" ng-if="c.showAIPanel">
+    <div class="panel-header">
+        <h4><i class="fa fa-robot"></i> AI Case Summary: {{c.activeStudentName}}</h4>
+        <button class="btn btn-icon btn-sm pull-right" ng-click="c.closeAIPanel()">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+    
+    <div class="panel-body">
+        <!-- Loading State -->
+        <div ng-if="c.loadingAI" class="loading-state">
+            <i class="fa fa-circle-o-notch fa-spin fa-3x"></i>
+            <p>Analyzing case data and generating compliance summary...</p>
+        </div>
+        
+        <!-- Result State -->
+        <div ng-if="!c.loadingAI" ng-bind-html="c.aiSummaryHtml" class="ai-summary-content"></div>
+    </div>
+</div>
+
+<!-- =========================================================
+     RISK AUDIT MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="riskAuditModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+
+
+    <div
+        class="modal-dialog modal-lg"
+        role="document"
+        ng-if="c.selectedCase">
+
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+
+            <div class="modal-header header-navy">
+
+                <button
+                    type="button"
+                    class="close text-white"
+                    data-dismiss="modal"
+                    ng-click="c.selectedCase = null">
+
+                    &times;
+
+                </button>
+
+
+                <h4 class="modal-title text-white">
+
+                    <i class="fa fa-shield"></i>
+
+                    Risk Audit:
+
+                    {{c.selectedCase.student_name}}
+
+                    ({{c.selectedCase.student_id}})
+
+                </h4>
+
+            </div>
+
+
+            <!-- BODY -->
+
+            <div class="modal-body">
+
+
+                <div class="row">
+
+
+                    <!-- =====================================
+                         STUDENT INFO
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="details-card">
+
+                            <h5>
+
+                                <i class="fa fa-user-circle"></i>
+
+                                Student &amp; SEVIS Info
+
+                            </h5>
+
+
+                            <p>
+
+                                <strong>Name:</strong>
+
+                                {{c.selectedCase.student_name}}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>Student ID:</strong>
+
+                                {{c.selectedCase.student_id}}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>Compliance Category:</strong>
+
+                                {{c.selectedCase.category}}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>Case Status:</strong>
+
+                                {{c.selectedCase.status}}
+
+                            </p>
+
+
+                            <hr>
+
+
+                            <h5>
+
+                                <i
+                                    class="fa fa-exclamation-triangle text-orange">
+                                </i>
+
+                                Risk Factor Analysis
+
+                            </h5>
+
+
+                            <div
+                                class="risk-analysis-box"
+                                ng-class="{
+
+                                    'box-danger':
+                                        c.selectedCase.risk_level === 'High',
+
+                                    'box-warning':
+                                        c.selectedCase.risk_level === 'Medium',
+
+                                    'box-success':
+                                        c.selectedCase.risk_level === 'Low'
+
+                                }">
+
+
+                                <div class="score-header">
+
+                                    <strong>
+
+                                        Risk Level:
+
+                                        {{c.selectedCase.risk_level}}
+
+                                        &nbsp;
+
+                                        (Score:
+
+                                        {{c.selectedCase.risk_score}}/100)
+
+                                    </strong>
+
+                                </div>
+
+
+                                <p class="margin-top-xs">
+
+                                    {{c.selectedCase.description}}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ADVISOR ACTIONS
+                    ====================================== -->
+
+                    <div class="col-md-6">
+
+
+                        <div class="form-group">
+
+                            <label>
+
+                                <strong>
+
+                                    SEVIS Action Log &amp;
+                                    Recommendation:
+
+                                </strong>
+
+                            </label>
+
+
+                            <div class="recommendation-box">
+
+                                <p>
+
+                                    <i
+                                        class="fa fa-info-circle text-blue">
+                                    </i>
+
+                                    <strong>
+                                        Recommended Action:
+                                    </strong>
+
+                                    {{c.selectedCase.recommendation}}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group margin-top-md">
+
+                            <label>
+
+                                Advisor Compliance Notes /
+                                SEVIS Log:
+
+                            </label>
+
+
+                            <textarea
+                                class="form-control vg-textarea"
+                                rows="4"
+                                ng-model="c.selectedCase.advisor_notes"
+                                placeholder="Enter audit findings, SEVIS update confirmation numbers, or follow-up notes...">
+                            </textarea>
+
+                        </div>
+
+
+                        <div
+                            class="audit-info-box"
+                            ng-if="c.selectedCase.days_left !== 999">
+
+                            <i class="fa fa-calendar"></i>
+
+                            <strong>
+                                Deadline:
+                            </strong>
+
+                            {{c.selectedCase.deadline}}
+
+                            <br>
+
+                            <span
+                                ng-if="c.selectedCase.days_left >= 0">
+
+                                {{c.selectedCase.days_left}}
+                                day(s) remaining
+
+                            </span>
+
+                            <span
+                                ng-if="c.selectedCase.days_left < 0"
+                                class="text-red">
+
+                                Deadline overdue
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="modal-footer">
+
+
+                <button
+                    type="button"
+                    class="btn btn-default pull-left"
+                    ng-click="c.updateStatus('Dismissed')"
+                    ng-disabled="c.data.processing">
+
+                    <i class="fa fa-eye-slash"></i>
+
+                    Dismiss Flag
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-warning"
+                    ng-click="c.updateStatus('Notice Sent')"
+                    ng-disabled="c.data.processing">
+
+                    <i class="fa fa-paper-plane"></i>
+
+                    Send Official Student Notice
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    ng-click="c.updateStatus('Resolved')"
+                    ng-disabled="c.data.processing">
+
+                    <i class="fa fa-check-circle"></i>
+
+                    Mark Compliance Resolved
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

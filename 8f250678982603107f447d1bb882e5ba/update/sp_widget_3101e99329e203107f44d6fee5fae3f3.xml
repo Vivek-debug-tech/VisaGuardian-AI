@@ -1,0 +1,2327 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window) {
+
+    var c = this;
+
+
+    // =====================================================
+    // INITIAL STATE
+    // =====================================================
+
+    c.currentFilter = "ALL";
+
+    c.searchQuery = "";
+
+
+    // =====================================================
+    // GET COUNT
+    // =====================================================
+
+    c.getCount = function(type) {
+
+        var students =
+            c.data.students || [];
+
+
+        if (type === "All") {
+
+            return students.length;
+
+        }
+
+
+        var count = 0;
+
+
+        for (
+            var i = 0;
+            i < students.length;
+            i++
+        ) {
+
+            if (
+                students[i].status === type
+            ) {
+
+                count++;
+
+            }
+
+        }
+
+
+        return count;
+
+    };
+
+
+    // =====================================================
+    // HIGH RISK COUNT
+    // =====================================================
+
+    c.getHighRiskCount = function() {
+
+        var students =
+            c.data.students || [];
+
+
+        var count = 0;
+
+
+        for (
+            var i = 0;
+            i < students.length;
+            i++
+        ) {
+
+            if (
+                students[i].risk === "High"
+            ) {
+
+                count++;
+
+            }
+
+        }
+
+
+        return count;
+
+    };
+
+
+    // =====================================================
+    // SET FILTER
+    // =====================================================
+
+    c.setFilter = function(filter) {
+
+        c.currentFilter =
+            filter;
+
+    };
+
+
+    // =====================================================
+    // FILTER STUDENTS
+    // =====================================================
+
+    c.filterStudents = function(student) {
+
+
+        // =================================================
+        // STATUS FILTER
+        // =================================================
+
+        if (
+            c.currentFilter === "Active" &&
+            student.status !== "Active"
+        ) {
+
+            return false;
+
+        }
+
+
+        if (
+            c.currentFilter === "Pending" &&
+            student.status !== "Pending"
+        ) {
+
+            return false;
+
+        }
+
+
+        if (
+            c.currentFilter === "HighRisk" &&
+            student.risk !== "High"
+        ) {
+
+            return false;
+
+        }
+
+
+        // =================================================
+        // SEARCH
+        // =================================================
+
+        var search =
+            (
+                c.searchQuery || ""
+            )
+            .toLowerCase()
+            .trim();
+
+
+        if (!search) {
+
+            return true;
+
+        }
+
+
+        var searchable = (
+
+            (student.name || "") +
+            " " +
+            (student.email || "") +
+            " " +
+            (student.user_name || "") +
+            " " +
+            (student.student_id || "") +
+            " " +
+            (student.visa_type || "") +
+            " " +
+            (student.program || "") +
+            " " +
+            (student.department || "")
+
+        ).toLowerCase();
+
+
+        return (
+            searchable.indexOf(search) !== -1
+        );
+
+    };
+
+
+    // =====================================================
+    // VIEW STUDENT PROFILE
+    // =====================================================
+
+    c.viewProfile = function(student) {
+
+        if (
+            !student ||
+            !student.sys_id
+        ) {
+
+            return;
+
+        }
+
+
+        try {
+
+            sessionStorage.setItem(
+                "vg_selected_student",
+                JSON.stringify(student)
+            );
+
+        } catch (e) {
+
+            console.error(
+                "Unable to store student",
+                e
+            );
+
+        }
+
+
+        // Change this page ID if your profile page
+        // uses a different ID.
+
+        $window.location.href =
+            "?id=dso_student_profile&sys_id=" +
+            encodeURIComponent(
+                student.sys_id
+            );
+
+    };
+
+
+    // =====================================================
+    // REFRESH
+    // =====================================================
+
+    c.refreshStudents = function() {
+
+        c.server.update();
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   DSO STUDENT DIRECTORY
+   FULL SCREEN
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN WORKSPACE
+   ========================================================= */
+
+.vg-workspace-container {
+
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    background: #f4f7fb;
+
+    color: #2b3674;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   HERO BANNER
+   ========================================================= */
+
+.vg-hero-banner {
+
+    width: 100%;
+    min-height: 120px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 25px 30px;
+
+    margin-bottom: 25px;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            135deg,
+            #071a35 0%,
+            #0b3470 55%,
+            #075fc5 100%
+        );
+
+    border-radius: 14px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 28px
+        rgba(9, 30, 58, 0.18);
+
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.hero-content {
+
+    flex: 1;
+    min-width: 0;
+
+}
+
+
+.hero-content h2 {
+
+    margin: 0 0 7px 0;
+
+    padding: 0;
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    line-height: 32px;
+
+    font-weight: 700;
+
+}
+
+
+.hero-content p {
+
+    margin: 0;
+
+    color:
+        rgba(255,255,255,0.82);
+
+    font-size: 13px;
+
+    line-height: 20px;
+
+}
+
+
+/* =========================================================
+   METRIC ROW
+   ========================================================= */
+
+.metric-row {
+
+    margin:
+        0 -8px 25px -8px;
+
+}
+
+
+.metric-row &gt; [class*="col-"] {
+
+    padding:
+        0 8px;
+
+    margin-bottom:
+        16px;
+
+}
+
+
+/* =========================================================
+   METRIC CARD
+   ========================================================= */
+
+.vg-metric-card {
+
+    width: 100%;
+
+    min-height: 108px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding:
+        18px 20px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e8eef7;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.045);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.vg-metric-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(0,0,0,0.08);
+
+}
+
+
+/* =========================================================
+   METRIC ICON
+   ========================================================= */
+
+.metric-icon {
+
+    width: 54px;
+    height: 54px;
+
+    min-width: 54px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+
+}
+
+
+.blue-circle {
+
+    background: #e8f0fe;
+
+    color: #0066ff;
+
+}
+
+
+.green-circle {
+
+    background: #e6f4ea;
+
+    color: #00a86b;
+
+}
+
+
+.orange-circle {
+
+    background: #fff4df;
+
+    color: #f59e0b;
+
+}
+
+
+.red-circle {
+
+    background: #fde8e8;
+
+    color: #e53935;
+
+}
+
+
+/* =========================================================
+   METRIC DATA
+   ========================================================= */
+
+.metric-data {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.metric-number {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 25px;
+
+    line-height: 28px;
+
+    font-weight: 700;
+
+}
+
+
+.metric-label {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #8f9bba;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+}
+
+
+.metric-subtext {
+
+    display: block;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================================
+   TEXT COLORS
+   ========================================================= */
+
+.text-blue {
+
+    color: #0066ff !important;
+
+}
+
+
+.text-green {
+
+    color: #00a86b !important;
+
+}
+
+
+.text-orange {
+
+    color: #f59e0b !important;
+
+}
+
+
+.text-red {
+
+    color: #e53935 !important;
+
+}
+
+
+/* =========================================================
+   MAIN TABLE CARD
+   ========================================================= */
+
+.vg-card {
+
+    width: 100%;
+
+    margin-top: 0;
+
+    padding:
+        22px 24px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e8eef7;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(0,0,0,0.045);
+
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.vg-card-header {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding-bottom: 17px;
+
+    margin-bottom: 5px;
+
+    border-bottom:
+        1px solid #edf2f8;
+
+    box-sizing: border-box;
+
+}
+
+
+.header-left {
+
+    min-width: 0;
+
+}
+
+
+.header-left h4 {
+
+    margin: 0;
+
+    padding: 0;
+
+    color: #172554;
+
+    font-size: 17px;
+
+    line-height: 24px;
+
+    font-weight: 700;
+
+}
+
+
+.header-left h4 i {
+
+    margin-right: 8px;
+
+    color: #0066ff;
+
+}
+
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =========================================================
+   FILTER PILLS
+   ========================================================= */
+
+.filter-pills {
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 3px;
+
+    background: #f1f5fb;
+
+    border-radius: 8px;
+
+}
+
+
+.filter-pills .btn {
+
+    border: none;
+
+    background: transparent;
+
+    color: #8f9bba;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 20px;
+
+    padding: 5px 12px;
+
+    border-radius: 6px;
+
+    box-shadow: none;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+
+}
+
+
+.filter-pills .btn:hover {
+
+    background: #e3ebf8;
+
+    color: #0066ff;
+
+}
+
+
+.filter-pills .btn.active {
+
+    background: #ffffff;
+
+    color: #0066ff;
+
+    box-shadow:
+        0 2px 7px
+        rgba(0,0,0,0.07);
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-wrapper {
+
+    position: relative;
+
+    width: 250px;
+
+    flex-shrink: 0;
+
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 11px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    z-index: 2;
+
+    color: #8f9bba;
+
+    font-size: 12px;
+
+    pointer-events: none;
+
+}
+
+
+.search-input {
+
+    width: 100% !important;
+
+    height: 36px;
+
+    padding:
+        7px 10px 7px 30px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid #dfe7f2;
+
+    border-radius: 8px;
+
+    background: #f6f9fd;
+
+    color: #2b3674;
+
+    font-size: 12px;
+
+    box-shadow: none;
+
+    outline: none;
+
+}
+
+
+.search-input:focus {
+
+    background: #ffffff;
+
+    border-color: #0066ff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,102,255,0.08);
+
+    outline: none;
+
+}
+
+
+/* =========================================================
+   TABLE RESPONSIVE
+   ========================================================= */
+
+.table-responsive {
+
+    width: 100%;
+
+    margin: 0;
+
+    overflow-x: auto;
+
+    overflow-y: visible;
+
+    border: none;
+
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-table {
+
+    width: 100%;
+
+    min-width: 700px;
+
+    margin: 0;
+
+    border: none;
+
+    background: #ffffff;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    table-layout: fixed;
+
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+   ========================================================= */
+
+.vg-table th:nth-child(1) {
+
+    width: 27%;
+
+}
+
+
+.vg-table th:nth-child(2) {
+
+    width: 15%;
+
+}
+
+
+.vg-table th:nth-child(3) {
+
+    width: 28%;
+
+}
+
+
+.vg-table th:nth-child(4) {
+
+    width: 15%;
+
+}
+
+
+.vg-table th:nth-child(5) {
+
+    width: 15%;
+
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.vg-table thead th {
+
+    padding:
+        14px 14px;
+
+    color: #8f9bba;
+
+    background: #ffffff;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+    border-top: none;
+
+    border-bottom:
+        2px solid #eef2f7;
+
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.vg-table tbody td {
+
+    padding:
+        15px 14px;
+
+    color: #2b3674;
+
+    background: #ffffff;
+
+    font-size: 13px;
+
+    line-height: 20px;
+
+    vertical-align: middle;
+
+    border-top:
+        1px solid #f0f4f9;
+
+}
+
+
+.vg-table tbody tr {
+
+    transition:
+        background-color 0.15s ease;
+
+}
+
+
+.vg-table tbody tr:hover td {
+
+    background:
+        #f8fbff;
+
+}
+
+
+/* =========================================================
+   STUDENT CELL
+   ========================================================= */
+
+.student-cell {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 180px;
+
+}
+
+
+.student-name {
+
+    display: block;
+
+    color: #172554;
+
+    font-size: 13px;
+
+    line-height: 19px;
+
+    font-weight: 700;
+
+}
+
+
+.student-email {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #8f9bba;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+}
+
+
+/* =========================================================
+   VISA TYPE
+   ========================================================= */
+
+.type-badge {
+
+    display: inline-block;
+
+    padding:
+        5px 9px;
+
+    background:
+        #eef5ff;
+
+    color:
+        #075fc5;
+
+    border:
+        1px solid #d7e7ff;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   PROGRAM
+   ========================================================= */
+
+.program-text {
+
+    color: #4a5568;
+
+    font-size: 12px;
+
+    line-height: 18px;
+
+}
+
+
+/* =========================================================
+   STATUS PILL
+   ========================================================= */
+
+.status-pill {
+
+    display: inline-block;
+
+    padding:
+        5px 11px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+.pill-green {
+
+    background:
+        #e6f6ee;
+
+    color:
+        #00945e;
+
+}
+
+
+.pill-orange {
+
+    background:
+        #fff4df;
+
+    color:
+        #e88a00;
+
+}
+
+
+.pill-red {
+
+    background:
+        #fde8e8;
+
+    color:
+        #dc3030;
+
+}
+
+
+/* =========================================================
+   RISK PILL
+   ========================================================= */
+
+.risk-pill {
+
+    display: inline-block;
+
+    padding:
+        5px 11px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    line-height: 16px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+.risk-low {
+
+    background:
+        #e6f6ee;
+
+    color:
+        #00945e;
+
+}
+
+
+.risk-med {
+
+    background:
+        #fff4df;
+
+    color:
+        #e88a00;
+
+}
+
+
+.risk-high {
+
+    background:
+        #fde8e8;
+
+    color:
+        #dc3030;
+
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+   ========================================================= */
+
+.pad-lg {
+
+    padding:
+        50px 30px !important;
+
+}
+
+
+.vg-table .text-muted {
+
+    color: #8f9bba;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   REMOVE BOOTSTRAP BORDERS
+   ========================================================= */
+
+.vg-table &gt; tbody &gt; tr &gt; td,
+.vg-table &gt; tbody &gt; tr &gt; th,
+.vg-table &gt; tfoot &gt; tr &gt; td,
+.vg-table &gt; tfoot &gt; tr &gt; th,
+.vg-table &gt; thead &gt; tr &gt; td,
+.vg-table &gt; thead &gt; tr &gt; th {
+
+    border-top: none;
+
+}
+
+
+.vg-table tbody tr td {
+
+    border-top:
+        1px solid #f0f4f9;
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    .vg-workspace-container {
+
+        padding: 0;
+
+    }
+
+
+    .vg-hero-banner {
+
+        min-height:
+            135px;
+
+        padding:
+            28px 34px;
+
+    }
+
+
+    .hero-content h2 {
+
+        font-size:
+            27px;
+
+    }
+
+
+    .hero-content p {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .vg-metric-card {
+
+        min-height:
+            115px;
+
+    }
+
+
+    .vg-card {
+
+        padding:
+            24px 28px;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .vg-workspace-container {
+
+        padding: 0;
+
+    }
+
+
+    .vg-card-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .header-right {
+
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+
+    }
+
+
+    .search-wrapper {
+
+        width:
+            260px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-workspace-container {
+
+        padding: 0;
+
+    }
+
+
+    .vg-hero-banner {
+
+        padding:
+            22px;
+
+    }
+
+
+    .header-right {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+        gap:
+            10px;
+
+    }
+
+
+    .filter-pills {
+
+        width:
+            100%;
+
+    }
+
+
+    .filter-pills .btn {
+
+        flex:
+            1;
+
+    }
+
+
+    .search-wrapper {
+
+        width:
+            100%;
+
+    }
+
+
+    .vg-card {
+
+        padding:
+            18px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .vg-workspace-container {
+
+        padding: 0;
+
+    }
+
+
+    .vg-hero-banner {
+
+        margin-bottom:
+            14px;
+
+        padding:
+            18px;
+
+        border-radius:
+            9px;
+
+    }
+
+
+    .hero-content h2 {
+
+        font-size:
+            20px;
+
+        line-height:
+            27px;
+
+    }
+
+
+    .hero-content p {
+
+        font-size:
+            11px;
+
+        line-height:
+            17px;
+
+    }
+
+
+    .metric-row {
+
+        margin:
+            0 -5px 15px -5px;
+
+    }
+
+
+    .metric-row &gt; [class*="col-"] {
+
+        padding:
+            0 5px;
+
+        margin-bottom:
+            10px;
+
+    }
+
+
+    .vg-metric-card {
+
+        min-height:
+            95px;
+
+        padding:
+            14px;
+
+        gap:
+            11px;
+
+    }
+
+
+    .metric-icon {
+
+        width:
+            44px;
+
+        height:
+            44px;
+
+        min-width:
+            44px;
+
+        font-size:
+            17px;
+
+    }
+
+
+    .metric-number {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .metric-label {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .metric-subtext {
+
+        font-size:
+            9px;
+
+    }
+
+
+    .vg-card {
+
+        padding:
+            14px;
+
+        border-radius:
+            9px;
+
+    }
+
+
+    .header-left h4 {
+
+        font-size:
+            15px;
+
+    }
+
+
+    .vg-table {
+
+        min-width:
+            700px;
+
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 450px) {
+
+    .vg-metric-card {
+
+        min-height:
+            85px;
+
+        padding:
+            11px;
+
+    }
+
+
+    .metric-icon {
+
+        width:
+            38px;
+
+        height:
+            38px;
+
+        min-width:
+            38px;
+
+        font-size:
+            15px;
+
+    }
+
+
+    .metric-number {
+
+        font-size:
+            19px;
+
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>ds0_students</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>DS0 Students</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.students = [];
+
+    data.total_students = 0;
+    data.active_students = 0;
+    data.pending_students = 0;
+    data.high_risk_students = 0;
+
+
+    // =====================================================
+    // STUDENT PROFILE TABLE
+    // =====================================================
+
+    var studentGR = new GlideRecord(
+        "x_snc_visaguardi_0_student_profile"
+    );
+
+
+    // =====================================================
+    // GET ALL STUDENT PROFILES
+    // =====================================================
+
+    studentGR.orderBy("first_name");
+
+    studentGR.query();
+
+
+    // =====================================================
+    // LOOP THROUGH STUDENTS
+    // =====================================================
+
+    while (studentGR.next()) {
+
+        var student = {};
+
+
+        // =================================================
+        // BASIC INFORMATION
+        // =================================================
+
+        student.sys_id =
+            studentGR.getUniqueValue();
+
+
+        student.name =
+            (
+                studentGR.getValue("first_name") || ""
+            ) +
+            " " +
+            (
+                studentGR.getValue("last_name") || ""
+            );
+
+
+        student.name =
+            student.name.trim();
+
+
+        // If name is empty, use display value
+
+        if (!student.name) {
+
+            student.name =
+                studentGR.getDisplayValue();
+
+        }
+
+
+        student.email =
+            studentGR.getValue("email") || "";
+
+
+        student.user_name =
+            studentGR.getValue("user_name") || "";
+
+
+        student.student_id =
+            studentGR.getValue("student_id") || "";
+
+
+        student.first_name =
+            studentGR.getValue("first_name") || "";
+
+
+        student.last_name =
+            studentGR.getValue("last_name") || "";
+
+
+        // =================================================
+        // ACADEMIC INFORMATION
+        // =================================================
+
+        student.program =
+            studentGR.getValue("degree_program") || "";
+
+
+        student.degree_level =
+            studentGR.getDisplayValue(
+                "degree_level"
+            ) || "";
+
+
+        student.department =
+            studentGR.getDisplayValue(
+                "department"
+            ) || "";
+
+
+        student.current_semester =
+            studentGR.getValue(
+                "current_semester"
+            ) || "";
+
+
+        student.intake_year =
+            studentGR.getValue(
+                "intake_year"
+            ) || "";
+
+
+        student.university_name =
+            studentGR.getValue(
+                "university_name"
+            ) || "";
+
+
+        // =================================================
+        // IMMIGRATION INFORMATION
+        // =================================================
+
+        student.sevis_id =
+            studentGR.getValue(
+                "sevis_id"
+            ) || "";
+
+
+        student.visa_type =
+            studentGR.getDisplayValue(
+                "visa_type"
+            ) || "Not specified";
+
+
+        student.current_visa_status =
+            studentGR.getDisplayValue(
+                "current_visa_status"
+            ) || "";
+
+
+        student.visa_expiry_date =
+            studentGR.getDisplayValue(
+                "visa_expiry_date"
+            ) || "";
+
+
+        // =================================================
+        // STATUS
+        // =================================================
+
+        /*
+         * Your Student Profile script does not show a
+         * student "status" field.
+         *
+         * Therefore we determine status from the
+         * current visa status.
+         */
+
+        var visaStatus =
+            (
+                student.current_visa_status || ""
+            ).toLowerCase();
+
+
+        if (
+            visaStatus.indexOf("pending") !== -1
+        ) {
+
+            student.status = "Pending";
+
+        } else {
+
+            student.status = "Active";
+
+        }
+
+
+        // =================================================
+        // RISK
+        // =================================================
+
+        /*
+         * Your Student Profile table script does not
+         * currently contain a risk field.
+         *
+         * Until a risk field/logic is added, students
+         * are considered Low risk.
+         */
+
+        student.risk = "Low";
+
+
+        // =================================================
+        // ADD STUDENT
+        // =================================================
+
+        data.students.push(student);
+
+
+        // =================================================
+        // TOTAL
+        // =================================================
+
+        data.total_students++;
+
+
+        // =================================================
+        // ACTIVE
+        // =================================================
+
+        if (
+            student.status === "Active"
+        ) {
+
+            data.active_students++;
+
+        }
+
+
+        // =================================================
+        // PENDING
+        // =================================================
+
+        if (
+            student.status === "Pending"
+        ) {
+
+            data.pending_students++;
+
+        }
+
+
+        // =================================================
+        // HIGH RISK
+        // =================================================
+
+        if (
+            student.risk === "High"
+        ) {
+
+            data.high_risk_students++;
+
+        }
+
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:13:26</sys_created_on>
+        <sys_id>3101e99329e203107f44d6fee5fae3f3</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_name>DS0 Students</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_3101e99329e203107f44d6fee5fae3f3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 12:51:49</sys_updated_on>
+        <template><![CDATA[<div class="vg-workspace-container">
+
+    <!-- =====================================================
+         HERO BANNER
+         ===================================================== -->
+
+    <div class="vg-hero-banner">
+
+        <div class="hero-content">
+
+            <h2>
+                ]]>👥<![CDATA[ Student Directory & Records
+            </h2>
+
+            <p>
+                VisaGuardian AI | Comprehensive international student
+                SEVIS compliance, enrollment, and risk tracking
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         METRIC SUMMARY CARDS
+         ===================================================== -->
+
+    <div class="row metric-row">
+
+        <!-- TOTAL STUDENTS -->
+
+        <div class="col-md-3 col-sm-6">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon blue-circle">
+                    <i class="fa fa-users"></i>
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-blue">
+                        {{c.getCount('All')}}
+                    </span>
+
+                    <span class="metric-label">
+                        TOTAL STUDENTS
+                    </span>
+
+                    <span class="metric-subtext text-blue">
+                        Enrolled this term
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE / COMPLIANT -->
+
+        <div class="col-md-3 col-sm-6">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon green-circle">
+                    <i class="fa fa-check-circle-o"></i>
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-green">
+                        {{c.getCount('Active')}}
+                    </span>
+
+                    <span class="metric-label">
+                        ACTIVE / COMPLIANT
+                    </span>
+
+                    <span class="metric-subtext text-green">
+                        Good SEVIS standing
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING -->
+
+        <div class="col-md-3 col-sm-6">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon orange-circle">
+                    <i class="fa fa-clock-o"></i>
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-orange">
+                        {{c.getCount('Pending')}}
+                    </span>
+
+                    <span class="metric-label">
+                        PENDING I-20 / OPT
+                    </span>
+
+                    <span class="metric-subtext text-orange">
+                        Action required
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HIGH RISK -->
+
+        <div class="col-md-3 col-sm-6">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon red-circle">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-red">
+                        {{c.getHighRiskCount()}}
+                    </span>
+
+                    <span class="metric-label">
+                        HIGH RISK
+                    </span>
+
+                    <span class="metric-subtext text-red">
+                        Compliance alert
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STUDENT TABLE CARD
+         ===================================================== -->
+
+    <div class="vg-card">
+
+        <!-- TABLE HEADER -->
+
+        <div class="vg-card-header">
+
+            <div class="header-left">
+
+                <h4>
+                    <i class="fa fa-graduation-cap"></i>
+                    International Student Roster
+                </h4>
+
+            </div>
+
+
+            <!-- FILTER + SEARCH -->
+
+            <div class="header-right">
+
+                <div class="btn-group filter-pills">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{'active': c.currentFilter === 'ALL'}"
+                        ng-click="c.setFilter('ALL')">
+                        All
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{'active': c.currentFilter === 'Active'}"
+                        ng-click="c.setFilter('Active')">
+                        Active
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{'active': c.currentFilter === 'Pending'}"
+                        ng-click="c.setFilter('Pending')">
+                        Pending
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{'active': c.currentFilter === 'HighRisk'}"
+                        ng-click="c.setFilter('HighRisk')">
+                        High Risk
+                    </button>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search-wrapper">
+
+                    <i class="fa fa-search search-icon"></i>
+
+                    <input
+                        type="text"
+                        class="form-control input-sm search-input"
+                        placeholder="Search student, major..."
+                        ng-model="c.searchQuery">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENT TABLE
+             ================================================= -->
+
+        <div class="table-responsive">
+
+            <table class="table vg-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student Name
+                        </th>
+
+                        <th>
+                            Visa Type
+                        </th>
+
+                        <th>
+                            Major / Program
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Risk Level
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        ng-repeat="student in c.data.students | filter:c.filterStudents">
+
+                        <!-- STUDENT -->
+
+                        <td>
+
+                            <div class="student-cell">
+
+                                <span class="student-name">
+                                    {{student.name}}
+                                </span>
+
+                                <span class="student-email">
+                                    {{student.email}}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- VISA TYPE -->
+
+                        <td>
+
+                            <span class="type-badge">
+                                {{student.visa_type}}
+                            </span>
+
+                        </td>
+
+
+                        <!-- PROGRAM -->
+
+                        <td>
+
+                            <span class="program-text">
+                                {{student.program}}
+                            </span>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="status-pill"
+                                ng-class="{
+                                    'pill-green':
+                                        student.status === 'Active',
+
+                                    'pill-orange':
+                                        student.status === 'Pending',
+
+                                    'pill-red':
+                                        student.status === 'Critical' ||
+                                        student.status === 'Terminated'
+                                }">
+
+                                {{student.status}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- RISK -->
+
+                        <td>
+
+                            <span
+                                class="risk-pill"
+                                ng-class="{
+                                    'risk-low':
+                                        student.risk === 'Low',
+
+                                    'risk-med':
+                                        student.risk === 'Medium',
+
+                                    'risk-high':
+                                        student.risk === 'High'
+                                }">
+
+                                {{student.risk}}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- EMPTY -->
+
+                    <tr
+                        ng-if="
+                            (c.data.students |
+                            filter:c.filterStudents).length === 0
+                        ">
+
+                        <td
+                            colspan="5"
+                            class="text-center text-muted pad-lg">
+
+                            <em>
+                                No students found matching the search criteria.
+                            </em>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>3101e99329e203107f44d6fee5fae3f3</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:13:26</sys_created_on>
+        <sys_id>b901e99329e203107f44d6fee5fae3f6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:13:26</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

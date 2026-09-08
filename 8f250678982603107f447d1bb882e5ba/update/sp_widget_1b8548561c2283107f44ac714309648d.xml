@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>$bg-main: #06111f;
+$bg-panel: #0d1b2f;
+$bg-card: rgba(13, 27, 47, 0.72);
+$surface: #ffffff;
+$surface-soft: #f5f8fc;
+$border: #d7e1ef;
+$border-strong: #86b8ff;
+$text-dark: #172033;
+$text-muted: #62718b;
+$text-light: #d9e7ff;
+$primary: #1f6fff;
+$primary-dark: #0f4fca;
+$success: #1ea672;
+$shadow-lg: 0 24px 60px rgba(5, 17, 34, 0.24);
+$shadow-md: 0 10px 30px rgba(15, 42, 84, 0.12);
+$radius-xl: 24px;
+$radius-lg: 18px;
+$radius-md: 14px;
+$radius-sm: 10px;
+
+.vg-register {
+  min-height: 100vh;
+  padding: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(31, 111, 255, 0.22), transparent 28%),
+    linear-gradient(135deg, #08111d 0%, #0b1830 48%, #11284a 100%);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: $text-dark;
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
+}
+
+.vg-register__shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  background: $surface;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+}
+
+.vg-register__sidebar {
+  padding: 36px 28px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(43, 112, 255, 0.22), transparent 22%),
+    linear-gradient(180deg, #101d34 0%, #132746 100%);
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.vg-brand {
+  margin-bottom: 40px;
+
+  h1 {
+    margin: 18px 0 8px;
+    font-size: 34px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  span {
+    color: #5aa2ff;
+  }
+
+  p {
+    margin: 0;
+    color: rgba(217, 231, 255, 0.8);
+    font-size: 15px;
+  }
+}
+
+.vg-brand__logo {
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.vg-brand__shield {
+  width: 34px;
+  height: 40px;
+  display: inline-block;
+  background: linear-gradient(180deg, #9bc1ff, #2c7dff);
+  clip-path: polygon(50% 0%, 95% 18%, 86% 84%, 50% 100%, 14% 84%, 5% 18%);
+}
+
+.vg-sidebar-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 32px;
+}
+
+.vg-sidebar-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  position: relative;
+
+  strong {
+    display: block;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  small {
+    color: rgba(217, 231, 255, 0.78);
+    font-size: 14px;
+  }
+
+  &amp;.is-active .vg-sidebar-step__count {
+    background: linear-gradient(180deg, #2e84ff, #1f6fff);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(31, 111, 255, 0.4);
+  }
+}
+
+.vg-sidebar-step__count {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #d7e7ff;
+  border: 1px solid rgba(215, 231, 255, 0.28);
+  background: rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+}
+
+.vg-sidebar-card {
+  margin-top: auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(215, 231, 255, 0.1);
+  border-radius: $radius-md;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    color: rgba(217, 231, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+.vg-sidebar-login {
+  padding-top: 28px;
+  text-align: center;
+
+  p {
+    margin: 0 0 8px;
+    color: rgba(217, 231, 255, 0.76);
+  }
+
+  a {
+    font-weight: 600;
+  }
+}
+
+.vg-register__content {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+.vg-register__header {
+  padding: 34px 36px 24px;
+  border-bottom: 1px solid #ebf1f8;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 36px;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #16233a;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+    font-size: 16px;
+  }
+}
+
+.vg-top-steps {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.vg-top-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: $text-muted;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 90px;
+
+  span {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    border: 1px solid $border;
+    background: #fff;
+  }
+
+  &amp;.is-active {
+    color: $primary;
+
+    span {
+      color: #fff;
+      border-color: $primary;
+      background: linear-gradient(180deg, #2f83ff, #1f6fff);
+      box-shadow: 0 10px 18px rgba(31, 111, 255, 0.22);
+    }
+  }
+}
+
+.vg-form {
+  padding: 24px 20px 30px;
+}
+
+.vg-card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  padding: 28px;
+  margin-bottom: 18px;
+  border: 1px solid #e8eef6;
+  border-radius: $radius-lg;
+  background: #fff;
+  box-shadow: $shadow-md;
+}
+
+.vg-card__intro {
+  h3 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    line-height: 1.2;
+    color: #16233a;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+.vg-role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vg-role-option {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 18px;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &amp;:hover {
+    border-color: #abcfff;
+    transform: translateY(-1px);
+  }
+
+  &amp;.is-selected {
+    border-color: $border-strong;
+    box-shadow: 0 0 0 3px rgba(31, 111, 255, 0.12);
+    background: linear-gradient(180deg, #fafdff, #f1f7ff);
+  }
+}
+
+.vg-role-option__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: #edf4ff;
+  color: $primary;
+  flex-shrink: 0;
+}
+
+.vg-role-option__body {
+  strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 18px;
+    color: #16233a;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: $text-muted;
+  }
+}
+
+.vg-form-grid {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+
+  &amp;.vg-form-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  &amp;.vg-form-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.vg-field {
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #23314b;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid $border;
+    border-radius: $radius-sm;
+    background: #fff;
+    color: $text-dark;
+    font-size: 14px;
+    outline: 0;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &amp;::placeholder {
+      color: #93a0b4;
+    }
+
+    &amp;:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(31, 111, 255, 0.12);
+    }
+  }
+}
+
+.vg-password-hint {
+  margin-top: 16px;
+  color: $success;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.vg-role-sections {
+  width: 100%;
+}
+
+.vg-role-panel {
+  padding: 22px;
+  border: 1px solid #e8eef6;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+
+  h4 {
+    margin: 0 0 18px;
+    font-size: 18px;
+    color: #16233a;
+  }
+}
+
+.vg-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.vg-btn {
+  min-width: 140px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 12px;
+  border: 0;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  &amp;.vg-btn--ghost {
+    background: transparent;
+    color: $primary;
+    border: 1px solid #cfe0ff;
+
+    &amp;:hover {
+      background: #f4f8ff;
+    }
+  }
+
+  &amp;.vg-btn--primary {
+    color: #fff;
+    background: linear-gradient(180deg, #2b80ff, #1f6fff);
+    box-shadow: 0 14px 24px rgba(31, 111, 255, 0.24);
+
+    &amp;:hover {
+      background: linear-gradient(180deg, #2374ec, #165edb);
+    }
+  }
+}
+
+.vg-form-footer {
+  margin-top: 18px;
+  text-align: center;
+  color: $text-muted;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1200px) {
+  .vg-register__shell {
+    grid-template-columns: 1fr;
+  }
+
+  .vg-register__sidebar {
+    padding: 28px;
+  }
+
+  .vg-register__header,
+  .vg-card {
+    grid-template-columns: 1fr;
+  }
+
+  .vg-role-grid,
+  .vg-form-grid.vg-form-grid--3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .vg-register {
+    padding: 16px;
+  }
+
+  .vg-register__header {
+    padding: 24px 20px 20px;
+    flex-direction: column;
+
+    h2 {
+      font-size: 28px;
+    }
+  }
+
+  .vg-form {
+    padding: 18px 14px 24px;
+  }
+
+  .vg-card {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .vg-role-grid,
+  .vg-form-grid.vg-form-grid--3,
+  .vg-form-grid.vg-form-grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .vg-form-actions {
+    flex-direction: column;
+  }
+
+  .vg-btn {
+    width: 100%;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>user_registration_page</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>User Registration Page</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 19:59:50</sys_created_on>
+        <sys_id>1b8548561c2283107f44ac714309648d</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>User Registration Page</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_1b8548561c2283107f44ac714309648d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 20:14:34</sys_updated_on>
+        <template><![CDATA[<div class="vg-register">
+  <div class="vg-register__shell">
+    <aside class="vg-register__sidebar">
+      <div class="vg-brand">
+        <div class="vg-brand__logo">
+          <span class="vg-brand__shield"></span>
+        </div>
+        <h1>VisaGuardian <span>AI</span></h1>
+        <p>Your Journey. Our Intelligence.</p>
+      </div>
+
+      <div class="vg-sidebar-steps">
+        <div class="vg-sidebar-step is-active">
+          <span class="vg-sidebar-step__count">1</span>
+          <div>
+            <strong>Create Account</strong>
+            <small>Fill in your details</small>
+          </div>
+        </div>
+
+        <div class="vg-sidebar-step">
+          <span class="vg-sidebar-step__count">2</span>
+          <div>
+            <strong>Verify Email</strong>
+            <small>Verify your email address</small>
+          </div>
+        </div>
+
+        <div class="vg-sidebar-step">
+          <span class="vg-sidebar-step__count">3</span>
+          <div>
+            <strong>Welcome</strong>
+            <small>Access your dashboard</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="vg-sidebar-card">
+        <strong>Your data is secure with us</strong>
+        <p>We use industry-standard security to protect your information.</p>
+      </div>
+
+      <div class="vg-sidebar-login">
+        <p>Already have an account?</p>
+        <a href="">Login here</a>
+      </div>
+    </aside>
+
+    <section class="vg-register__content">
+      <header class="vg-register__header">
+        <div>
+          <h2>Create Your VisaGuardian AI Account</h2>
+          <p>Register as Student, Advisor, or DSO to get started</p>
+        </div>
+
+        <div class="vg-top-steps">
+          <div class="vg-top-step is-active">
+            <span>1</span>
+            <label>Account Details</label>
+          </div>
+          <div class="vg-top-step">
+            <span>2</span>
+            <label>Role Details</label>
+          </div>
+          <div class="vg-top-step">
+            <span>3</span>
+            <label>Review &amp; Submit</label>
+          </div>
+        </div>
+      </header>
+
+      <form class="vg-form" novalidate>
+        <section class="vg-card">
+          <div class="vg-card__intro">
+            <h3>Choose Your Role</h3>
+            <p>Select how you will be using VisaGuardian AI</p>
+          </div>
+
+          <div class="vg-role-grid">
+            <label class="vg-role-option" ng-class="{'is-selected': c.data.role === 'student'}">
+              <input type="radio" name="role" value="student" ng-model="c.data.role" />
+              <div class="vg-role-option__icon">]]>🎓<![CDATA[</div>
+              <div class="vg-role-option__body">
+                <strong>Student</strong>
+                <p>Register as a student to manage your visa journey, applications and documents.</p>
+              </div>
+            </label>
+
+            <label class="vg-role-option" ng-class="{'is-selected': c.data.role === 'advisor'}">
+              <input type="radio" name="role" value="advisor" ng-model="c.data.role" />
+              <div class="vg-role-option__icon">]]>💼<![CDATA[</div>
+              <div class="vg-role-option__body">
+                <strong>Advisor</strong>
+                <p>Register as an advisor to assist students with their visa applications.</p>
+              </div>
+            </label>
+
+            <label class="vg-role-option" ng-class="{'is-selected': c.data.role === 'dso'}">
+              <input type="radio" name="role" value="dso" ng-model="c.data.role" />
+              <div class="vg-role-option__icon">]]>🏛<![CDATA[</div>
+              <div class="vg-role-option__body">
+                <strong>DSO</strong>
+                <p>Register as a DSO to manage institution, students and SEVIS compliance.</p>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <section class="vg-card">
+          <div class="vg-card__intro">
+            <h3>Personal Information</h3>
+            <p>Enter your personal details</p>
+          </div>
+
+          <div class="vg-form-grid vg-form-grid--3">
+            <div class="vg-field">
+              <label>First Name</label>
+              <input type="text" ng-model="c.data.first_name" placeholder="Enter first name" />
+            </div>
+
+            <div class="vg-field">
+              <label>Last Name</label>
+              <input type="text" ng-model="c.data.last_name" placeholder="Enter last name" />
+            </div>
+
+            <div class="vg-field">
+              <label>Email Address</label>
+              <input type="email" ng-model="c.data.email" placeholder="Enter email address" />
+            </div>
+
+            <div class="vg-field">
+              <label>Phone Number</label>
+              <input type="text" ng-model="c.data.phone" placeholder="Enter phone number" />
+            </div>
+          </div>
+        </section>
+
+        <section class="vg-card">
+          <div class="vg-card__intro">
+            <h3>Account Information</h3>
+            <p>Create your login credentials</p>
+          </div>
+
+          <div class="vg-form-grid vg-form-grid--3">
+            <div class="vg-field">
+              <label>Username</label>
+              <input type="text" ng-model="c.data.username" placeholder="Enter username" />
+            </div>
+
+            <div class="vg-field">
+              <label>Password</label>
+              <input type="password" ng-model="c.data.password" placeholder="Create password" />
+            </div>
+
+            <div class="vg-field">
+              <label>Confirm Password</label>
+              <input type="password" ng-model="c.data.confirm_password" placeholder="Confirm password" />
+            </div>
+          </div>
+
+          <div class="vg-password-hint">
+            Password must contain at least 8 characters, including uppercase, lowercase, number and special character.
+          </div>
+        </section>
+
+        <section class="vg-card">
+          <div class="vg-card__intro">
+            <h3>Role Specific Information</h3>
+            <p>Provide details related to your role</p>
+          </div>
+
+          <div class="vg-role-sections">
+            <div class="vg-role-panel" ng-show="c.data.role === 'student' || !c.data.role">
+              <h4>For Students</h4>
+
+              <div class="vg-form-grid vg-form-grid--2">
+                <div class="vg-field">
+                  <label>University</label>
+                  <input type="text" ng-model="c.data.student_university" placeholder="Enter university name" />
+                </div>
+
+                <div class="vg-field">
+                  <label>Student ID</label>
+                  <input type="text" ng-model="c.data.student_id" placeholder="Enter student ID" />
+                </div>
+              </div>
+            </div>
+
+            <div class="vg-role-panel" ng-show="c.data.role === 'advisor'">
+              <h4>For Advisors</h4>
+
+              <div class="vg-form-grid vg-form-grid--2">
+                <div class="vg-field">
+                  <label>Organization</label>
+                  <input type="text" ng-model="c.data.advisor_organization" placeholder="Enter organization name" />
+                </div>
+
+                <div class="vg-field">
+                  <label>Advisor ID</label>
+                  <input type="text" ng-model="c.data.advisor_id" placeholder="Enter advisor ID" />
+                </div>
+              </div>
+            </div>
+
+            <div class="vg-role-panel" ng-show="c.data.role === 'dso'">
+              <h4>For DSO</h4>
+
+              <div class="vg-form-grid vg-form-grid--2">
+                <div class="vg-field">
+                  <label>Institution</label>
+                  <input type="text" ng-model="c.data.dso_institution" placeholder="Enter institution name" />
+                </div>
+
+                <div class="vg-field">
+                  <label>SEVIS ID</label>
+                  <input type="text" ng-model="c.data.dso_sevis_id" placeholder="Enter SEVIS ID" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="vg-form-actions">
+          <button type="button" class="vg-btn vg-btn--ghost">Cancel</button>
+          <button type="submit" class="vg-btn vg-btn--primary">Register</button>
+        </div>
+
+        <div class="vg-form-footer">
+          By creating an account, you agree to our
+          <a href="">Terms of Service</a>
+          and
+          <a href="">Privacy Policy</a>.
+        </div>
+      </form>
+    </section>
+  </div>
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>1b8548561c2283107f44ac714309648d</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 19:59:50</sys_created_on>
+        <sys_id>978548561c2283107f44ac7143096491</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 19:59:50</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="Verification" section_id="6edad334982243107f447d1bb882e5db" sys_domain="global" table="x_snc_visaguardi_0_visa_document" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>verification_status</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:48:43</sys_created_on>
+            <sys_id>d9ac1bf4982243107f447d1bb882e54d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Verification" display_value="Verification" name="x_snc_visaguardi_0_visa_document" sys_domain="global" view="Default view">6edad334982243107f447d1bb882e5db</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:48:43</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>verification_date</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:48:43</sys_created_on>
+            <sys_id>91ac1bf4982243107f447d1bb882e54e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Verification" display_value="Verification" name="x_snc_visaguardi_0_visa_document" sys_domain="global" view="Default view">6edad334982243107f447d1bb882e5db</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:48:43</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>.split</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:48:43</sys_created_on>
+            <sys_id>59ac1bf4982243107f447d1bb882e54e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Verification" display_value="Verification" name="x_snc_visaguardi_0_visa_document" sys_domain="global" view="Default view">6edad334982243107f447d1bb882e5db</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:48:43</sys_updated_on>
+            <sys_user/>
+            <type>.split</type>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>verified_by</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:48:43</sys_created_on>
+            <sys_id>11ac1bf4982243107f447d1bb882e54f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Verification" display_value="Verification" name="x_snc_visaguardi_0_visa_document" sys_domain="global" view="Default view">6edad334982243107f447d1bb882e5db</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:48:43</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption>Verification</caption>
+            <header>false</header>
+            <name>x_snc_visaguardi_0_visa_document</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:40:53</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>6edad334982243107f447d1bb882e5db</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_snc_visaguardi_0_visa_document</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+            <sys_update_name>sys_ui_section_6edad334982243107f447d1bb882e5db</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:40:53</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

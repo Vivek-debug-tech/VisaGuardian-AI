@@ -1,0 +1,2230 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+    var c = this;
+
+    c.loading = true;
+
+    c.$onInit = function() {
+        c.loading = false;
+    };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   MY COMPLIANCE DEADLINES
+   PREMIUM ENTERPRISE UI
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL CONTAINER
+   ========================================================= */
+
+.vg-deadlines-widget,
+.vg-deadlines-widget * {
+    box-sizing: border-box;
+}
+
+
+.vg-deadlines-widget {
+
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #d6e2ee;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #17395f;
+
+    box-shadow:
+        0 6px 18px rgba(0, 45, 90, 0.07);
+
+    transition:
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.vg-deadlines-widget:hover {
+
+    border-color: #c8d9e8;
+
+    box-shadow:
+        0 9px 24px rgba(0, 45, 90, 0.09);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-deadlines-header {
+
+    position: relative;
+
+    min-height: 64px;
+
+    padding: 0 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    background:
+        linear-gradient(
+            120deg,
+            #06376c 0%,
+            #08477f 50%,
+            #0e5892 100%
+        );
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.2px;
+
+    overflow: hidden;
+}
+
+
+/* Header decorative glow */
+
+.vg-deadlines-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+
+    height: 220px;
+
+    right: -80px;
+
+    top: -150px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(89, 177, 235, 0.13);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.vg-deadlines-header .glyphicon {
+
+    position: relative;
+
+    z-index: 1;
+
+    width: 34px;
+
+    height: 34px;
+
+    margin-right: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+    font-size: 16px;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.vg-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        #bdcede
+        #f2f6fa;
+}
+
+
+/* Chrome / Edge scrollbar */
+
+.vg-table-wrapper::-webkit-scrollbar {
+
+    height: 7px;
+}
+
+
+.vg-table-wrapper::-webkit-scrollbar-track {
+
+    background: #f2f6fa;
+}
+
+
+.vg-table-wrapper::-webkit-scrollbar-thumb {
+
+    background: #bdcede;
+
+    border-radius: 10px;
+}
+
+
+.vg-table-wrapper::-webkit-scrollbar-thumb:hover {
+
+    background: #9db5ca;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-deadlines-table {
+
+    width: 100%;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    table-layout: fixed;
+
+    font-size: 13px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.vg-deadlines-table thead th {
+
+    height: 48px;
+
+    padding:
+        0 16px;
+
+    background:
+        #0a3767;
+
+    color: #ffffff;
+
+    text-align: left;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1px;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    vertical-align: middle;
+
+    white-space: nowrap;
+}
+
+
+.vg-deadlines-table thead th:first-child {
+
+    padding-left: 17px;
+}
+
+
+.vg-deadlines-table thead th:last-child {
+
+    border-right: none;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+   TOTAL = 100%
+   ========================================================= */
+
+
+/* Deadline Title */
+
+.vg-deadlines-table th:nth-child(1),
+.vg-deadlines-table td:nth-child(1) {
+
+    width: 23%;
+}
+
+
+/* Case Number */
+
+.vg-deadlines-table th:nth-child(2),
+.vg-deadlines-table td:nth-child(2) {
+
+    width: 17%;
+}
+
+
+/* Category */
+
+.vg-deadlines-table th:nth-child(3),
+.vg-deadlines-table td:nth-child(3) {
+
+    width: 14%;
+}
+
+
+/* Due Date */
+
+.vg-deadlines-table th:nth-child(4),
+.vg-deadlines-table td:nth-child(4) {
+
+    width: 18%;
+}
+
+
+/* Status */
+
+.vg-deadlines-table th:nth-child(5),
+.vg-deadlines-table td:nth-child(5) {
+
+    width: 14%;
+}
+
+
+/* Days Remaining */
+
+.vg-deadlines-table th:nth-child(6),
+.vg-deadlines-table td:nth-child(6) {
+
+    width: 14%;
+
+    min-width: 125px;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.vg-deadlines-table tbody tr {
+
+    background: #ffffff;
+
+    border-bottom:
+        1px solid
+        #e4ebf2;
+
+    transition:
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+/* Alternating rows */
+
+.vg-deadlines-table tbody tr:nth-child(even) {
+
+    background:
+        #f8fafc;
+}
+
+
+/* Hover */
+
+.vg-deadlines-table tbody tr:hover {
+
+    background:
+        #eef6fd;
+
+    box-shadow:
+        inset 3px 0 0 #3c8bc5;
+}
+
+
+/* Last row */
+
+.vg-deadlines-table tbody tr:last-child {
+
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+.vg-deadlines-table td {
+
+    height: 58px;
+
+    padding:
+        10px 16px;
+
+    color:
+        #405a73;
+
+    vertical-align:
+        middle;
+
+    overflow:
+        hidden;
+
+    border-bottom:
+        1px solid
+        #e4ebf2;
+}
+
+
+.vg-deadlines-table tbody tr:last-child td {
+
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   DEADLINE TITLE
+   ========================================================= */
+
+.deadline-title {
+
+    color:
+        #193f68 !important;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+/* =========================================================
+   CASE NUMBER
+   ========================================================= */
+
+.vg-deadlines-table td:nth-child(2) {
+
+    color:
+        #48647e;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+/* =========================================================
+   CATEGORY COLUMN
+   ========================================================= */
+
+.vg-deadlines-table td:nth-child(3) {
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.deadline-date {
+
+    white-space:
+        nowrap;
+
+    color:
+        #607890 !important;
+
+    font-size:
+        12px;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   CATEGORY BADGES
+   ========================================================= */
+
+.category-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        28px;
+
+    padding:
+        5px 11px;
+
+    border-radius:
+        7px;
+
+    color:
+        #ffffff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+
+    line-height:
+        14px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.18);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.category-badge:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 3px 7px
+        rgba(0,70,110,0.13);
+}
+
+
+/* =========================================================
+   CATEGORY - EMPLOYMENT
+   ========================================================= */
+
+.category-employment {
+
+    background:
+        linear-gradient(
+            135deg,
+            #48aeca,
+            #399fbe
+        );
+}
+
+
+/* =========================================================
+   CATEGORY - IMMIGRATION
+   ========================================================= */
+
+.category-immigration {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4cb8d0,
+            #3ca7c2
+        );
+}
+
+
+/* =========================================================
+   CATEGORY - REPORTING
+   ========================================================= */
+
+.category-reporting {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4cb8d0,
+            #3ca7c2
+        );
+}
+
+
+/* =========================================================
+   CATEGORY - IDENTIFICATION
+   ========================================================= */
+
+.category-identification {
+
+    background:
+        linear-gradient(
+            135deg,
+            #4cb8d0,
+            #3ca7c2
+        );
+}
+
+
+/* =========================================================
+   STATUS COLUMN
+   ========================================================= */
+
+.vg-deadlines-table td:nth-child(5) {
+
+    overflow:
+        visible;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        29px;
+
+    padding:
+        5px 11px;
+
+    border-radius:
+        7px;
+
+    color:
+        #ffffff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+
+    line-height:
+        14px;
+
+    max-width:
+        100%;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.17);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.status-badge:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 3px 7px
+        rgba(0,0,0,0.10);
+}
+
+
+/* =========================================================
+   STATUS - URGENT
+   ========================================================= */
+
+.status-urgent {
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9a735,
+            #dc941f
+        );
+}
+
+
+/* =========================================================
+   STATUS - WARNING
+   ========================================================= */
+
+.status-warning {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0ad4e,
+            #e49a31
+        );
+}
+
+
+/* =========================================================
+   STATUS - NORMAL
+   ========================================================= */
+
+.status-normal {
+
+    background:
+        linear-gradient(
+            135deg,
+            #5dbb65,
+            #48a653
+        );
+}
+
+
+/* =========================================================
+   STATUS - ON TRACK
+   ========================================================= */
+
+.status-ontrack {
+
+    background:
+        linear-gradient(
+            135deg,
+            #59b957,
+            #48a64b
+        );
+}
+
+
+/* =========================================================
+   STATUS - OVERDUE
+   ========================================================= */
+
+.status-overdue {
+
+    background:
+        linear-gradient(
+            135deg,
+            #df5956,
+            #d34845
+        );
+
+    box-shadow:
+        0 3px 8px
+        rgba(211,72,69,.12);
+}
+
+
+/* =========================================================
+   DAYS REMAINING
+   ========================================================= */
+
+.days-remaining {
+
+    text-align:
+        center;
+
+    white-space:
+        nowrap;
+
+    font-size:
+        12px;
+
+    padding:
+        11px 8px !important;
+
+    overflow:
+        visible !important;
+
+    font-weight:
+        600;
+}
+
+
+.days-remaining strong {
+
+    font-size:
+        14px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.1px;
+}
+
+
+.days-remaining span {
+
+    margin-left:
+        5px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   DAYS - URGENT
+   ========================================================= */
+
+.days-urgent {
+
+    color:
+        #dd9415 !important;
+}
+
+
+/* =========================================================
+   DAYS - WARNING
+   ========================================================= */
+
+.days-warning {
+
+    color:
+        #d68d12 !important;
+}
+
+
+/* =========================================================
+   DAYS - NORMAL
+   ========================================================= */
+
+.days-normal {
+
+    color:
+        #4c9f52 !important;
+}
+
+
+/* =========================================================
+   DAYS - ON TRACK
+   ========================================================= */
+
+.days-ontrack {
+
+    color:
+        #4c9f52 !important;
+}
+
+
+/* =========================================================
+   DAYS - OVERDUE
+   ========================================================= */
+
+.days-overdue {
+
+    color:
+        #d84e4b !important;
+}
+
+
+/* =========================================================
+   OVERDUE ROW ACCENT
+   Automatically emphasizes overdue records
+   ========================================================= */
+
+.vg-deadlines-table tbody tr:has(.status-overdue) {
+
+    background:
+        linear-gradient(
+            90deg,
+            #fffafa 0%,
+            #ffffff 18%
+        );
+}
+
+
+.vg-deadlines-table tbody tr:has(.status-overdue):hover {
+
+    background:
+        #fff4f4;
+}
+
+
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
+
+.vg-loading {
+
+    text-align:
+        center;
+
+    padding:
+        42px 20px !important;
+
+    color:
+        #71869a !important;
+
+    background:
+        #ffffff;
+}
+
+
+.vg-loading .glyphicon {
+
+    margin-right:
+        7px;
+
+    color:
+        #347fc9;
+
+    animation:
+        vg-spin 1s linear infinite;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-empty {
+
+    text-align:
+        center;
+
+    padding:
+        42px 20px !important;
+
+    color:
+        #5c7186 !important;
+
+    background:
+        #ffffff;
+}
+
+
+.vg-empty .glyphicon {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    margin-right:
+        8px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #e6f6ec;
+
+    color:
+        #48a653;
+
+    font-size:
+        17px;
+}
+
+
+/* =========================================================
+   SPINNER
+   ========================================================= */
+
+@keyframes vg-spin {
+
+    from {
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   TABLE FOOTER FEEL
+   ========================================================= */
+
+.vg-deadlines-table tbody tr:last-child td:first-child {
+
+    border-bottom-left-radius:
+        10px;
+}
+
+
+.vg-deadlines-table tbody tr:last-child td:last-child {
+
+    border-bottom-right-radius:
+        10px;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 1100px) {
+
+    .vg-deadlines-header {
+
+        min-height:
+            60px;
+
+        padding:
+            0 19px;
+    }
+
+
+    .vg-deadlines-table {
+
+        min-width:
+            950px;
+    }
+
+
+    .vg-table-wrapper {
+
+        overflow-x:
+            auto;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media screen and (max-width: 850px) {
+
+    .vg-deadlines-widget {
+
+        border-radius:
+            10px;
+    }
+
+
+    .vg-deadlines-header {
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-deadlines-table {
+
+        min-width:
+            920px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 700px) {
+
+    .vg-deadlines-header {
+
+        min-height:
+            54px;
+
+        padding:
+            0 15px;
+
+        font-size:
+            15px;
+
+        border-radius:
+            0;
+    }
+
+
+    .vg-deadlines-header .glyphicon {
+
+        width:
+            30px;
+
+        height:
+            30px;
+
+        margin-right:
+            9px;
+
+        font-size:
+            14px;
+    }
+
+
+    .vg-deadlines-table {
+
+        min-width:
+            950px;
+
+        font-size:
+            12px;
+    }
+
+
+    .vg-deadlines-table thead th {
+
+        height:
+            46px;
+
+        padding:
+            0 13px;
+
+        font-size:
+            11px;
+    }
+
+
+    .vg-deadlines-table td {
+
+        height:
+            55px;
+
+        padding:
+            9px 13px;
+    }
+
+
+    .deadline-title {
+
+        font-size:
+            12px;
+    }
+
+
+    .category-badge,
+    .status-badge {
+
+        min-height:
+            27px;
+
+        padding:
+            5px 9px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 420px) {
+
+    .vg-deadlines-header {
+
+        min-height:
+            50px;
+
+        font-size:
+            14px;
+    }
+
+
+    .vg-deadlines-table {
+
+        min-width:
+            920px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.vg-deadlines-widget a:focus,
+.vg-deadlines-widget button:focus {
+
+    outline:
+        2px solid
+        #4d90d4;
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+    .vg-deadlines-widget {
+
+        box-shadow:
+            none;
+
+        border:
+            1px solid #ccd6e0;
+    }
+
+
+    .vg-deadlines-table tbody tr:hover {
+
+        background:
+            inherit;
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_my_deadlines</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG My Deadlines</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.deadlines = [];
+    data.error = "";
+
+
+    /* ==========================================
+       TABLES
+       ========================================== */
+
+    var VISA_CASE_TABLE =
+        "x_snc_visaguardi_0_visa_case";
+
+    var STUDENT_PROFILE_TABLE =
+        "x_snc_visaguardi_0_student_profile";
+
+
+    /* ==========================================
+       CURRENT DATE
+       ========================================== */
+
+    var today = new GlideDateTime();
+
+    today.setDisplayValue(
+        today.getLocalDate() + " 00:00:00"
+    );
+
+
+    /* ==========================================
+       FIND LOGGED-IN STUDENT PROFILE
+       ========================================== */
+
+    var student =
+        new GlideRecord(STUDENT_PROFILE_TABLE);
+
+    var profileFound = false;
+
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData(
+            "vg_student_sys_id"
+        );
+
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData(
+            "vg_student_user_name"
+        );
+
+
+    /* ==========================================
+       1. FIND BY SESSION STUDENT SYS_ID
+       ========================================== */
+
+    if (sessionStudentSysId) {
+
+        if (student.get(sessionStudentSysId)) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       2. FALLBACK - SESSION USER NAME
+       ========================================== */
+
+    if (
+        !profileFound &&
+        sessionStudentUserName
+    ) {
+
+        student =
+            new GlideRecord(
+                STUDENT_PROFILE_TABLE
+            );
+
+        student.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       3. FALLBACK - SERVICENOW USER REFERENCE
+       ========================================== */
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+
+        if (userSysId) {
+
+            student =
+                new GlideRecord(
+                    STUDENT_PROFILE_TABLE
+                );
+
+            student.addQuery(
+                "user",
+                userSysId
+            );
+
+            student.setLimit(1);
+
+            student.query();
+
+            if (student.next()) {
+
+                profileFound = true;
+            }
+        }
+    }
+
+
+    /* ==========================================
+       4. FALLBACK - SERVICENOW USER NAME
+       ========================================== */
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                STUDENT_PROFILE_TABLE
+            );
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       PROFILE NOT FOUND
+       ========================================== */
+
+    if (!profileFound) {
+
+        data.error =
+            "Student profile was not found for the logged-in student.";
+
+        return;
+    }
+
+
+    /* ==========================================
+       GET STUDENT PROFILE SYS_ID
+       ========================================== */
+
+    var studentProfileSysId =
+        student.getUniqueValue();
+
+
+    /*
+     * Optional student information.
+     * Useful if we need it later.
+     */
+
+    data.student = {
+
+        sys_id:
+            studentProfileSysId,
+
+        name:
+            student.getDisplayValue("name"),
+
+        student_id:
+            student.getValue("student_id"),
+
+        email:
+            student.getValue("email")
+    };
+
+
+    /* ==========================================
+       GET VISA CASES FOR THIS STUDENT
+       ========================================== */
+
+    var cases =
+        new GlideRecord(
+            VISA_CASE_TABLE
+        );
+
+
+    /*
+     * CRITICAL:
+     *
+     * The Visa Case "student" field
+     * references Student Profiles.
+     *
+     * Therefore we use the Student
+     * Profile sys_id here.
+     */
+    cases.addQuery(
+        "student",
+        studentProfileSysId
+    );
+
+
+    /*
+     * Only active cases.
+     */
+    if (
+        cases.isValidField("active")
+    ) {
+
+        cases.addQuery(
+            "active",
+            true
+        );
+    }
+
+
+    /*
+     * Only cases having a due date.
+     */
+    if (
+        cases.isValidField("due_date")
+    ) {
+
+        cases.addNotNullQuery(
+            "due_date"
+        );
+    }
+
+
+    /*
+     * Earliest deadline first.
+     */
+    cases.orderBy(
+        "due_date"
+    );
+
+
+    cases.query();
+
+
+    /* ==========================================
+       BUILD DEADLINES
+       ========================================== */
+
+    while (cases.next()) {
+
+
+        /* ==========================================
+           CASE INFORMATION
+           ========================================== */
+
+        var caseSysId =
+            cases.getUniqueValue();
+
+
+        var caseNumber =
+            cases.isValidField("number")
+                ? cases.getDisplayValue("number")
+                : caseSysId;
+
+
+        var requestType =
+            getRequestType(cases);
+
+
+        var dueDate =
+            getDueDate(cases);
+
+
+        /*
+         * Safety check.
+         */
+        if (!dueDate) {
+
+            continue;
+        }
+
+
+        /* ==========================================
+           DETERMINE CATEGORY
+           ========================================== */
+
+        var category =
+            getCategory(requestType);
+
+
+        var categoryClass =
+            getCategoryClass(requestType);
+
+
+        /* ==========================================
+           DEADLINE TITLE
+           ========================================== */
+
+        var deadlineTitle =
+            requestType +
+            " Deadline";
+
+
+        /* ==========================================
+           ADD DEADLINE
+           ========================================== */
+
+        addDeadline(
+
+            caseSysId,
+
+            caseNumber,
+
+            deadlineTitle,
+
+            category,
+
+            categoryClass,
+
+            dueDate
+        );
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       ADD DEADLINE
+       ========================================== */
+
+    function addDeadline(
+        caseSysId,
+        caseNumber,
+        title,
+        category,
+        categoryClass,
+        dateString
+    ) {
+
+
+        /* ==========================================
+           CREATE DUE DATE
+           ========================================== */
+
+        // =====================================================
+// CALCULATE CALENDAR DAYS REMAINING
+// =====================================================
+
+var dueDate =
+    new GlideDateTime(
+        dateString + " 00:00:00"
+    );
+
+var todayDate =
+    new GlideDateTime(
+        today.getLocalDate() + " 00:00:00"
+    );
+
+var difference =
+    dueDate.getNumericValue() -
+    todayDate.getNumericValue();
+
+var daysRemaining =
+    Math.round(
+        difference /
+        (1000 * 60 * 60 * 24)
+    );
+
+
+        /* ==========================================
+           DETERMINE STATUS
+           ========================================== */
+
+        var status = "";
+
+        var statusClass = "";
+
+
+        if (daysRemaining < 0) {
+
+            status =
+                "Overdue";
+
+            statusClass =
+                "overdue";
+
+
+        } else if (daysRemaining <= 14) {
+
+            status =
+                "Urgent Action Required";
+
+            statusClass =
+                "urgent";
+
+
+        } else if (daysRemaining <= 30) {
+
+            status =
+                "Upcoming";
+
+            statusClass =
+                "warning";
+
+
+        } else {
+
+            status =
+                "On Track";
+
+            statusClass =
+                "ontrack";
+        }
+
+
+        /* ==========================================
+           ADD DEADLINE RECORD
+           ========================================== */
+
+        data.deadlines.push({
+
+            /*
+             * VISA CASE IDENTIFICATION
+             *
+             * These two fields are important for
+             * Track Case functionality later.
+             */
+
+            case_sys_id:
+                caseSysId,
+
+            case_number:
+                caseNumber,
+
+
+            /*
+             * DEADLINE INFORMATION
+             */
+
+            title:
+                title,
+
+            category:
+                category,
+
+            category_class:
+                categoryClass,
+
+            due_date:
+                dateString,
+
+            days_remaining:
+                daysRemaining,
+
+            status:
+                status,
+
+            status_class:
+                statusClass
+        });
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET DUE DATE
+       ========================================== */
+
+    function getDueDate(gr) {
+
+        if (
+            !gr.isValidField("due_date")
+        ) {
+
+            return "";
+        }
+
+
+        if (
+            !gr.getValue("due_date")
+        ) {
+
+            return "";
+        }
+
+
+        /*
+         * getDisplayValue() returns the
+         * value suitable for displaying
+         * in the portal.
+         */
+        return gr.getDisplayValue(
+            "due_date"
+        );
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET REQUEST TYPE
+       ========================================== */
+
+    function getRequestType(gr) {
+
+
+        /*
+         * Request Category
+         */
+        if (
+            gr.isValidField(
+                "request_category"
+            ) &&
+            gr.getValue(
+                "request_category"
+            )
+        ) {
+
+            return gr.getDisplayValue(
+                "request_category"
+            );
+        }
+
+
+        /*
+         * Contact Type
+         */
+        if (
+            gr.isValidField(
+                "contact_type"
+            ) &&
+            gr.getValue(
+                "contact_type"
+            )
+        ) {
+
+            return gr.getDisplayValue(
+                "contact_type"
+            );
+        }
+
+
+        /*
+         * Short Description
+         */
+        if (
+            gr.isValidField(
+                "short_description"
+            ) &&
+            gr.getValue(
+                "short_description"
+            )
+        ) {
+
+            return gr.getValue(
+                "short_description"
+            );
+        }
+
+
+        return "Visa Request";
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET CATEGORY
+       ========================================== */
+
+    function getCategory(type) {
+
+        var value =
+            (type || "").toLowerCase();
+
+
+        /*
+         * Employment
+         */
+        if (
+            value.indexOf("cpt") >= 0 ||
+            value.indexOf("opt") >= 0 ||
+            value.indexOf("employment") >= 0
+        ) {
+
+            return "Employment";
+        }
+
+
+        /*
+         * Immigration
+         */
+        if (
+            value.indexOf("travel") >= 0 ||
+            value.indexOf("visa") >= 0 ||
+            value.indexOf("immigration") >= 0 ||
+            value.indexOf("extension") >= 0
+        ) {
+
+            return "Immigration";
+        }
+
+
+        /*
+         * Reporting
+         */
+        if (
+            value.indexOf("sevis") >= 0 ||
+            value.indexOf("address") >= 0 ||
+            value.indexOf("semester") >= 0
+        ) {
+
+            return "Reporting";
+        }
+
+
+        /*
+         * Identification
+         */
+        if (
+            value.indexOf("passport") >= 0
+        ) {
+
+            return "Identification";
+        }
+
+
+        return "Visa Services";
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET CATEGORY CSS CLASS
+       ========================================== */
+
+    function getCategoryClass(type) {
+
+        var value =
+            (type || "").toLowerCase();
+
+
+        /*
+         * Employment
+         */
+        if (
+            value.indexOf("cpt") >= 0 ||
+            value.indexOf("opt") >= 0 ||
+            value.indexOf("employment") >= 0
+        ) {
+
+            return "employment";
+        }
+
+
+        /*
+         * Immigration
+         */
+        if (
+            value.indexOf("travel") >= 0 ||
+            value.indexOf("visa") >= 0 ||
+            value.indexOf("immigration") >= 0 ||
+            value.indexOf("extension") >= 0
+        ) {
+
+            return "immigration";
+        }
+
+
+        /*
+         * Reporting
+         */
+        if (
+            value.indexOf("sevis") >= 0 ||
+            value.indexOf("address") >= 0 ||
+            value.indexOf("semester") >= 0
+        ) {
+
+            return "reporting";
+        }
+
+
+        /*
+         * Identification
+         */
+        if (
+            value.indexOf("passport") >= 0
+        ) {
+
+            return "identification";
+        }
+
+
+        return "immigration";
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:56:33</sys_created_on>
+        <sys_id>f6863dbda8e203107f446d9f3e09f611</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>VG My Deadlines</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_f6863dbda8e203107f446d9f3e09f611</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 11:20:59</sys_updated_on>
+        <template><![CDATA[<div class="vg-deadlines-widget">
+
+    <!-- HEADER -->
+    <div class="vg-deadlines-header">
+
+        <span class="glyphicon glyphicon-calendar"></span>
+
+        <span>My Compliance Deadlines</span>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="vg-table-wrapper">
+
+        <table class="vg-deadlines-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Deadline Title</th>
+
+                    <th>Case Number</th>
+
+                    <th>Category</th>
+
+                    <th>Due Date</th>
+
+                    <th>Status</th>
+
+                    <th>Days Remaining</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <!-- ==========================================
+                     LOADING
+                     ========================================== -->
+
+                <tr ng-if="c.loading">
+
+                    <td
+                        colspan="6"
+                        class="vg-loading">
+
+                        <span
+                            class="glyphicon glyphicon-refresh">
+                        </span>
+
+                        Loading deadlines...
+
+                    </td>
+
+                </tr>
+
+
+                <!-- ==========================================
+                     NO DEADLINES
+                     ========================================== -->
+
+                <tr
+                    ng-if="
+                        !c.loading &&
+                        c.data.deadlines.length === 0
+                    ">
+
+                    <td
+                        colspan="6"
+                        class="vg-empty">
+
+                        <span
+                            class="glyphicon glyphicon-ok-circle">
+                        </span>
+
+                        No upcoming compliance deadlines.
+
+                    </td>
+
+                </tr>
+
+
+                <!-- ==========================================
+                     DEADLINES
+                     ========================================== -->
+
+                <tr
+                    ng-repeat="
+                        deadline in c.data.deadlines
+                        track by $index
+                    "
+                    ng-if="!c.loading">
+
+
+                    <!-- ======================================
+                         DEADLINE TITLE
+                         ====================================== -->
+
+                    <td class="deadline-title">
+
+                        <strong>
+                            {{deadline.title}}
+                        </strong>
+
+                    </td>
+
+
+                    <!-- ======================================
+                         CASE NUMBER
+                         ====================================== -->
+
+                    <td class="deadline-case-number">
+
+                        <span
+                            class="case-number-badge">
+
+                            {{deadline.case_number}}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ======================================
+                         CATEGORY
+                         ====================================== -->
+
+                    <td>
+
+                        <span
+                            class="category-badge"
+                            ng-class="
+                                'category-' +
+                                deadline.category_class
+                            ">
+
+                            {{deadline.category}}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ======================================
+                         DUE DATE
+                         ====================================== -->
+
+                    <td class="deadline-date">
+
+                        {{deadline.due_date}}
+
+                    </td>
+
+
+                    <!-- ======================================
+                         STATUS
+                         ====================================== -->
+
+                    <td>
+
+                        <span
+                            class="status-badge"
+                            ng-class="
+                                'status-' +
+                                deadline.status_class
+                            ">
+
+                            {{deadline.status}}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ======================================
+                         DAYS REMAINING
+                         ====================================== -->
+
+                    <td
+                        class="days-remaining"
+                        ng-class="
+                            'days-' +
+                            deadline.status_class
+                        ">
+
+                        <strong>
+
+                            {{deadline.days_remaining}}
+
+                        </strong>
+
+
+                        <span
+                            ng-if="
+                                deadline.days_remaining >= 0
+                            ">
+
+                            days
+
+                        </span>
+
+
+                        <span
+                            ng-if="
+                                deadline.days_remaining < 0
+                            ">
+
+                            overdue
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>f6863dbda8e203107f446d9f3e09f611</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:56:33</sys_created_on>
+        <sys_id>32863dbda8e203107f446d9f3e09f615</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:56:33</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

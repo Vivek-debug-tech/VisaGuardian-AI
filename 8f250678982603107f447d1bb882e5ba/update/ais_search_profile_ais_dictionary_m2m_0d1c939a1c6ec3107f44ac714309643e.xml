@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="ais_search_profile_ais_dictionary_m2m">
+    <ais_search_profile_ais_dictionary_m2m action="INSERT_OR_UPDATE">
+        <dictionary display_value="x_snc_visaguardi_0_now_assist_in_virtual_agent_1181c139a1c6ec3107f44ac714309642f_default_spell_check_dictionary">011c939a1c6ec3107f44ac714309643c</dictionary>
+        <dictionary_reference_qualifier/>
+        <marked_for_deletion>false</marked_for_deletion>
+        <profile display_value="Now Assist in Virtual Agent - 1">741c539a1c6ec3107f44ac71430964bf</profile>
+        <sys_class_name>ais_search_profile_ais_dictionary_m2m</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 11:37:08</sys_created_on>
+        <sys_id>0d1c939a1c6ec3107f44ac714309643e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0_now_assist_in_virtual_agent_1181c139a1c6ec3107f44ac714309642f_default_spell_check_dictionary.Now Assist in Virtual Agent - 1181c139a1c6ec3107f44ac714309642f</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>ais_search_profile_ais_dictionary_m2m_0d1c939a1c6ec3107f44ac714309643e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 11:37:08</sys_updated_on>
+    </ais_search_profile_ais_dictionary_m2m>
+</record_update>

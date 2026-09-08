@@ -1,0 +1,1968 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+
+    var c = this;
+
+    c.loading = false;
+    c.error = "";
+    c.success = "";
+    c.submitted = false;
+
+
+    /* ==========================================
+       INITIAL FORM
+       ========================================== */
+
+    if (!c.data.form) {
+
+        c.data.form = {
+            request_category: "",
+            academic_major: "",
+            description: ""
+        };
+
+    }
+
+
+    if (!c.data.documents) {
+
+        c.data.documents = {};
+
+    }
+
+
+    /* ==========================================
+       CATEGORY CHANGED
+       ========================================== */
+
+    c.categoryChanged = function() {
+
+        c.error = "";
+        c.success = "";
+
+        // Reset checklist
+        c.data.documents = {};
+
+    };
+
+
+    /* ==========================================
+       SUBMIT REQUEST
+       ========================================== */
+
+    c.submitRequest = function() {
+
+        c.error = "";
+        c.success = "";
+
+        var f = c.data.form;
+
+
+        /* REQUIRED CATEGORY */
+
+        if (!f.request_category) {
+
+            c.error =
+                "Please select a request category.";
+
+            return;
+
+        }
+
+
+        /* ACADEMIC MAJOR */
+
+        if (!f.academic_major) {
+
+            c.error =
+                "Please enter your academic major.";
+
+            return;
+
+        }
+
+
+        c.loading = true;
+
+
+        /*
+         * Tell server what operation to perform.
+         */
+
+        c.data.action = "submit_request";
+
+
+        c.server.update().then(function() {
+
+            c.loading = false;
+
+            // Check c.data directly instead of response.data
+            if (c.data.request_success) {
+
+                c.submitted = true;
+                c.success =
+                    c.data.request_message ||
+                    "Your visa request has been submitted successfully.";
+
+            } else {
+
+                c.error =
+                    c.data.request_error ||
+                    "Unable to submit the visa request.";
+
+            }
+
+        }).catch(function(error) {
+
+            c.loading = false;
+            c.error = "An unexpected error occurred while submitting the request.";
+            
+            // Using warn instead of error to avoid triggering the red banner if a real network error happens
+            console.warn("Visa Request Error:", error); 
+
+        });
+            
+
+    };
+
+
+    /* ==========================================
+       RESET
+       ========================================== */
+
+    c.resetForm = function() {
+
+        c.data.form = {
+
+            request_category: "",
+            academic_major: "",
+            description: ""
+
+        };
+
+
+        c.data.documents = {};
+
+        c.data.action = "";
+
+        c.error = "";
+
+        c.success = "";
+
+        c.submitted = false;
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   SERVICENOW CONTAINER OVERRIDES (EDGE-TO-EDGE RESET)
+   ========================================================= */
+
+:host, 
+.page-container, 
+.container, 
+.row, 
+.col-xs-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* =========================================================
+   VISA GUARDIAN AI
+   VISA SERVICE REQUEST
+   PREMIUM ENTERPRISE UI
+   FULL PAGE
+   UI ONLY — NO FUNCTIONALITY CHANGES
+   ========================================================= */
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+.vg-request-wrapper,
+.vg-request-wrapper *,
+.vg-request-wrapper *::before,
+.vg-request-wrapper *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.vg-request-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background:
+        radial-gradient(
+            circle at 92% 4%,
+            rgba(41, 126, 222, 0.13),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 5% 96%,
+            rgba(91, 65, 190, 0.08),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #f8fbff 0%,
+            #f3f7fc 50%,
+            #edf4fa 100%
+        );
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    color: #1c3855;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   SUBTLE BACKGROUND GRID
+   ========================================================= */
+
+.vg-request-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.25;
+    background-image:
+        linear-gradient(
+            rgba(34, 105, 168, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(34, 105, 168, 0.025) 1px,
+            transparent 1px
+        );
+    background-size: 42px 42px;
+}
+
+/* =========================================================
+   DECORATIVE GLOW
+   ========================================================= */
+
+.vg-request-wrapper::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    right: -130px;
+    top: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(37, 124, 218, 0.08);
+    box-shadow: 0 0 80px rgba(32, 123, 224, 0.06);
+    pointer-events: none;
+}
+
+/* =========================================================
+   REQUEST CARD
+   ========================================================= */
+
+.vg-request-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.96);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-request-header {
+    position: relative;
+    width: 100%;
+    min-height: 108px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px 32px;
+    background:
+        linear-gradient(
+            120deg,
+            #062f61 0%,
+            #073f78 45%,
+            #125a9b 100%
+        );
+    color: #ffffff;
+    overflow: hidden;
+}
+
+/* header glow */
+.vg-request-header::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    right: -130px;
+    top: -180px;
+    border-radius: 50%;
+    background: rgba(69, 164, 255, 0.13);
+}
+
+/* second header glow */
+.vg-request-header::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    right: 130px;
+    bottom: -130px;
+    border-radius: 50%;
+    border: 1px solid rgba(111, 190, 255, 0.12);
+}
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.vg-header-icon {
+    position: relative;
+    z-index: 2;
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.16),
+            rgba(255,255,255,.07)
+        );
+    border: 1px solid rgba(255,255,255,.20);
+    color: #ffffff;
+    font-size: 24px;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.10),
+        0 8px 20px rgba(0,0,0,.12);
+}
+
+/* =========================================================
+   HEADER TEXT
+   ========================================================= */
+
+.vg-header-title {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    font-size: 25px;
+    line-height: 31px;
+    font-weight: 750;
+    letter-spacing: -.35px;
+    color: #ffffff;
+}
+
+.vg-header-subtitle {
+    position: relative;
+    z-index: 2;
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 19px;
+    color: rgba(255,255,255,.78);
+}
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.vg-alert {
+    position: relative;
+    z-index: 3;
+    width: calc(100% - 64px);
+    margin: 22px 32px 0;
+    padding: 14px 17px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.vg-success {
+    background:
+        linear-gradient(
+            135deg,
+            #effaf3,
+            #e8f7ed
+        );
+    border: 1px solid #b9e1c5;
+    color: #17723a;
+    box-shadow: 0 5px 15px rgba(30,130,70,.05);
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-error {
+    background:
+        linear-gradient(
+            135deg,
+            #fff5f5,
+            #fff0f0
+        );
+    border: 1px solid #efc1c1;
+    color: #c62828;
+    box-shadow: 0 5px 15px rgba(190,50,50,.05);
+}
+
+/* =========================================================
+   ALERT ICON
+   ========================================================= */
+
+.vg-alert &gt; .glyphicon {
+    margin-top: 2px;
+    font-size: 17px;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.vg-request-card form {
+    width: 100%;
+    padding: 34px 38px 40px;
+}
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.vg-form-group {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+/* =========================================================
+   FORM LABEL
+   ========================================================= */
+
+.vg-form-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: #183b5f;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+}
+
+/* =========================================================
+   REQUIRED
+   ========================================================= */
+
+.required {
+    color: #e53935;
+    margin-left: 3px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   COMMON FORM CONTROLS
+   ========================================================= */
+
+.vg-input,
+.vg-select,
+.vg-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbdbea;
+    border-radius: 10px;
+    background: #fbfdff;
+    color: #1f405f;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(31,66,100,.025);
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease,
+        transform .15s ease;
+}
+
+/* =========================================================
+   INPUT / SELECT
+   ========================================================= */
+
+.vg-input,
+.vg-select {
+    height: 49px;
+    padding: 11px 15px;
+}
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.vg-textarea {
+    min-height: 145px;
+    padding: 13px 15px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+/* =========================================================
+   PLACEHOLDER
+   ========================================================= */
+
+.vg-input::placeholder,
+.vg-textarea::placeholder {
+    color: #9aaabd;
+    opacity: 1;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.vg-input:hover,
+.vg-select:hover,
+.vg-textarea:hover {
+    border-color: #a8bfd5;
+    background: #ffffff;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.vg-input:focus,
+.vg-select:focus,
+.vg-textarea:focus {
+    border-color: #2182d0;
+    background: #ffffff;
+    box-shadow:
+        0 0 0 3px rgba(33,130,208,.10),
+        0 4px 12px rgba(33,130,208,.05);
+    outline: none;
+}
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.vg-select {
+    cursor: pointer;
+}
+
+/* =========================================================
+   CATEGORY DESCRIPTION
+   ========================================================= */
+
+.vg-category-description {
+    margin-top: 10px;
+    padding: 12px 15px;
+    background:
+        linear-gradient(
+            135deg,
+            #f0f7fd,
+            #f6faff
+        );
+    border: 1px solid #d7e8f5;
+    border-left: 3px solid #2583c7;
+    border-radius: 8px;
+    color: #526d84;
+    font-size: 12px;
+    line-height: 19px;
+}
+
+/* =========================================================
+   DOCUMENT BOX
+   ========================================================= */
+
+.vg-document-box {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 27px;
+    padding: 21px;
+    background:
+        linear-gradient(
+            145deg,
+            #f2f7fb,
+            #edf4f9
+        );
+    border: 1px solid #d8e5ee;
+    border-radius: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+}
+
+/* =========================================================
+   DOCUMENT TITLE
+   ========================================================= */
+
+.vg-document-title {
+    color: #183b5f;
+    font-size: 16px;
+    font-weight: 750;
+    line-height: 22px;
+    margin-bottom: 8px;
+}
+
+/* =========================================================
+   DOCUMENT TITLE ICON
+   ========================================================= */
+
+.vg-document-title .glyphicon {
+    color: #2581c5;
+    margin-right: 8px;
+}
+
+/* =========================================================
+   DOCUMENT DESCRIPTION
+   ========================================================= */
+
+.vg-document-description {
+    color: #71869a;
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 16px;
+}
+
+/* =========================================================
+   CHECKLIST
+   ========================================================= */
+
+.vg-checklist {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px 18px;
+}
+
+/* =========================================================
+   DOCUMENT OPTION
+   ========================================================= */
+
+.vg-checklist label {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 13px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid #d8e4ec;
+    border-radius: 9px;
+    color: #334e68;
+    font-size: 13px;
+    font-weight: 550;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .15s ease,
+        box-shadow .2s ease;
+}
+
+.vg-checklist label:hover {
+    background: #ffffff;
+    border-color: #a9c9e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(30,80,120,.06);
+}
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+
+.vg-checklist input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    margin: 0;
+    accent-color: #187dcc;
+    cursor: pointer;
+}
+
+/* =========================================================
+   REQUIRED LABEL
+   ========================================================= */
+
+.vg-required-label {
+    margin-left: auto;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: #fff0f0;
+    border: 1px solid #f4cccc;
+    color: #c62828;
+    font-size: 9px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   NO DOCUMENTS
+   ========================================================= */
+
+.vg-no-documents {
+    padding: 15px;
+    background: #ffffff;
+    border: 1px dashed #c8d7e3;
+    border-radius: 8px;
+    color: #718497;
+    font-size: 12px;
+    line-height: 19px;
+}
+
+/* =========================================================
+   FORM ACTION AREA
+   ========================================================= */
+
+.vg-request-card form &gt; .vg-submit-button {
+    margin-top: 3px;
+}
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.vg-submit-button {
+    position: relative;
+    width: 100%;
+    height: 52px;
+    border: 0;
+    border-radius: 10px;
+    background:
+        linear-gradient(
+            100deg,
+            #087fa7 0%,
+            #087fba 45%,
+            #2857c7 100%
+        );
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 750;
+    letter-spacing: .05px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow:
+        0 8px 18px rgba(14,104,166,.18),
+        inset 0 1px 0 rgba(255,255,255,.12);
+    transition:
+        transform .18s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+/* button shine */
+.vg-submit-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 70%;
+    height: 100%;
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.12),
+            transparent
+        );
+    transform: skewX(-20deg);
+    transition: left .55s ease;
+}
+
+.vg-submit-button:hover::before {
+    left: 130%;
+}
+
+/* =========================================================
+   SUBMIT HOVER
+   ========================================================= */
+
+.vg-submit-button:hover {
+    filter: brightness(1.04);
+    transform: translateY(-2px);
+    box-shadow:
+        0 12px 25px rgba(14,104,166,.23),
+        inset 0 1px 0 rgba(255,255,255,.14);
+}
+
+/* =========================================================
+   SUBMIT ACTIVE
+   ========================================================= */
+
+.vg-submit-button:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 12px rgba(14,104,166,.18);
+}
+
+/* =========================================================
+   SUBMIT DISABLED
+   ========================================================= */
+
+.vg-submit-button:disabled {
+    opacity: .62;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* =========================================================
+   RESET BUTTON
+   ========================================================= */
+
+.vg-reset-button {
+    width: 100%;
+    height: 46px;
+    margin-top: 11px;
+    background: #ffffff;
+    border: 1px solid #cbd9e5;
+    border-radius: 10px;
+    color: #46647e;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        transform .15s ease;
+}
+
+.vg-reset-button:hover {
+    background: #f5f9fc;
+    border-color: #aabfd1;
+    color: #244e70;
+    transform: translateY(-1px);
+}
+
+.vg-reset-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   SUCCESS ACTIONS
+   ========================================================= */
+
+.vg-success-actions {
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+}
+
+/* =========================================================
+   NEW REQUEST BUTTON
+   ========================================================= */
+
+.vg-new-request-button {
+    min-width: 230px;
+    height: 48px;
+    padding: 0 27px;
+    border: none;
+    border-radius: 10px;
+    background:
+        linear-gradient(
+            100deg,
+            #087fa7,
+            #2857c7
+        );
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(22,102,171,.18);
+    transition: all .2s ease;
+}
+
+.vg-new-request-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 23px rgba(22,102,171,.22);
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.vg-spin {
+    display: inline-block;
+    animation: vg-spin 1s linear infinite;
+}
+
+@keyframes vg-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+    .vg-request-wrapper {
+        padding: 0;
+    }
+
+    .vg-request-header {
+        min-height: 112px;
+        padding: 25px 35px;
+    }
+
+    .vg-header-title {
+        font-size: 27px;
+    }
+
+    .vg-header-subtitle {
+        font-size: 13px;
+    }
+
+    .vg-request-card form {
+        padding: 38px 44px 44px;
+    }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+    .vg-request-wrapper {
+        padding: 0;
+    }
+
+    .vg-request-header {
+        min-height: 92px;
+        padding: 20px 24px;
+    }
+
+    .vg-checklist {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+    .vg-request-wrapper {
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    .vg-request-card {
+        border-radius: 0;
+    }
+
+    .vg-request-header {
+        min-height: 78px;
+        padding: 15px;
+        gap: 11px;
+    }
+
+    .vg-header-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+
+    .vg-header-title {
+        font-size: 17px;
+        line-height: 23px;
+    }
+
+    .vg-header-subtitle {
+        margin-top: 2px;
+        font-size: 10px;
+        line-height: 15px;
+    }
+
+    .vg-alert {
+        width: calc(100% - 24px);
+        margin: 12px;
+        padding: 11px 12px;
+        font-size: 11px;
+    }
+
+    .vg-request-card form {
+        padding: 22px 15px 28px;
+    }
+
+    .vg-form-group {
+        margin-bottom: 18px;
+    }
+
+    .vg-form-group label {
+        margin-bottom: 7px;
+        font-size: 13px;
+    }
+
+    .vg-input,
+    .vg-select {
+        height: 44px;
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+
+    .vg-textarea {
+        min-height: 115px;
+        font-size: 13px;
+    }
+
+    .vg-category-description {
+        font-size: 11px;
+    }
+
+    .vg-document-box {
+        padding: 15px;
+    }
+
+    .vg-document-title {
+        font-size: 14px;
+    }
+
+    .vg-document-description {
+        font-size: 11px;
+    }
+
+    .vg-checklist {
+        grid-template-columns: 1fr;
+    }
+
+    .vg-checklist label {
+        min-height: 45px;
+        font-size: 12px;
+    }
+
+    .vg-submit-button {
+        height: 48px;
+        font-size: 13px;
+    }
+
+    .vg-reset-button {
+        height: 43px;
+    }
+
+    .vg-success-actions {
+        padding: 28px 15px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+    .vg-request-wrapper {
+        padding: 0;
+    }
+
+    .vg-request-header {
+        padding: 13px;
+    }
+
+    .vg-header-title {
+        font-size: 15px;
+    }
+
+    .vg-header-subtitle {
+        font-size: 9px;
+    }
+
+    .vg-request-card form {
+        padding: 18px 12px 23px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_visa_request_form</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Visa Request Form</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function () {
+
+    data.request_success = false;
+    data.request_error = "";
+    data.request_message = "";
+
+    data.form = {
+        request_category: "",
+        academic_major: "",
+        description: ""
+    };
+
+    data.documents = {};
+    data.request_categories = [];
+
+
+    // =====================================================
+    // LOAD ACTIVE REQUEST TYPE CONFIGURATIONS
+    // =====================================================
+
+    var requestConfig = new GlideRecord(
+        "x_snc_visaguardi_0_request_type_configuration"
+    );
+
+    requestConfig.addQuery("active", true);
+    requestConfig.orderBy("display_order");
+    requestConfig.query();
+
+    while (requestConfig.next()) {
+
+        data.request_categories.push({
+
+            value: requestConfig.getValue(
+                "request_type"
+            ),
+
+            label: requestConfig.getDisplayValue(
+                "request_type"
+            ),
+
+            description: requestConfig.getValue(
+                "description"
+            ),
+
+            default_due_days: parseInt(
+                requestConfig.getValue(
+                    "default_due_dates"
+                ) || "0",
+                10
+            )
+        });
+    }
+
+
+    // =====================================================
+    // ONLY CONTINUE WHEN FORM IS SUBMITTED
+    // =====================================================
+
+    if (
+        !input ||
+        input.action !== "submit_request"
+    ) {
+
+        return;
+    }
+
+
+    // =====================================================
+    // READ FORM DATA
+    // =====================================================
+
+    var form =
+        input.form || {};
+
+    var category =
+        String(
+            form.request_category || ""
+        ).trim();
+
+    var major =
+        String(
+            form.academic_major || ""
+        ).trim();
+
+    var description =
+        String(
+            form.description || ""
+        ).trim();
+
+
+    // =====================================================
+    // VALIDATE REQUEST CATEGORY
+    // =====================================================
+
+    if (!category) {
+
+        data.request_error =
+            "Request category is required.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // VALIDATE REQUEST CATEGORY AGAINST
+    // REQUEST TYPE CONFIGURATION
+    // =====================================================
+
+    var categoryConfig =
+        new GlideRecord(
+            "x_snc_visaguardi_0_request_type_configuration"
+        );
+
+    categoryConfig.addQuery(
+        "request_type",
+        category
+    );
+
+    categoryConfig.addQuery(
+        "active",
+        true
+    );
+
+    categoryConfig.setLimit(1);
+    categoryConfig.query();
+
+    if (!categoryConfig.next()) {
+
+        data.request_error =
+            "The selected request category is not currently available.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // VALIDATE ACADEMIC MAJOR
+    // =====================================================
+
+    if (!major) {
+
+        data.request_error =
+            "Academic major is required.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // VALIDATE LOGGED-IN USER
+    // =====================================================
+
+    var userId =
+        gs.getUserID();
+
+    if (
+        !userId ||
+        gs.getUserName() == "guest"
+    ) {
+
+        data.request_error =
+            "You must be logged in as a student to submit a request.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // FIND STUDENT PROFILE
+    // 4 FALLBACK CHECKS
+    // =====================================================
+
+    var studentProfile =
+        new GlideRecord(
+            "x_snc_visaguardi_0_student_profile"
+        );
+
+    var profileFound = false;
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData(
+            "vg_student_sys_id"
+        );
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData(
+            "vg_student_user_name"
+        );
+
+
+    // =====================================================
+    // 1. SESSION STUDENT SYS ID
+    // =====================================================
+
+    if (sessionStudentSysId) {
+
+        if (
+            studentProfile.get(
+                sessionStudentSysId
+            )
+        ) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =====================================================
+    // 2. SESSION STUDENT USER NAME
+    // =====================================================
+
+    if (
+        !profileFound &&
+        sessionStudentUserName
+    ) {
+
+        studentProfile =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        studentProfile.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        studentProfile.setLimit(1);
+        studentProfile.query();
+
+        if (studentProfile.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =====================================================
+    // 3. SERVICENOW USER REFERENCE
+    // =====================================================
+
+    if (!profileFound) {
+
+        studentProfile =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        studentProfile.addQuery(
+            "user",
+            userId
+        );
+
+        studentProfile.setLimit(1);
+        studentProfile.query();
+
+        if (studentProfile.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =====================================================
+    // 4. SERVICENOW USER NAME
+    // =====================================================
+
+    if (!profileFound) {
+
+        studentProfile =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        studentProfile.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        studentProfile.setLimit(1);
+        studentProfile.query();
+
+        if (studentProfile.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =====================================================
+    // PROFILE NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        data.request_error =
+            "Student profile could not be found for your account.";
+
+        gs.error(
+            "VisaGuardian: Student profile not found for user " +
+            gs.getUserName()
+        );
+
+        return;
+    }
+
+
+    var studentProfileId =
+        studentProfile.getUniqueValue();
+
+
+    // =====================================================
+    // CREATE VISA CASE
+    // =====================================================
+
+    var visaCase =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+    if (!visaCase.isValid()) {
+
+        data.request_error =
+            "Visa Cases table could not be found.";
+
+        return;
+    }
+
+    visaCase.initialize();
+
+
+    // =====================================================
+    // SET CASE TYPE
+    // IMPORTANT:
+    // Visa Cases uses "case_type"
+    // =====================================================
+
+    if (
+        visaCase.isValidField(
+            "case_type"
+        )
+    ) {
+
+        visaCase.setValue(
+            "case_type",
+            category
+        );
+
+    } else {
+
+        data.request_error =
+            "The Visa Cases table does not contain the Case Type field.";
+
+        gs.error(
+            "VisaGuardian: case_type field not found on Visa Cases table."
+        );
+
+        return;
+    }
+
+
+    // =====================================================
+    // BUILD DESCRIPTION
+    // =====================================================
+
+    var completeDescription =
+        "Academic Major: " +
+        major +
+        "\n\n" +
+        "Student Visa Request Category: " +
+        category +
+        "\n\n" +
+        "Additional Notes:\n" +
+        description;
+
+
+    if (
+        visaCase.isValidField(
+            "description"
+        )
+    ) {
+
+        visaCase.setValue(
+            "description",
+            completeDescription
+        );
+    }
+
+
+    // =====================================================
+    // CASE STAGE
+    // =====================================================
+
+    if (
+        visaCase.isValidField(
+            "case_stage"
+        )
+    ) {
+
+        visaCase.setValue(
+            "case_stage",
+            "Submitted"
+        );
+    }
+
+
+    // =====================================================
+    // STATE
+    // =====================================================
+
+    if (
+        visaCase.isValidField(
+            "state"
+        )
+    ) {
+
+        visaCase.setValue(
+            "state",
+            "1"
+        );
+    }
+
+
+    // =====================================================
+    // LINK CASE TO STUDENT PROFILE
+    // =====================================================
+
+    if (
+        visaCase.isValidField(
+            "student"
+        )
+    ) {
+
+        visaCase.setValue(
+            "student",
+            studentProfileId
+        );
+    }
+
+
+    // =====================================================
+    // LINK CASE TO SERVICENOW USER
+    // =====================================================
+
+    if (
+        visaCase.isValidField(
+            "opened_for"
+        )
+    ) {
+
+        visaCase.setValue(
+            "opened_for",
+            userId
+        );
+    }
+
+
+    if (
+        visaCase.isValidField(
+            "caller_id"
+        )
+    ) {
+
+        visaCase.setValue(
+            "caller_id",
+            userId
+        );
+    }
+
+
+    // =====================================================
+    // INSERT VISA CASE
+    // =====================================================
+
+    var newSysId =
+        visaCase.insert();
+
+
+    if (!newSysId) {
+
+        data.request_error =
+            "The visa request could not be created.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // GET CASE NUMBER
+    // =====================================================
+
+    var caseNumber =
+        visaCase.getDisplayValue(
+            "number"
+        );
+
+
+    // =====================================================
+    // SUCCESS
+    // =====================================================
+
+    data.request_success = true;
+
+    data.request_message =
+        "Case " +
+        caseNumber +
+        " has been created and submitted to your advisor.";
+
+
+    data.form = {
+
+        request_category:
+            category,
+
+        academic_major:
+            major,
+
+        description:
+            description
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:15:54</sys_created_on>
+        <sys_id>1efa39f9a82603107f446d9f3e09f61d</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>VG Visa Request Form</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_1efa39f9a82603107f446d9f3e09f61d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 12:27:32</sys_updated_on>
+        <template><![CDATA[<div class="vg-request-wrapper">
+
+    <div class="vg-request-card">
+
+        <!-- =====================================================
+             HEADER
+             ===================================================== -->
+
+        <div class="vg-request-header">
+
+            <div class="vg-header-icon">
+                <span class="glyphicon glyphicon-file"></span>
+            </div>
+
+            <div>
+
+                <div class="vg-header-title">
+                    Submit New Visa Service Request
+                </div>
+
+                <div class="vg-header-subtitle">
+                    VisaGuardian AI • International Student Services
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SUCCESS MESSAGE
+             ===================================================== -->
+
+        <div class="vg-alert vg-success"
+             ng-if="c.success">
+
+            <span class="glyphicon glyphicon-ok-circle"></span>
+
+            <div>
+
+                <strong>
+                    Request submitted successfully!
+                </strong>
+
+                <div>
+                    {{c.success}}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             ERROR MESSAGE
+             ===================================================== -->
+
+        <div class="vg-alert vg-error"
+             ng-if="c.error">
+
+            <span class="glyphicon glyphicon-warning-sign"></span>
+
+            <div>
+                {{c.error}}
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FORM
+             ===================================================== -->
+
+        <form ng-submit="c.submitRequest()"
+              ng-if="!c.submitted">
+
+
+            <!-- =================================================
+                 REQUEST CATEGORY
+                 NOW LOADED FROM REQUEST TYPE CONFIGURATION
+                 ================================================= -->
+
+            <div class="vg-form-group">
+
+                <label>
+                    Select Request Category
+                    <span class="required">*</span>
+                </label>
+
+
+                <select
+                    class="form-control vg-select"
+                    ng-model="c.data.form.request_category"
+                    ng-change="c.categoryChanged()"
+                    ng-options="category.value as category.label for category in c.data.request_categories"
+                    required>
+
+                    <option value="">
+                        -- Choose Category --
+                    </option>
+
+                </select>
+
+
+                <!-- SELECTED CATEGORY DESCRIPTION -->
+
+                <div
+                    class="vg-category-description"
+                    ng-if="c.selectedCategory">
+
+                    {{c.selectedCategory.description}}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACADEMIC MAJOR
+                 ================================================= -->
+
+            <div class="vg-form-group">
+
+                <label>
+                    Academic Major
+                </label>
+
+
+                <input
+                    type="text"
+                    class="form-control vg-input"
+                    ng-model="c.data.form.academic_major"
+                    placeholder="Computer Science">
+
+            </div>
+
+
+            <!-- =================================================
+                 ADDITIONAL NOTES
+                 ================================================= -->
+
+            <div class="vg-form-group">
+
+                <label>
+                    Additional Notes / Remarks
+                </label>
+
+
+                <textarea
+                    class="form-control vg-textarea"
+                    rows="4"
+                    ng-model="c.data.form.description"
+                    placeholder="Provide extra context for your advisor...">
+                </textarea>
+
+            </div>
+
+
+            <!-- =================================================
+                 REQUIRED DOCUMENT CHECKLIST
+                 ================================================= -->
+
+            <div
+                class="vg-document-box"
+                ng-if="c.data.form.request_category">
+
+
+                <!-- CHECKLIST HEADER -->
+
+                <div class="vg-document-title">
+
+                    <span class="glyphicon glyphicon-check"></span>
+
+                    Required Document Checklist
+
+                </div>
+
+
+                <div class="vg-document-description">
+
+                    The required supporting documents for this
+                    request category are shown below.
+
+                </div>
+
+
+                <!-- =================================================
+                     DOCUMENTS FROM CONFIGURATION
+                     ================================================= -->
+
+                <div
+                    class="vg-checklist"
+                    ng-if="c.documents && c.documents.length">
+
+
+                    <label
+                        ng-repeat="doc in c.documents track by doc.sys_id"
+                        class="vg-document-option">
+
+
+                        <input
+                            type="checkbox"
+                            ng-model="doc.selected">
+
+
+                        <span>
+                            {{doc.document_type}}
+                        </span>
+
+
+                        <span
+                            class="vg-required-label"
+                            ng-if="doc.required">
+
+                            Required
+
+                        </span>
+
+
+                    </label>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     NO DOCUMENT CONFIGURATION
+                     ================================================= -->
+
+                <div
+                    class="vg-no-documents"
+                    ng-if="!c.documents || !c.documents.length">
+
+                    <span class="glyphicon glyphicon-info-sign"></span>
+
+                    No document requirements have been configured
+                    for this request category.
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT BUTTON
+                 ================================================= -->
+
+            <button
+                type="submit"
+                class="vg-submit-button"
+                ng-disabled="c.loading">
+
+
+                <span ng-if="!c.loading">
+
+                    <span class="glyphicon glyphicon-send"></span>
+
+                    Submit Visa Request
+
+                </span>
+
+
+                <span ng-if="c.loading">
+
+                    <span class="glyphicon glyphicon-refresh vg-spin"></span>
+
+                    Submitting...
+
+                </span>
+
+
+            </button>
+
+
+            <!-- =================================================
+                 RESET BUTTON
+                 ================================================= -->
+
+            <button
+                type="button"
+                class="vg-reset-button"
+                ng-click="c.resetForm()"
+                ng-disabled="c.loading">
+
+                Clear Form
+
+            </button>
+
+        </form>
+
+
+        <!-- =====================================================
+             SUCCESS ACTION
+             ===================================================== -->
+
+        <div
+            class="vg-success-actions"
+            ng-if="c.submitted">
+
+
+            <button
+                class="vg-new-request-button"
+                ng-click="c.resetForm()">
+
+                Submit Another Request
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>1efa39f9a82603107f446d9f3e09f61d</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:15:54</sys_created_on>
+        <sys_id>52fa39f9a82603107f446d9f3e09f621</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:15:54</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

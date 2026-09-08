@@ -1,0 +1,4751 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope) {
+
+    var c = this;
+
+    c.loading = false;
+
+
+    c.refresh = function() {
+
+        c.loading = true;
+
+        c.server.update().then(function(response) {
+
+            c.data = response.data;
+
+            c.loading = false;
+
+        });
+
+    };
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   DSO COMPLIANCE COMMAND CENTER
+   ENTERPRISE UI THEME
+   ========================================================= */
+
+.vg-dashboard {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0 0 40px;
+
+    box-sizing: border-box;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    color: #173f6d;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7faff 0%,
+            #f3f7fb 100%
+        );
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+
+.vg-dashboard *,
+.vg-dashboard *::before,
+.vg-dashboard *::after {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-hero {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 148px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 28px 40px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b2448 0%,
+            #123d73 52%,
+            #1f5b98 100%
+        );
+
+    border-radius: 16px;
+
+    margin-bottom: 26px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(10, 40, 78, .16);
+}
+
+
+/* Decorative glow */
+
+.vg-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    right: -150px;
+    top: -220px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.045);
+
+    pointer-events: none;
+}
+
+
+.vg-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    right: 25%;
+    bottom: -225px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(66,153,225,.08);
+
+    pointer-events: none;
+}
+
+
+/* Hero content */
+
+.vg-hero &gt; div:first-child {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Branding */
+
+.vg-hero-title {
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 4px;
+
+    color:
+        rgba(255,255,255,.78);
+
+    font-size: 13px;
+
+    font-weight: 750;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.vg-hero-title .shield {
+    margin-right: 9px;
+
+    color: #ffffff;
+
+    font-size: 19px;
+}
+
+
+/* Main heading */
+
+.vg-hero h2 {
+    margin: 5px 0 5px;
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    line-height: 1.2;
+
+    font-weight: 750;
+
+    letter-spacing: -.4px;
+}
+
+
+.vg-hero p {
+    margin: 0;
+
+    color:
+        rgba(255,255,255,.78);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* Live status */
+
+.vg-hero-status {
+    position: relative;
+
+    z-index: 3;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 8px 14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+    border-radius: 22px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    color: #ffffff;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    letter-spacing: .5px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.08);
+}
+
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    display: inline-block;
+
+    border-radius: 50%;
+
+    background: #25c875;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(37,200,117,.12);
+}
+
+
+/* =========================================================
+   KPI ROW
+   ========================================================= */
+
+.vg-kpi-row {
+    margin-bottom: 4px;
+}
+
+
+.vg-kpi-row &gt; div {
+    margin-bottom: 20px;
+}
+
+
+/* KPI CARD */
+
+.vg-kpi-card {
+    position: relative;
+
+    min-height: 112px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 21px 22px;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        #dfe8f1;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(22,63,101,.045);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+    overflow: hidden;
+}
+
+
+.vg-kpi-card::after {
+    content: "";
+
+    position: absolute;
+
+    right: -35px;
+    bottom: -45px;
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(40,100,232,.025);
+
+    pointer-events: none;
+}
+
+
+.vg-kpi-card:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #cfdeeb;
+
+    box-shadow:
+        0 11px 25px
+        rgba(22,63,101,.09);
+}
+
+
+/* KPI icons */
+
+.vg-kpi-icon {
+    width: 54px;
+    height: 54px;
+
+    min-width: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+}
+
+
+.vg-kpi-icon.blue {
+    background:
+        #e9f1ff;
+
+    color:
+        #1768ed;
+}
+
+
+.vg-kpi-icon.green {
+    background:
+        #e6f6ed;
+
+    color:
+        #08a968;
+}
+
+
+.vg-kpi-icon.red {
+    background:
+        #fdeaea;
+
+    color:
+        #e95151;
+}
+
+
+.vg-kpi-icon.orange {
+    background:
+        #fff3df;
+
+    color:
+        #f19a3e;
+}
+
+
+/* KPI text */
+
+.vg-kpi-value {
+    position: relative;
+    z-index: 1;
+
+    color:
+        #162f61;
+
+    font-size: 27px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -.4px;
+}
+
+
+.vg-kpi-label {
+    margin-top: 6px;
+
+    color:
+        #8194aa;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .65px;
+
+    text-transform: uppercase;
+}
+
+
+.vg-kpi-sub {
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   THEME COLORS
+   ========================================================= */
+
+.blue-text {
+    color: #1768ed !important;
+}
+
+
+.green-text {
+    color: #08a968 !important;
+}
+
+
+.orange-text {
+    color: #f19a3e !important;
+}
+
+
+.red-text {
+    color: #e95151 !important;
+}
+
+
+/* =========================================================
+   GENERAL CARDS
+   ========================================================= */
+
+.vg-card {
+    position: relative;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #dfe8f1;
+
+    border-radius:
+        14px;
+
+    padding:
+        23px 27px;
+
+    margin-bottom:
+        22px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(22,63,101,.045);
+
+    transition:
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-card:hover {
+    border-color:
+        #d4e1ec;
+
+    box-shadow:
+        0 9px 24px
+        rgba(22,63,101,.065);
+}
+
+
+/* =========================================================
+   SECTION HEADERS
+   ========================================================= */
+
+.vg-card-header,
+.vg-section-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom:
+        15px;
+
+    margin-bottom:
+        17px;
+
+    border-bottom:
+        1px solid
+        #e7edf4;
+}
+
+
+.vg-card-header h3,
+.vg-section-header h3 {
+    margin: 0;
+
+    color:
+        #173f6d;
+
+    font-size:
+        16px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        750;
+}
+
+
+.vg-card-header p,
+.vg-section-header p {
+    margin:
+        5px 0 0;
+
+    color:
+        #8396ab;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.45;
+}
+
+
+.vg-card-header i,
+.vg-section-header i {
+    margin-right:
+        7px;
+
+    color:
+        #1768ed;
+}
+
+
+/* =========================================================
+   COMPLIANCE HEALTH
+   ========================================================= */
+
+.compliance-score {
+    color:
+        #08a968;
+
+    font-size:
+        29px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+}
+
+
+/* Progress */
+
+.progress-track {
+    width: 100%;
+
+    height: 18px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background:
+        #edf2f7;
+
+    box-shadow:
+        inset 0 1px 2px
+        rgba(20,45,70,.04);
+}
+
+
+.progress-value {
+    height: 100%;
+
+    min-width: 0;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #05a96b 0%,
+            #20c27d 100%
+        );
+
+    box-shadow:
+        0 2px 6px
+        rgba(5,169,107,.18);
+
+    transition:
+        width .45s ease;
+}
+
+
+/* Compliance statistics */
+
+.compliance-stats {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-around;
+
+    gap:
+        20px;
+
+    margin-top:
+        20px;
+}
+
+
+.compliance-stat {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+}
+
+
+.compliance-stat strong {
+    display:
+        block;
+
+    color:
+        #173f6d;
+
+    font-size:
+        18px;
+
+    line-height:
+        1;
+}
+
+
+.compliance-stat span:not(
+    .green-dot
+):not(
+    .orange-dot
+):not(
+    .red-dot
+) {
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+}
+
+
+/* Status dots */
+
+.green-dot,
+.orange-dot,
+.red-dot {
+    width:
+        9px;
+
+    height:
+        9px;
+
+    min-width:
+        9px;
+
+    display:
+        inline-block;
+
+    border-radius:
+        50%;
+}
+
+
+.green-dot {
+    background:
+        #08ad70;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(8,173,112,.08);
+}
+
+
+.orange-dot {
+    background:
+        #f19a3e;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(241,154,62,.08);
+}
+
+
+.red-dot {
+    background:
+        #e95151;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(233,81,81,.08);
+}
+
+
+/* =========================================================
+   RISK SNAPSHOT
+   ========================================================= */
+
+.risk-list {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.risk-row {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        16px 5px;
+
+    border-bottom:
+        1px solid
+        #edf1f5;
+
+    transition:
+        background .18s ease;
+}
+
+
+.risk-row:last-child {
+    border-bottom:
+        none;
+}
+
+
+.risk-row:hover {
+    background:
+        #fafcff;
+}
+
+
+.risk-info {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+}
+
+
+.risk-info strong {
+    display:
+        block;
+
+    color:
+        #173f6d;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.risk-info small {
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+}
+
+
+/* Risk icons */
+
+.risk-icon {
+    width:
+        37px;
+
+    height:
+        37px;
+
+    min-width:
+        37px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        10px;
+
+    font-size:
+        14px;
+}
+
+
+.risk-icon.high {
+    background:
+        #fde9e9;
+
+    color:
+        #e95151;
+}
+
+
+.risk-icon.medium {
+    background:
+        #fff2dc;
+
+    color:
+        #f19a3e;
+}
+
+
+.risk-icon.low {
+    background:
+        #e5f6ec;
+
+    color:
+        #08a968;
+}
+
+
+.risk-number {
+    min-width:
+        25px;
+
+    color:
+        #173f6d;
+
+    font-size:
+        19px;
+
+    font-weight:
+        800;
+
+    text-align:
+        right;
+}
+
+
+/* =========================================================
+   DEADLINES
+   ========================================================= */
+
+.deadline-list {
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.deadline-row {
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        90px
+        55px;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    padding:
+        14px 5px;
+
+    border-bottom:
+        1px solid
+        #edf1f5;
+}
+
+
+.deadline-row:last-child {
+    border-bottom:
+        none;
+}
+
+
+.deadline-student {
+    min-width:
+        0;
+}
+
+
+.deadline-student strong {
+    display:
+        block;
+
+    overflow:
+        hidden;
+
+    color:
+        #173f6d;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.deadline-student small {
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+}
+
+
+.deadline-type {
+    color:
+        #647b91;
+
+    font-size:
+        10px;
+}
+
+
+.deadline-days {
+    padding:
+        5px 7px;
+
+    border-radius:
+        6px;
+
+    text-align:
+        center;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+}
+
+
+.deadline-danger {
+    background:
+        #fde9e9;
+
+    color:
+        #e95151;
+}
+
+
+.deadline-warning {
+    background:
+        #fff2dc;
+
+    color:
+        #df861f;
+}
+
+
+.deadline-normal {
+    background:
+        #e9f1ff;
+
+    color:
+        #1768ed;
+}
+
+
+/* =========================================================
+   ADVISOR WORKLOAD
+   ========================================================= */
+
+.advisor-row {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    padding:
+        13px 0;
+
+    border-bottom:
+        1px solid
+        #edf1f5;
+}
+
+
+.advisor-row:last-child {
+    border-bottom:
+        none;
+}
+
+
+.advisor-avatar {
+    width:
+        39px;
+
+    height:
+        39px;
+
+    min-width:
+        39px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #e8f0ff;
+
+    color:
+        #1768ed;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(23,104,237,.04);
+}
+
+
+.advisor-main {
+    flex:
+        1;
+
+    min-width:
+        0;
+}
+
+
+.advisor-main strong {
+    color:
+        #173f6d;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+.advisor-load {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    margin-top:
+        6px;
+}
+
+
+.advisor-load span {
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+
+    white-space:
+        nowrap;
+}
+
+
+.advisor-progress {
+    width:
+        100%;
+
+    height:
+        7px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+    background:
+        #eaf0f6;
+}
+
+
+.advisor-progress-value {
+    height:
+        100%;
+
+    border-radius:
+        10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1768ed,
+            #3983ff
+        );
+
+    transition:
+        width .35s ease;
+}
+
+
+.advisor-status {
+    padding:
+        5px 8px;
+
+    border-radius:
+        7px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+.advisor-status.available {
+    background:
+        #e5f6ec;
+
+    color:
+        #08a968;
+}
+
+
+.advisor-status.busy {
+    background:
+        #fff2dc;
+
+    color:
+        #e28b23;
+}
+
+
+.advisor-status.overloaded {
+    background:
+        #fde9e9;
+
+    color:
+        #e95151;
+}
+
+
+/* =========================================================
+   SLA PERFORMANCE
+   ========================================================= */
+
+.sla-main {
+    min-height:
+        165px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-around;
+
+    gap:
+        30px;
+}
+
+
+/* SLA circle */
+
+.sla-circle {
+    width:
+        128px;
+
+    height:
+        128px;
+
+    min-width:
+        128px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-direction:
+        column;
+
+    border:
+        10px solid
+        #08ad70;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 0 1px
+        rgba(8,173,112,.05),
+        inset 0 0 18px
+        rgba(8,173,112,.025);
+}
+
+
+.sla-circle strong {
+    color:
+        #173f6d;
+
+    font-size:
+        26px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+}
+
+
+.sla-circle span {
+    margin-top:
+        5px;
+
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+}
+
+
+/* SLA details */
+
+.sla-detail {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        15px;
+}
+
+
+.sla-detail:last-child {
+    margin-bottom:
+        0;
+}
+
+
+.sla-detail &gt; span {
+    width:
+        8px;
+
+    height:
+        8px;
+
+    min-width:
+        8px;
+
+    border-radius:
+        50%;
+}
+
+
+.sla-green {
+    background:
+        #08ad70;
+}
+
+
+.sla-orange {
+    background:
+        #f19a3e;
+}
+
+
+.sla-red {
+    background:
+        #e95151;
+}
+
+
+.sla-detail strong {
+    display:
+        block;
+
+    color:
+        #173f6d;
+
+    font-size:
+        14px;
+
+    line-height:
+        1;
+}
+
+
+.sla-detail small {
+    display:
+        block;
+
+    margin-top:
+        4px;
+
+    color:
+        #8799ad;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   PRIORITY ACTIONS
+   ========================================================= */
+
+.priority-card {
+    margin-top:
+        2px;
+}
+
+
+.priority-count,
+.section-count {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-width:
+        29px;
+
+    min-height:
+        27px;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        16px;
+
+    background:
+        #e8f0ff;
+
+    color:
+        #1768ed;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   DASHBOARD TABLE
+   ========================================================= */
+
+.vg-dashboard-table {
+    width:
+        100%;
+
+    margin:
+        0;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+}
+
+
+.vg-dashboard-table th {
+    padding:
+        12px 9px;
+
+    border-top:
+        none !important;
+
+    border-bottom:
+        1px solid
+        #e1e9f1;
+
+    color:
+        #8396aa;
+
+    background:
+        #fbfcfe;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .65px;
+
+    text-transform:
+        uppercase;
+
+    white-space:
+        nowrap;
+}
+
+
+.vg-dashboard-table th:first-child {
+    border-radius:
+        8px 0 0 0;
+}
+
+
+.vg-dashboard-table th:last-child {
+    border-radius:
+        0 8px 0 0;
+}
+
+
+.vg-dashboard-table td {
+    padding:
+        14px 9px;
+
+    border-top:
+        1px solid
+        #edf1f5;
+
+    color:
+        #274a6c;
+
+    font-size:
+        11px;
+
+    vertical-align:
+        middle;
+}
+
+
+.vg-dashboard-table tbody tr {
+    transition:
+        background .18s ease;
+}
+
+
+.vg-dashboard-table tbody tr:hover {
+    background:
+        #f9fbfe;
+}
+
+
+/* Case badge */
+
+.case-badge {
+    display:
+        inline-block;
+
+    padding:
+        5px 8px;
+
+    border-radius:
+        6px;
+
+    background:
+        #e8f0ff;
+
+    color:
+        #1768ed;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+}
+
+
+/* Status / risk badges */
+
+.status-badge,
+.risk-badge {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        14px;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+.status-green,
+.risk-low {
+    background:
+        #e5f6ec;
+
+    color:
+        #08a968;
+}
+
+
+.status-orange,
+.risk-medium {
+    background:
+        #fff2dc;
+
+    color:
+        #e28b23;
+}
+
+
+.status-red,
+.risk-high {
+    background:
+        #fde9e9;
+
+    color:
+        #e95151;
+}
+
+
+/* =========================================================
+   AI COMPLIANCE INSIGHT
+   ========================================================= */
+
+.vg-ai-card {
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        15px;
+
+    padding:
+        21px 24px;
+
+    margin-top:
+        20px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #d8e7ff;
+
+    border-left:
+        5px solid
+        #1768ed;
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef5ff 0%,
+            #f8faff 100%
+        );
+
+    box-shadow:
+        0 6px 18px
+        rgba(23,104,237,.045);
+}
+
+
+.vg-ai-card::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        180px;
+
+    height:
+        180px;
+
+    right:
+        -100px;
+
+    top:
+        -100px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(23,104,237,.045);
+
+    pointer-events:
+        none;
+}
+
+
+.ai-icon {
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    flex-shrink:
+        0;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        10px;
+
+    background:
+        #ffffff;
+
+    font-size:
+        20px;
+
+    box-shadow:
+        0 3px 8px
+        rgba(23,104,237,.08);
+}
+
+
+.ai-content {
+    position:
+        relative;
+
+    z-index:
+        1;
+}
+
+
+.ai-content h3 {
+    margin:
+        0 0 5px;
+
+    color:
+        #173f6d;
+
+    font-size:
+        16px;
+
+    font-weight:
+        750;
+}
+
+
+.ai-content p {
+    margin:
+        0;
+
+    color:
+        #526d87;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.6;
+}
+
+
+.ai-recommendation {
+    margin-top:
+        10px;
+
+    color:
+        #294f72;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+}
+
+
+.ai-recommendation strong {
+    color:
+        #173f6d;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+   ========================================================= */
+
+.empty-state,
+.empty-table {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        130px;
+
+    padding:
+        25px !important;
+
+    color:
+        #8a9bad;
+
+    font-size:
+        11px;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   COLUMN SPACING
+   ========================================================= */
+
+.vg-dashboard .row {
+    margin-left:
+        -10px;
+
+    margin-right:
+        -10px;
+}
+
+
+.vg-dashboard .row &gt; [class*="col-"] {
+    padding-left:
+        10px;
+
+    padding-right:
+        10px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.vg-dashboard ::-webkit-scrollbar {
+    width:
+        7px;
+
+    height:
+        7px;
+}
+
+
+.vg-dashboard ::-webkit-scrollbar-track {
+    background:
+        #f2f5f8;
+
+    border-radius:
+        10px;
+}
+
+
+.vg-dashboard ::-webkit-scrollbar-thumb {
+    background:
+        #c5d2df;
+
+    border-radius:
+        10px;
+}
+
+
+.vg-dashboard ::-webkit-scrollbar-thumb:hover {
+    background:
+        #9fb2c5;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .vg-hero {
+        padding:
+            25px 30px;
+    }
+
+    .vg-kpi-card {
+        padding:
+            18px;
+    }
+
+    .sla-main {
+        gap:
+            15px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .vg-hero {
+        min-height:
+            135px;
+    }
+
+    .vg-hero h2 {
+        font-size:
+            23px;
+    }
+
+    .vg-kpi-card {
+        min-height:
+            100px;
+    }
+
+    .vg-kpi-value {
+        font-size:
+            24px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-dashboard {
+        padding-bottom:
+            25px;
+    }
+
+
+    .vg-hero {
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            17px;
+
+        padding:
+            23px 22px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .vg-hero h2 {
+        font-size:
+            21px;
+    }
+
+
+    .vg-hero p {
+        font-size:
+            11px;
+    }
+
+
+    .vg-hero-status {
+        align-self:
+            flex-start;
+    }
+
+
+    .compliance-stats {
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            13px;
+    }
+
+
+    .sla-main {
+        flex-direction:
+            column;
+
+        justify-content:
+            center;
+
+        gap:
+            25px;
+
+        padding:
+            10px 0;
+    }
+
+
+    .deadline-row {
+        grid-template-columns:
+            minmax(0,1fr)
+            70px
+            48px;
+    }
+
+
+    .vg-card {
+        padding:
+            19px;
+    }
+
+
+    .vg-ai-card {
+        padding:
+            18px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .vg-hero {
+        padding:
+            20px 17px;
+    }
+
+
+    .vg-hero-title {
+        font-size:
+            11px;
+    }
+
+
+    .vg-hero h2 {
+        font-size:
+            19px;
+    }
+
+
+    .vg-hero p {
+        font-size:
+            10px;
+    }
+
+
+    .vg-kpi-card {
+        min-height:
+            94px;
+
+        padding:
+            16px;
+    }
+
+
+    .vg-kpi-icon {
+        width:
+            46px;
+
+        height:
+            46px;
+
+        min-width:
+            46px;
+
+        font-size:
+            17px;
+    }
+
+
+    .vg-kpi-value {
+        font-size:
+            22px;
+    }
+
+
+    .vg-kpi-label {
+        font-size:
+            9px;
+    }
+
+
+    .vg-kpi-sub {
+        font-size:
+            9px;
+    }
+
+
+    .vg-card {
+        padding:
+            16px;
+    }
+
+
+    .vg-card-header,
+    .vg-section-header {
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+    }
+
+
+    .vg-dashboard-table {
+        min-width:
+            650px;
+    }
+
+
+    .vg-dashboard .table-responsive {
+        overflow-x:
+            auto;
+
+        border-radius:
+            8px;
+    }
+
+
+    .deadline-row {
+        grid-template-columns:
+            1fr 65px 45px;
+
+        gap:
+            7px;
+    }
+
+
+    .advisor-status {
+        font-size:
+            8px;
+
+        padding:
+            4px 6px;
+    }
+
+}
+
+
+/* =========================================================
+   FINAL VISUAL POLISH
+   ========================================================= */
+
+.vg-dashboard button,
+.vg-dashboard a {
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+.vg-dashboard button:focus,
+.vg-dashboard a:focus {
+    outline:
+        none;
+}
+
+
+.vg-dashboard strong {
+    font-weight:
+        700;
+}
+
+
+.vg-dashboard .text-muted {
+    color:
+        #8799ad !important;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>dso_dashboard</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>DSO Dashboard</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    /* =====================================================
+       INITIAL DATA
+       ===================================================== */
+
+    data.kpis = {
+        students: 0,
+        compliance: 0,
+        highRisk: 0,
+        deadlines: 0
+    };
+
+
+    data.compliance = {
+        compliant: 0,
+        atRisk: 0,
+        nonCompliant: 0
+    };
+
+
+    data.risk = {
+        high: 0,
+        medium: 0,
+        low: 0
+    };
+
+
+    data.upcomingDeadlines = [];
+
+
+    data.advisors = [];
+
+
+    data.advisorStats = {
+        total: 0
+    };
+
+
+    data.sla = {
+        performance: 0,
+        onTrack: 0,
+        atRisk: 0,
+        breached: 0
+    };
+
+
+    data.priorityActions = [];
+
+
+    data.aiInsight =
+        "No compliance data is currently available.";
+
+
+    data.aiRecommendation =
+        "Review the visa case records and advisor assignments.";
+
+
+
+    /* =====================================================
+       TABLE NAMES
+       ===================================================== */
+
+    var CASE_TABLE =
+        "x_snc_visaguardi_0_visa_case";
+
+
+    var ADVISOR_TABLE =
+        "x_snc_visaguardi_0_advisor_profiles";
+
+		var STUDENT_TABLE =
+    "x_snc_visaguardi_0_student_profile";
+
+    /* =====================================================
+       HELPER
+       FIND EXISTING FIELD
+       ===================================================== */
+
+    function findField(tableName, candidates) {
+
+        var dict =
+            new GlideRecord("sys_dictionary");
+
+
+        dict.addQuery(
+            "name",
+            tableName
+        );
+
+
+        dict.addQuery(
+            "element",
+            "IN",
+            candidates.join(",")
+        );
+
+
+        dict.setLimit(1);
+
+        dict.query();
+
+
+        if (dict.next()) {
+
+            return dict.getValue(
+                "element"
+            );
+
+        }
+
+
+        return "";
+    }
+
+
+
+    /* =====================================================
+       CASE TABLE FIELDS
+       ===================================================== */
+
+    var caseIdField =
+        findField(
+            CASE_TABLE,
+            [
+                "case_id",
+                "number",
+                "u_case_id",
+                "u_number"
+            ]
+        );
+
+
+    var studentField =
+        findField(
+            CASE_TABLE,
+            [
+                "student",
+                "student_name",
+                "u_student",
+                "u_student_name"
+            ]
+        );
+
+
+    var studentIdField =
+        findField(
+            CASE_TABLE,
+            [
+                "student_id",
+                "roll_number",
+                "u_student_id",
+                "u_roll_number"
+            ]
+        );
+
+
+    var statusField =
+        findField(
+            CASE_TABLE,
+            [
+                "status",
+                "state",
+                "case_status",
+                "u_status"
+            ]
+        );
+
+
+    var riskField =
+        findField(
+            CASE_TABLE,
+            [
+                "risk",
+                "risk_level",
+                "risk_score",
+                "u_risk",
+                "u_risk_level"
+            ]
+        );
+
+
+    var priorityField =
+        findField(
+            CASE_TABLE,
+            [
+                "priority",
+                "u_priority"
+            ]
+        );
+
+
+    var visaField =
+        findField(
+            CASE_TABLE,
+            [
+                "visa_type",
+                "visa",
+                "u_visa_type"
+            ]
+        );
+
+
+    var deadlineField =
+        findField(
+            CASE_TABLE,
+            [
+                "deadline",
+                "due_date",
+                "target_date",
+                "expiry_date",
+                "expiration_date",
+                "u_deadline",
+                "u_due_date"
+            ]
+        );
+
+
+    var slaField =
+        findField(
+            CASE_TABLE,
+            [
+                "sla_status",
+                "sla",
+                "sla_state",
+                "u_sla_status"
+            ]
+        );
+
+
+    /* =====================================================
+       ADVISOR FIELD
+       ===================================================== */
+
+    var advisorField =
+        findField(
+            CASE_TABLE,
+            [
+                "advisor",
+                "assigned_advisor",
+                "assigned_to",
+                "advisor_profile",
+                "u_advisor",
+                "u_assigned_advisor"
+            ]
+        );
+
+
+
+    /* =====================================================
+       ADVISOR TABLE FIELDS
+       ===================================================== */
+
+    var advisorNameField =
+        findField(
+            ADVISOR_TABLE,
+            [
+                "name",
+                "advisor_name",
+                "full_name",
+                "u_name",
+                "u_advisor_name"
+            ]
+        );
+
+
+    var advisorEmailField =
+        findField(
+            ADVISOR_TABLE,
+            [
+                "email",
+                "email_address",
+                "u_email"
+            ]
+        );
+
+
+    var advisorUserField =
+        findField(
+            ADVISOR_TABLE,
+            [
+                "user",
+                "sys_user",
+                "advisor_user",
+                "u_user"
+            ]
+        );
+
+
+    var capacityField =
+        findField(
+            ADVISOR_TABLE,
+            [
+                "max_capacity",
+                "capacity",
+                "case_capacity",
+                "maximum_capacity",
+                "u_max_capacity",
+                "u_capacity"
+            ]
+        );
+
+
+    var advisorActiveField =
+        findField(
+            ADVISOR_TABLE,
+            [
+                "active",
+                "u_active"
+            ]
+        );
+
+
+
+    /* =====================================================
+       UTILITY FUNCTIONS
+       ===================================================== */
+
+    function getDisplay(gr, field) {
+
+        if (!field) {
+            return "";
+        }
+
+
+        try {
+
+            return (
+                gr.getDisplayValue(field) ||
+                gr.getValue(field) ||
+                ""
+            );
+
+        } catch (e) {
+
+            return "";
+
+        }
+    }
+
+
+
+    function getValue(gr, field) {
+
+        if (!field) {
+            return "";
+        }
+
+
+        try {
+
+            return (
+                gr.getValue(field) ||
+                ""
+            );
+
+        } catch (e) {
+
+            return "";
+
+        }
+    }
+
+
+
+    function toNumber(value) {
+
+        var n =
+            parseInt(
+                value,
+                10
+            );
+
+
+        if (isNaN(n)) {
+            return 0;
+        }
+
+
+        return n;
+    }
+
+
+
+    function normalize(value) {
+
+        return String(value || "")
+            .toLowerCase()
+            .replace(/[_-]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    }
+
+
+
+    /* =====================================================
+       LOAD VISA CASES
+       ===================================================== */
+
+    var cases = [];
+
+
+    var caseGR =
+        new GlideRecord(
+            CASE_TABLE
+        );
+
+
+    caseGR.query();
+
+
+    while (caseGR.next()) {
+
+        var item = {};
+
+
+        item.sys_id =
+            caseGR.getUniqueValue();
+
+
+
+        /* =================================================
+           CASE ID
+           ================================================= */
+
+        item.case_id =
+            getDisplay(
+                caseGR,
+                caseIdField
+            );
+
+
+        if (!item.case_id) {
+
+            item.case_id =
+                "CASE-" +
+                item.sys_id.substring(0, 6);
+
+        }
+
+
+
+        /* =================================================
+           STUDENT
+           ================================================= */
+
+        item.student =
+            getDisplay(
+                caseGR,
+                studentField
+            );
+
+
+        if (!item.student) {
+
+            item.student =
+                "Unknown Student";
+
+        }
+
+
+
+        /* =================================================
+           STUDENT ID
+           ================================================= */
+
+        item.student_id =
+            getDisplay(
+                caseGR,
+                studentIdField
+            );
+
+
+
+        /* =================================================
+           STATUS
+           ================================================= */
+
+        item.status =
+            getDisplay(
+                caseGR,
+                statusField
+            );
+
+
+        item.statusNormalized =
+            normalize(
+                item.status
+            );
+
+
+
+        /* =================================================
+           RISK
+           ================================================= */
+
+        item.risk =
+            getDisplay(
+                caseGR,
+                riskField
+            );
+
+
+        item.riskNormalized =
+            normalize(
+                item.risk
+            );
+
+
+
+        /* =================================================
+           PRIORITY
+           ================================================= */
+
+        item.priority =
+            getDisplay(
+                caseGR,
+                priorityField
+            );
+
+
+
+        /* =================================================
+           VISA
+           ================================================= */
+
+        item.visa =
+            getDisplay(
+                caseGR,
+                visaField
+            );
+
+
+
+        /* =================================================
+           DEADLINE
+           ================================================= */
+
+        item.deadline =
+            getDisplay(
+                caseGR,
+                deadlineField
+            );
+
+
+        item.deadlineValue =
+            getValue(
+                caseGR,
+                deadlineField
+            );
+
+
+
+        /* =================================================
+           SLA
+           ================================================= */
+
+        item.sla =
+            getDisplay(
+                caseGR,
+                slaField
+            );
+
+
+
+        /* =================================================
+           ADVISOR
+           
+           IMPORTANT:
+           Store BOTH the actual value and display value.
+           ================================================= */
+
+        item.advisorSysId = "";
+
+        item.advisorDisplay = "";
+
+
+        if (advisorField) {
+
+            try {
+
+                item.advisorSysId =
+                    caseGR.getValue(
+                        advisorField
+                    ) || "";
+
+
+                item.advisorDisplay =
+                    caseGR.getDisplayValue(
+                        advisorField
+                    ) || "";
+
+
+            } catch (e) {
+
+                item.advisorSysId = "";
+
+                item.advisorDisplay = "";
+
+            }
+
+        }
+
+
+        cases.push(item);
+
+    }
+
+
+
+    /* =====================================================
+       TOTAL STUDENTS
+       ===================================================== */
+
+   /* =====================================================
+   TOTAL REGISTERED STUDENTS
+   ===================================================== */
+
+data.kpis.students = 0;
+
+var studentGR =
+    new GlideRecord(STUDENT_TABLE);
+
+if (studentGR.isValid()) {
+
+    studentGR.query();
+
+    while (studentGR.next()) {
+
+        data.kpis.students++;
+
+    }
+
+}
+
+
+
+    /* =====================================================
+       RISK CALCULATION
+       ===================================================== */
+
+    for (
+        var r = 0;
+        r < cases.length;
+        r++
+    ) {
+
+        var risk =
+            cases[r].riskNormalized;
+
+
+        if (
+            risk.indexOf("high") >= 0 ||
+            risk.indexOf("critical") >= 0
+        ) {
+
+            data.risk.high++;
+
+
+        } else if (
+            risk.indexOf("medium") >= 0 ||
+            risk.indexOf("moderate") >= 0
+        ) {
+
+            data.risk.medium++;
+
+
+        } else {
+
+            data.risk.low++;
+
+        }
+
+    }
+
+
+    data.kpis.highRisk =
+        data.risk.high;
+
+
+
+    /* =====================================================
+       COMPLIANCE
+       ===================================================== */
+
+    for (
+        var c = 0;
+        c < cases.length;
+        c++
+    ) {
+
+        var status =
+            cases[c].statusNormalized;
+
+
+        var caseRisk =
+            cases[c].riskNormalized;
+
+
+        if (
+            status.indexOf("approved") >= 0 ||
+            status.indexOf("active") >= 0 ||
+            status.indexOf("compliant") >= 0
+        ) {
+
+            data.compliance.compliant++;
+
+
+        } else if (
+            caseRisk.indexOf("high") >= 0 ||
+            caseRisk.indexOf("critical") >= 0 ||
+            status.indexOf("rejected") >= 0 ||
+            status.indexOf("missing") >= 0 ||
+            status.indexOf("terminated") >= 0
+        ) {
+
+            data.compliance.nonCompliant++;
+
+
+        } else {
+
+            data.compliance.atRisk++;
+
+        }
+
+    }
+
+
+    var totalComplianceRecords =
+        data.compliance.compliant +
+        data.compliance.atRisk +
+        data.compliance.nonCompliant;
+
+
+    if (
+        totalComplianceRecords > 0
+    ) {
+
+        data.kpis.compliance =
+            Math.round(
+                (
+                    data.compliance.compliant /
+                    totalComplianceRecords
+                ) * 100
+            );
+
+    }
+
+
+
+    /* =====================================================
+       UPCOMING DEADLINES
+       ===================================================== */
+
+    var today =
+        new GlideDateTime();
+
+
+    for (
+        var d = 0;
+        d < cases.length;
+        d++
+    ) {
+
+        if (
+            !cases[d].deadlineValue
+        ) {
+            continue;
+        }
+
+
+        try {
+
+            var deadlineDate =
+                new GlideDateTime(
+                    cases[d].deadlineValue
+                );
+
+
+            var diff =
+                GlideDateTime.subtract(
+                    deadlineDate,
+                    today
+                );
+
+
+            var days =
+                Math.floor(
+                    diff.getNumericValue() /
+                    86400000
+                );
+
+
+            if (
+                days >= 0 &&
+                days <= 30
+            ) {
+
+                var deadlineType =
+                    cases[d].visa ||
+                    "Compliance";
+
+
+                data.upcomingDeadlines.push({
+
+                    student:
+                        cases[d].student,
+
+                    case_id:
+                        cases[d].case_id,
+
+                    type:
+                        deadlineType,
+
+                    days:
+                        days
+
+                });
+
+
+                data.kpis.deadlines++;
+
+            }
+
+
+        } catch (e) {}
+
+    }
+
+
+
+    data.upcomingDeadlines.sort(
+        function(a, b) {
+
+            return (
+                a.days -
+                b.days
+            );
+
+        }
+    );
+
+
+    data.upcomingDeadlines =
+        data.upcomingDeadlines.slice(
+            0,
+            5
+        );
+
+
+
+    /* =====================================================
+       SLA
+       ===================================================== */
+
+    for (
+        var s = 0;
+        s < cases.length;
+        s++
+    ) {
+
+        var sla =
+            normalize(
+                cases[s].sla
+            );
+
+
+        var statusSla =
+            cases[s].statusNormalized;
+
+
+        if (
+            sla.indexOf("breach") >= 0 ||
+            sla.indexOf("overdue") >= 0 ||
+            statusSla.indexOf("overdue") >= 0
+        ) {
+
+            data.sla.breached++;
+
+
+        } else if (
+            sla.indexOf("risk") >= 0 ||
+            sla.indexOf("warning") >= 0 ||
+            statusSla.indexOf("under review") >= 0
+        ) {
+
+            data.sla.atRisk++;
+
+
+        } else {
+
+            data.sla.onTrack++;
+
+        }
+
+    }
+
+
+    var slaTotal =
+        data.sla.onTrack +
+        data.sla.atRisk +
+        data.sla.breached;
+
+
+    if (
+        slaTotal > 0
+    ) {
+
+        data.sla.performance =
+            Math.round(
+                (
+                    data.sla.onTrack /
+                    slaTotal
+                ) * 100
+            );
+
+    }
+
+
+
+    /* =====================================================
+       LOAD ADVISOR PROFILES
+       ===================================================== */
+
+    var advisorMap = {};
+
+    var advisorNameMap = {};
+
+    var advisorEmailMap = {};
+
+
+    var advisorGR =
+        new GlideRecord(
+            ADVISOR_TABLE
+        );
+
+
+    advisorGR.query();
+
+
+    while (advisorGR.next()) {
+
+        var advisorId =
+            advisorGR.getUniqueValue();
+
+
+
+        /* =================================================
+           ADVISOR NAME
+           ================================================= */
+
+        var advisorName =
+            getDisplay(
+                advisorGR,
+                advisorNameField
+            );
+
+
+        if (
+            !advisorName &&
+            advisorUserField
+        ) {
+
+            advisorName =
+                getDisplay(
+                    advisorGR,
+                    advisorUserField
+                );
+
+        }
+
+
+        if (!advisorName) {
+
+            advisorName =
+                "Advisor";
+
+        }
+
+
+
+        /* =================================================
+           EMAIL
+           ================================================= */
+
+        var email =
+            getDisplay(
+                advisorGR,
+                advisorEmailField
+            );
+
+
+
+        /* =================================================
+           CAPACITY
+           ================================================= */
+
+        var maxCapacity =
+            toNumber(
+                getValue(
+                    advisorGR,
+                    capacityField
+                )
+            );
+
+
+        if (
+            maxCapacity <= 0
+        ) {
+
+            maxCapacity = 20;
+
+        }
+
+
+
+        /* =================================================
+           ACTIVE
+           ================================================= */
+
+        var activeValue = true;
+
+
+        if (
+            advisorActiveField
+        ) {
+
+            var activeRaw =
+                normalize(
+                    getValue(
+                        advisorGR,
+                        advisorActiveField
+                    )
+                );
+
+
+            if (
+                activeRaw === "false" ||
+                activeRaw === "0" ||
+                activeRaw === "no"
+            ) {
+
+                activeValue = false;
+
+            }
+
+        }
+
+
+        if (!activeValue) {
+
+            continue;
+
+        }
+
+
+
+        /* =================================================
+           ADVISOR OBJECT
+           ================================================= */
+
+        var advisorObject = {
+
+            sys_id:
+                advisorId,
+
+            name:
+                advisorName,
+
+            email:
+                email,
+
+            maxCapacity:
+                maxCapacity,
+
+            activeCases:
+                0,
+
+            pending:
+                0
+
+        };
+
+
+
+        /* =================================================
+           MAP BY SYS_ID
+           ================================================= */
+
+        advisorMap[
+            advisorId
+        ] =
+            advisorObject;
+
+
+
+        /* =================================================
+           MAP BY NAME
+           ================================================= */
+
+        advisorNameMap[
+            normalize(
+                advisorName
+            )
+        ] =
+            advisorObject;
+
+
+
+        /* =================================================
+           MAP BY EMAIL
+           ================================================= */
+
+        if (email) {
+
+            advisorEmailMap[
+                normalize(
+                    email
+                )
+            ] =
+                advisorObject;
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       ASSIGN VISA CASES TO ADVISORS
+
+       This is the important corrected section.
+
+       It tries:
+
+       1. Advisor sys_id
+       2. Advisor display name
+       3. Advisor value as name
+       4. Advisor email
+       ===================================================== */
+
+    for (
+        var ac = 0;
+        ac < cases.length;
+        ac++
+    ) {
+
+        var assignedAdvisor =
+            null;
+
+
+        var advisorValue =
+            cases[ac].advisorSysId ||
+            "";
+
+
+        var advisorDisplay =
+            cases[ac].advisorDisplay ||
+            "";
+
+
+
+        /* =================================================
+           MATCH 1 — SYS_ID
+           ================================================= */
+
+        if (
+            advisorValue &&
+            advisorMap[
+                advisorValue
+            ]
+        ) {
+
+            assignedAdvisor =
+                advisorMap[
+                    advisorValue
+                ];
+
+        }
+
+
+
+        /* =================================================
+           MATCH 2 — DISPLAY NAME
+           ================================================= */
+
+        if (
+            !assignedAdvisor &&
+            advisorDisplay
+        ) {
+
+            assignedAdvisor =
+                advisorNameMap[
+                    normalize(
+                        advisorDisplay
+                    )
+                ];
+
+        }
+
+
+
+        /* =================================================
+           MATCH 3 — VALUE AS NAME
+           ================================================= */
+
+        if (
+            !assignedAdvisor &&
+            advisorValue
+        ) {
+
+            assignedAdvisor =
+                advisorNameMap[
+                    normalize(
+                        advisorValue
+                    )
+                ];
+
+        }
+
+
+
+        /* =================================================
+           MATCH 4 — EMAIL
+           ================================================= */
+
+        if (
+            !assignedAdvisor &&
+            advisorDisplay
+        ) {
+
+            assignedAdvisor =
+                advisorEmailMap[
+                    normalize(
+                        advisorDisplay
+                    )
+                ];
+
+        }
+
+
+
+        /* =================================================
+           CASE FOUND FOR ADVISOR
+           ================================================= */
+
+        if (assignedAdvisor) {
+
+            /* ---------------------------------------------
+               ACTIVE CASE COUNT
+               --------------------------------------------- */
+
+            assignedAdvisor.activeCases++;
+
+
+
+            /* ---------------------------------------------
+               CASE STATUS
+               --------------------------------------------- */
+
+            var caseStatus =
+                cases[ac]
+                    .statusNormalized;
+
+
+
+            /* ---------------------------------------------
+               PENDING CASE
+               --------------------------------------------- */
+
+            if (
+
+                caseStatus.indexOf(
+                    "pending"
+                ) >= 0 ||
+
+                caseStatus.indexOf(
+                    "missing"
+                ) >= 0 ||
+
+                caseStatus.indexOf(
+                    "review"
+                ) >= 0
+
+            ) {
+
+                assignedAdvisor.pending++;
+
+            }
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       BUILD ADVISOR DATA
+       ===================================================== */
+
+    for (
+        var aid in advisorMap
+    ) {
+
+        var advisor =
+            advisorMap[aid];
+
+
+
+        /* =================================================
+           CAPACITY
+           ================================================= */
+
+        var capacity =
+            Math.round(
+                (
+                    advisor.activeCases /
+                    advisor.maxCapacity
+                ) * 100
+            );
+
+
+        if (
+            capacity > 100
+        ) {
+
+            capacity = 100;
+
+        }
+
+
+
+        /* =================================================
+           STATUS
+           ================================================= */
+
+        var advisorStatus =
+            "Available";
+
+
+        if (
+            capacity >= 85
+        ) {
+
+            advisorStatus =
+                "Overloaded";
+
+
+        } else if (
+            capacity >= 70
+        ) {
+
+            advisorStatus =
+                "Busy";
+
+        }
+
+
+
+        /* =================================================
+           INITIALS
+           ================================================= */
+
+        var initials =
+            advisor.name
+                .split(" ")
+                .map(
+                    function(part) {
+
+                        return part.charAt(0);
+
+                    }
+                )
+                .join("")
+                .substring(
+                    0,
+                    2
+                )
+                .toUpperCase();
+
+
+
+        /* =================================================
+           SEND TO CLIENT
+           ================================================= */
+
+        data.advisors.push({
+
+            sys_id:
+                advisor.sys_id,
+
+            name:
+                advisor.name,
+
+            email:
+                advisor.email,
+
+            initials:
+                initials,
+
+            activeCases:
+                advisor.activeCases,
+
+            pending:
+                advisor.pending,
+
+            maxCapacity:
+                advisor.maxCapacity,
+
+            capacity:
+                capacity,
+
+            capacity_percent:
+                capacity,
+
+            pending_docs:
+                advisor.pending,
+
+            status:
+                advisorStatus
+
+        });
+
+    }
+
+
+
+    /* =====================================================
+       ADVISOR STATISTICS
+       ===================================================== */
+
+    data.advisorStats.total =
+        data.advisors.length;
+
+
+
+    /* =====================================================
+       SORT ADVISORS
+       Highest workload first
+       ===================================================== */
+
+    data.advisors.sort(
+        function(a, b) {
+
+            return (
+                b.activeCases -
+                a.activeCases
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
+       PRIORITY ACTIONS
+       HIGH RISK + PENDING / MISSING
+       ===================================================== */
+
+    for (
+        var p = 0;
+        p < cases.length;
+        p++
+    ) {
+
+        var pRisk =
+            cases[p].riskNormalized;
+
+
+        var pStatus =
+            cases[p].statusNormalized;
+
+
+        var needsAttention =
+
+            pRisk.indexOf(
+                "high"
+            ) >= 0 ||
+
+            pRisk.indexOf(
+                "critical"
+            ) >= 0 ||
+
+            pStatus.indexOf(
+                "missing"
+            ) >= 0 ||
+
+            pStatus.indexOf(
+                "pending"
+            ) >= 0;
+
+
+        if (
+            needsAttention
+        ) {
+
+            data.priorityActions.push({
+
+                case_id:
+                    cases[p].case_id,
+
+                student:
+                    cases[p].student,
+
+                status:
+                    cases[p].status ||
+                    "Pending",
+
+                risk:
+                    cases[p].risk ||
+                    "Medium",
+
+                priority:
+                    cases[p].priority ||
+                    "Normal",
+
+                deadline:
+                    cases[p].deadline ||
+                    "—"
+
+            });
+
+        }
+
+    }
+
+
+
+    data.priorityActions =
+        data.priorityActions.slice(
+            0,
+            10
+        );
+
+
+
+    /* =====================================================
+       AI INSIGHT
+       ===================================================== */
+
+    if (
+        data.kpis.highRisk > 0
+    ) {
+
+        data.aiInsight =
+            data.kpis.highRisk +
+            " high-risk visa case(s) currently require DSO attention. " +
+            data.compliance.atRisk +
+            " additional case(s) are being monitored.";
+
+
+        data.aiRecommendation =
+            "Prioritize high-risk cases and review missing documentation, deadlines and SLA status.";
+
+
+    } else {
+
+        data.aiInsight =
+            "The current visa case portfolio does not contain any high-risk cases.";
+
+
+        data.aiRecommendation =
+            "Continue monitoring upcoming deadlines and advisor workload.";
+
+    }
+
+
+
+    /* =====================================================
+       FINAL ADVISOR SUMMARY
+       ===================================================== */
+
+    var overloadedCount = 0;
+
+    var totalCapacity = 0;
+
+
+    for (
+        var aw = 0;
+        aw < data.advisors.length;
+        aw++
+    ) {
+
+        if (
+            data.advisors[aw].capacity >= 85
+        ) {
+
+            overloadedCount++;
+
+        }
+
+
+        totalCapacity +=
+            data.advisors[aw].capacity;
+
+    }
+
+
+    data.advisorStats.overloaded =
+        overloadedCount;
+
+
+    if (
+        data.advisors.length > 0
+    ) {
+
+        data.advisorStats.avgCapacity =
+            Math.round(
+                totalCapacity /
+                data.advisors.length
+            );
+
+    } else {
+
+        data.advisorStats.avgCapacity =
+            0;
+
+    }
+
+
+
+    /* =====================================================
+       VALUES USED BY ADVISOR WORKLOAD HTML
+       ===================================================== */
+
+    data.avgCapacity =
+        data.advisorStats.avgCapacity;
+
+
+    data.overloadedCount =
+        data.advisorStats.overloaded;
+
+
+    data.pendingActionsCount = 0;
+
+
+    for (
+        var pa = 0;
+        pa < data.advisors.length;
+        pa++
+    ) {
+
+        data.pendingActionsCount +=
+            data.advisors[pa].pending;
+
+    }
+
+
+
+    /* =====================================================
+       DEBUG INFORMATION
+
+       Useful while testing the widget.
+       ===================================================== */
+
+    data.debug = {
+
+        caseTable:
+            CASE_TABLE,
+
+        advisorTable:
+            ADVISOR_TABLE,
+
+        detectedAdvisorField:
+            advisorField,
+
+        detectedAdvisorNameField:
+            advisorNameField,
+
+        detectedAdvisorEmailField:
+            advisorEmailField,
+
+        totalCases:
+            cases.length,
+
+        totalAdvisors:
+            data.advisors.length
+
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 13:18:21</sys_created_on>
+        <sys_id>eb33f71e1c2207107f44ac7143096438</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>DSO Dashboard</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_eb33f71e1c2207107f44ac7143096438</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 16:04:05</sys_updated_on>
+        <template><![CDATA[<div class="vg-dashboard">
+
+  <!-- HERO -->
+  <div class="vg-hero">
+    <div>
+      <div class="vg-hero-title">
+        <span class="shield">]]>🛡<![CDATA[</span>
+        VISA GUARDIAN AI
+      </div>
+
+      <h2>DSO Compliance Command Center</h2>
+
+      <p>
+        Institution-wide compliance, visa case risk and operational overview
+      </p>
+    </div>
+
+    <div class="vg-hero-status">
+      <span class="status-dot"></span>
+      LIVE
+    </div>
+  </div>
+
+
+  <!-- KPI CARDS -->
+  <div class="row vg-kpi-row">
+
+    <!-- STUDENTS -->
+    <div class="col-md-3 col-sm-6">
+      <div class="vg-kpi-card">
+
+        <div class="vg-kpi-icon blue">
+          <i class="fa fa-users"></i>
+        </div>
+
+        <div>
+          <div class="vg-kpi-value">
+            {{c.data.kpis.students}}
+          </div>
+
+          <div class="vg-kpi-label">
+            STUDENTS
+          </div>
+
+          <div class="vg-kpi-sub blue-text">
+            Active records
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- COMPLIANCE -->
+    <div class="col-md-3 col-sm-6">
+      <div class="vg-kpi-card">
+
+        <div class="vg-kpi-icon green">
+          <i class="fa fa-shield"></i>
+        </div>
+
+        <div>
+          <div class="vg-kpi-value">
+            {{c.data.kpis.compliance}}%
+          </div>
+
+          <div class="vg-kpi-label">
+            COMPLIANCE
+          </div>
+
+          <div class="vg-kpi-sub green-text">
+            Institution health
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- HIGH RISK -->
+    <div class="col-md-3 col-sm-6">
+      <div class="vg-kpi-card">
+
+        <div class="vg-kpi-icon red">
+          <i class="fa fa-exclamation-triangle"></i>
+        </div>
+
+        <div>
+          <div class="vg-kpi-value">
+            {{c.data.kpis.highRisk}}
+          </div>
+
+          <div class="vg-kpi-label">
+            HIGH RISK
+          </div>
+
+          <div class="vg-kpi-sub red-text">
+            Requires attention
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- DEADLINES -->
+    <div class="col-md-3 col-sm-6">
+      <div class="vg-kpi-card">
+
+        <div class="vg-kpi-icon orange">
+          <i class="fa fa-clock-o"></i>
+        </div>
+
+        <div>
+          <div class="vg-kpi-value">
+            {{c.data.kpis.deadlines}}
+          </div>
+
+          <div class="vg-kpi-label">
+            DEADLINES
+          </div>
+
+          <div class="vg-kpi-sub orange-text">
+            Next 30 days
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- COMPLIANCE HEALTH -->
+  <div class="vg-card vg-compliance-card">
+
+    <div class="vg-card-header">
+
+      <div>
+        <h3>
+          <i class="fa fa-shield"></i>
+          Compliance Health
+        </h3>
+
+        <p>
+          Institution-wide visa compliance status
+        </p>
+      </div>
+
+      <div class="compliance-score">
+        {{c.data.kpis.compliance}}%
+      </div>
+
+    </div>
+
+
+    <div class="compliance-progress">
+
+      <div class="progress-track">
+
+        <div
+          class="progress-value"
+          ng-style="{'width': c.data.kpis.compliance + '%'}">
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="compliance-stats">
+
+      <div class="compliance-stat">
+        <span class="green-dot"></span>
+
+        <div>
+          <strong>{{c.data.compliance.compliant}}</strong>
+          <span>Compliant</span>
+        </div>
+      </div>
+
+
+      <div class="compliance-stat">
+        <span class="orange-dot"></span>
+
+        <div>
+          <strong>{{c.data.compliance.atRisk}}</strong>
+          <span>At Risk</span>
+        </div>
+      </div>
+
+
+      <div class="compliance-stat">
+        <span class="red-dot"></span>
+
+        <div>
+          <strong>{{c.data.compliance.nonCompliant}}</strong>
+          <span>Non-Compliant</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- RISK + DEADLINES -->
+  <div class="row">
+
+
+    <!-- RISK SNAPSHOT -->
+    <div class="col-md-6">
+
+      <div class="vg-card dashboard-card">
+
+        <div class="vg-section-header">
+
+          <div>
+            <h3>
+              <i class="fa fa-exclamation-triangle"></i>
+              Risk Snapshot
+            </h3>
+
+            <p>Current visa case risk distribution</p>
+          </div>
+
+        </div>
+
+
+        <div class="risk-list">
+
+
+          <!-- HIGH -->
+          <div class="risk-row">
+
+            <div class="risk-info">
+
+              <span class="risk-icon high">
+                <i class="fa fa-arrow-up"></i>
+              </span>
+
+              <div>
+                <strong>High Risk</strong>
+                <small>
+                  Critical compliance cases
+                </small>
+              </div>
+
+            </div>
+
+            <strong class="risk-number red-text">
+              {{c.data.risk.high}}
+            </strong>
+
+          </div>
+
+
+          <!-- MEDIUM -->
+          <div class="risk-row">
+
+            <div class="risk-info">
+
+              <span class="risk-icon medium">
+                <i class="fa fa-minus"></i>
+              </span>
+
+              <div>
+                <strong>Medium Risk</strong>
+                <small>
+                  Requires monitoring
+                </small>
+              </div>
+
+            </div>
+
+            <strong class="risk-number orange-text">
+              {{c.data.risk.medium}}
+            </strong>
+
+          </div>
+
+
+          <!-- LOW -->
+          <div class="risk-row">
+
+            <div class="risk-info">
+
+              <span class="risk-icon low">
+                <i class="fa fa-check"></i>
+              </span>
+
+              <div>
+                <strong>Low Risk</strong>
+                <small>
+                  Normal compliance
+                </small>
+              </div>
+
+            </div>
+
+            <strong class="risk-number green-text">
+              {{c.data.risk.low}}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- UPCOMING DEADLINES -->
+    <div class="col-md-6">
+
+      <div class="vg-card dashboard-card">
+
+        <div class="vg-section-header">
+
+          <div>
+            <h3>
+              <i class="fa fa-clock-o"></i>
+              Upcoming Deadlines
+            </h3>
+
+            <p>Priority compliance deadlines</p>
+          </div>
+
+        </div>
+
+
+        <div class="deadline-list">
+
+          <div
+            class="deadline-row"
+            ng-repeat="deadline in c.data.upcomingDeadlines">
+
+            <div class="deadline-student">
+
+              <strong>
+                {{deadline.student}}
+              </strong>
+
+              <small>
+                {{deadline.case_id}}
+              </small>
+
+            </div>
+
+
+            <div class="deadline-type">
+              {{deadline.type}}
+            </div>
+
+
+            <div
+              class="deadline-days"
+              ng-class="{
+                'deadline-danger': deadline.days <= 7,
+                'deadline-warning': deadline.days > 7 && deadline.days <= 30,
+                'deadline-normal': deadline.days > 30
+              }">
+
+              {{deadline.days}}d
+
+            </div>
+
+          </div>
+
+
+          <div
+            ng-if="c.data.upcomingDeadlines.length === 0"
+            class="empty-state">
+
+            No upcoming deadlines found.
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ADVISOR WORKLOAD + SLA -->
+  <div class="row">
+
+
+    <!-- ADVISOR WORKLOAD -->
+    <div class="col-md-6">
+
+      <div class="vg-card dashboard-card">
+
+        <div class="vg-section-header">
+
+          <div>
+            <h3>
+              <i class="fa fa-users"></i>
+              Advisor Workload
+            </h3>
+
+            <p>Current case distribution</p>
+          </div>
+
+          <span class="section-count">
+            {{c.data.advisorStats.total}}
+          </span>
+
+        </div>
+
+
+        <div class="advisor-list">
+
+          <div
+            class="advisor-row"
+            ng-repeat="advisor in c.data.advisors | limitTo:5">
+
+            <div class="advisor-avatar">
+              {{advisor.initials}}
+            </div>
+
+
+            <div class="advisor-main">
+
+              <strong>
+                {{advisor.name}}
+              </strong>
+
+              <div class="advisor-load">
+
+                <div class="advisor-progress">
+
+                  <div
+                    class="advisor-progress-value"
+                    ng-style="{
+                      'width': advisor.capacity + '%'
+                    }">
+                  </div>
+
+                </div>
+
+                <span>
+                  {{advisor.activeCases}} cases
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <span
+              class="advisor-status"
+              ng-class="{
+                'available': advisor.capacity < 70,
+                'busy': advisor.capacity >= 70 && advisor.capacity < 85,
+                'overloaded': advisor.capacity >= 85
+              }">
+
+              {{advisor.status}}
+
+            </span>
+
+          </div>
+
+
+          <div
+            ng-if="c.data.advisors.length === 0"
+            class="empty-state">
+
+            No advisor records found.
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- SLA -->
+    <div class="col-md-6">
+
+      <div class="vg-card dashboard-card">
+
+        <div class="vg-section-header">
+
+          <div>
+            <h3>
+              <i class="fa fa-hourglass-half"></i>
+              SLA Performance
+            </h3>
+
+            <p>Visa case processing performance</p>
+          </div>
+
+        </div>
+
+
+        <div class="sla-main">
+
+          <div class="sla-circle">
+
+            <strong>
+              {{c.data.sla.performance}}%
+            </strong>
+
+            <span>
+              On Track
+            </span>
+
+          </div>
+
+
+          <div class="sla-details">
+
+            <div class="sla-detail">
+
+              <span class="sla-green"></span>
+
+              <div>
+                <strong>
+                  {{c.data.sla.onTrack}}
+                </strong>
+
+                <small>
+                  On Track
+                </small>
+              </div>
+
+            </div>
+
+
+            <div class="sla-detail">
+
+              <span class="sla-orange"></span>
+
+              <div>
+                <strong>
+                  {{c.data.sla.atRisk}}
+                </strong>
+
+                <small>
+                  At Risk
+                </small>
+              </div>
+
+            </div>
+
+
+            <div class="sla-detail">
+
+              <span class="sla-red"></span>
+
+              <div>
+                <strong>
+                  {{c.data.sla.breached}}
+                </strong>
+
+                <small>
+                  Breached
+                </small>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- PRIORITY ACTIONS -->
+  <div class="vg-card priority-card">
+
+    <div class="vg-section-header">
+
+      <div>
+        <h3>
+          <i class="fa fa-bell"></i>
+          Priority Actions
+        </h3>
+
+        <p>
+          Cases requiring DSO attention
+        </p>
+      </div>
+
+      <span class="priority-count">
+        {{c.data.priorityActions.length}}
+      </span>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+      <table class="table vg-dashboard-table">
+
+        <thead>
+
+          <tr>
+
+            <th>Case</th>
+
+            <th>Student</th>
+
+            <th>Status</th>
+
+            <th>Risk</th>
+
+            <th>Priority</th>
+
+            <th>Deadline</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr ng-repeat="item in c.data.priorityActions">
+
+            <td>
+
+              <span class="case-badge">
+                {{item.case_id}}
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <strong>
+                {{item.student}}
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="status-badge"
+                ng-class="{
+                  'status-green': item.status === 'Approved' || item.status === 'Active',
+                  'status-orange': item.status === 'Pending' || item.status === 'Under Review',
+                  'status-red': item.status === 'Rejected' || item.status === 'Missing Docs'
+                }">
+
+                {{item.status}}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="risk-badge"
+                ng-class="{
+                  'risk-high': item.risk === 'High',
+                  'risk-medium': item.risk === 'Medium',
+                  'risk-low': item.risk === 'Low'
+                }">
+
+                {{item.risk}}
+
+              </span>
+
+            </td>
+
+
+            <td>
+              {{item.priority}}
+            </td>
+
+
+            <td>
+              {{item.deadline}}
+            </td>
+
+          </tr>
+
+
+          <tr ng-if="c.data.priorityActions.length === 0">
+
+            <td
+              colspan="6"
+              class="empty-table">
+
+              No priority actions currently require attention.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- AI INSIGHT -->
+  <div class="vg-ai-card">
+
+    <div class="ai-icon">
+      ✨
+    </div>
+
+    <div class="ai-content">
+
+      <h3>
+        AI Compliance Insight
+      </h3>
+
+      <p>
+        {{c.data.aiInsight}}
+      </p>
+
+      <div class="ai-recommendation">
+
+        <strong>
+          Recommended Action:
+        </strong>
+
+        {{c.data.aiRecommendation}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>eb33f71e1c2207107f44ac7143096438</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 13:18:21</sys_created_on>
+        <sys_id>2733f71e1c2207107f44ac714309643c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 13:18:21</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

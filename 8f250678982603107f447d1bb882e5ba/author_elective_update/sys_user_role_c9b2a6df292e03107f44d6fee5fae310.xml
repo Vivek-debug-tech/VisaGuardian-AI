@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role">
+    <sys_user_role action="DELETE">
+        <assignable_by display_value="now_assist_panel_user" name="now_assist_panel_user">a64d0d7dc36431100f24c87af040ddf9</assignable_by>
+        <can_delegate>true</can_delegate>
+        <description>Provides student users with access to the VisaGuardian AI assistant and their own visa case information.</description>
+        <elevated_privilege>false</elevated_privilege>
+        <federated_id/>
+        <grantable>true</grantable>
+        <includes_roles/>
+        <name>x_snc_visaguardi_0.visa_student</name>
+        <scoped_admin>false</scoped_admin>
+        <suffix>visa_student</suffix>
+        <sys_class_name>sys_user_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 10:02:19</sys_created_on>
+        <sys_id>c9b2a6df292e03107f44d6fee5fae310</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0.visa_student</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_user_role_c9b2a6df292e03107f44d6fee5fae310</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 10:02:19</sys_updated_on>
+    </sys_user_role>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_user_role_c9b2a6df292e03107f44d6fee5fae310</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role"><sys_user_role action="INSERT_OR_UPDATE"><assignable_by display_value="now_assist_panel_user" name="now_assist_panel_user">a64d0d7dc36431100f24c87af040ddf9</assignable_by><can_delegate>true</can_delegate><description>Provides student users with access to the VisaGuardian AI assistant and their own visa case information.</description><elevated_privilege>false</elevated_privilege><federated_id/><grantable>true</grantable><includes_roles/><name>x_snc_visaguardi_0.visa_student</name><scoped_admin>false</scoped_admin><suffix>visa_student</suffix><sys_class_name>sys_user_role</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-12 10:02:19</sys_created_on><sys_id>c9b2a6df292e03107f44d6fee5fae310</sys_id><sys_mod_count>0</sys_mod_count><sys_name>x_snc_visaguardi_0.visa_student</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sys_user_role_c9b2a6df292e03107f44d6fee5fae310</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-12 10:02:19</sys_updated_on></sys_user_role></record_update>]]></payload>
+        <payload_hash>-165347421</payload_hash>
+        <record_name>x_snc_visaguardi_0.visa_student</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 10:02:19</sys_created_on>
+        <sys_id>2d23aa93296e03107f44d6fee5fae3ba</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19ff56c3f950000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 10:02:19</sys_updated_on>
+        <type>Role</type>
+        <update_guid>ed23aa935b6e03100f37c108fdf95db9</update_guid>
+        <update_guid_history>ed23aa935b6e03100f37c108fdf95db9:-165347421</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="x_snc_visaguardi_0.visa_student">72e36ad7296e03107f44d6fee5fae317</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 10:05:45</sys_created_on>
+        <sys_db_object display_value="" name="sys_user_role">sys_user_role</sys_db_object>
+        <sys_id>11a01e9aab744c8992a92f6dae17e5a1</sys_id>
+        <sys_metadata>c9b2a6df292e03107f44d6fee5fae310</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0.visa_student</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_user_role_c9b2a6df292e03107f44d6fee5fae310</sys_update_name>
+        <sys_update_version display_value="sys_user_role_c9b2a6df292e03107f44d6fee5fae310">2d23aa93296e03107f44d6fee5fae3ba</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 10:05:45</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

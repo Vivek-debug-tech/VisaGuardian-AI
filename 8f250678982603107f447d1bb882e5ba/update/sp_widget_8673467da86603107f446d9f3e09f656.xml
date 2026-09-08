@@ -1,0 +1,6469 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  var c = this;
+
+  c.twin = {
+    riskScore: 35,
+    riskLevel: "Medium Risk",
+    lastCalculated: "2026-08-07",
+    riskReasons: [
+      {
+        title: "Deadline Proximity",
+        points: 20,
+        description: "CPT start date is within 18 days and advisor approval is still pending."
+      },
+      {
+        title: "Missing Required Document",
+        points: 15,
+        description: "Academic Advisor Approval Form has not been uploaded for CASE0010011."
+      }
+    ]
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   STUDENT COMPLIANCE DIGITAL TWIN
+   PREMIUM ENTERPRISE DASHBOARD UI
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+.vg-twin-page,
+.vg-twin-page *,
+.vg-twin-page *::before,
+.vg-twin-page *::after {
+    box-sizing: border-box;
+}
+
+.vg-twin-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 0;
+
+    background:
+        radial-gradient(
+            circle at 95% 0%,
+            rgba(35, 126, 205, 0.08),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 0% 100%,
+            rgba(111, 76, 180, 0.045),
+            transparent 24%
+        ),
+        #f4f7fb;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #17395f;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.vg-twin-header {
+    position: relative;
+
+    width: 100%;
+    min-height: 88px;
+
+    padding: 15px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #06366b 0%,
+            #08477f 48%,
+            #125c99 100%
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 26px rgba(0, 48, 95, 0.14),
+        0 2px 7px rgba(0, 48, 95, 0.08);
+}
+
+
+/* Header decorative glow */
+
+.vg-twin-header::before {
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    right: -90px;
+    top: -175px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(78, 169, 239, 0.13);
+
+    pointer-events: none;
+}
+
+
+.vg-twin-header::after {
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    left: 48%;
+    bottom: -135px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER LEFT
+   ========================================================= */
+
+.vg-twin-header-left {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.vg-twin-header-icon {
+    position: relative;
+
+    width: 60px;
+    height: 60px;
+
+    min-width: 60px;
+
+    margin-right: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.15),
+            rgba(255,255,255,.07)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.17);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.12);
+
+    font-size: 28px;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.vg-twin-title {
+    font-size: 28px;
+
+    font-weight: 750;
+
+    line-height: 34px;
+
+    letter-spacing: -0.4px;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.vg-twin-subtitle {
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    line-height: 18px;
+
+    color: #d8e8f7;
+}
+
+
+/* =========================================================
+   LIVE STATUS
+   ========================================================= */
+
+.vg-twin-live-status {
+    position: relative;
+    z-index: 2;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 15px;
+
+    border-radius: 22px;
+
+    background:
+        rgba(255,255,255,.10);
+
+    border:
+        1px solid
+        rgba(255,255,255,.22);
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.06);
+}
+
+
+/* =========================================================
+   LIVE DOT
+   ========================================================= */
+
+.vg-live-dot {
+    width: 9px;
+    height: 9px;
+
+    min-width: 9px;
+
+    border-radius: 50%;
+
+    background: #31c47a;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(49,196,122,.14);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-twin-error {
+    margin-top: 15px;
+
+    padding: 13px 16px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    background:
+        #fff3f3;
+
+    border:
+        1px solid
+        #efc1c1;
+
+    border-left:
+        4px solid
+        #d9534f;
+
+    border-radius: 9px;
+
+    color: #c62828;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 3px 9px
+        rgba(160,40,40,.04);
+}
+
+
+/* =========================================================
+   STUDENT CONTEXT
+   ========================================================= */
+
+.vg-twin-student-context {
+    margin-top: 14px;
+
+    padding: 11px 18px;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        rgba(255,255,255,.96);
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0,40,80,.045);
+}
+
+
+/* =========================================================
+   CONTEXT ITEM
+   ========================================================= */
+
+.vg-student-context-item {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   CONTEXT LABEL
+   ========================================================= */
+
+.vg-context-label {
+    color: #7d8fa3;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: .55px;
+}
+
+
+/* =========================================================
+   CONTEXT VALUE
+   ========================================================= */
+
+.vg-student-context-item strong {
+    color: #123f77;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   CONTEXT DIVIDER
+   ========================================================= */
+
+.vg-student-context-divider {
+    width: 1px;
+
+    height: 23px;
+
+    margin: 0 19px;
+
+    background:
+        #dce5ef;
+}
+
+
+/* =========================================================
+   SUMMARY GRID
+   ========================================================= */
+
+.vg-twin-summary-grid {
+    width: 100%;
+
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   SUMMARY CARD
+   ========================================================= */
+
+.vg-twin-summary-card {
+    position: relative;
+
+    min-height: 169px;
+
+    padding: 18px 20px 17px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,40,80,.055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-twin-summary-card:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #c5d8e9;
+
+    box-shadow:
+        0 10px 23px
+        rgba(0,40,80,.09);
+}
+
+
+/* =========================================================
+   SUMMARY CARD ACCENT
+   ========================================================= */
+
+.vg-twin-summary-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 4px;
+}
+
+
+.score-card::before {
+    background: #35ad72;
+}
+
+
+.visa-card::before {
+    background: #347fc9;
+}
+
+
+.risk-card::before {
+    background: #e5a52f;
+}
+
+
+.deadline-card::before {
+    background: #7955bd;
+}
+
+
+/* =========================================================
+   SUMMARY TOP
+   ========================================================= */
+
+.vg-summary-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.vg-summary-top &gt; div:first-child {
+    flex: 1;
+
+    min-width: 0;
+
+    padding-right: 6px;
+}
+
+
+/* =========================================================
+   SUMMARY LABEL
+   ========================================================= */
+
+.vg-summary-label {
+    color: #60758c;
+
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   SUMMARY VALUE
+   ========================================================= */
+
+.vg-summary-value {
+    margin-top: 8px;
+
+    color: #123f77;
+
+    font-size: 27px;
+
+    font-weight: 750;
+
+    line-height: 31px;
+
+    white-space: normal;
+
+    overflow-wrap: normal;
+}
+
+
+/* Visa status */
+
+.visa-card .vg-summary-value {
+    max-width: 130px;
+
+    font-size: 21px;
+
+    line-height: 27px;
+
+    letter-spacing: -.2px;
+}
+
+
+/* Deadline */
+
+.deadline-card .vg-summary-value {
+    font-size: 25px;
+
+    line-height: 29px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SUMMARY ICON
+   ========================================================= */
+
+.vg-summary-icon {
+    width: 50px;
+    height: 50px;
+
+    min-width: 50px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+}
+
+
+.score-icon {
+    background: #e5f6ed;
+    color: #28a66b;
+}
+
+
+.visa-icon {
+    background: #e7f0fb;
+    color: #2c7ac2;
+}
+
+
+.risk-icon {
+    background: #fff0d6;
+    color: #d89218;
+}
+
+
+.deadline-icon {
+    background: #f0eafa;
+    color: #7955bd;
+}
+
+
+/* =========================================================
+   SCORE BAR
+   ========================================================= */
+
+.vg-score-bar {
+    width: 100%;
+
+    height: 7px;
+
+    margin-top: 15px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background:
+        #e5ebf1;
+}
+
+
+.vg-score-progress {
+    height: 100%;
+
+    border-radius: 10px;
+
+    background:
+        #35ad72;
+
+    transition:
+        width .4s ease;
+}
+
+
+/* =========================================================
+   SUMMARY STATUS
+   ========================================================= */
+
+.vg-summary-status {
+    margin-top: 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+
+.vg-summary-status span {
+    width: 7px;
+    height: 7px;
+
+    min-width: 7px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+}
+
+
+.vg-summary-status.success {
+    color: #24935b;
+}
+
+
+.vg-summary-status.success span {
+    background: #2db375;
+}
+
+
+.vg-summary-status.warning {
+    color: #d89016;
+}
+
+
+.vg-summary-status.warning span {
+    background: #e6a42c;
+}
+
+
+.vg-summary-status.danger {
+    color: #d34c4c;
+}
+
+
+.vg-summary-status.danger span {
+    background: #d9534f;
+}
+
+
+/* =========================================================
+   SUMMARY DESCRIPTION
+   ========================================================= */
+
+.vg-summary-description {
+    margin-top: 9px;
+
+    color: #7b90a6;
+
+    font-size: 11px;
+
+    line-height: 17px;
+}
+
+
+/* =========================================================
+   MAIN TWO-COLUMN AREA
+   ========================================================= */
+
+.vg-twin-main-grid {
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   GENERAL CARD
+   ========================================================= */
+
+.vg-twin-card {
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,40,80,.05);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-twin-card-header {
+    min-height: 68px;
+
+    padding:
+        12px 19px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap: 12px;
+
+    border-bottom:
+        1px solid
+        #dce5ef;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+/* =========================================================
+   CARD HEADING
+   ========================================================= */
+
+.vg-card-heading {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   CARD ICON
+   ========================================================= */
+
+.vg-card-heading-icon {
+    width: 44px;
+    height: 44px;
+
+    min-width: 44px;
+
+    margin-right: 12px;
+
+    border-radius: 10px;
+
+    background:
+        #edf4fb;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.vg-card-title {
+    color: #123f77;
+
+    font-size: 17px;
+
+    font-weight: 750;
+
+    line-height: 21px;
+}
+
+
+/* =========================================================
+   CARD SUBTITLE
+   ========================================================= */
+
+.vg-card-subtitle {
+    margin-top: 3px;
+
+    color: #8295a9;
+
+    font-size: 11px;
+
+    line-height: 15px;
+}
+
+
+/* =========================================================
+   DOCUMENT COUNT
+   ========================================================= */
+
+.vg-document-count {
+    padding:
+        6px 11px;
+
+    border-radius:
+        17px;
+
+    background:
+        #edf4fb;
+
+    color:
+        #1760a2;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   DOCUMENT PROGRESS
+   ========================================================= */
+
+.vg-document-progress {
+    height: 8px;
+
+    margin:
+        17px 20px 8px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+    background:
+        #e4ebf1;
+}
+
+
+.vg-document-progress-fill {
+    height: 100%;
+
+    border-radius: 10px;
+
+    background:
+        #35ad72;
+
+    transition:
+        width .4s ease;
+}
+
+
+/* =========================================================
+   DOCUMENT SUMMARY
+   ========================================================= */
+
+.vg-document-summary {
+    padding:
+        0 20px 9px;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    color:
+        #60758b;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+}
+
+
+.vg-document-missing {
+    color:
+        #d99016;
+}
+
+
+.vg-document-complete {
+    color:
+        #24975d;
+}
+
+
+/* =========================================================
+   DOCUMENT INSIGHT
+   ========================================================= */
+
+.vg-document-insight {
+    margin:
+        12px 20px 7px;
+
+    padding:
+        14px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    border:
+        1px solid
+        #dfe8f0;
+
+    border-radius:
+        10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbfe,
+            #f5f9fd
+        );
+}
+
+
+.vg-document-insight-icon {
+    width: 39px;
+    height: 39px;
+
+    min-width: 39px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        #edf4fb;
+
+    font-size:
+        17px;
+}
+
+
+.vg-document-insight-content {
+    min-width: 0;
+}
+
+
+.vg-document-insight-title {
+    color:
+        #214766;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    line-height:
+        17px;
+}
+
+
+.vg-document-insight-description {
+    margin-top:
+        3px;
+
+    color:
+        #8294a8;
+
+    font-size:
+        10px;
+
+    line-height:
+        15px;
+}
+
+
+/* =========================================================
+   DOCUMENT LIST
+   ========================================================= */
+
+.vg-document-list {
+    padding:
+        0 20px 9px;
+}
+
+
+/* =========================================================
+   DOCUMENT ROW
+   ========================================================= */
+
+.vg-document-row {
+    min-height:
+        46px;
+
+    padding:
+        8px 0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    border-bottom:
+        1px solid
+        #edf1f5;
+}
+
+
+.vg-document-row:last-child {
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   DOCUMENT NAME
+   ========================================================= */
+
+.vg-document-name {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    min-width:
+        0;
+
+    color:
+        #304c68;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   CHECK ICON
+   ========================================================= */
+
+.vg-check {
+    width:
+        24px;
+
+    height:
+        24px;
+
+    min-width:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #e3f6eb;
+
+    color:
+        #26a568;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   WARNING ICON
+   ========================================================= */
+
+.vg-warning {
+    width:
+        24px;
+
+    height:
+        24px;
+
+    min-width:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #fff0d5;
+
+    color:
+        #d89016;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   DOCUMENT STATUS
+   ========================================================= */
+
+.vg-document-status {
+    padding:
+        5px 9px;
+
+    border-radius:
+        13px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        650;
+
+    white-space:
+        nowrap;
+}
+
+
+.vg-document-status.complete {
+    background:
+        #e5f6ec;
+
+    color:
+        #258e59;
+}
+
+
+.vg-document-status.pending {
+    background:
+        #fff0d8;
+
+    color:
+        #d18a12;
+}
+
+
+/* =========================================================
+   SECONDARY BUTTON
+   ========================================================= */
+
+.vg-twin-secondary-button {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin:
+        8px 20px 18px;
+
+    padding:
+        9px 14px;
+
+    border:
+        1px solid
+        #bfd3e6;
+
+    border-radius:
+        7px;
+
+    background:
+        #ffffff;
+
+    color:
+        #15528a !important;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    text-decoration:
+        none !important;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-twin-secondary-button:hover {
+    background:
+        #eef5fc;
+
+    border-color:
+        #8db4d6;
+
+    color:
+        #0c4d85 !important;
+
+    box-shadow:
+        0 4px 10px
+        rgba(25,90,140,.08);
+
+    transform:
+        translateY(-1px);
+
+    text-decoration:
+        none !important;
+}
+
+
+/* =========================================================
+   DEADLINE LIST
+   ========================================================= */
+
+.vg-deadline-list {
+    padding:
+        4px 20px 2px;
+}
+
+
+/* =========================================================
+   DEADLINE ITEM
+   ========================================================= */
+
+.vg-deadline-item {
+    min-height:
+        70px;
+
+    padding:
+        10px 0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    border-bottom:
+        1px solid
+        #e8edf2;
+}
+
+
+.vg-deadline-item:last-child {
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   DEADLINE ICON
+   ========================================================= */
+
+.vg-deadline-icon {
+    width:
+        41px;
+
+    height:
+        41px;
+
+    min-width:
+        41px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        10px;
+
+    background:
+        #edf4fb;
+
+    color:
+        #3b78ad;
+
+    font-size:
+        17px;
+}
+
+
+.vg-deadline-icon.urgent-icon {
+    background:
+        #fff0d7;
+
+    color:
+        #df971a;
+}
+
+
+/* =========================================================
+   DEADLINE CONTENT
+   ========================================================= */
+
+.vg-deadline-content {
+    flex:
+        1;
+
+    min-width:
+        0;
+}
+
+
+.vg-deadline-title {
+    color:
+        #214766;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+.vg-deadline-case {
+    margin-top:
+        2px;
+
+    color:
+        #8294a8;
+
+    font-size:
+        10px;
+}
+
+
+.vg-deadline-date {
+    margin-top:
+        3px;
+
+    color:
+        #657d95;
+
+    font-size:
+        10px;
+
+    line-height:
+        15px;
+}
+
+
+/* =========================================================
+   DEADLINE BADGES
+   ========================================================= */
+
+.vg-deadline-badge {
+    padding:
+        6px 10px;
+
+    border-radius:
+        6px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        650;
+
+    white-space:
+        nowrap;
+}
+
+
+.urgent-badge {
+    background:
+        #fff0d7;
+
+    color:
+        #d68c0e;
+}
+
+
+.warning-badge {
+    background:
+        #fff4df;
+
+    color:
+        #d79622;
+}
+
+
+.normal-badge {
+    background:
+        #e5f6ec;
+
+    color:
+        #258e59;
+}
+
+
+/* =========================================================
+   VIEW ALL
+   ========================================================= */
+
+.vg-view-all {
+    color:
+        #3175b5;
+
+    font-size:
+        10px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   RISK EXPLANATION
+   ========================================================= */
+
+.vg-risk-explanation {
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   RISK WEIGHTS
+   ========================================================= */
+
+.vg-risk-weight-info {
+    color:
+        #59738d;
+
+    font-size:
+        11px;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   RISK CONTENT
+   ========================================================= */
+
+.vg-risk-content {
+    padding:
+        25px 28px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        310px
+        minmax(0, 1fr);
+
+    gap:
+        38px;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   RISK SCORE SECTION
+   ========================================================= */
+
+.vg-risk-score-section {
+    text-align:
+        center;
+
+    padding:
+        5px 15px;
+}
+
+
+/* =========================================================
+   RISK SCORE
+   ========================================================= */
+
+.vg-risk-score {
+    color:
+        #123f77;
+
+    font-size:
+        54px;
+
+    font-weight:
+        750;
+
+    line-height:
+        58px;
+
+    letter-spacing:
+        -1px;
+}
+
+
+.vg-risk-score span {
+    color:
+        #7c91a7;
+
+    font-size:
+        17px;
+
+    font-weight:
+        500;
+
+    letter-spacing:
+        0;
+}
+
+
+/* =========================================================
+   RISK LEVEL
+   ========================================================= */
+
+.vg-risk-level {
+    margin-top:
+        8px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        .2px;
+}
+
+
+.risk-level-low {
+    color:
+        #25935c;
+}
+
+
+.risk-level-medium {
+    color:
+        #db9417;
+}
+
+
+.risk-level-high {
+    color:
+        #d44f4f;
+}
+
+
+/* =========================================================
+   RISK METER
+   ========================================================= */
+
+.vg-risk-meter {
+    width:
+        100%;
+
+    height:
+        10px;
+
+    margin-top:
+        17px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+    background:
+        #e5ebf0;
+}
+
+
+.vg-risk-meter-fill {
+    height:
+        100%;
+
+    border-radius:
+        10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #35ad72,
+            #c8ad32,
+            #e3a126
+        );
+
+    transition:
+        width .4s ease;
+}
+
+
+/* =========================================================
+   RISK REASONS
+   ========================================================= */
+
+.vg-risk-reasons {
+    min-width:
+        0;
+}
+
+
+.vg-risk-reasons-title {
+    margin-bottom:
+        9px;
+
+    color:
+        #244766;
+
+    font-size:
+        13px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-risk-reason {
+    min-height:
+        40px;
+
+    padding:
+        7px 0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    border-bottom:
+        1px solid
+        #e8edf2;
+
+    color:
+        #607991;
+
+    font-size:
+        11px;
+}
+
+
+.vg-risk-reason:last-child {
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   RISK REASON ICON
+   ========================================================= */
+
+.vg-risk-reason &gt; span {
+    width:
+        28px;
+
+    height:
+        28px;
+
+    min-width:
+        28px;
+
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-weight:
+        750;
+}
+
+
+.warning-reason &gt; span {
+    background:
+        #fff0d7;
+
+    color:
+        #db9417;
+}
+
+
+.positive-reason &gt; span {
+    background:
+        #e4f6ec;
+
+    color:
+        #28a368;
+}
+
+
+/* =========================================================
+   COMPLIANCE STATE
+   ========================================================= */
+
+.vg-compliance-state-grid {
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   STATE ITEM
+   ========================================================= */
+
+.vg-state-item {
+    min-height:
+        84px;
+
+    padding:
+        15px 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    border-right:
+        1px solid
+        #dce5ef;
+
+    border-bottom:
+        1px solid
+        #dce5ef;
+
+    transition:
+        background .2s ease;
+}
+
+
+.vg-state-item:hover {
+    background:
+        #f9fbfd;
+}
+
+
+.vg-state-item:nth-child(3n) {
+    border-right:
+        none;
+}
+
+
+/* =========================================================
+   STATE ICON
+   ========================================================= */
+
+.vg-state-icon {
+    width:
+        37px;
+
+    height:
+        37px;
+
+    min-width:
+        37px;
+
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        14px;
+
+    font-weight:
+        750;
+}
+
+
+.verified .vg-state-icon {
+    background:
+        #e4f6ec;
+
+    color:
+        #27a267;
+}
+
+
+.warning-state .vg-state-icon {
+    background:
+        #fff0d7;
+
+    color:
+        #d99417;
+}
+
+
+/* =========================================================
+   STATE TITLE
+   ========================================================= */
+
+.vg-state-title {
+    color:
+        #254663;
+
+    font-size:
+        12px;
+
+    font-weight:
+        750;
+
+    line-height:
+        16px;
+}
+
+
+/* =========================================================
+   STATE DESCRIPTION
+   ========================================================= */
+
+.vg-state-description {
+    margin-top:
+        3px;
+
+    color:
+        #8496a9;
+
+    font-size:
+        10px;
+
+    line-height:
+        14px;
+}
+
+
+/* =========================================================
+   STATE LABEL
+   ========================================================= */
+
+.vg-state-label {
+    padding:
+        6px 10px;
+
+    border-radius:
+        6px;
+
+    background:
+        #e5f6ec;
+
+    color:
+        #238d58;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   ACTIVE VISA CASES
+   ========================================================= */
+
+.vg-cases-card {
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   CASE LIST
+   ========================================================= */
+
+.vg-case-list {
+    padding:
+        0;
+}
+
+
+/* =========================================================
+   CASE ITEM
+   ========================================================= */
+
+.vg-case-item {
+    min-height:
+        76px;
+
+    padding:
+        13px 20px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.5fr
+        1fr
+        1.35fr
+        1fr;
+
+    gap:
+        15px;
+
+    align-items:
+        center;
+
+    border-bottom:
+        1px solid
+        #e5ebf1;
+
+    transition:
+        background .2s ease;
+}
+
+
+.vg-case-item:hover {
+    background:
+        #f8fbfe;
+}
+
+
+.vg-case-item:last-child {
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   CASE MAIN
+   ========================================================= */
+
+.vg-case-main {
+    min-width:
+        0;
+}
+
+
+.vg-case-number {
+    color:
+        #1762a2;
+
+    font-size:
+        13px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-case-type {
+    margin-top:
+        3px;
+
+    color:
+        #7a8fa4;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   CASE DETAIL
+   ========================================================= */
+
+.vg-case-detail {
+    min-width:
+        0;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        3px;
+}
+
+
+.vg-case-detail span {
+    color:
+        #8a9aac;
+
+    font-size:
+        9px;
+
+    text-transform:
+        uppercase;
+
+    font-weight:
+        650;
+
+    letter-spacing:
+        .35px;
+}
+
+
+.vg-case-detail strong {
+    color:
+        #36526c;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   ASSESSMENT INFORMATION
+   ========================================================= */
+
+.vg-assessment-info {
+    margin-top:
+        14px;
+
+    padding:
+        11px 15px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d8e2ec;
+
+    border-radius:
+        9px;
+
+    color:
+        #5e748b;
+
+    font-size:
+        11px;
+
+    box-shadow:
+        0 3px 9px
+        rgba(0,40,80,.035);
+}
+
+
+.vg-assessment-icon {
+    width:
+        25px;
+
+    height:
+        25px;
+
+    min-width:
+        25px;
+
+    border-radius:
+        50%;
+
+    background:
+        #edf3fa;
+
+    color:
+        #3176b4;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-weight:
+        750;
+}
+
+
+.vg-assessment-info strong {
+    color:
+        #234765;
+
+    margin-right:
+        5px;
+}
+
+
+/* =========================================================
+   AI RECOMMENDATION
+   ========================================================= */
+
+.vg-ai-recommendation {
+    position:
+        relative;
+
+    margin-top:
+        20px;
+
+    padding:
+        18px 21px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        16px;
+
+    border:
+        1px solid
+        #d9c9f0;
+
+    border-left:
+        4px solid
+        #7955bd;
+
+    border-radius:
+        12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fbf9ff 0%,
+            #f5efff 100%
+        );
+
+    box-shadow:
+        0 6px 17px
+        rgba(80,50,130,.055);
+}
+
+
+/* =========================================================
+   AI ICON
+   ========================================================= */
+
+.vg-ai-icon {
+    width:
+        58px;
+
+    height:
+        58px;
+
+    min-width:
+        58px;
+
+    border-radius:
+        13px;
+
+    background:
+        #eee4ff;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        27px;
+}
+
+
+/* =========================================================
+   AI CONTENT
+   ========================================================= */
+
+.vg-ai-content {
+    flex:
+        1;
+
+    min-width:
+        0;
+}
+
+
+/* =========================================================
+   AI LABEL
+   ========================================================= */
+
+.vg-ai-label {
+    color:
+        #7850b8;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        .8px;
+}
+
+
+/* =========================================================
+   AI TITLE
+   ========================================================= */
+
+.vg-ai-title {
+    margin-top:
+        5px;
+
+    color:
+        #183b61;
+
+    font-size:
+        15px;
+
+    font-weight:
+        750;
+
+    line-height:
+        20px;
+}
+
+
+/* =========================================================
+   AI DESCRIPTION
+   ========================================================= */
+
+.vg-ai-description {
+    margin-top:
+        5px;
+
+    color:
+        #72869b;
+
+    font-size:
+        10px;
+
+    line-height:
+        16px;
+}
+
+
+/* =========================================================
+   AI ACTION
+   ========================================================= */
+
+.vg-ai-action {
+    min-width:
+        195px;
+
+    min-height:
+        42px;
+
+    padding:
+        10px 16px;
+
+    border-radius:
+        8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7955bd,
+            #704db5
+        );
+
+    color:
+        #ffffff !important;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        9px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none !important;
+
+    box-shadow:
+        0 5px 12px
+        rgba(106,72,174,.16);
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-ai-action:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #6845a8,
+            #603fa0
+        );
+
+    color:
+        #ffffff !important;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 8px 17px
+        rgba(106,72,174,.22);
+
+    text-decoration:
+        none !important;
+}
+
+
+/* =========================================================
+   EMPTY PAGE
+   ========================================================= */
+
+.vg-twin-empty-page {
+    margin-top:
+        20px;
+
+    padding:
+        55px 20px;
+
+    text-align:
+        center;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d8e2ec;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,40,80,.05);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-empty-state {
+    padding:
+        22px 10px;
+
+    text-align:
+        center;
+}
+
+
+.vg-empty-icon {
+    font-size:
+        25px;
+
+    opacity:
+        .65;
+}
+
+
+.vg-empty-title {
+    margin-top:
+        7px;
+
+    color:
+        #526b84;
+
+    font-size:
+        13px;
+
+    font-weight:
+        650;
+}
+
+
+.vg-empty-description {
+    margin-top:
+        4px;
+
+    color:
+        #8999aa;
+
+    font-size:
+        11px;
+
+    line-height:
+        17px;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media screen and (min-width: 1400px) {
+
+    .vg-twin-page {
+        padding: 0;
+    }
+
+    .vg-twin-header {
+        min-height:
+            92px;
+
+        padding:
+            16px 28px;
+    }
+
+    .vg-twin-summary-grid {
+        gap:
+            20px;
+    }
+
+    .vg-twin-main-grid {
+        gap:
+            20px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET / SMALL DESKTOP
+   ========================================================= */
+
+@media screen and (max-width: 1100px) {
+
+    .vg-twin-summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .vg-twin-main-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .vg-case-item {
+        grid-template-columns:
+            1.5fr
+            1fr
+            1fr
+            1fr;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 850px) {
+
+    .vg-twin-page {
+        padding: 0;
+    }
+
+    .vg-twin-header {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            14px;
+
+        padding:
+            17px 19px;
+    }
+
+    .vg-twin-live-status {
+        align-self:
+            flex-start;
+    }
+
+    .vg-risk-content {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            22px;
+    }
+
+    .vg-risk-score-section {
+        max-width:
+            320px;
+
+        width:
+            100%;
+
+        margin:
+            0 auto;
+    }
+
+    .vg-compliance-state-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .vg-state-item:nth-child(3n) {
+        border-right:
+            1px solid
+            #dce5ef;
+    }
+
+    .vg-state-item:nth-child(2n) {
+        border-right:
+            none;
+    }
+
+    .vg-case-item {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            10px;
+    }
+
+    .vg-ai-recommendation {
+        align-items:
+            flex-start;
+
+        flex-wrap:
+            wrap;
+    }
+
+    .vg-ai-content {
+        min-width:
+            calc(100% - 75px);
+    }
+
+    .vg-ai-action {
+        width:
+            100%;
+
+        min-width:
+            0;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 650px) {
+
+    .vg-twin-page {
+        padding: 0;
+    }
+
+    .vg-twin-header {
+        border-radius:
+            11px;
+    }
+
+    .vg-twin-title {
+        font-size:
+            22px;
+
+        line-height:
+            27px;
+    }
+
+    .vg-twin-subtitle {
+        font-size:
+            11px;
+    }
+
+    .vg-twin-header-icon {
+        width:
+            53px;
+
+        height:
+            53px;
+
+        min-width:
+            53px;
+
+        font-size:
+            24px;
+    }
+
+    .vg-twin-summary-grid {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            13px;
+    }
+
+    .vg-twin-summary-card {
+        min-height:
+            150px;
+    }
+
+    .vg-twin-student-context {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            9px;
+
+        padding:
+            13px 15px;
+    }
+
+    .vg-student-context-divider {
+        display:
+            none;
+    }
+
+    .vg-summary-value {
+        font-size:
+            25px;
+
+        line-height:
+            29px;
+    }
+
+    .vg-compliance-state-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .vg-state-item,
+    .vg-state-item:nth-child(2n),
+    .vg-state-item:nth-child(3n) {
+        border-right:
+            none;
+    }
+
+    .vg-case-item {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            8px;
+
+        padding:
+            14px 16px;
+    }
+
+    .vg-risk-weight-info {
+        display:
+            none;
+    }
+
+    .vg-document-summary {
+        flex-direction:
+            column;
+
+        gap:
+            4px;
+    }
+
+    .vg-document-insight {
+        align-items:
+            flex-start;
+    }
+
+    .vg-risk-content {
+        padding:
+            20px 17px;
+    }
+
+    .vg-risk-score {
+        font-size:
+            48px;
+    }
+
+    .vg-twin-card-header {
+        padding:
+            11px 15px;
+    }
+
+    .vg-card-title {
+        font-size:
+            15px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 420px) {
+
+    .vg-twin-page {
+        padding: 0;
+    }
+
+    .vg-twin-header {
+        padding:
+            15px;
+    }
+
+    .vg-twin-title {
+        font-size:
+            20px;
+
+        line-height:
+            25px;
+    }
+
+    .vg-twin-live-status {
+        font-size:
+            10px;
+    }
+
+    .vg-summary-icon {
+        width:
+            44px;
+
+        height:
+            44px;
+
+        min-width:
+            44px;
+    }
+
+    .vg-summary-value {
+        font-size:
+            24px;
+    }
+
+    .vg-ai-icon {
+        width:
+            50px;
+
+        height:
+            50px;
+
+        min-width:
+            50px;
+    }
+
+    .vg-ai-title {
+        font-size:
+            13px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / FOCUS
+   ========================================================= */
+
+.vg-twin-page a:focus,
+.vg-twin-page button:focus {
+    outline:
+        2px solid
+        #4d90d4;
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   LINK CLEANUP
+   ========================================================= */
+
+.vg-twin-page a:hover,
+.vg-twin-page a:focus {
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   SMOOTH INTERACTION
+   ========================================================= */
+
+.vg-twin-page button,
+.vg-twin-page a {
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/* =========================================================
+   PRINT
+   ========================================================= */
+
+@media print {
+
+    .vg-twin-page {
+        background:
+            #ffffff;
+
+        padding:
+            0;
+    }
+
+    .vg-twin-summary-card,
+    .vg-twin-card,
+    .vg-ai-recommendation,
+    .vg-assessment-info {
+        box-shadow:
+            none;
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_compliance_digital_twin</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Compliance Digital Twin</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // =========================================================
+    // VISA GUARDIAN AI
+    // STUDENT COMPLIANCE DIGITAL TWIN
+    // =========================================================
+
+
+    // =========================================================
+    // INITIAL DATA
+    // =========================================================
+
+    data.error = "";
+
+    data.student = null;
+
+    data.summary = {
+        compliance_score: 0,
+        risk_score: 0,
+        risk_level: "Low",
+        visa_status: "Not Available",
+        next_deadline: null,
+        active_cases: 0,
+
+        document_completion: 0,
+        total_documents: 0,
+        completed_documents: 0,
+        missing_documents: 0,
+
+        sla_breaches: 0,
+        deadline_risk: 0,
+        document_risk: 0,
+        sla_risk: 0
+    };
+
+    data.documents = {
+        total: 0,
+        completed: 0,
+        missing: 0,
+        percentage: 0,
+        list: []
+    };
+
+    data.deadlines = [];
+
+    data.compliance_state = [];
+
+    data.risk = {
+        score: 0,
+        level: "Low",
+        explanation: []
+    };
+
+    data.recommendation = "";
+
+    data.cases = [];
+
+    data.latest_assessment = null;
+
+
+    // =========================================================
+    // 1. FIND LOGGED-IN STUDENT
+    // =========================================================
+
+    var student =
+        new GlideRecord(
+            "x_snc_visaguardi_0_student_profile"
+        );
+
+    var profileFound = false;
+
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData(
+            "vg_student_sys_id"
+        );
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData(
+            "vg_student_user_name"
+        );
+
+
+    // ---------------------------------------------------------
+    // 1A. SESSION STUDENT SYS ID
+    // ---------------------------------------------------------
+
+    if (sessionStudentSysId) {
+
+        if (
+            student.get(
+                sessionStudentSysId
+            )
+        ) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // ---------------------------------------------------------
+    // 1B. SESSION USER NAME
+    // ---------------------------------------------------------
+
+    if (
+        !profileFound &&
+        sessionStudentUserName
+    ) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // ---------------------------------------------------------
+    // 1C. SERVICENOW USER REFERENCE
+    // ---------------------------------------------------------
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+        if (userSysId) {
+
+            student =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+            student.addQuery(
+                "user",
+                userSysId
+            );
+
+            student.setLimit(1);
+
+            student.query();
+
+            if (student.next()) {
+
+                profileFound = true;
+            }
+        }
+    }
+
+
+    // ---------------------------------------------------------
+    // 1D. SERVICENOW USER NAME
+    // ---------------------------------------------------------
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =========================================================
+    // PROFILE NOT FOUND
+    // =========================================================
+
+    if (!profileFound) {
+
+        data.error =
+            "Student profile was not found for the logged-in student.";
+
+        return;
+    }
+
+
+    // =========================================================
+    // 2. STUDENT INFORMATION
+    // =========================================================
+
+    data.student = {
+
+        sys_id:
+            student.getUniqueValue(),
+
+        name:
+            student.getDisplayValue("name"),
+
+        first_name:
+            student.getValue("first_name"),
+
+        last_name:
+            student.getValue("last_name"),
+
+        student_id:
+            student.getValue("student_id"),
+
+        email:
+            student.getValue("email"),
+
+        visa_type:
+            student.getDisplayValue("visa_type"),
+
+        visa_status:
+            student.getDisplayValue(
+                "current_visa_status"
+            ),
+
+        sevis_id:
+            student.getValue("sevis_id"),
+
+        university_name:
+            student.getValue("university_name"),
+
+        degree_program:
+            student.getValue("degree_program"),
+
+        degree_level:
+            student.getDisplayValue(
+                "degree_level"
+            )
+    };
+
+
+    // =========================================================
+    // 3. HELPER FUNCTIONS
+    // =========================================================
+
+
+    /*
+     * Converts values such as:
+     *
+     * new_visa_application
+     * New Visa Application
+     * NEW VISA APPLICATION
+     *
+     * into the same comparable format.
+     */
+    function normalize(value) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+        }
+
+        return String(value)
+            .trim()
+            .toLowerCase()
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ");
+    }
+
+
+    /*
+     * Converts a request/case type into
+     * the category used by Document Configuration.
+     */
+    function normalizeCategory(value) {
+
+        var result =
+            normalize(value);
+
+        /*
+         * Remove common suffixes only when needed.
+         */
+        if (
+            result === "cpt request"
+        ) {
+            result = "cpt application";
+        }
+
+        if (
+            result === "opt request"
+        ) {
+            result = "opt application";
+        }
+
+        if (
+            result === "visa request"
+        ) {
+            result = "visa renewal";
+        }
+
+        return result;
+    }
+
+
+    function numberValue(value) {
+
+        var parsed =
+            parseInt(
+                value,
+                10
+            );
+
+        if (isNaN(parsed)) {
+
+            return 0;
+        }
+
+        return parsed;
+    }
+
+
+    function getDaysRemaining(dateValue) {
+
+        if (!dateValue) {
+
+            return null;
+        }
+
+        var today =
+            new GlideDateTime();
+
+        var due =
+            new GlideDateTime(
+                dateValue
+            );
+
+        var difference =
+            due.getNumericValue() -
+            today.getNumericValue();
+
+        return Math.ceil(
+            difference /
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
+        );
+    }
+
+
+    function getRiskLevel(score) {
+
+        if (score >= 80) {
+
+            return "Critical";
+        }
+
+        if (score >= 60) {
+
+            return "High";
+        }
+
+        if (score >= 30) {
+
+            return "Medium";
+        }
+
+        return "Low";
+    }
+
+
+    function hasValue(value) {
+
+        return (
+            value !== null &&
+            value !== undefined &&
+            String(value).trim() !== ""
+        );
+    }
+
+
+    /*
+     * A document is considered completed only when
+     * it has been verified/approved/completed.
+     *
+     * Uploaded does NOT automatically mean verified.
+     */
+   /*
+ * A document is considered completed if it is verified, approved,
+ * uploaded, or submitted.
+ */
+function isCompletedDocument(doc) {
+    var verificationStatus = normalize(doc.getDisplayValue("verification_status"));
+    var documentStatus = normalize(doc.getDisplayValue("document_status"));
+
+    if (
+        verificationStatus === "verified" ||
+        verificationStatus === "approved" ||
+        verificationStatus === "complete" ||
+        verificationStatus === "completed" ||
+        verificationStatus === "uploaded" ||
+        verificationStatus === "submitted" ||
+        verificationStatus === "pending_verification"
+    ) {
+        return true;
+    }
+
+    if (
+        documentStatus === "verified" ||
+        documentStatus === "approved" ||
+        documentStatus === "complete" ||
+        documentStatus === "completed" ||
+        documentStatus === "uploaded" ||
+        documentStatus === "submitted" ||
+        documentStatus === "pending_verification"
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+/*
+ * A document is missing only when it has not been uploaded/submitted,
+ * or has been rejected.
+ */
+function isMissingDocument(doc) {
+    var verificationStatus = normalize(doc.getDisplayValue("verification_status"));
+    var documentStatus = normalize(doc.getDisplayValue("document_status"));
+
+    if (
+        verificationStatus === "rejected" ||
+        verificationStatus === "missing" ||
+        verificationStatus === "required" ||
+        verificationStatus === "not verified" ||
+        verificationStatus === "not_verified"
+    ) {
+        return true;
+    }
+
+    if (
+        documentStatus === "required" ||
+        documentStatus === "missing" ||
+        documentStatus === "rejected"
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+    /*
+     * Gets the best category value from a Visa Case.
+     *
+     * Primary:
+     *   visa_category
+     *
+     * Fallback:
+     *   case_type
+     */
+    function getCaseCategory(caseGR) {
+
+        var category = "";
+
+
+        if (
+            caseGR.isValidField(
+                "visa_category"
+            )
+        ) {
+
+            category =
+                caseGR.getDisplayValue(
+                    "visa_category"
+                );
+
+            if (!hasValue(category)) {
+
+                category =
+                    caseGR.getValue(
+                        "visa_category"
+                    );
+            }
+        }
+
+
+        if (!hasValue(category)) {
+
+            if (
+                caseGR.isValidField(
+                    "case_type"
+                )
+            ) {
+
+                category =
+                    caseGR.getDisplayValue(
+                        "case_type"
+                    );
+
+                if (!hasValue(category)) {
+
+                    category =
+                        caseGR.getValue(
+                            "case_type"
+                        );
+                }
+            }
+        }
+
+
+        return category;
+    }
+
+
+    /*
+     * Find matching document configuration
+     * for a particular Visa Case.
+     *
+     * IMPORTANT:
+     *
+     * We DO NOT use case_type from the
+     * configuration table because that field
+     * does not exist there.
+     *
+     * We use:
+     *
+     * configuration.visa_category
+     *
+     * against:
+     *
+     * case.visa_category OR case.case_type
+     */
+    function getRequiredDocumentsForCase(
+        caseGR,
+        configurationRecords
+    ) {
+
+        var result = [];
+
+        var caseCategory =
+            normalizeCategory(
+                getCaseCategory(
+                    caseGR
+                )
+            );
+
+
+        if (!hasValue(caseCategory)) {
+
+            return result;
+        }
+
+
+        for (
+            var configIndex = 0;
+            configIndex <
+            configurationRecords.length;
+            configIndex++
+        ) {
+
+            var config =
+                configurationRecords[
+                    configIndex
+                ];
+
+
+            var configCategory =
+                normalizeCategory(
+                    config.visa_category
+                );
+
+
+            if (
+                configCategory !==
+                caseCategory
+            ) {
+
+                continue;
+            }
+
+
+            result.push({
+
+                configuration_sys_id:
+                    config.sys_id,
+
+                case_sys_id:
+                    caseGR.getUniqueValue(),
+
+                case_number:
+                    caseGR.getDisplayValue(
+                        "number"
+                    ),
+
+                case_category:
+                    getCaseCategory(
+                        caseGR
+                    ),
+
+                document_type:
+                    config.document_type,
+
+                document_type_value:
+                    config.document_type_value,
+
+                document_name:
+                    config.document_type,
+
+                priority:
+                    config.priority
+            });
+        }
+
+
+        /*
+         * Sort by priority.
+         */
+        result.sort(
+            function(a, b) {
+
+                return (
+                    a.priority -
+                    b.priority
+                );
+            }
+        );
+
+
+        return result;
+    }
+
+
+    // =========================================================
+    // 4. GET ALL ACTIVE VISA CASES
+    // =========================================================
+
+    var caseGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    caseGR.addQuery(
+        "student",
+        student.getUniqueValue()
+    );
+
+
+    caseGR.addQuery(
+        "active",
+        true
+    );
+
+
+    caseGR.orderBy(
+        "due_date"
+    );
+
+
+    caseGR.query();
+
+
+    while (caseGR.next()) {
+
+        var caseCategory =
+            getCaseCategory(
+                caseGR
+            );
+
+
+        var caseData = {
+
+            sys_id:
+                caseGR.getUniqueValue(),
+
+            number:
+                caseGR.getDisplayValue(
+                    "number"
+                ),
+
+            case_type:
+                caseGR.isValidField(
+                    "case_type"
+                )
+                    ? caseGR.getDisplayValue(
+                        "case_type"
+                    )
+                    : "",
+
+            case_type_value:
+                caseGR.isValidField(
+                    "case_type"
+                )
+                    ? caseGR.getValue(
+                        "case_type"
+                    )
+                    : "",
+
+            visa_category:
+                caseGR.isValidField(
+                    "visa_category"
+                )
+                    ? caseGR.getDisplayValue(
+                        "visa_category"
+                    )
+                    : "",
+
+            visa_category_value:
+                caseGR.isValidField(
+                    "visa_category"
+                )
+                    ? caseGR.getValue(
+                        "visa_category"
+                    )
+                    : "",
+
+            category:
+                caseCategory,
+
+            status:
+                caseGR.isValidField(
+                    "state"
+                )
+                    ? caseGR.getDisplayValue(
+                        "state"
+                    )
+                    : "",
+
+            due_date:
+                caseGR.isValidField(
+                    "due_date"
+                )
+                    ? caseGR.getDisplayValue(
+                        "due_date"
+                    )
+                    : "",
+
+            due_date_value:
+                caseGR.isValidField(
+                    "due_date"
+                )
+                    ? caseGR.getValue(
+                        "due_date"
+                    )
+                    : "",
+
+            days_remaining:
+                caseGR.isValidField(
+                    "due_date"
+                )
+                    ? getDaysRemaining(
+                        caseGR.getValue(
+                            "due_date"
+                        )
+                    )
+                    : null,
+
+            compliance_score:
+                caseGR.isValidField(
+                    "compliance_score"
+                )
+                    ? numberValue(
+                        caseGR.getValue(
+                            "compliance_score"
+                        )
+                    )
+                    : 0,
+
+            risk_level:
+                caseGR.isValidField(
+                    "risk_level"
+                )
+                    ? caseGR.getDisplayValue(
+                        "risk_level"
+                    )
+                    : "",
+
+            missing_documents:
+                caseGR.isValidField(
+                    "missing_documents_count"
+                )
+                    ? numberValue(
+                        caseGR.getValue(
+                            "missing_documents_count"
+                        )
+                    )
+                    : 0,
+
+            made_sla:
+                caseGR.isValidField(
+                    "made_sla"
+                )
+                    ? caseGR.getValue(
+                        "made_sla"
+                    )
+                    : ""
+        };
+
+
+        data.cases.push(
+            caseData
+        );
+    }
+
+
+    data.summary.active_cases =
+        data.cases.length;
+
+
+    // =========================================================
+    // 5. NO ACTIVE CASES
+    // =========================================================
+
+    if (
+        data.cases.length === 0
+    ) {
+
+        data.summary.visa_status =
+            data.student.visa_status ||
+            "No Active Case";
+
+        data.summary.compliance_score =
+            100;
+
+        data.summary.risk_score =
+            0;
+
+        data.summary.risk_level =
+            "Low";
+
+        data.documents.percentage =
+            100;
+
+        data.risk.score =
+            0;
+
+        data.risk.level =
+            "Low";
+
+        data.recommendation =
+            "You currently have no active visa cases.";
+
+        return;
+    }
+
+
+    // =========================================================
+    // 6. CASE IDS
+    // =========================================================
+
+    var caseIds = [];
+
+    for (
+        var caseIndex = 0;
+        caseIndex <
+        data.cases.length;
+        caseIndex++
+    ) {
+
+        caseIds.push(
+            data.cases[
+                caseIndex
+            ].sys_id
+        );
+    }
+
+
+    // =========================================================
+    // 7. FIND NEAREST DEADLINE
+    // =========================================================
+
+    var nearestDeadline =
+        null;
+
+
+    for (
+        var deadlineIndex = 0;
+        deadlineIndex <
+        data.cases.length;
+        deadlineIndex++
+    ) {
+
+        var currentCase =
+            data.cases[
+                deadlineIndex
+            ];
+
+
+        /*
+         * Cases without a due date are not
+         * considered for nearest deadline.
+         */
+        if (
+            currentCase.days_remaining ===
+            null
+        ) {
+
+            continue;
+        }
+
+
+        var deadline = {
+
+            case_sys_id:
+                currentCase.sys_id,
+
+            case_number:
+                currentCase.number,
+
+            case_type:
+                currentCase.category,
+
+            due_date:
+                currentCase.due_date,
+
+            days_remaining:
+                currentCase.days_remaining
+        };
+
+
+        data.deadlines.push(
+            deadline
+        );
+
+
+        if (
+            nearestDeadline === null ||
+            currentCase.days_remaining <
+            nearestDeadline.days_remaining
+        ) {
+
+            nearestDeadline =
+                deadline;
+        }
+    }
+
+
+    // =========================================================
+    // 8. VISA STATUS
+    // =========================================================
+
+    data.summary.visa_status =
+        data.student.visa_status ||
+        "Active";
+
+
+    // =========================================================
+    // 9. NEXT DEADLINE
+    // =========================================================
+
+    if (nearestDeadline) {
+
+        data.summary.next_deadline =
+            nearestDeadline;
+    }
+
+
+    // =========================================================
+    // 10. LOAD DOCUMENT CONFIGURATION
+    //
+    // ACTUAL TABLE STRUCTURE:
+    //
+    // Active
+    // Visa Category
+    // Document Type
+    // Required
+    // Priority
+    //
+    // We DO NOT use:
+    // case_type
+    // document_name
+    // =========================================================
+
+    var configurationGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_document_configuration"
+        );
+
+
+    configurationGR.addQuery(
+        "active",
+        true
+    );
+
+
+    configurationGR.addQuery(
+        "required",
+        true
+    );
+
+
+    configurationGR.orderBy(
+        "priority"
+    );
+
+
+    configurationGR.query();
+
+
+    var configurationRecords =
+        [];
+
+
+    while (
+        configurationGR.next()
+    ) {
+
+        var documentTypeDisplay =
+            configurationGR.getDisplayValue(
+                "document_type"
+            );
+
+        var documentTypeValue =
+            configurationGR.getValue(
+                "document_type"
+            );
+
+
+        configurationRecords.push({
+
+            sys_id:
+                configurationGR.getUniqueValue(),
+
+            visa_category:
+                configurationGR.getDisplayValue(
+                    "visa_category"
+                ),
+
+            visa_category_value:
+                configurationGR.getValue(
+                    "visa_category"
+                ),
+
+            document_type:
+                documentTypeDisplay,
+
+            document_type_value:
+                documentTypeValue,
+
+            priority:
+                numberValue(
+                    configurationGR.getValue(
+                        "priority"
+                    )
+                )
+        });
+    }
+
+
+    // =========================================================
+    // 11. LOAD ACTUAL VISA DOCUMENTS
+    //
+    // Documents are always scoped to
+    // their individual Visa Case.
+    // =========================================================
+
+    var documentGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_document"
+        );
+
+
+    documentGR.addQuery(
+        "visa_case",
+        "IN",
+        caseIds.join(",")
+    );
+
+
+    documentGR.query();
+
+
+    var uploadedDocuments =
+        [];
+
+
+    while (
+        documentGR.next()
+    ) {
+
+        var completed =
+            isCompletedDocument(
+                documentGR
+            );
+
+
+        var missing =
+            isMissingDocument(
+                documentGR
+            );
+
+
+        uploadedDocuments.push({
+
+            sys_id:
+                documentGR.getUniqueValue(),
+
+            visa_case:
+                documentGR.getValue(
+                    "visa_case"
+                ),
+
+            visa_case_display:
+                documentGR.getDisplayValue(
+                    "visa_case"
+                ),
+
+            document_type:
+                documentGR.getDisplayValue(
+                    "document_type"
+                ),
+
+            document_type_value:
+                documentGR.getValue(
+                    "document_type"
+                ),
+
+            document_status:
+                documentGR.getDisplayValue(
+                    "document_status"
+                ),
+
+            verification_status:
+                documentGR.getDisplayValue(
+                    "verification_status"
+                ),
+
+            expiry_date:
+                documentGR.getDisplayValue(
+                    "expiry_date"
+                ),
+
+            completed:
+                completed,
+
+            missing:
+                missing
+        });
+    }
+
+
+    // =========================================================
+    // 12. DOCUMENT COMPLETENESS
+    //
+    // IMPORTANT:
+    //
+    // We process EACH ACTIVE VISA CASE separately.
+    //
+    // Example:
+    //
+    // Case A → 5 required docs
+    // Case B → 4 required docs
+    //
+    // They are NOT mixed together.
+    // =========================================================
+
+    var totalRequiredDocuments = 0;
+
+    var totalCompletedDocuments = 0;
+
+    var totalMissingDocuments = 0;
+
+
+    for (
+        var caseDocIndex = 0;
+        caseDocIndex <
+        data.cases.length;
+        caseDocIndex++
+    ) {
+
+        var currentVisaCase =
+            data.cases[
+                caseDocIndex
+            ];
+
+
+        // -----------------------------------------------------
+        // Get configuration for THIS case
+        // -----------------------------------------------------
+
+        var requiredForCase =
+            getRequiredDocumentsForCase(
+                getVisaCaseRecord(
+                    currentVisaCase.sys_id
+                ),
+                configurationRecords
+            );
+
+
+        /*
+         * Count required documents
+         * for this case.
+         */
+        totalRequiredDocuments +=
+            requiredForCase.length;
+
+
+        /*
+         * Update case-level missing count.
+         */
+        var caseMissingCount = 0;
+
+        var caseCompletedCount = 0;
+
+
+        // -----------------------------------------------------
+        // Process each required document
+        // -----------------------------------------------------
+
+        for (
+            var requiredIndex = 0;
+            requiredIndex <
+            requiredForCase.length;
+            requiredIndex++
+        ) {
+
+            var requiredDoc =
+                requiredForCase[
+                    requiredIndex
+                ];
+
+
+            var foundDocument =
+                null;
+
+
+            // -------------------------------------------------
+            // Find actual document for THIS case
+            // -------------------------------------------------
+
+            for (
+                var uploadedIndex = 0;
+                uploadedIndex <
+                uploadedDocuments.length;
+                uploadedIndex++
+            ) {
+
+                var uploaded =
+                    uploadedDocuments[
+                        uploadedIndex
+                    ];
+
+
+                /*
+                 * Never allow a document from
+                 * another Visa Case to satisfy
+                 * this case's requirement.
+                 */
+                if (
+                    uploaded.visa_case !==
+                    requiredDoc.case_sys_id
+                ) {
+
+                    continue;
+                }
+
+
+                var requiredType =
+                    normalize(
+                        requiredDoc.document_type
+                    );
+
+
+                var requiredTypeValue =
+                    normalize(
+                        requiredDoc.document_type_value
+                    );
+
+
+                var uploadedType =
+                    normalize(
+                        uploaded.document_type
+                    );
+
+
+                var uploadedTypeValue =
+                    normalize(
+                        uploaded.document_type_value
+                    );
+
+
+                if (
+                    (
+                        requiredType &&
+                        uploadedType ===
+                        requiredType
+                    ) ||
+                    (
+                        requiredTypeValue &&
+                        uploadedTypeValue ===
+                        requiredTypeValue
+                    ) ||
+                    (
+                        requiredType &&
+                        uploadedTypeValue ===
+                        requiredType
+                    ) ||
+                    (
+                        requiredTypeValue &&
+                        uploadedType ===
+                        requiredTypeValue
+                    )
+                ) {
+
+                    foundDocument =
+                        uploaded;
+
+                    break;
+                }
+            }
+
+
+            // -------------------------------------------------
+            // COMPLETED
+            // -------------------------------------------------
+
+            var isComplete =
+                (
+                    foundDocument !== null &&
+                    foundDocument.completed
+                );
+
+
+            if (isComplete) {
+
+                totalCompletedDocuments++;
+
+                caseCompletedCount++;
+
+            } else {
+
+                totalMissingDocuments++;
+
+                caseMissingCount++;
+            }
+
+
+            // -------------------------------------------------
+            // ADD DOCUMENT TO DIGITAL TWIN LIST
+            // -------------------------------------------------
+
+            data.documents.list.push({
+
+                case_sys_id:
+                    requiredDoc.case_sys_id,
+
+                case_number:
+                    requiredDoc.case_number,
+
+                document_type:
+                    requiredDoc.document_type,
+
+                document_name:
+                    requiredDoc.document_name,
+
+                uploaded:
+                    foundDocument !== null,
+
+                completed:
+                    isComplete,
+
+                status:
+                    foundDocument
+                        ? foundDocument.document_status
+                        : "Required",
+
+                verification_status:
+                    foundDocument
+                        ? foundDocument.verification_status
+                        : "Not Uploaded"
+            });
+        }
+
+
+        // -----------------------------------------------------
+        // STORE PER-CASE DOCUMENT COUNTS
+        // -----------------------------------------------------
+
+        currentVisaCase.required_documents =
+            requiredForCase.length;
+
+        currentVisaCase.completed_documents =
+            caseCompletedCount;
+
+        currentVisaCase.missing_documents =
+            caseMissingCount;
+    }
+
+
+    // =========================================================
+    // 13. FINAL DOCUMENT TOTALS
+    // =========================================================
+
+    data.documents.total =
+        totalRequiredDocuments;
+
+
+    data.documents.completed =
+        totalCompletedDocuments;
+
+
+    data.documents.missing =
+        totalMissingDocuments;
+
+
+    // =========================================================
+    // 14. DOCUMENT COMPLETION %
+    // =========================================================
+
+    if (
+        data.documents.total > 0
+    ) {
+
+        data.documents.percentage =
+            Math.round(
+                (
+                    data.documents.completed /
+                    data.documents.total
+                ) *
+                100
+            );
+
+    } else {
+
+        /*
+         * No configuration matched
+         * the student's active cases.
+         */
+        data.documents.percentage =
+            0;
+    }
+
+
+    // =========================================================
+    // 15. UPDATE CASE MISSING DOCUMENT COUNTS
+    //
+    // IMPORTANT:
+    //
+    // We calculate the count live for the Digital Twin.
+    // We do NOT modify the Visa Case record here.
+    // =========================================================
+
+
+    // =========================================================
+    // 16. DEADLINE RISK
+    //
+    // 40%
+    // =========================================================
+
+    var deadlineRisk = 0;
+
+
+    if (nearestDeadline) {
+
+        var days =
+            nearestDeadline.days_remaining;
+
+
+        if (days <= 0) {
+
+            deadlineRisk = 100;
+
+        } else if (days <= 3) {
+
+            deadlineRisk = 90;
+
+        } else if (days <= 7) {
+
+            deadlineRisk = 75;
+
+        } else if (days <= 14) {
+
+            deadlineRisk = 55;
+
+        } else if (days <= 30) {
+
+            deadlineRisk = 30;
+
+        } else {
+
+            deadlineRisk = 10;
+        }
+    }
+
+
+    // =========================================================
+    // 17. MISSING DOCUMENT RISK
+    //
+    // 35%
+    // =========================================================
+
+    var missingDocumentRisk =
+        0;
+
+
+    if (
+        data.documents.total > 0
+    ) {
+
+        missingDocumentRisk =
+            Math.round(
+                (
+                    data.documents.missing /
+                    data.documents.total
+                ) *
+                100
+            );
+    }
+
+
+    // =========================================================
+    // 18. SLA RISK
+    //
+    // 25%
+    // =========================================================
+
+    var slaRisk = 0;
+
+    var slaBreaches = 0;
+
+
+    for (
+        var slaIndex = 0;
+        slaIndex <
+        data.cases.length;
+        slaIndex++
+    ) {
+
+        var madeSLA =
+            normalize(
+                data.cases[
+                    slaIndex
+                ].made_sla
+            );
+
+
+        if (
+            madeSLA === "false" ||
+            madeSLA === "0" ||
+            madeSLA === "no"
+        ) {
+
+            slaBreaches++;
+        }
+    }
+
+
+    if (
+        data.cases.length > 0
+    ) {
+
+        slaRisk =
+            Math.round(
+                (
+                    slaBreaches /
+                    data.cases.length
+                ) *
+                100
+            );
+    }
+
+
+    // =========================================================
+    // 19. FINAL RISK SCORE
+    //
+    // Deadline       = 40%
+    // Missing Docs   = 35%
+    // SLA Delays     = 25%
+    // =========================================================
+
+    var riskScore =
+        Math.round(
+
+            (
+                deadlineRisk *
+                0.40
+            ) +
+
+            (
+                missingDocumentRisk *
+                0.35
+            ) +
+
+            (
+                slaRisk *
+                0.25
+            )
+        );
+
+
+    if (riskScore > 100) {
+
+        riskScore = 100;
+    }
+
+
+    if (riskScore < 0) {
+
+        riskScore = 0;
+    }
+
+
+    var riskLevel =
+        getRiskLevel(
+            riskScore
+        );
+
+
+    // =========================================================
+    // 20. COMPLIANCE SCORE
+    //
+    // Documents = 50%
+    // Deadlines = 30%
+    // SLA       = 20%
+    // =========================================================
+
+    var documentHealth =
+        data.documents.percentage;
+
+
+    var deadlineHealth =
+        100 -
+        deadlineRisk;
+
+
+    var slaHealth =
+        100 -
+        slaRisk;
+
+
+    var complianceScore =
+        Math.round(
+
+            (
+                documentHealth *
+                0.50
+            ) +
+
+            (
+                deadlineHealth *
+                0.30
+            ) +
+
+            (
+                slaHealth *
+                0.20
+            )
+        );
+
+
+    if (
+        complianceScore > 100
+    ) {
+
+        complianceScore =
+            100;
+    }
+
+
+    if (
+        complianceScore < 0
+    ) {
+
+        complianceScore =
+            0;
+    }
+
+
+    // =========================================================
+    // 21. SEND SUMMARY
+    // =========================================================
+
+    data.summary.compliance_score =
+        complianceScore;
+
+
+    data.summary.risk_score =
+        riskScore;
+
+
+    data.summary.risk_level =
+        riskLevel;
+
+
+    data.risk.score =
+        riskScore;
+
+
+    data.risk.level =
+        riskLevel;
+
+
+    // =========================================================
+    // 22. RISK EXPLANATION
+    // =========================================================
+
+    var explanations = [];
+
+
+    if (
+        data.documents.missing > 0
+    ) {
+
+        explanations.push(
+            "Missing or incomplete required documents: " +
+            data.documents.missing
+        );
+    }
+
+
+    if (
+        nearestDeadline &&
+        nearestDeadline.days_remaining <= 14
+    ) {
+
+        if (
+            nearestDeadline.days_remaining <= 0
+        ) {
+
+            explanations.push(
+                "A compliance deadline has passed."
+            );
+
+        } else {
+
+            explanations.push(
+                "A compliance deadline is approaching in " +
+                nearestDeadline.days_remaining +
+                " day(s)."
+            );
+        }
+    }
+
+
+    if (
+        slaBreaches > 0
+    ) {
+
+        explanations.push(
+            slaBreaches +
+            " active case(s) have an SLA delay."
+        );
+    }
+
+
+    if (
+        data.documents.total > 0 &&
+        data.documents.missing === 0
+    ) {
+
+        explanations.push(
+            "All required documents are complete."
+        );
+    }
+
+
+    if (
+        data.documents.total === 0
+    ) {
+
+        explanations.push(
+            "No required document configuration matched the active visa cases."
+        );
+    }
+
+
+    if (
+        slaBreaches === 0
+    ) {
+
+        explanations.push(
+            "No SLA breach detected."
+        );
+    }
+
+
+    if (
+        explanations.length === 0
+    ) {
+
+        explanations.push(
+            "No significant compliance risk factors detected."
+        );
+    }
+
+
+    data.risk.explanation =
+        explanations;
+
+
+    // =========================================================
+    // 23. COMPLIANCE STATE
+    // =========================================================
+
+    data.compliance_state = [];
+
+
+    // ---------------------------------------------------------
+    // IDENTITY
+    // ---------------------------------------------------------
+
+    data.compliance_state.push({
+
+        name:
+            "Identity Verified",
+
+        status:
+            (
+                data.student.first_name &&
+                data.student.last_name
+            )
+                ? "complete"
+                : "warning"
+    });
+
+
+    // ---------------------------------------------------------
+    // PASSPORT
+    // ---------------------------------------------------------
+
+    var passportVerified =
+        false;
+
+
+    for (
+        var passportIndex = 0;
+        passportIndex <
+        data.documents.list.length;
+        passportIndex++
+    ) {
+
+        var passportDoc =
+            data.documents.list[
+                passportIndex
+            ];
+
+
+        if (
+            normalize(
+                passportDoc.document_type
+            ).indexOf(
+                "passport"
+            ) !== -1 &&
+            passportDoc.completed
+        ) {
+
+            passportVerified =
+                true;
+
+            break;
+        }
+    }
+
+
+    data.compliance_state.push({
+
+        name:
+            "Passport Verified",
+
+        status:
+            passportVerified
+                ? "complete"
+                : "warning"
+    });
+
+
+    // ---------------------------------------------------------
+    // UNIVERSITY
+    // ---------------------------------------------------------
+
+    data.compliance_state.push({
+
+        name:
+            "University Information",
+
+        status:
+            data.student.university_name
+                ? "complete"
+                : "warning"
+    });
+
+
+    // ---------------------------------------------------------
+    // VISA STATUS
+    // ---------------------------------------------------------
+
+    var visaStatus =
+        normalize(
+            data.student.visa_status
+        );
+
+
+    data.compliance_state.push({
+
+        name:
+            "Visa Status Active",
+
+        status:
+            (
+                visaStatus === "active" ||
+                visaStatus === "valid" ||
+                visaStatus === "approved"
+            )
+                ? "complete"
+                : "warning"
+    });
+
+
+    // ---------------------------------------------------------
+    // REQUIRED DOCUMENTS
+    // ---------------------------------------------------------
+
+    data.compliance_state.push({
+
+        name:
+            "Required Documents",
+
+        status:
+            (
+                data.documents.total > 0 &&
+                data.documents.missing === 0
+            )
+                ? "complete"
+                : "warning"
+    });
+
+
+    // ---------------------------------------------------------
+    // SLA
+    // ---------------------------------------------------------
+
+    data.compliance_state.push({
+
+        name:
+            "SLA Compliance",
+
+        status:
+            slaBreaches === 0
+                ? "complete"
+                : "warning"
+    });
+
+
+    // =========================================================
+    // 24. AI RECOMMENDATION
+    // =========================================================
+
+    if (
+        data.documents.missing > 0
+    ) {
+
+        data.recommendation =
+            "Complete the missing required documents before your upcoming compliance deadline.";
+
+    } else if (
+        nearestDeadline &&
+        nearestDeadline.days_remaining <= 14
+    ) {
+
+        data.recommendation =
+            "Review your upcoming compliance deadline and complete any required action before the due date.";
+
+    } else if (
+        slaBreaches > 0
+    ) {
+
+        data.recommendation =
+            "Review the delayed case activity and follow up with your assigned advisor.";
+
+    } else {
+
+        data.recommendation =
+            "Your compliance records currently look healthy. Continue monitoring your documents and upcoming deadlines.";
+    }
+
+
+    // =========================================================
+    // 25. GET LATEST RISK ASSESSMENT
+    // =========================================================
+
+    var latestAssessment =
+        null;
+
+
+    var assessmentGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_risk_assessment"
+        );
+
+
+    assessmentGR.addQuery(
+        "visa_case",
+        "IN",
+        caseIds.join(",")
+    );
+
+
+    assessmentGR.orderByDesc(
+        "last_assessment_date"
+    );
+
+
+    assessmentGR.setLimit(1);
+
+    assessmentGR.query();
+
+
+    if (
+        assessmentGR.next()
+    ) {
+
+        latestAssessment = {
+
+            sys_id:
+                assessmentGR.getUniqueValue(),
+
+            compliance_score:
+                assessmentGR.getValue(
+                    "compliance_score"
+                ),
+
+            risk_level:
+                assessmentGR.getDisplayValue(
+                    "risk_level"
+                ),
+
+            days_remaining:
+                assessmentGR.getValue(
+                    "days_remaining"
+                ),
+
+            missing_documents:
+                assessmentGR.getValue(
+                    "missing_documents_count"
+                ),
+
+            explanation:
+                assessmentGR.getValue(
+                    "risk_explanation"
+                ),
+
+            assessment_status:
+                assessmentGR.getDisplayValue(
+                    "assessment_status"
+                ),
+
+            last_assessment_date:
+                assessmentGR.getDisplayValue(
+                    "last_assessment_date"
+                ),
+
+            visa_case:
+                assessmentGR.getDisplayValue(
+                    "visa_case"
+                )
+        };
+    }
+
+
+    data.latest_assessment =
+        latestAssessment;
+
+
+    // =========================================================
+    // 26. FINAL DATA FOR UI
+    // =========================================================
+
+    data.summary.document_completion =
+        data.documents.percentage;
+
+
+    data.summary.total_documents =
+        data.documents.total;
+
+
+    data.summary.completed_documents =
+        data.documents.completed;
+
+
+    data.summary.missing_documents =
+        data.documents.missing;
+
+
+    data.summary.sla_breaches =
+        slaBreaches;
+
+
+    data.summary.deadline_risk =
+        deadlineRisk;
+
+
+    data.summary.document_risk =
+        missingDocumentRisk;
+
+
+    data.summary.sla_risk =
+        slaRisk;
+
+
+    // =========================================================
+    // 27. HELPER:
+    // GET VISA CASE RECORD
+    //
+    // Used because document configuration must be
+    // evaluated separately for every case.
+    // =========================================================
+
+    function getVisaCaseRecord(
+        sysId
+    ) {
+
+        var gr =
+            new GlideRecord(
+                "x_snc_visaguardi_0_visa_case"
+            );
+
+
+        if (
+            gr.get(sysId)
+        ) {
+
+            return gr;
+        }
+
+
+        return null;
+    }
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:53:02</sys_created_on>
+        <sys_id>8673467da86603107f446d9f3e09f656</sys_id>
+        <sys_mod_count>25</sys_mod_count>
+        <sys_name>VG Compliance Digital Twin</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_8673467da86603107f446d9f3e09f656</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-18 07:11:07</sys_updated_on>
+        <template><![CDATA[<!-- =========================================================
+     VISA GUARDIAN AI
+     STUDENT COMPLIANCE DIGITAL TWIN
+     ========================================================= -->
+
+<div class="vg-twin-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="vg-twin-header">
+
+        <div class="vg-twin-header-left">
+
+            <div class="vg-twin-header-icon">
+                ]]>🧬
+<![CDATA[            </div>
+
+            <div>
+
+                <div class="vg-twin-title">
+                    My Compliance Digital Twin
+                </div>
+
+                <div class="vg-twin-subtitle">
+                    Live view of your visa compliance status
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="vg-twin-live-status">
+
+            <span class="vg-live-dot"></span>
+
+            Compliance Monitoring Active
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+         ===================================================== -->
+
+    <div
+        class="vg-twin-error"
+        ng-if="data.error">
+
+        <span>⚠</span>
+
+        {{data.error}}
+
+    </div>
+
+
+    <!-- =====================================================
+         STUDENT CONTEXT
+         ===================================================== -->
+
+    <div
+        class="vg-twin-student-context"
+        ng-if="data.student">
+
+        <div class="vg-student-context-item">
+
+            <span class="vg-context-label">
+                STUDENT
+            </span>
+
+            <strong>
+                {{data.student.name}}
+            </strong>
+
+        </div>
+
+        <div class="vg-student-context-divider"></div>
+
+        <div class="vg-student-context-item">
+
+            <span class="vg-context-label">
+                STUDENT ID
+            </span>
+
+            <strong>
+                {{data.student.student_id || '—'}}
+            </strong>
+
+        </div>
+
+        <div class="vg-student-context-divider"></div>
+
+        <div class="vg-student-context-item">
+
+            <span class="vg-context-label">
+                ACTIVE CASES
+            </span>
+
+            <strong>
+                {{data.cases.length}}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+         ===================================================== -->
+
+    <div
+        class="vg-twin-summary-grid"
+        ng-if="data.student">
+
+
+        <!-- =================================================
+             COMPLIANCE SCORE
+             ================================================= -->
+
+        <div class="vg-twin-summary-card score-card">
+
+            <div class="vg-summary-top">
+
+                <div>
+
+                    <div class="vg-summary-label">
+                        Compliance Score
+                    </div>
+
+                    <div class="vg-summary-value">
+                        {{data.summary.compliance_score}}%
+                    </div>
+
+                </div>
+
+                <div class="vg-summary-icon score-icon">
+                    ✓
+                </div>
+
+            </div>
+
+            <div class="vg-score-bar">
+
+                <div
+                    class="vg-score-progress"
+                    ng-style="{
+                        'width': data.summary.compliance_score + '%'
+                    }">
+                </div>
+
+            </div>
+
+            <div class="vg-summary-description">
+
+                <span ng-if="data.summary.compliance_score >= 80">
+                    Your compliance is currently on track.
+                </span>
+
+                <span
+                    ng-if="
+                        data.summary.compliance_score >= 60 &&
+                        data.summary.compliance_score < 80
+                    ">
+                    Your compliance is generally healthy but needs attention.
+                </span>
+
+                <span
+                    ng-if="data.summary.compliance_score < 60">
+                    Some compliance items require immediate attention.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             VISA STATUS
+             ================================================= -->
+
+        <div class="vg-twin-summary-card visa-card">
+
+            <div class="vg-summary-top">
+
+                <div>
+
+                    <div class="vg-summary-label">
+                        Visa Status
+                    </div>
+
+                    <div class="vg-summary-value">
+                        {{data.summary.visa_status || 'Not Available'}}
+                    </div>
+
+                </div>
+
+                <div class="vg-summary-icon visa-icon">
+                    ]]>🛂
+<![CDATA[                </div>
+
+            </div>
+
+
+            <div
+                class="vg-summary-status success"
+                ng-if="
+                    data.summary.visa_status &&
+                    (
+                        data.summary.visa_status.toLowerCase() === 'active' ||
+                        data.summary.visa_status.toLowerCase() === 'valid' ||
+                        data.summary.visa_status.toLowerCase() === 'approved'
+                    )
+                ">
+
+                <span></span>
+
+                Valid Status
+
+            </div>
+
+
+            <div
+                class="vg-summary-status warning"
+                ng-if="
+                    !data.summary.visa_status ||
+                    (
+                        data.summary.visa_status.toLowerCase() !== 'active' &&
+                        data.summary.visa_status.toLowerCase() !== 'valid' &&
+                        data.summary.visa_status.toLowerCase() !== 'approved'
+                    )
+                ">
+
+                <span></span>
+
+                Review Required
+
+            </div>
+
+
+            <div class="vg-summary-description">
+
+                Current visa status from your student profile.
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RISK LEVEL
+             ================================================= -->
+
+        <div
+            class="vg-twin-summary-card risk-card"
+            ng-class="{
+                'risk-low-card':
+                    data.summary.risk_level === 'Low',
+
+                'risk-medium-card':
+                    data.summary.risk_level === 'Medium',
+
+                'risk-high-card':
+                    data.summary.risk_level === 'High'
+            }">
+
+            <div class="vg-summary-top">
+
+                <div>
+
+                    <div class="vg-summary-label">
+                        Risk Level
+                    </div>
+
+                    <div class="vg-summary-value">
+                        {{data.summary.risk_level}}
+                    </div>
+
+                </div>
+
+                <div class="vg-summary-icon risk-icon">
+                    !
+                </div>
+
+            </div>
+
+
+            <div
+                class="vg-summary-status success"
+                ng-if="data.summary.risk_level === 'Low'">
+
+                <span></span>
+
+                Low Risk
+
+            </div>
+
+
+            <div
+                class="vg-summary-status warning"
+                ng-if="data.summary.risk_level === 'Medium'">
+
+                <span></span>
+
+                Needs Attention
+
+            </div>
+
+
+            <div
+                class="vg-summary-status danger"
+                ng-if="data.summary.risk_level === 'High'">
+
+                <span></span>
+
+                Immediate Attention
+
+            </div>
+
+
+            <div class="vg-summary-description">
+
+                Overall risk based on deadlines, documents and SLA health.
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NEXT DEADLINE
+             ================================================= -->
+
+        <div class="vg-twin-summary-card deadline-card">
+
+            <div class="vg-summary-top">
+
+                <div>
+
+                    <div class="vg-summary-label">
+                        Next Deadline
+                    </div>
+
+
+                    <div
+                        class="vg-summary-value"
+                        ng-if="data.summary.next_deadline">
+
+                        {{data.summary.next_deadline.days_remaining}}
+                        {{data.summary.next_deadline.days_remaining == 1 ? 'Day' : 'Days'}}
+
+                    </div>
+
+
+                    <div
+                        class="vg-summary-value"
+                        ng-if="!data.summary.next_deadline">
+
+                        None
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-summary-icon deadline-icon">
+                    ]]>📅
+<![CDATA[                </div>
+
+            </div>
+
+
+            <div
+                class="vg-summary-status warning"
+                ng-if="
+                    data.summary.next_deadline &&
+                    data.summary.next_deadline.days_remaining <= 14
+                ">
+
+                <span></span>
+
+                Upcoming
+
+            </div>
+
+
+            <div
+                class="vg-summary-status success"
+                ng-if="
+                    data.summary.next_deadline &&
+                    data.summary.next_deadline.days_remaining > 14
+                ">
+
+                <span></span>
+
+                On Track
+
+            </div>
+
+
+            <div
+                class="vg-summary-status success"
+                ng-if="!data.summary.next_deadline">
+
+                <span></span>
+
+                No Deadline
+
+            </div>
+
+
+            <div class="vg-summary-description">
+
+                <span ng-if="data.summary.next_deadline">
+
+                    {{data.summary.next_deadline.case_type}}
+                    —
+                    {{data.summary.next_deadline.due_date}}
+
+                </span>
+
+                <span ng-if="!data.summary.next_deadline">
+
+                    No upcoming compliance deadline found.
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CONTENT GRID
+         ===================================================== -->
+
+    <div
+        class="vg-twin-main-grid"
+        ng-if="data.student">
+
+
+        <!-- =================================================
+             DOCUMENT STATUS
+             ================================================= -->
+
+        <div class="vg-twin-card">
+
+            <div class="vg-twin-card-header">
+
+                <div class="vg-card-heading">
+
+                    <span class="vg-card-heading-icon">
+                        ]]>📄
+<![CDATA[                    </span>
+
+                    <div>
+
+                        <div class="vg-card-title">
+                            Document Status
+                        </div>
+
+                        <div class="vg-card-subtitle">
+                            Documents across your active visa cases
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-document-count">
+
+                    {{data.documents.completed}}
+                    /
+                    {{data.documents.total}}
+
+                </div>
+
+            </div>
+
+
+            <!-- DOCUMENT PROGRESS -->
+
+            <div class="vg-document-progress">
+
+                <div
+                    class="vg-document-progress-fill"
+                    ng-style="{
+                        'width': data.documents.percentage + '%'
+                    }">
+                </div>
+
+            </div>
+
+
+            <!-- DOCUMENT SUMMARY -->
+
+            <div class="vg-document-summary">
+
+                <span>
+                    {{data.documents.percentage}}% Complete
+                </span>
+
+                <span
+                    ng-if="data.documents.missing > 0"
+                    class="vg-document-missing">
+
+                    {{data.documents.missing}}
+                    Pending / Missing
+
+                </span>
+
+                <span
+                    ng-if="data.documents.missing === 0"
+                    class="vg-document-complete">
+
+                    All Tracked Documents Complete
+
+                </span>
+
+            </div>
+
+
+            <!-- COMPACT DOCUMENT SUMMARY -->
+
+            <div class="vg-document-insight">
+
+                <div class="vg-document-insight-icon">
+                    ]]>📋
+<![CDATA[                </div>
+
+                <div class="vg-document-insight-content">
+
+                    <div
+                        class="vg-document-insight-title"
+                        ng-if="data.documents.missing > 0">
+
+                        {{data.documents.missing}}
+                        required documents need attention.
+
+                    </div>
+
+                    <div
+                        class="vg-document-insight-title"
+                        ng-if="data.documents.missing === 0">
+
+                        All tracked documents are complete.
+
+                    </div>
+
+                    <div class="vg-document-insight-description">
+
+                        Review your document requirements and verification status.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="student?id=vg_doc_upload"
+                class="vg-twin-secondary-button">
+
+                View All Documents
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             UPCOMING DEADLINES
+             ================================================= -->
+
+        <div class="vg-twin-card">
+
+            <div class="vg-twin-card-header">
+
+                <div class="vg-card-heading">
+
+                    <span class="vg-card-heading-icon">
+                        ⏰
+                    </span>
+
+                    <div>
+
+                        <div class="vg-card-title">
+                            Upcoming Deadlines
+                        </div>
+
+                        <div class="vg-card-subtitle">
+                            Important compliance dates
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <span class="vg-view-all">
+                    {{data.deadlines.length}} Active
+                </span>
+
+            </div>
+
+
+            <div class="vg-deadline-list">
+
+
+                <div
+                    class="vg-deadline-item"
+                    ng-repeat="deadline in data.deadlines | orderBy:'days_remaining' | limitTo:3 track by deadline.case_sys_id"
+                    ng-class="{
+                        'urgent':
+                            deadline.days_remaining <= 7,
+
+                        'warning-deadline':
+                            deadline.days_remaining > 7 &&
+                            deadline.days_remaining <= 14
+                    }">
+
+
+                    <div
+                        class="vg-deadline-icon"
+                        ng-class="{
+                            'urgent-icon':
+                                deadline.days_remaining <= 7,
+
+                            'normal':
+                                deadline.days_remaining > 7
+                        }">
+
+                        <span
+                            ng-if="deadline.days_remaining <= 7">
+                            !
+                        </span>
+
+                        <span
+                            ng-if="deadline.days_remaining > 7">
+                            ]]>📅
+<![CDATA[                        </span>
+
+                    </div>
+
+
+                    <div class="vg-deadline-content">
+
+                        <div class="vg-deadline-title">
+
+                            {{deadline.case_type}}
+
+                        </div>
+
+
+                        <div class="vg-deadline-case">
+
+                            {{deadline.case_number}}
+
+                        </div>
+
+
+                        <div class="vg-deadline-date">
+
+                            <span
+                                ng-if="deadline.days_remaining > 0">
+
+                                Due in
+                                {{deadline.days_remaining}}
+                                {{deadline.days_remaining == 1 ? 'day' : 'days'}}
+
+                            </span>
+
+
+                            <span
+                                ng-if="deadline.days_remaining === 0">
+
+                                Due Today
+
+                            </span>
+
+
+                            <span
+                                ng-if="deadline.days_remaining < 0">
+
+                                Overdue by
+                                {{-deadline.days_remaining}}
+                                {{(-deadline.days_remaining) == 1 ? 'day' : 'days'}}
+
+                            </span>
+
+                            <br>
+
+                            {{deadline.due_date}}
+
+                        </div>
+
+                    </div>
+
+
+                    <span
+                        class="vg-deadline-badge urgent-badge"
+                        ng-if="deadline.days_remaining <= 7">
+
+                        Urgent
+
+                    </span>
+
+
+                    <span
+                        class="vg-deadline-badge warning-badge"
+                        ng-if="
+                            deadline.days_remaining > 7 &&
+                            deadline.days_remaining <= 14
+                        ">
+
+                        Upcoming
+
+                    </span>
+
+
+                    <span
+                        class="vg-deadline-badge normal-badge"
+                        ng-if="deadline.days_remaining > 14">
+
+                        On Track
+
+                    </span>
+
+                </div>
+
+
+                <!-- NO DEADLINES -->
+
+                <div
+                    class="vg-empty-state"
+                    ng-if="data.deadlines.length === 0">
+
+                    <div class="vg-empty-icon">
+                        ]]>📅
+<![CDATA[                    </div>
+
+                    <div class="vg-empty-title">
+                        No Upcoming Deadlines
+                    </div>
+
+                    <div class="vg-empty-description">
+                        You currently have no active case deadlines.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="student?id=vg_deadlines"
+                class="vg-twin-secondary-button">
+
+                View My Deadlines
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         EXPLAINABLE RISK SCORE
+         ===================================================== -->
+
+    <div
+        class="vg-twin-card vg-risk-explanation"
+        ng-if="data.student">
+
+
+        <div class="vg-twin-card-header">
+
+            <div class="vg-card-heading">
+
+                <span class="vg-card-heading-icon risk-heading-icon">
+                    ⚠
+                </span>
+
+                <div>
+
+                    <div class="vg-card-title">
+                        Explainable Risk Score
+                    </div>
+
+                    <div class="vg-card-subtitle">
+                        Understand what is affecting your compliance risk
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-risk-weight-info">
+
+                Deadline 40%
+                &nbsp;•&nbsp;
+                Documents 35%
+                &nbsp;•&nbsp;
+                SLA 25%
+
+            </div>
+
+        </div>
+
+
+        <div class="vg-risk-content">
+
+
+            <!-- SCORE -->
+
+            <div class="vg-risk-score-section">
+
+                <div class="vg-risk-score">
+
+                    {{data.risk.score}}
+
+                    <span>
+                        / 100
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="vg-risk-level"
+                    ng-class="{
+                        'risk-level-low':
+                            data.risk.level === 'Low',
+
+                        'risk-level-medium':
+                            data.risk.level === 'Medium',
+
+                        'risk-level-high':
+                            data.risk.level === 'High'
+                    }">
+
+                    {{data.risk.level | uppercase}} RISK
+
+                </div>
+
+
+                <div class="vg-risk-meter">
+
+                    <div
+                        class="vg-risk-meter-fill"
+                        ng-style="{
+                            'width': data.risk.score + '%'
+                        }">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- EXPLANATION -->
+
+            <div class="vg-risk-reasons">
+
+                <div class="vg-risk-reasons-title">
+
+                    Why is my risk score
+                    {{data.risk.level | lowercase}}?
+
+                </div>
+
+
+                <div
+                    class="vg-risk-reason"
+                    ng-repeat="reason in data.risk.explanation track by $index"
+                    ng-class="{
+                        'positive-reason':
+                            reason.indexOf('No SLA') !== -1 ||
+                            reason.indexOf('complete') !== -1,
+
+                        'warning-reason':
+                            reason.indexOf('Missing') !== -1 ||
+                            reason.indexOf('deadline') !== -1 ||
+                            reason.indexOf('delay') !== -1 ||
+                            reason.indexOf('passed') !== -1
+                    }">
+
+
+                    <span
+                        ng-if="
+                            reason.indexOf('No SLA') !== -1 ||
+                            reason.indexOf('complete') !== -1
+                        ">
+
+                        ✓
+
+                    </span>
+
+
+                    <span
+                        ng-if="
+                            reason.indexOf('No SLA') === -1 &&
+                            reason.indexOf('complete') === -1
+                        ">
+
+                        ⚠
+
+                    </span>
+
+
+                    <div>
+                        {{reason}}
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="vg-empty-state"
+                    ng-if="data.risk.explanation.length === 0">
+
+                    No risk explanation available.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         COMPLIANCE STATE
+         ===================================================== -->
+
+    <div
+        class="vg-twin-card"
+        ng-if="data.student">
+
+
+        <div class="vg-twin-card-header">
+
+            <div class="vg-card-heading">
+
+                <span class="vg-card-heading-icon">
+                    ]]>🧬
+<![CDATA[                </span>
+
+                <div>
+
+                    <div class="vg-card-title">
+                        Compliance State
+                    </div>
+
+                    <div class="vg-card-subtitle">
+                        Current state of your compliance journey
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-state-label">
+                LIVE STATE
+            </div>
+
+        </div>
+
+
+        <div class="vg-compliance-state-grid">
+
+
+            <div
+                class="vg-state-item"
+                ng-repeat="state in data.compliance_state track by $index"
+                ng-class="{
+                    'verified':
+                        state.status === 'complete',
+
+                    'warning-state':
+                        state.status !== 'complete'
+                }">
+
+
+                <div class="vg-state-icon">
+
+                    <span
+                        ng-if="state.status === 'complete'">
+                        ✓
+                    </span>
+
+                    <span
+                        ng-if="state.status !== 'complete'">
+                        !
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <div class="vg-state-title">
+                        {{state.name}}
+                    </div>
+
+
+                    <div
+                        class="vg-state-description"
+                        ng-if="state.status === 'complete'">
+
+                        Verified / Available
+
+                    </div>
+
+
+                    <div
+                        class="vg-state-description"
+                        ng-if="state.status !== 'complete'">
+
+                        Review Required
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACTIVE VISA CASES
+         ===================================================== -->
+
+    <div
+        class="vg-twin-card vg-cases-card"
+        ng-if="data.cases.length > 0">
+
+
+        <div class="vg-twin-card-header">
+
+            <div class="vg-card-heading">
+
+                <span class="vg-card-heading-icon">
+                    ]]>📁
+<![CDATA[                </span>
+
+                <div>
+
+                    <div class="vg-card-title">
+                        Active Visa Cases
+                    </div>
+
+                    <div class="vg-card-subtitle">
+                        Showing your most time-sensitive active cases
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-state-label">
+                {{data.cases.length}} ACTIVE
+            </div>
+
+        </div>
+
+
+        <div class="vg-case-list">
+
+            <div
+                class="vg-case-item"
+                ng-repeat="caseItem in data.cases | limitTo:3 track by caseItem.sys_id">
+
+
+                <div class="vg-case-main">
+
+                    <div class="vg-case-number">
+                        {{caseItem.number}}
+                    </div>
+
+                    <div class="vg-case-type">
+                        {{caseItem.case_type}}
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-detail">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong>
+                        {{caseItem.status || '—'}}
+                    </strong>
+
+                </div>
+
+
+                <div class="vg-case-detail">
+
+                    <span>
+                        Due
+                    </span>
+
+                    <strong>
+                        {{caseItem.due_date || '—'}}
+                    </strong>
+
+                </div>
+
+
+                <div class="vg-case-detail">
+
+                    <span>
+                        Missing Docs
+                    </span>
+
+                    <strong>
+                        {{caseItem.missing_documents}}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="student?id=vg_my_requests"
+            class="vg-twin-secondary-button vg-cases-view-button">
+
+            View All Visa Cases
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         LATEST RISK ASSESSMENT
+         ===================================================== -->
+
+    <div
+        class="vg-assessment-info"
+        ng-if="data.latest_assessment">
+
+
+        <span class="vg-assessment-icon">
+            ℹ
+        </span>
+
+
+        <div>
+
+            <strong>
+                Latest Risk Assessment
+            </strong>
+
+            <span>
+
+                {{data.latest_assessment.assessment_status || 'Completed'}}
+
+                <span ng-if="data.latest_assessment.last_assessment_date">
+                    •
+                    {{data.latest_assessment.last_assessment_date}}
+                </span>
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         AI RECOMMENDATION
+         ===================================================== -->
+
+    <div
+        class="vg-ai-recommendation"
+        ng-if="data.student">
+
+
+        <div class="vg-ai-icon">
+            ]]>🤖
+<![CDATA[        </div>
+
+
+        <div class="vg-ai-content">
+
+            <div class="vg-ai-label">
+                AI RECOMMENDATION
+            </div>
+
+
+            <div class="vg-ai-title">
+
+                {{data.recommendation}}
+
+            </div>
+
+
+            <div class="vg-ai-description">
+
+                This recommendation is based on your current
+                compliance state, document status, active case
+                deadlines and operational risk factors.
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="student?id=vg_doc_upload"
+            class="vg-ai-action">
+
+            View Required Document
+
+            <span>
+                →
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         NO STUDENT DATA
+         ===================================================== -->
+
+    <div
+        class="vg-twin-empty-page"
+        ng-if="!data.student && !data.error">
+
+        <div class="vg-empty-icon">
+            ]]>🧬
+<![CDATA[        </div>
+
+        <div class="vg-empty-title">
+            Loading Compliance Digital Twin...
+        </div>
+
+        <div class="vg-empty-description">
+            Retrieving your current compliance information.
+        </div>
+
+    </div>
+
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>8673467da86603107f446d9f3e09f656</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:53:02</sys_created_on>
+        <sys_id>ca73467da86603107f446d9f3e09f659</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:53:02</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

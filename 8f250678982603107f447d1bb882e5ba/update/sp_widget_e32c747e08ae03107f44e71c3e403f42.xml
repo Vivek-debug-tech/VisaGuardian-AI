@@ -1,0 +1,2145 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($scope) {
+
+    var c = this;
+
+
+    // =====================================================
+    // PAGE NAVIGATION
+    // =====================================================
+
+    c.openPage = function(pageId) {
+
+        if (!pageId) {
+            return;
+        }
+
+        window.location.href =
+            "student?id=" + pageId;
+
+    };
+
+
+    // =====================================================
+    // OPEN CASE
+    // =====================================================
+
+    c.openCase = function(sysId) {
+
+        if (!sysId) {
+            return;
+        }
+
+        window.location.href =
+            "student?id=case_details&sys_id=" +
+            sysId;
+
+    };
+
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    if (!c.data) {
+        c.data = {};
+    }
+
+    if (!c.data.components) {
+        c.data.components = [];
+    }
+
+    if (!c.data.alerts) {
+        c.data.alerts = [];
+    }
+
+    if (!c.data.healthTrend) {
+        c.data.healthTrend = [];
+    }
+
+    if (!c.data.recommendation) {
+
+        c.data.recommendation = {
+            title: '',
+            description: '',
+            page: ''
+        };
+
+    }
+
+
+    // =====================================================
+    // REFRESH
+    // =====================================================
+
+    c.refresh = function() {
+
+        c.server.get({
+            action: 'refresh'
+        }).then(function(response) {
+
+            if (response &&
+                response.data) {
+
+                angular.extend(
+                    c.data,
+                    response.data
+                );
+
+            }
+
+        });
+
+    };
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.vg-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.vg-summary-card {
+    min-width: 0;
+    min-height: 205px;
+    background: #ffffff;
+    border: 1px solid #d9e4ee;
+    border-radius: 10px;
+    padding: 18px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(27,58,91,.06);
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.vg-summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(27,58,91,.12);
+}
+
+.vg-card-title {
+    color: #506b87;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vg-score-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.vg-score-circle {
+    --score: 0;
+    width: 82px;
+    height: 82px;
+    min-width: 82px;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            #35ae70 calc(var(--score) * 1%),
+            #e8eef4 0
+        );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.vg-score-circle::after {
+    content: "";
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.vg-score-circle span {
+    position: relative;
+    z-index: 2;
+    color: #173b61;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.vg-document-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 17px;
+}
+
+.vg-document-circle {
+    width: 82px;
+    height: 82px;
+    min-width: 82px;
+    border-radius: 50%;
+    border: 5px solid #4c82da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #244f87;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.vg-risk-circle {
+    width: 82px;
+    height: 82px;
+    margin-top: 17px;
+    border-radius: 50%;
+    border: 5px solid #dcae47;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3d4d60;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.vg-risk-circle.risk-low {
+    border-color: #39aa6c;
+    color: #29945c;
+}
+
+.vg-risk-circle.risk-medium {
+    border-color: #e2b54f;
+    color: #a87916;
+}
+
+.vg-risk-circle.risk-high {
+    border-color: #d85757;
+    color: #c23e3e;
+}
+
+.vg-calendar-icon {
+    margin-top: 14px;
+    font-size: 28px;
+}
+
+.vg-days {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.vg-days strong {
+    color: #173b61;
+    font-size: 28px;
+}
+
+.vg-days span {
+    color: #d75252;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.vg-summary-card h3 {
+    margin: 6px 0 4px;
+    color: #173b61;
+    font-size: 15px;
+}
+
+.vg-summary-card p {
+    color: #73879a;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.vg-summary-card a {
+    color: #2878c8;
+    font-size: 11px;
+    text-decoration: none;
+}
+
+.vg-summary-card a:hover {
+    text-decoration: underline;
+}
+
+
+/* Service Portal width fix */
+
+.vg-compliance-page {
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f8fc;
+    color: #173b61;
+    font-family: "Segoe UI", Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.vg-compliance-header {
+    width: 100%;
+    min-height: 68px;
+    background: #071f3d;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+.vg-compliance-body {
+    width: 100%;
+    padding: 18px 22px 30px;
+    box-sizing: border-box;
+}
+
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.container-fluid {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>student_compaliance</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>student compaliance</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.complianceScore = 0;
+
+    data.complianceMessage =
+        'No compliance case found.';
+
+    data.documentsCompleted = 0;
+    data.documentsTotal = 0;
+    data.documentsPending = 0;
+    data.documentsStatus = 'Pending';
+
+    data.riskLevel = 'Unknown';
+    data.riskScore = 0;
+
+    data.riskMessage =
+        'Risk assessment unavailable.';
+
+    data.deadlineDays = null;
+    data.deadlineTitle = '';
+    data.deadlineDate = '';
+
+    data.components = [];
+    data.alerts = [];
+    data.healthTrend = [];
+
+    data.scoreImprovement = 0;
+
+    data.student = {
+
+        program: '',
+        university: '',
+        programStartDate: '',
+        expectedGraduation: '',
+        currentTerm: '',
+        daysInProgram: ''
+
+    };
+
+    data.recommendation = {
+
+        title: '',
+        description: '',
+        page: ''
+
+    };
+
+
+    // =====================================================
+    // CURRENT USER
+    // =====================================================
+
+    var currentUserId =
+        gs.getUserID();
+
+
+    if (!currentUserId) {
+        return;
+    }
+
+
+    // =====================================================
+    // FIND USER'S VISA CASE
+    // =====================================================
+
+    /*
+     * Your Visa Cases table is the custom VisaGuardian
+     * table shown in your screenshots.
+     *
+     * Replace ONLY this table name if your exact
+     * technical table name is different.
+     */
+
+    var caseGR =
+        new GlideRecord('x_snc_visaguardian_ai_visa_cases');
+
+
+    if (!caseGR.isValid()) {
+
+        gs.error(
+            'VisaGuardian: Visa Cases table is invalid.'
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Find the student's case.
+     *
+     * We first try common user-reference fields.
+     */
+
+    var foundCase = false;
+
+
+    if (caseGR.isValidField('student')) {
+
+        caseGR.addQuery(
+            'student',
+            currentUserId
+        );
+
+    } else if (caseGR.isValidField('opened_by')) {
+
+        caseGR.addQuery(
+            'opened_by',
+            currentUserId
+        );
+
+    } else if (caseGR.isValidField('caller_id')) {
+
+        caseGR.addQuery(
+            'caller_id',
+            currentUserId
+        );
+
+    } else {
+
+        /*
+         * Last option: assigned user.
+         */
+
+        if (caseGR.isValidField('assigned_to')) {
+
+            caseGR.addQuery(
+                'assigned_to',
+                currentUserId
+            );
+
+        }
+
+    }
+
+
+    caseGR.orderByDesc('sys_created_on');
+
+    caseGR.setLimit(1);
+
+    caseGR.query();
+
+
+    if (caseGR.next()) {
+
+        foundCase = true;
+
+    }
+
+
+    // =====================================================
+    // NO CASE
+    // =====================================================
+
+    if (!foundCase) {
+
+        data.complianceMessage =
+            'No active compliance case found.';
+
+        data.components = [];
+
+        data.alerts = [];
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // COMPLIANCE SCORE
+    // =====================================================
+
+    if (caseGR.isValidField('compliance_score')) {
+
+        var score =
+            parseInt(
+                caseGR.getValue(
+                    'compliance_score'
+                ),
+                10
+            );
+
+
+        if (!isNaN(score)) {
+
+            data.complianceScore =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        score
+                    )
+                );
+
+        }
+
+    }
+
+
+    if (data.complianceScore >= 80) {
+
+        data.complianceMessage =
+            'You are maintaining good compliance. Keep going!';
+
+    } else if (data.complianceScore >= 60) {
+
+        data.complianceMessage =
+            'Some compliance items need your attention.';
+
+    } else {
+
+        data.complianceMessage =
+            'Several compliance requirements need attention.';
+
+    }
+
+
+    // =====================================================
+    // DOCUMENT INFORMATION
+    // =====================================================
+
+    data.documentsTotal = 9;
+
+    data.documentsCompleted = 0;
+
+
+    /*
+     * Documents submitted/uploaded.
+     */
+
+    if (caseGR.isValidField('documents_submitted')) {
+
+        if (
+            caseGR.getValue(
+                'documents_submitted'
+            ) == 'true'
+        ) {
+
+            data.documentsCompleted++;
+
+        }
+
+    }
+
+
+    if (caseGR.isValidField('documents_uploaded')) {
+
+        if (
+            caseGR.getValue(
+                'documents_uploaded'
+            ) == 'true'
+        ) {
+
+            data.documentsCompleted++;
+
+        }
+
+    }
+
+
+    /*
+     * Keep the value within 0-9.
+     */
+
+    if (data.documentsCompleted > 9) {
+
+        data.documentsCompleted = 9;
+
+    }
+
+
+    data.documentsPending =
+        data.documentsTotal -
+        data.documentsCompleted;
+
+
+    if (
+        data.documentsCompleted ==
+        data.documentsTotal
+    ) {
+
+        data.documentsStatus =
+            'Complete';
+
+    } else {
+
+        data.documentsStatus =
+            'Pending';
+
+    }
+
+
+    // =====================================================
+    // RISK
+    // =====================================================
+
+    if (caseGR.isValidField('compliance_score')) {
+
+        var riskScore =
+            100 -
+            data.complianceScore;
+
+
+        data.riskScore =
+            Math.max(
+                0,
+                Math.min(
+                    100,
+                    riskScore
+                )
+            );
+
+
+        if (data.riskScore <= 25) {
+
+            data.riskLevel =
+                'Low';
+
+            data.riskMessage =
+                'Your current compliance risk is low.';
+
+        } else if (data.riskScore <= 60) {
+
+            data.riskLevel =
+                'Medium';
+
+            data.riskMessage =
+                'Review suggested for financial and compliance documents.';
+
+        } else {
+
+            data.riskLevel =
+                'High';
+
+            data.riskMessage =
+                'Immediate attention is recommended.';
+
+        }
+
+    }
+
+
+    // =====================================================
+    // DEADLINE
+    // =====================================================
+
+    if (
+        caseGR.isValidField('due_date') &&
+        !gs.nil(
+            caseGR.getValue(
+                'due_date'
+            )
+        )
+    ) {
+
+        var dueDate =
+            new GlideDateTime(
+                caseGR.getValue(
+                    'due_date'
+                )
+            );
+
+
+        var now =
+            new GlideDateTime();
+
+
+        var difference =
+            GlideDateTime.subtract(
+                now,
+                dueDate
+            );
+
+
+        var seconds =
+            parseInt(
+                difference.getNumericValue(),
+                10
+            ) / 1000;
+
+
+        var days =
+            Math.ceil(
+                seconds / 86400
+            );
+
+
+        if (days >= 0) {
+
+            data.deadlineDays =
+                days;
+
+            data.deadlineTitle =
+                'Visa Case Deadline';
+
+            data.deadlineDate =
+                dueDate.getLocalDate();
+
+        }
+
+    }
+
+
+    // =====================================================
+    // COMPLIANCE COMPONENTS
+    // =====================================================
+
+    addComponent(
+        'Identity Verification',
+        'Passport and identity documents',
+        'Verified',
+        '✓',
+        ''
+    );
+
+
+    addComponent(
+        'Admission Verification',
+        'Admission letter and I-20',
+        'Verified',
+        '✓',
+        ''
+    );
+
+
+    addComponent(
+        'Passport Verification',
+        'Passport validity and details',
+        'Verified',
+        '✓',
+        ''
+    );
+
+
+    /*
+     * Financial documents.
+     */
+
+    var financialStatus =
+        'Verified';
+
+
+    if (
+        caseGR.isValidField('decision') &&
+        caseGR.getValue('decision') ==
+        'Additional Documents Required'
+    ) {
+
+        financialStatus =
+            'Review';
+
+    }
+
+
+    addComponent(
+        'Financial Documents',
+        'Financial proof and statements',
+        financialStatus,
+        '!',
+        ''
+    );
+
+
+    addComponent(
+        'Academic Verification',
+        'Transcripts and academic records',
+        'Verified',
+        ']]>🎓<![CDATA[',
+        ''
+    );
+
+
+    addComponent(
+        'SEVIS Registration',
+        'SEVIS fee and registration',
+        'Verified',
+        ']]>🌐<![CDATA[',
+        ''
+    );
+
+
+    addComponent(
+        'Health Insurance',
+        'Health insurance coverage',
+        'Verified',
+        '♡',
+        ''
+    );
+
+
+    /*
+     * Travel signature.
+     */
+
+    var travelStatus =
+        'Pending';
+
+
+    if (
+        caseGR.isValidField('dso_decision')
+    ) {
+
+        var dsoDecision =
+            caseGR.getValue(
+                'dso_decision'
+            );
+
+
+        if (
+            dsoDecision ==
+            'Approved'
+        ) {
+
+            travelStatus =
+                'Verified';
+
+        }
+
+    }
+
+
+    addComponent(
+        'Travel Signature',
+        'I-20 travel signature',
+        travelStatus,
+        '✈',
+        ''
+    );
+
+
+    /*
+     * Visa application.
+     */
+
+    var visaStatus =
+        'Pending';
+
+
+    if (
+        caseGR.isValidField('decision')
+    ) {
+
+        var decision =
+            caseGR.getValue(
+                'decision'
+            );
+
+
+        if (
+            decision ==
+            'Approved'
+        ) {
+
+            visaStatus =
+                'Verified';
+
+        }
+
+    }
+
+
+    addComponent(
+        'Visa Application',
+        'Visa application and interview',
+        visaStatus,
+        '✓',
+        ''
+    );
+
+
+
+    // =====================================================
+    // HEALTH TREND
+    // =====================================================
+
+    data.healthTrend = [
+
+        {
+            month: 'Mar',
+            value: data.complianceScore,
+            left: 5
+        },
+
+        {
+            month: 'Apr',
+            value: data.complianceScore,
+            left: 25
+        },
+
+        {
+            month: 'May',
+            value: data.complianceScore,
+            left: 45
+        },
+
+        {
+            month: 'Jun',
+            value: data.complianceScore,
+            left: 65
+        },
+
+        {
+            month: 'Jul',
+            value: data.complianceScore,
+            left: 82
+        },
+
+        {
+            month: 'Aug',
+            value: data.complianceScore,
+            left: 96
+        }
+
+    ];
+
+
+    data.scoreImprovement = 0;
+
+
+    // =====================================================
+    // KEY INFORMATION
+    // =====================================================
+
+    /*
+     * Read information from the current user.
+     */
+
+    var userGR =
+        new GlideRecord(
+            'sys_user'
+        );
+
+
+    if (
+        userGR.get(
+            currentUserId
+        )
+    ) {
+
+        data.student.program =
+            userGR.getDisplayValue(
+                'department'
+            );
+
+
+        data.student.university =
+            userGR.getDisplayValue(
+                'company'
+            );
+
+    }
+
+
+    /*
+     * Current semester and student-specific
+     * fields can be populated if they exist
+     * directly on the Visa Case.
+     */
+
+    if (
+        caseGR.isValidField(
+            'current_semester'
+        )
+    ) {
+
+        data.student.currentTerm =
+            caseGR.getDisplayValue(
+                'current_semester'
+            );
+
+    }
+
+
+    if (
+        caseGR.isValidField(
+            'expected_graduation'
+        )
+    ) {
+
+        data.student.expectedGraduation =
+            caseGR.getDisplayValue(
+                'expected_graduation'
+            );
+
+    }
+
+
+    if (
+        caseGR.isValidField(
+            'program_start_date'
+        )
+    ) {
+
+        data.student.programStartDate =
+            caseGR.getDisplayValue(
+                'program_start_date'
+            );
+
+    }
+
+
+    // =====================================================
+    // RECOMMENDATION
+    // =====================================================
+
+    if (
+        data.documentsPending > 0
+    ) {
+
+        data.recommendation = {
+
+            title:
+                'Complete financial document review',
+
+            description:
+                'Your compliance records require verification. Please review and upload any missing documents.',
+
+            page:
+                'vg_doc_upload'
+
+        };
+
+    } else if (
+        data.deadlineDays !== null &&
+        data.deadlineDays <= 14
+    ) {
+
+        data.recommendation = {
+
+            title:
+                'Upcoming compliance deadline',
+
+            description:
+                'Your next immigration-related deadline is approaching. Review the deadline details and required action.',
+
+            page:
+                'vg_deadlines'
+
+        };
+
+    } else {
+
+        data.recommendation = {
+
+            title:
+                'Keep your compliance up to date',
+
+            description:
+                'Continue monitoring your documents, deadlines, and visa requirements.',
+
+            page:
+                'vg_deadlines'
+
+        };
+
+    }
+
+
+    // =====================================================
+    // ALERTS
+    // =====================================================
+
+    if (
+        data.documentsPending > 0
+    ) {
+
+        data.alerts.push({
+
+            type:
+                'warning',
+
+            icon:
+                '⚠',
+
+            title:
+                'Financial document review required',
+
+            description:
+                'Please review your pending compliance documents.',
+
+            time:
+                'Current'
+
+        });
+
+    }
+
+
+    if (
+        data.deadlineDays !== null &&
+        data.deadlineDays <= 14
+    ) {
+
+        data.alerts.push({
+
+            type:
+                'info',
+
+            icon:
+                'i',
+
+            title:
+                'Visa deadline approaching',
+
+            description:
+                data.deadlineTitle +
+                ' is due in ' +
+                data.deadlineDays +
+                ' days.',
+
+            time:
+                'Upcoming'
+
+        });
+
+    }
+
+
+    if (
+        data.complianceScore >= 80
+    ) {
+
+        data.alerts.push({
+
+            type:
+                'success',
+
+            icon:
+                '✓',
+
+            title:
+                'Compliance status healthy',
+
+            description:
+                'Your current compliance score is ' +
+                data.complianceScore +
+                '%.',
+
+            time:
+                'Current'
+
+        });
+
+    }
+
+
+    // =====================================================
+    // HELPER
+    // =====================================================
+
+    function addComponent(
+        name,
+        description,
+        status,
+        icon,
+        date
+    ) {
+
+        data.components.push({
+
+            name:
+                name,
+
+            description:
+                description,
+
+            status:
+                status,
+
+            icon:
+                icon,
+
+            date:
+                date
+
+        });
+
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-10 13:15:29</sys_created_on>
+        <sys_id>e32c747e08ae03107f44e71c3e403f42</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>student compaliance</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_e32c747e08ae03107f44e71c3e403f42</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-10 14:24:42</sys_updated_on>
+        <template><![CDATA[<div class="vg-compliance-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="vg-compliance-header">
+
+        <div class="vg-header-title-area">
+
+            <span class="vg-header-menu">☰</span>
+
+            <div>
+
+                <div class="vg-header-title">
+                    ]]>🛩<![CDATA[️ My Compliance Digital Twin
+                </div>
+
+                <div class="vg-header-subtitle">
+                    Real-time overview of your visa compliance health and requirements
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN BODY
+         ===================================================== -->
+
+    <div class="vg-compliance-body">
+
+
+        <!-- =================================================
+             TOP SUMMARY CARDS
+             VISA STATUS REMOVED
+             ================================================= -->
+
+        <div class="vg-summary-grid">
+
+
+            <!-- =============================================
+                 COMPLIANCE SCORE
+                 ============================================= -->
+
+            <div class="vg-summary-card"
+                 ng-click="c.openPage('vg_compliance_score')">
+
+                <div class="vg-card-title">
+                    Compliance Score
+                    <span>ⓘ</span>
+                </div>
+
+
+                <div class="vg-score-area">
+
+                    <div class="vg-score-circle"
+                         ng-style="{'--score': c.data.complianceScore || 0}">
+
+                        <span>
+                            {{c.data.complianceScore || 0}}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="vg-score-info">
+
+                        <strong
+                            ng-if="(c.data.complianceScore || 0) >= 80">
+
+                            Good Standing
+
+                        </strong>
+
+
+                        <strong
+                            ng-if="(c.data.complianceScore || 0) >= 60 &&
+                                   (c.data.complianceScore || 0) < 80">
+
+                            Needs Attention
+
+                        </strong>
+
+
+                        <strong
+                            ng-if="(c.data.complianceScore || 0) < 60">
+
+                            At Risk
+
+                        </strong>
+
+
+                        <p>
+
+                            {{c.data.complianceMessage ||
+                            'Compliance information unavailable.'}}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href=""
+                   ng-click="$event.preventDefault();
+                             $event.stopPropagation();
+                             c.openPage('vg_compliance_score')">
+
+                    View Score Breakdown →
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 DOCUMENTS
+                 ============================================= -->
+
+            <div class="vg-summary-card"
+                 ng-click="c.openPage('vg_doc_upload')">
+
+                <div class="vg-card-title">
+
+                    Documents
+
+                    <span>ⓘ</span>
+
+                </div>
+
+
+                <div class="vg-document-area">
+
+                    <div class="vg-document-circle">
+
+                        {{c.data.documentsCompleted || 0}} /
+                        {{c.data.documentsTotal || 0}}
+
+                    </div>
+
+
+                    <div class="vg-document-status">
+
+                        <strong>
+
+                            {{c.data.documentsStatus || 'Pending'}}
+
+                        </strong>
+
+
+                        <p>
+
+                            {{c.data.documentsPending || 0}}
+                            document(s) require review.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href=""
+                   ng-click="$event.preventDefault();
+                             $event.stopPropagation();
+                             c.openPage('vg_doc_upload')">
+
+                    View Documents →
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 RISK LEVEL
+                 ============================================= -->
+
+            <div class="vg-summary-card"
+                 ng-click="c.openPage('vg_risk_details')">
+
+                <div class="vg-card-title">
+
+                    Risk Level
+
+                    <span>ⓘ</span>
+
+                </div>
+
+
+                <div class="vg-risk-circle"
+                     ng-class="{
+                       'risk-low':
+                           c.data.riskLevel == 'Low',
+
+                       'risk-medium':
+                           c.data.riskLevel == 'Medium',
+
+                       'risk-high':
+                           c.data.riskLevel == 'High'
+                     }">
+
+                    {{c.data.riskLevel || 'Unknown'}}
+
+                </div>
+
+
+                <div class="vg-risk-score">
+
+                    {{c.data.riskScore || 0}}/100
+
+                </div>
+
+
+                <p>
+
+                    {{c.data.riskMessage ||
+                    'Risk assessment unavailable.'}}
+
+                </p>
+
+
+                <a href=""
+                   ng-click="$event.preventDefault();
+                             $event.stopPropagation();
+                             c.openPage('vg_risk_details')">
+
+                    View Risk Details →
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 UPCOMING DEADLINE
+                 ============================================= -->
+
+            <div class="vg-summary-card"
+                 ng-click="c.openPage('vg_deadlines')">
+
+                <div class="vg-card-title">
+
+                    Upcoming Deadline
+
+                    <span>ⓘ</span>
+
+                </div>
+
+
+                <div class="vg-calendar-icon">
+
+                    ]]>📅
+
+<![CDATA[                </div>
+
+
+                <div class="vg-days">
+
+                    <strong>
+
+                        {{c.data.deadlineDays !== null &&
+                          c.data.deadlineDays !== undefined
+                          ? c.data.deadlineDays
+                          : '--'}}
+
+                    </strong>
+
+                    <span>
+
+                        Days
+
+                    </span>
+
+                </div>
+
+
+                <h3>
+
+                    {{c.data.deadlineTitle ||
+                    'No upcoming deadline'}}
+
+                </h3>
+
+
+                <p>
+
+                    Due:
+                    {{c.data.deadlineDate ||
+                    'No upcoming date'}}
+
+                </p>
+
+
+                <a href=""
+                   ng-click="$event.preventDefault();
+                             $event.stopPropagation();
+                             c.openPage('vg_deadlines')">
+
+                    View All Deadlines →
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             LOWER DASHBOARD
+             ================================================= -->
+
+        <div class="vg-dashboard-grid">
+
+
+            <!-- =============================================
+                 COMPLIANCE COMPONENTS
+                 ============================================= -->
+
+            <div class="vg-panel vg-components-panel">
+
+                <div class="vg-panel-header">
+
+                    <h2>
+                        Compliance Components
+                        <span>ⓘ</span>
+                    </h2>
+
+                    <p>
+                        Real-time status of your compliance requirements
+                    </p>
+
+                </div>
+
+
+                <div ng-if="!c.data.components.length"
+                     class="vg-empty">
+
+                    No compliance component data is available.
+
+                </div>
+
+
+                <div class="vg-component"
+                     ng-repeat="item in c.data.components track by $index">
+
+
+                    <div class="vg-component-icon">
+
+                        {{item.icon}}
+
+                    </div>
+
+
+                    <div class="vg-component-info">
+
+                        <strong>
+
+                            {{item.name}}
+
+                        </strong>
+
+                        <span>
+
+                            {{item.description}}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="vg-component-status">
+
+                        <span ng-class="{
+
+                            'status-verified':
+                                item.status == 'Verified',
+
+                            'status-review':
+                                item.status == 'Review',
+
+                            'status-pending':
+                                item.status == 'Pending'
+
+                        }">
+
+                            {{item.status}}
+
+                        </span>
+
+
+                        <small>
+
+                            {{item.date}}
+
+                        </small>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 COMPLIANCE HEALTH TREND
+                 ============================================= -->
+
+            <div class="vg-panel vg-health-panel">
+
+                <div class="vg-panel-header">
+
+                    <h2>
+                        Compliance Health Trend
+                    </h2>
+
+                    <p>
+                        Your compliance score over time
+                    </p>
+
+                </div>
+
+
+                <div class="vg-chart">
+
+                    <div class="vg-chart-grid line-100">
+                        <span>100</span>
+                    </div>
+
+                    <div class="vg-chart-grid line-75">
+                        <span>75</span>
+                    </div>
+
+                    <div class="vg-chart-grid line-50">
+                        <span>50</span>
+                    </div>
+
+                    <div class="vg-chart-grid line-25">
+                        <span>25</span>
+                    </div>
+
+                    <div class="vg-chart-grid line-0">
+                        <span>0</span>
+                    </div>
+
+
+                    <div ng-repeat="point in c.data.healthTrend track by $index"
+                         class="vg-chart-point"
+                         ng-style="{
+                           left: point.left + '%',
+                           bottom: point.value + '%'
+                         }">
+
+                        <span>
+                            {{point.value}}%
+                        </span>
+
+                    </div>
+
+
+                    <div class="vg-chart-months">
+
+                        <span ng-repeat="point in c.data.healthTrend">
+
+                            {{point.month}}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-health-improvement">
+
+                    ↗ Score improved
+                    {{c.data.scoreImprovement || 0}}%
+                    this month
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 KEY INFORMATION
+                 ============================================= -->
+
+            <div class="vg-panel vg-key-panel">
+
+                <div class="vg-panel-header">
+
+                    <h2>
+                        Key Information
+                    </h2>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ]]>📖
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <strong>
+                            Program
+                        </strong>
+
+                        <p>
+                            {{c.data.student.program ||
+                            'Not available'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ]]>🏛<![CDATA[️
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            University
+                        </strong>
+
+                        <p>
+                            {{c.data.student.university ||
+                            'Not available'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ]]>📅
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <strong>
+                            Program Start Date
+                        </strong>
+
+                        <p>
+                            {{c.data.student.programStartDate ||
+                            'Not available'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ]]>🎓
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <strong>
+                            Expected Graduation
+                        </strong>
+
+                        <p>
+                            {{c.data.student.expectedGraduation ||
+                            'Not available'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ]]>📚
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <strong>
+                            Current Term
+                        </strong>
+
+                        <p>
+                            {{c.data.student.currentTerm ||
+                            'Semester Not available'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-icon">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Days in Program
+                        </strong>
+
+                        <p>
+                            {{c.data.student.daysInProgram ||
+                            '--'}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a href=""
+                   ng-click="$event.preventDefault();
+                             c.openPage('vg_profile')">
+
+                    View Full Profile →
+
+                </a>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 AI RECOMMENDATION
+                 ============================================= -->
+
+            <div class="vg-panel vg-ai-panel">
+
+                <div class="vg-panel-header">
+
+                    <h2>
+                        ✦ AI Recommendation
+                    </h2>
+
+                </div>
+
+
+                <p>
+
+                    Based on your current status,
+                    here's what you should focus on:
+
+                </p>
+
+
+                <div class="vg-recommendation-box">
+
+                    <div class="vg-recommendation-icon">
+
+                        ]]>📄
+
+<![CDATA[                    </div>
+
+
+                    <div>
+
+                        <strong>
+
+                            {{c.data.recommendation.title ||
+                            'No action required'}}
+
+                        </strong>
+
+
+                        <p>
+
+                            {{c.data.recommendation.description ||
+                            'Your compliance status is currently being monitored.'}}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    ng-if="c.data.recommendation.page"
+                    ng-click="c.openPage(c.data.recommendation.page)">
+
+                    Take Action
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 ALERTS & NOTIFICATIONS
+                 ============================================= -->
+
+            <div class="vg-panel vg-alerts-panel">
+
+                <div class="vg-alert-header">
+
+                    <h2>
+                        Alerts & Notifications
+                    </h2>
+
+                    <a href=""
+                       ng-click="$event.preventDefault();
+                                 c.openPage('vg_notifications')">
+
+                        View All
+
+                    </a>
+
+                </div>
+
+
+                <div ng-if="!c.data.alerts.length"
+                     class="vg-empty">
+
+                    No active alerts.
+
+                </div>
+
+
+                <div class="vg-alert"
+                     ng-repeat="alert in c.data.alerts track by $index">
+
+                    <div class="vg-alert-icon"
+                         ng-class="alert.type">
+
+                        {{alert.icon}}
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{alert.title}}
+                        </strong>
+
+                        <p>
+                            {{alert.description}}
+                        </p>
+
+                        <small>
+                            {{alert.time}}
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+             ================================================= -->
+
+        <div class="vg-quick-actions">
+
+            <h2>
+                Quick Actions
+            </h2>
+
+
+            <div class="vg-actions">
+
+
+                <button
+                    ng-click="c.openPage('vg_doc_upload')">
+
+                    <span>
+                        ]]>📄
+<![CDATA[                    </span>
+
+                    <div>
+
+                        <strong>
+                            Upload Documents
+                        </strong>
+
+                        <small>
+                            Add new document
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    ng-click="c.openPage('vg_my_requests')">
+
+                    <span>
+                        ]]>📋
+<![CDATA[                    </span>
+
+                    <div>
+
+                        <strong>
+                            View My Cases
+                        </strong>
+
+                        <small>
+                            Check case status
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    ng-click="c.openPage('vg_deadlines')">
+
+                    <span>
+                        ]]>📅
+<![CDATA[                    </span>
+
+                    <div>
+
+                        <strong>
+                            Check Deadlines
+                        </strong>
+
+                        <small>
+                            View all deadlines
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    ng-click="c.openPage('vg_ai_chat')">
+
+                    <span>
+                        ]]>🤖
+<![CDATA[                    </span>
+
+                    <div>
+
+                        <strong>
+                            Ask AI Assistant
+                        </strong>
+
+                        <small>
+                            Get instant help
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    ng-click="c.openPage('vg_advisor')">
+
+                    <span>
+                        ☎
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Contact Advisor
+                        </strong>
+
+                        <small>
+                            Send message
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>e32c747e08ae03107f44e71c3e403f42</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-10 13:15:30</sys_created_on>
+        <sys_id>272c747e08ae03107f44e71c3e403f46</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-10 13:15:30</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

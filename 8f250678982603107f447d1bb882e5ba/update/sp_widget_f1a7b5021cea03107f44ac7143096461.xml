@@ -1,0 +1,2446 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   PREMIUM ENTERPRISE SERVICE NOW PORTAL
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT APPLICATION
+   ========================================================= */
+
+.vg-app {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0 0 30px;
+
+    box-sizing: border-box;
+
+    color: #ffffff;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 76% 18%,
+            rgba(0, 102, 255, 0.18),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 12% 40%,
+            rgba(0, 78, 180, 0.10),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 52% 100%,
+            rgba(105, 0, 220, 0.10),
+            transparent 32%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817 0%,
+            #03132e 45%,
+            #020918 100%
+        );
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+
+/* Ambient background */
+
+.vg-app::before {
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+    height: 500px;
+
+    top: -250px;
+    left: -200px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 110, 255, 0.08),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+.vg-app::after {
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    right: -300px;
+    bottom: -350px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(82, 0, 255, 0.08),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-header {
+
+    width: 100%;
+
+    padding:
+        22px 5% 14px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    position: relative;
+
+    z-index: 50;
+
+    border-bottom:
+        1px solid
+        rgba(80, 140, 220, 0.08);
+}
+
+
+.vg-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+/* =========================================================
+   VISAGUARDIAN LOGO
+   ========================================================= */
+
+.vg-logo-wrap {
+    width: 80px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+
+/* Actual logo image */
+
+.vg-logo {
+    width: 70px;
+    height: 70px;
+
+    object-fit: contain;
+
+    display: block;
+
+    /* Blue enterprise glow */
+    filter:
+        drop-shadow(0 0 6px rgba(0, 150, 255, 0.65))
+        drop-shadow(0 0 14px rgba(0, 105, 255, 0.35));
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+
+/* Subtle hover effect */
+
+.vg-logo-wrap:hover .vg-logo {
+    transform: scale(1.05);
+
+    filter:
+        drop-shadow(0 0 8px rgba(0, 170, 255, 0.85))
+        drop-shadow(0 0 20px rgba(0, 110, 255, 0.45));
+}
+
+
+/* =========================================================
+   BRAND TEXT
+   ========================================================= */
+
+.vg-brand-text {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.vg-brand-name {
+
+    font-size: 26px;
+
+    line-height: 1;
+
+    font-weight: 750;
+
+    letter-spacing: -0.7px;
+}
+
+
+.vg-brand-name span {
+
+    color: #1598ff;
+}
+
+
+.vg-brand-name strong {
+
+    color: #963cff;
+}
+
+
+.vg-tagline {
+
+    margin-top: 7px;
+
+    color: #aebdd3;
+
+    font-size: 12px;
+
+    letter-spacing: .7px;
+}
+
+
+/* =========================================================
+   HEADER STATUS
+   ========================================================= */
+
+.vg-header-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        8px 14px;
+
+    border:
+        1px solid
+        rgba(34, 143, 255, .22);
+
+    border-radius: 30px;
+
+    background:
+        rgba(5, 40, 82, .28);
+
+    color: #76bfff;
+
+    font-size: 12px;
+
+    letter-spacing: .3px;
+}
+
+
+.vg-status-dot {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #19d96b;
+
+    box-shadow:
+        0 0 9px
+        rgba(25, 217, 107, .8);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-hero {
+
+    width: 90%;
+
+    max-width: 1400px;
+
+    min-height: 405px;
+
+    margin:
+        5px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        47% 53%;
+
+    align-items: center;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   HERO LEFT
+   ========================================================= */
+
+.vg-hero-left {
+
+    position: relative;
+
+    z-index: 10;
+
+    padding-left: 3px;
+}
+
+
+/* =========================================================
+   PLATFORM BADGE
+   ========================================================= */
+
+.vg-platform {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        9px 17px;
+
+    border:
+        1px solid
+        rgba(19, 145, 255, .75);
+
+    border-radius: 30px;
+
+    color: #40b8ff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: .2px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0, 103, 255, .12),
+            rgba(55, 0, 180, .06)
+        );
+
+    box-shadow:
+        0 0 18px
+        rgba(0, 120, 255, .08),
+
+        inset 0 0 15px
+        rgba(0, 100, 255, .04);
+}
+
+
+.vg-star {
+
+    font-size: 16px;
+
+    color: #40b9ff;
+
+    text-shadow:
+        0 0 8px
+        rgba(0, 160, 255, .8);
+}
+
+
+/* =========================================================
+   HERO TITLE
+   ========================================================= */
+
+.vg-hero h1 {
+
+    margin:
+        23px 0 15px;
+
+    font-size:
+        clamp(
+            44px,
+            5vw,
+            67px
+        );
+
+    line-height: 1.04;
+
+    letter-spacing: -2.8px;
+
+    font-weight: 750;
+}
+
+
+.vg-hero h1 span {
+
+    display: block;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1598ff 0%,
+            #3f50ff 52%,
+            #a62aff 100%
+        );
+
+    -webkit-background-clip:
+        text;
+
+    background-clip:
+        text;
+
+    -webkit-text-fill-color:
+        transparent;
+
+    filter:
+        drop-shadow(
+            0 0 18px
+            rgba(45, 70, 255, .12)
+        );
+}
+
+
+/* =========================================================
+   HERO DESCRIPTION
+   ========================================================= */
+
+.vg-hero-left p {
+
+    margin: 0;
+
+    color: #bdc9da;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   HERO POINTS
+   ========================================================= */
+
+.vg-hero-points {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 24px;
+
+    flex-wrap: wrap;
+}
+
+
+.vg-hero-point {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #8fa6c4;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+
+.vg-point-icon {
+
+    width: 19px;
+    height: 19px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(45, 151, 255, .45);
+
+    background:
+        rgba(0, 110, 255, .10);
+
+    color: #39aaff;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   HERO RIGHT
+   ========================================================= */
+
+.vg-hero-right {
+
+    height: 430px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =========================================================
+   GLOW
+   ========================================================= */
+
+.vg-glow {
+
+    position: absolute;
+
+    width: 470px;
+    height: 470px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 116, 255, .34),
+            rgba(0, 80, 255, .10) 42%,
+            transparent 72%
+        );
+
+    filter:
+        blur(20px);
+}
+
+
+/* =========================================================
+   GLOBE
+   ========================================================= */
+
+.vg-globe {
+
+    width: 345px;
+    height: 345px;
+
+    position: relative;
+
+    z-index: 5;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 34% 27%,
+            #0870d0 0%,
+            #064581 23%,
+            #03244b 52%,
+            #010b1e 80%
+        );
+
+    border:
+        1px solid
+        rgba(36, 159, 255, .95);
+
+    box-shadow:
+
+        0 0 28px
+        rgba(0, 135, 255, .80),
+
+        0 0 80px
+        rgba(0, 100, 255, .22),
+
+        inset 0 0 65px
+        rgba(0, 119, 255, .55);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   GLOBE LIGHT
+   ========================================================= */
+
+.vg-globe-light {
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    top: -45px;
+    left: -30px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(75, 175, 255, .22);
+
+    filter:
+        blur(30px);
+}
+
+
+/* =========================================================
+   LONGITUDE
+   ========================================================= */
+
+.vg-longitude {
+
+    position: absolute;
+
+    top: -3%;
+
+    height: 106%;
+
+    border:
+        1px solid
+        rgba(70, 170, 255, .28);
+
+    border-radius: 50%;
+}
+
+
+.vg-longitude-1 {
+
+    width: 42%;
+
+    left: 29%;
+}
+
+
+.vg-longitude-2 {
+
+    width: 72%;
+
+    left: 14%;
+}
+
+
+.vg-longitude-3 {
+
+    width: 20%;
+
+    left: 40%;
+}
+
+
+/* =========================================================
+   LATITUDE
+   ========================================================= */
+
+.vg-latitude {
+
+    position: absolute;
+
+    left: -3%;
+
+    width: 106%;
+
+    border:
+        1px solid
+        rgba(70, 170, 255, .28);
+
+    border-radius: 50%;
+}
+
+
+.vg-latitude-1 {
+
+    height: 42%;
+
+    top: 29%;
+}
+
+
+.vg-latitude-2 {
+
+    height: 72%;
+
+    top: 14%;
+}
+
+
+.vg-latitude-3 {
+
+    height: 18%;
+
+    top: 41%;
+}
+
+
+/* =========================================================
+   WORLD
+   ========================================================= */
+
+.vg-world {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 140px;
+
+    opacity: .92;
+
+    filter:
+        drop-shadow(
+            0 0 13px
+            #008cff
+        );
+}
+
+
+/* =========================================================
+   ORBITS
+   ========================================================= */
+
+.vg-orbit {
+
+    position: absolute;
+
+    z-index: 3;
+
+    width: 525px;
+    height: 150px;
+
+    border:
+        1px solid
+        rgba(38, 157, 255, .72);
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px
+        rgba(0, 135, 255, .28);
+}
+
+
+.vg-orbit-1 {
+
+    transform:
+        rotate(16deg);
+}
+
+
+.vg-orbit-2 {
+
+    transform:
+        rotate(-16deg);
+}
+
+
+/* =========================================================
+   ORBIT DOTS
+   ========================================================= */
+
+.vg-dot {
+
+    position: absolute;
+
+    z-index: 8;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #43b3ff;
+
+    box-shadow:
+        0 0 13px
+        #008cff;
+}
+
+
+.dot-1 {
+
+    top: 105px;
+    right: 12%;
+}
+
+
+.dot-2 {
+
+    top: 200px;
+    right: 4%;
+}
+
+
+.dot-3 {
+
+    bottom: 110px;
+    left: 9%;
+}
+
+
+.dot-4 {
+
+    top: 170px;
+    left: 3%;
+}
+
+
+/* =========================================================
+   FLOATING SECURITY BADGE
+   ========================================================= */
+
+.vg-security-badge {
+
+    position: absolute;
+
+    z-index: 15;
+
+    right: 4%;
+
+    bottom: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding:
+        9px 13px;
+
+    border:
+        1px solid
+        rgba(55, 156, 255, .30);
+
+    border-radius: 10px;
+
+    background:
+        rgba(3, 22, 49, .82);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 10px 35px
+        rgba(0, 0, 0, .35);
+}
+
+
+.vg-security-check {
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #39d987;
+
+    background:
+        rgba(30, 211, 111, .10);
+
+    border:
+        1px solid
+        rgba(30, 211, 111, .35);
+}
+
+
+.vg-security-badge strong {
+
+    display: block;
+
+    color: #e6f1ff;
+
+    font-size: 11px;
+}
+
+
+.vg-security-badge small {
+
+    display: block;
+
+    margin-top: 2px;
+
+    color: #7187a5;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   PORTAL TITLE
+   ========================================================= */
+
+.vg-portal-title {
+
+    width: 90%;
+
+    max-width: 1400px;
+
+    margin:
+        0 auto 22px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr auto 1fr;
+
+    align-items: center;
+
+    gap: 25px;
+
+    position: relative;
+
+    z-index: 10;
+}
+
+
+.vg-title-content {
+
+    text-align: center;
+
+    min-width: 300px;
+}
+
+
+.vg-section-label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #368dff;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+.vg-portal-title h2 {
+
+    margin: 0;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    letter-spacing: -.7px;
+}
+
+
+.vg-portal-title p {
+
+    margin:
+        7px 0 0;
+
+    color: #7f91ab;
+
+    font-size: 13px;
+}
+
+
+.vg-title-line {
+
+    width: 100%;
+
+    height: 1px;
+}
+
+
+.vg-line-left {
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(25, 130, 255, .55)
+        );
+}
+
+
+.vg-line-right {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(25, 130, 255, .55),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   PORTAL CARDS
+   ========================================================= */
+
+.vg-portals {
+
+    width: 90%;
+
+    max-width: 1400px;
+
+    margin:
+        0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+    position: relative;
+
+    z-index: 10;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.vg-card {
+
+    min-height: 310px;
+
+    padding:
+        18px 20px 20px;
+
+    box-sizing: border-box;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(8, 34, 69, .84),
+            rgba(2, 12, 29, .96)
+        );
+
+    backdrop-filter:
+        blur(12px);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        border-color .3s ease;
+}
+
+
+/* Card top glow */
+
+.vg-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -100px;
+    left: 50%;
+
+    width: 220px;
+    height: 180px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(30, 135, 255, .12),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* Bottom shine */
+
+.vg-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+    left: 15%;
+
+    width: 70%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(80, 160, 255, .35),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.vg-card:hover {
+
+    transform:
+        translateY(-8px);
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 0, 0, .32);
+}
+
+
+.vg-student:hover {
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 120, 255, .15);
+}
+
+
+.vg-advisor:hover {
+
+    box-shadow:
+        0 18px 50px
+        rgba(0, 220, 100, .12);
+}
+
+
+.vg-officer:hover {
+
+    box-shadow:
+        0 18px 50px
+        rgba(255, 135, 0, .12);
+}
+
+
+/* =========================================================
+   CARD COLORS
+   ========================================================= */
+
+.vg-student {
+
+    border:
+        1px solid
+        rgba(7, 140, 255, .60);
+}
+
+
+.vg-advisor {
+
+    border:
+        1px solid
+        rgba(21, 219, 101, .55);
+}
+
+
+.vg-officer {
+
+    border:
+        1px solid
+        rgba(255, 135, 0, .55);
+}
+
+
+/* =========================================================
+   CARD TOP
+   ========================================================= */
+
+.vg-card-top {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+
+.vg-role-number {
+
+    color: #617895;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+.vg-role-status {
+
+    padding:
+        4px 8px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(20, 80, 145, .16);
+
+    color: #7594b8;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+
+/* =========================================================
+   CARD ICON
+   ========================================================= */
+
+.vg-card-icon {
+
+    width: 76px;
+    height: 76px;
+
+    margin-bottom: 9px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 35px;
+
+    position: relative;
+
+    transition:
+        transform .3s ease;
+}
+
+
+.vg-card:hover .vg-card-icon {
+
+    transform:
+        scale(1.06)
+        translateY(-2px);
+}
+
+
+.vg-student .vg-card-icon {
+
+    border:
+        1px solid
+        rgba(7, 140, 255, .75);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 110, 255, .16),
+            rgba(0, 80, 180, .04)
+        );
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 110, 255, .08);
+}
+
+
+.vg-advisor .vg-card-icon {
+
+    border:
+        1px solid
+        rgba(21, 219, 101, .70);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 180, 80, .15),
+            rgba(0, 100, 60, .04)
+        );
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 200, 100, .06);
+}
+
+
+.vg-officer .vg-card-icon {
+
+    border:
+        1px solid
+        rgba(255, 135, 0, .72);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 120, 0, .15),
+            rgba(170, 70, 0, .04)
+        );
+
+    box-shadow:
+        0 0 25px
+        rgba(255, 120, 0, .06);
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.vg-card h3 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 700;
+}
+
+
+.vg-student h3 {
+
+    color: #27a4ff;
+}
+
+
+.vg-advisor h3 {
+
+    color: #40e777;
+}
+
+
+.vg-officer h3 {
+
+    color: #ff9b25;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.vg-card-divider {
+
+    width: 38px;
+
+    height: 2px;
+
+    margin:
+        8px 0 9px;
+
+    border-radius: 10px;
+}
+
+
+.vg-student .vg-card-divider {
+
+    background: #1598ff;
+
+    box-shadow:
+        0 0 8px
+        rgba(21, 152, 255, .45);
+}
+
+
+.vg-advisor .vg-card-divider {
+
+    background: #40e777;
+
+    box-shadow:
+        0 0 8px
+        rgba(64, 231, 119, .4);
+}
+
+
+.vg-officer .vg-card-divider {
+
+    background: #ff9b25;
+
+    box-shadow:
+        0 0 8px
+        rgba(255, 155, 37, .4);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.vg-card p {
+
+    max-width: 285px;
+
+    margin:
+        0 auto 18px;
+
+    color: #aebdd0;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.vg-button {
+
+    width: 100%;
+
+    margin-top: auto;
+
+    padding:
+        13px 17px;
+
+    box-sizing: border-box;
+
+    border: none;
+
+    border-radius: 9px;
+
+    color: #ffffff !important;
+
+    text-decoration: none !important;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    cursor: pointer;
+
+    transition:
+        all .25s ease;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* Button shine */
+
+.vg-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.12),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left .5s ease;
+}
+
+
+.vg-button:hover::before {
+
+    left: 140%;
+}
+
+
+.vg-button:hover {
+
+    color: #ffffff !important;
+
+    text-decoration: none !important;
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.12);
+}
+
+
+/* =========================================================
+   STUDENT BUTTON
+   ========================================================= */
+
+.vg-student-button {
+
+    background:
+        linear-gradient(
+            100deg,
+            #0868e9,
+            #0754d2
+        );
+
+    box-shadow:
+        0 7px 20px
+        rgba(0, 90, 230, .18);
+}
+
+
+/* =========================================================
+   ADVISOR BUTTON
+   ========================================================= */
+
+.vg-advisor-button {
+
+    background:
+        linear-gradient(
+            100deg,
+            #12aa50,
+            #07843c
+        );
+
+    box-shadow:
+        0 7px 20px
+        rgba(0, 180, 75, .14);
+}
+
+
+/* =========================================================
+   OFFICER BUTTON
+   ========================================================= */
+
+.vg-officer-button {
+
+    background:
+        linear-gradient(
+            100deg,
+            #df7000,
+            #b75400
+        );
+
+    box-shadow:
+        0 7px 20px
+        rgba(220, 100, 0, .14);
+}
+
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.vg-arrow {
+
+    font-size: 20px;
+
+    font-weight: 400;
+
+    transition:
+        transform .25s ease;
+}
+
+
+.vg-button:hover .vg-arrow {
+
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   FEATURE BAR
+   ========================================================= */
+
+.vg-features {
+
+    width: 90%;
+
+    max-width: 1400px;
+
+    margin:
+        18px auto 0;
+
+    padding:
+        10px;
+
+    box-sizing: border-box;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5, 25, 53, .88),
+            rgba(3, 15, 33, .94)
+        );
+
+    border:
+        1px solid
+        rgba(40, 110, 190, .16);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, .15);
+
+    position: relative;
+
+    z-index: 10;
+}
+
+
+/* =========================================================
+   FEATURE
+   ========================================================= */
+
+.vg-feature {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding:
+        8px 18px;
+
+    border-right:
+        1px solid
+        rgba(130, 150, 190, .13);
+}
+
+
+.vg-feature:last-child {
+
+    border-right:
+        none;
+}
+
+
+/* =========================================================
+   FEATURE ICON
+   ========================================================= */
+
+.vg-feature-icon {
+
+    width: 48px;
+
+    min-width: 48px;
+
+    height: 48px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 21px;
+}
+
+
+.vg-blue-icon {
+
+    border:
+        1px solid
+        rgba(7, 140, 255, .65);
+
+    background:
+        rgba(0, 110, 255, .09);
+}
+
+
+.vg-green-icon {
+
+    border:
+        1px solid
+        rgba(21, 219, 101, .65);
+
+    background:
+        rgba(0, 180, 80, .09);
+}
+
+
+.vg-purple-icon {
+
+    border:
+        1px solid
+        rgba(160, 44, 255, .65);
+
+    background:
+        rgba(130, 0, 255, .09);
+}
+
+
+/* =========================================================
+   FEATURE TEXT
+   ========================================================= */
+
+.vg-feature-content h4 {
+
+    margin:
+        0 0 3px;
+
+    font-size: 14px;
+
+    font-weight: 650;
+}
+
+
+.vg-feature:nth-child(1) h4 {
+
+    color: #18a5ff;
+}
+
+
+.vg-feature:nth-child(2) h4 {
+
+    color: #40e777;
+}
+
+
+.vg-feature:nth-child(3) h4 {
+
+    color: #b34dff;
+}
+
+
+.vg-feature-content p {
+
+    margin: 0;
+
+    color: #7f91aa;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1150px) {
+
+    .vg-hero {
+
+        grid-template-columns:
+            1fr;
+
+        text-align: center;
+    }
+
+
+    .vg-hero-left {
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        padding-top: 20px;
+    }
+
+
+    .vg-hero-left p {
+
+        margin: auto;
+    }
+
+
+    .vg-hero-points {
+
+        justify-content: center;
+    }
+
+
+    .vg-hero-right {
+
+        height: 370px;
+    }
+
+
+    .vg-portals {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+
+    .vg-features {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+
+    .vg-security-badge {
+
+        right: 7%;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .vg-header-status {
+
+        display: none;
+    }
+
+
+    .vg-portals {
+
+        grid-template-columns:
+            1fr;
+
+        max-width: 520px;
+    }
+
+
+    .vg-features {
+
+        grid-template-columns:
+            1fr;
+
+        max-width: 520px;
+    }
+
+
+    .vg-feature {
+
+        border-right:
+            none !important;
+
+        border-bottom:
+            1px solid
+            rgba(130,150,190,.13);
+
+        padding:
+            14px;
+    }
+
+
+    .vg-feature:last-child {
+
+        border-bottom:
+            none;
+    }
+
+
+    .vg-portal-title {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 10px;
+    }
+
+
+    .vg-title-line {
+
+        display: none;
+    }
+
+
+    .vg-title-content {
+
+        min-width: 0;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .vg-header {
+
+        padding:
+            18px 20px 12px;
+    }
+
+
+    .vg-logo-wrap {
+
+        width: 48px;
+        height: 48px;
+    }
+
+
+    .vg-logo {
+
+        width: 48px;
+        height: 48px;
+    }
+
+
+    .vg-brand-name {
+
+        font-size: 21px;
+    }
+
+
+    .vg-tagline {
+
+        font-size: 10px;
+    }
+
+
+    .vg-hero {
+
+        width: 92%;
+    }
+
+
+    .vg-hero h1 {
+
+        font-size: 40px;
+
+        letter-spacing:
+            -1.8px;
+    }
+
+
+    .vg-hero-left p {
+
+        font-size: 14px;
+    }
+
+
+    .vg-hero-points {
+
+        gap: 10px;
+    }
+
+
+    .vg-hero-point {
+
+        font-size: 10px;
+    }
+
+
+    .vg-globe {
+
+        width: 270px;
+        height: 270px;
+    }
+
+
+    .vg-glow {
+
+        width: 320px;
+        height: 320px;
+    }
+
+
+    .vg-orbit {
+
+        width: 370px;
+        height: 120px;
+    }
+
+
+    .vg-world {
+
+        font-size: 105px;
+    }
+
+
+    .vg-security-badge {
+
+        display: none;
+    }
+
+
+    .vg-portal-title h2 {
+
+        font-size: 25px;
+    }
+
+
+    .vg-card {
+
+        min-height: 300px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Visa_Home_page</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 09:47:57</sys_created_on>
+        <sys_id>f1a7b5021cea03107f44ac7143096461</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>Visa_Home_page</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_f1a7b5021cea03107f44ac7143096461</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 10:22:40</sys_updated_on>
+        <template><![CDATA[<div class="vg-app">
+
+    <!-- ================= HEADER ================= -->
+    <header class="vg-header">
+
+        <div class="vg-brand">
+
+            <!-- REAL VISAGUARDIAN LOGO -->
+            <div class="vg-logo-wrap">
+                <img
+                    src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+                    alt="VisaGuardian AI"
+                    class="vg-logo"
+                >
+            </div>
+
+            <div class="vg-brand-text">
+
+                <div class="vg-brand-name">
+                    Visa<span>Guardian</span> <strong>AI</strong>
+                </div>
+
+                <div class="vg-tagline">
+                    Secure. Smart. Seamless.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="vg-header-status">
+            <span class="vg-status-dot"></span>
+            AI-Powered Visa Platform
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+    <section class="vg-hero">
+
+        <!-- LEFT SIDE -->
+        <div class="vg-hero-left">
+
+            <div class="vg-platform">
+                <span class="vg-star">✦</span>
+                AI-Powered Visa Platform
+            </div>
+
+            <h1>
+                Welcome to
+                <span>VisaGuardian AI</span>
+            </h1>
+
+            <p>
+                Your trusted partner in the visa journey.<br>
+                Choose your portal to get started with a<br>
+                secure and personalized experience.
+            </p>
+
+            <div class="vg-hero-points">
+
+                <div class="vg-hero-point">
+                    <span class="vg-point-icon">✓</span>
+                    Secure &amp; Compliant
+                </div>
+
+                <div class="vg-hero-point">
+                    <span class="vg-point-icon">✦</span>
+                    AI-Powered Guidance
+                </div>
+
+                <div class="vg-hero-point">
+                    <span class="vg-point-icon">◷</span>
+                    Real-Time Tracking
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="vg-hero-right">
+
+            <div class="vg-glow"></div>
+
+            <!-- ORBITS -->
+            <div class="vg-orbit vg-orbit-1"></div>
+            <div class="vg-orbit vg-orbit-2"></div>
+
+            <!-- GLOBE -->
+            <div class="vg-globe">
+
+                <div class="vg-longitude vg-longitude-1"></div>
+                <div class="vg-longitude vg-longitude-2"></div>
+                <div class="vg-longitude vg-longitude-3"></div>
+
+                <div class="vg-latitude vg-latitude-1"></div>
+                <div class="vg-latitude vg-latitude-2"></div>
+                <div class="vg-latitude vg-latitude-3"></div>
+
+                <div class="vg-world">
+                    ]]>🌎
+<![CDATA[                </div>
+
+                <div class="vg-globe-light"></div>
+
+            </div>
+
+            <!-- ORBIT DOTS -->
+            <span class="vg-dot dot-1"></span>
+            <span class="vg-dot dot-2"></span>
+            <span class="vg-dot dot-3"></span>
+            <span class="vg-dot dot-4"></span>
+
+            <!-- FLOATING SECURITY BADGE -->
+            <div class="vg-security-badge">
+                <span class="vg-security-check">✓</span>
+                <div>
+                    <strong>Secure Platform</strong>
+                    <small>Enterprise Protection</small>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PORTAL HEADING ================= -->
+    <section class="vg-portal-title">
+
+        <div class="vg-title-line vg-line-left"></div>
+
+        <div class="vg-title-content">
+
+            <span class="vg-section-label">
+                ACCESS CONTROL
+            </span>
+
+            <h2>Choose Your Portal</h2>
+
+            <p>
+                Select your role to access your personalized dashboard
+            </p>
+
+        </div>
+
+        <div class="vg-title-line vg-line-right"></div>
+
+    </section>
+
+
+    <!-- ================= PORTAL CARDS ================= -->
+    <section class="vg-portals">
+
+
+        <!-- ===== STUDENT ===== -->
+        <article class="vg-card vg-student">
+
+            <div class="vg-card-top">
+                <span class="vg-role-number">01</span>
+                <span class="vg-role-status">
+                    STUDENT
+                </span>
+            </div>
+
+            <div class="vg-card-icon">
+                <span>]]>🎓<![CDATA[</span>
+            </div>
+
+            <h3>Student</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Apply for visas, upload documents,
+                track your applications and get
+                real-time updates.
+            </p>
+
+            <a
+                href="/student?id=login_page"
+                class="vg-button vg-student-button">
+
+                <span>Enter Student Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+
+        <!-- ===== VISA ADVISOR ===== -->
+        <article class="vg-card vg-advisor">
+
+            <div class="vg-card-top">
+                <span class="vg-role-number">02</span>
+                <span class="vg-role-status">
+                    ADVISOR
+                </span>
+            </div>
+
+            <div class="vg-card-icon">
+                <span>]]>👤<![CDATA[</span>
+            </div>
+
+            <h3>Visa Advisor</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Review student applications,
+                provide guidance and manage
+                your assigned cases.
+            </p>
+
+            <a
+                href="/student?id=advisor_login"
+                class="vg-button vg-advisor-button">
+
+                <span>Enter Advisor Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+
+        <!-- ===== VISA OFFICER ===== -->
+        <article class="vg-card vg-officer">
+
+            <div class="vg-card-top">
+                <span class="vg-role-number">03</span>
+                <span class="vg-role-status">
+                    DSO
+                </span>
+            </div>
+
+            <div class="vg-card-icon">
+                <span>]]>🛡<![CDATA[</span>
+            </div>
+
+            <h3>DSO Officer</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Review applications, verify
+                documents and make visa
+                decisions.
+            </p>
+
+            <a
+                href="/student?id=dso_login"
+                class="vg-button vg-officer-button">
+
+                <span>Enter DSO Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+    </section>
+
+
+    <!-- ================= FEATURE BAR ================= -->
+    <section class="vg-features">
+
+
+        <!-- SECURE -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-blue-icon">
+                <span>]]>🛡<![CDATA[</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>Secure &amp; Compliant</h4>
+
+                <p>
+                    Enterprise-grade security<br>
+                    for your data protection.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-green-icon">
+                <span>⚡</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>AI-Powered Assistance</h4>
+
+                <p>
+                    Intelligent guidance at every<br>
+                    step of your journey.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- REAL TIME -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-purple-icon">
+                <span>◷</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>Real-time Updates</h4>
+
+                <p>
+                    Track your application status<br>
+                    in real time.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="dfab03f098ae03107f447d1bb882e5ba" label="Risk Assessments" max_length="40" name="x_snc_visaguardi_0_risk_assessment" type="collection">
+        <element label="Missing Documents Count" max_length="10" name="missing_documents_count" type="integer"/>
+        <element choice="1" label="Risk Level" mandatory="true" max_length="40" name="risk_level" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Low" sequence="0" value="low"/>
+                <element inactive_on_update="false" label="Medium" sequence="1" value="medium"/>
+                <element inactive_on_update="false" label="Critical" sequence="3" value="critical"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+            </choice>
+        </element>
+        <element label="Risk Explanation" max_length="255" name="risk_explanation" type="string"/>
+        <element choice="1" label="Assessment Status" mandatory="true" max_length="40" name="assessment_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Reassessment Required" value="reassessment_required"/>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Completed" value="completed"/>
+            </choice>
+        </element>
+        <element label="Last Assessment Date" max_length="40" name="last_assessment_date" type="glide_date_time"/>
+        <element label="Compliance Score" mandatory="true" max_length="20" name="compliance_score" type="integer"/>
+        <element label="Visa Case" mandatory="true" max_length="32" name="visa_case" reference="x_snc_visaguardi_0_visa_case" type="reference"/>
+        <element label="Days Remaining" max_length="10" name="days_remaining" type="integer"/>
+        <index name="index">
+            <element name="visa_case"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,2333 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+
+    var c = this;
+
+
+    /* =====================================================
+       VIEW DETAILS
+    ===================================================== */
+
+    c.viewDetails = function(notification) {
+
+        if (!notification) {
+            return;
+        }
+
+        /*
+         * Mark notification as read
+         */
+
+        if (!notification.is_read) {
+
+            c.server.get({
+                action: 'mark_read',
+                sys_id: notification.sys_id
+            }).then(function(response) {
+
+                if (
+                    response.data &&
+                    response.data.success
+                ) {
+
+                    notification.is_read = true;
+
+                    if (c.data.unreadCount > 0) {
+                        c.data.unreadCount--;
+                    }
+                }
+
+                openRelatedCase(notification);
+
+            });
+
+        } else {
+
+            openRelatedCase(notification);
+
+        }
+
+    };
+
+
+    /* =====================================================
+       MARK AS READ
+    ===================================================== */
+
+    c.markAsRead = function(notification) {
+
+        if (
+            !notification ||
+            notification.is_read
+        ) {
+            return;
+        }
+
+        c.server.get({
+            action: 'mark_read',
+            sys_id: notification.sys_id
+        }).then(function(response) {
+
+            if (
+                response.data &&
+                response.data.success
+            ) {
+
+                notification.is_read = true;
+
+                if (c.data.unreadCount > 0) {
+                    c.data.unreadCount--;
+                }
+            }
+
+        });
+
+    };
+
+
+    /* =====================================================
+       REFRESH
+    ===================================================== */
+
+    c.refresh = function() {
+
+        c.server.get({
+            action: 'refresh'
+        }).then(function(response) {
+
+            if (response.data) {
+
+                c.data.notifications =
+                    response.data.notifications || [];
+
+                c.data.unreadCount =
+                    response.data.unreadCount || 0;
+
+            }
+
+        });
+
+    };
+
+
+    /* =====================================================
+       OPEN RELATED CASE
+    ===================================================== */
+
+    function openRelatedCase(notification) {
+
+        if (notification.case_sys_id) {
+
+            window.location.href =
+                '?id=visa_case&sys_id=' +
+                notification.case_sys_id;
+
+        }
+
+    }
+
+}; // <-- Make sure it ends with a semicolon here]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   NOTIFICATIONS &amp; SYSTEM ALERTS
+   PREMIUM ENTERPRISE UI
+   UI ONLY — NO FUNCTIONALITY CHANGES
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT CONTAINER
+   ========================================================= */
+
+.vg-notifications,
+.vg-notifications * {
+    box-sizing: border-box;
+}
+
+
+.vg-notifications {
+
+    width: 100%;
+    max-width: 1400px;
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    padding: 0;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f7faff 0%,
+            #f2f7fc 50%,
+            #edf4fa 100%
+        );
+
+    border:
+        1px solid #d5e2ee;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #183b60;
+
+    box-shadow:
+        0 12px 35px
+        rgba(20, 60, 95, 0.08);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-notification-header {
+
+    position: relative;
+
+    min-height: 76px;
+
+    padding:
+        0 28px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    background:
+        linear-gradient(
+            120deg,
+            #073b73 0%,
+            #0a4b83 50%,
+            #105d96 100%
+        );
+
+    color:
+        #ffffff;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        0 4px 15px
+        rgba(5, 53, 99, 0.16);
+}
+
+
+/* Header glow */
+
+.vg-notification-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    right: -120px;
+    top: -210px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(75, 165, 235, 0.15);
+
+    pointer-events:
+        none;
+}
+
+
+.vg-notification-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    left: 38%;
+    bottom: -150px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(117, 84, 205, 0.10);
+
+    pointer-events:
+        none;
+}
+
+
+/* =========================================================
+   HEADER TITLE
+   ========================================================= */
+
+.vg-header-title {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -0.2px;
+}
+
+
+/* =========================================================
+   BELL
+   ========================================================= */
+
+.vg-bell {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.16);
+
+    font-size:
+        20px;
+
+    line-height:
+        1;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,0.10);
+}
+
+
+/* =========================================================
+   HEADER COUNT
+   ========================================================= */
+
+.vg-header-count {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    min-width:
+        30px;
+
+    height:
+        30px;
+
+    padding:
+        0 9px;
+
+    border-radius:
+        50%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff4b52,
+            #f13742
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    box-shadow:
+        0 4px 12px
+        rgba(240, 55, 66, 0.30);
+
+    border:
+        2px solid
+        rgba(255,255,255,0.14);
+}
+
+
+/* =========================================================
+   NOTIFICATION LIST
+   ========================================================= */
+
+.vg-notification-list {
+
+    min-height:
+        calc(100vh - 76px);
+
+    padding:
+        24px 26px 32px;
+
+    background:
+        transparent;
+}
+
+
+/* =========================================================
+   NOTIFICATION CARD
+   ========================================================= */
+
+.vg-notification-card {
+
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        17px;
+
+    padding:
+        19px 21px;
+
+    margin-bottom:
+        15px;
+
+    background:
+        rgba(255,255,255,0.96);
+
+    border:
+        1px solid #d7e4ef;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+        0 5px 16px
+        rgba(24, 66, 105, 0.055);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+
+    overflow:
+        hidden;
+}
+
+
+.vg-notification-card:last-child {
+
+    margin-bottom:
+        0;
+}
+
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.vg-notification-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #c5d9e9;
+
+    box-shadow:
+        0 9px 24px
+        rgba(24, 66, 105, 0.10);
+
+    background:
+        #ffffff;
+}
+
+
+/* =========================================================
+   UNREAD CARD
+   ========================================================= */
+
+.vg-notification-card.vg-unread {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f4f9ff 0%,
+            #eef6ff 100%
+        );
+
+    border-color:
+        #cbdff0;
+
+    border-left:
+        5px solid #0b467f;
+
+    box-shadow:
+        0 6px 18px
+        rgba(20, 76, 122, 0.07);
+}
+
+
+/* =========================================================
+   UNREAD HOVER
+   ========================================================= */
+
+.vg-notification-card.vg-unread:hover {
+
+    border-left-color:
+        #1262a0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7fbff 0%,
+            #edf6ff 100%
+        );
+}
+
+
+/* =========================================================
+   NOTIFICATION ICON
+   ========================================================= */
+
+.vg-notification-icon {
+
+    width:
+        48px;
+
+    min-width:
+        48px;
+
+    height:
+        48px;
+
+    border-radius:
+        14px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        23px;
+
+    font-weight:
+        700;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.03);
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.vg-notification-card:hover
+.vg-notification-icon {
+
+    transform:
+        scale(1.04);
+}
+
+
+/* =========================================================
+   WARNING
+   ========================================================= */
+
+.vg-warning .vg-notification-icon {
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf5ff,
+            #e4f0ff
+        );
+
+    color:
+        #3786c8;
+
+    box-shadow:
+        0 5px 12px
+        rgba(55,134,200,0.08);
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.vg-success .vg-notification-icon {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf9ef,
+            #e2f6e9
+        );
+
+    color:
+        #35a85b;
+
+    box-shadow:
+        0 5px 12px
+        rgba(53,168,91,0.08);
+}
+
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+.vg-info .vg-notification-icon {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf8fc,
+            #e2f5fa
+        );
+
+    color:
+        #3198bd;
+
+    box-shadow:
+        0 5px 12px
+        rgba(49,152,189,0.08);
+}
+
+
+/* =========================================================
+   DANGER
+   ========================================================= */
+
+.vg-danger .vg-notification-icon {
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff2f2,
+            #ffe9e9
+        );
+
+    color:
+        #d44747;
+
+    box-shadow:
+        0 5px 12px
+        rgba(212,71,71,0.08);
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.vg-notification-content {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+    padding-right:
+        16px;
+}
+
+
+/* =========================================================
+   TITLE ROW
+   ========================================================= */
+
+.vg-notification-title-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    margin-bottom:
+        6px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.vg-notification-title-row h3 {
+
+    margin:
+        0;
+
+    color:
+        #0c3d6d;
+
+    font-size:
+        18px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.35;
+
+    letter-spacing:
+        -0.15px;
+}
+
+
+/* =========================================================
+   TYPE BADGES
+   ========================================================= */
+
+.vg-type-badge {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        27px;
+
+    padding:
+        4px 10px;
+
+    border-radius:
+        7px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    color:
+        #ffffff;
+
+    line-height:
+        1.2;
+
+    box-shadow:
+        0 3px 8px
+        rgba(0,0,0,0.06);
+}
+
+
+/* =========================================================
+   WARNING BADGE
+   ========================================================= */
+
+.vg-type-badge.warning {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f5b03e,
+            #ee9e27
+        );
+}
+
+
+/* =========================================================
+   SUCCESS BADGE
+   ========================================================= */
+
+.vg-type-badge.success {
+
+    background:
+        linear-gradient(
+            135deg,
+            #55be64,
+            #43aa55
+        );
+}
+
+
+/* =========================================================
+   INFO BADGE
+   ========================================================= */
+
+.vg-type-badge.info {
+
+    background:
+        linear-gradient(
+            135deg,
+            #52b9d7,
+            #3ca8c8
+        );
+}
+
+
+/* =========================================================
+   DANGER BADGE
+   ========================================================= */
+
+.vg-type-badge.danger {
+
+    background:
+        linear-gradient(
+            135deg,
+            #e05b57,
+            #cf4644
+        );
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.vg-notification-message {
+
+    color:
+        #5c7489;
+
+    font-size:
+        15px;
+
+    line-height:
+        1.65;
+
+    margin-bottom:
+        9px;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   BOTTOM / TIME
+   ========================================================= */
+
+.vg-notification-bottom {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-start;
+
+    width:
+        100%;
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+.vg-time {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    color:
+        #8799a8;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   UNREAD DOT
+   ========================================================= */
+
+.vg-unread-dot {
+
+    position:
+        absolute;
+
+    right:
+        15px;
+
+    top:
+        15px;
+
+    width:
+        9px;
+
+    height:
+        9px;
+
+    border-radius:
+        50%;
+
+    background:
+        #2874e8;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(40,116,232,0.10),
+        0 0 10px
+        rgba(40,116,232,0.25);
+
+    animation:
+        vg-notification-pulse 2.2s
+        ease-in-out infinite;
+}
+
+
+@keyframes vg-notification-pulse {
+
+    0%,
+    100% {
+
+        box-shadow:
+            0 0 0 4px
+            rgba(40,116,232,0.08),
+            0 0 8px
+            rgba(40,116,232,0.20);
+    }
+
+    50% {
+
+        box-shadow:
+            0 0 0 6px
+            rgba(40,116,232,0.04),
+            0 0 15px
+            rgba(40,116,232,0.35);
+    }
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-empty {
+
+    min-height:
+        420px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        70px 30px;
+
+    color:
+        #738692;
+}
+
+
+/* =========================================================
+   EMPTY ICON
+   ========================================================= */
+
+.vg-empty-icon {
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        18px;
+
+    border-radius:
+        20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf5fc,
+            #e6f0f8
+        );
+
+    border:
+        1px solid #d9e6f0;
+
+    color:
+        #4282b4;
+
+    font-size:
+        34px;
+
+    box-shadow:
+        0 7px 18px
+        rgba(40,88,125,0.07);
+}
+
+
+/* =========================================================
+   EMPTY TITLE
+   ========================================================= */
+
+.vg-empty h3 {
+
+    margin:
+        0 0 8px;
+
+    color:
+        #1b4569;
+
+    font-size:
+        20px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   EMPTY MESSAGE
+   ========================================================= */
+
+.vg-empty p {
+
+    max-width:
+        420px;
+
+    margin:
+        0;
+
+    color:
+        #7a8d9b;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.6;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media screen and (min-width: 1200px) {
+
+    .vg-notifications {
+
+        max-width:
+            1400px;
+
+        border-radius:
+            15px;
+    }
+
+
+    .vg-notification-header {
+
+        min-height:
+            80px;
+
+        padding:
+            0 30px;
+    }
+
+
+    .vg-notification-list {
+
+        padding:
+            25px 28px 35px;
+    }
+
+
+    .vg-notification-card {
+
+        padding:
+            21px 23px;
+
+        margin-bottom:
+            17px;
+    }
+
+
+    .vg-notification-title-row h3 {
+
+        font-size:
+            19px;
+    }
+
+
+    .vg-notification-message {
+
+        font-size:
+            15px;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+    .vg-notification-header {
+
+        padding:
+            0 20px;
+    }
+
+
+    .vg-notification-list {
+
+        padding:
+            20px 18px 28px;
+    }
+
+
+    .vg-notification-card {
+
+        padding:
+            17px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 700px) {
+
+    .vg-notifications {
+
+        min-height:
+            100vh;
+
+        border-radius:
+            0;
+
+        border-left:
+            none;
+
+        border-right:
+            none;
+
+        box-shadow:
+            none;
+    }
+
+
+    .vg-notification-header {
+
+        min-height:
+            68px;
+
+        padding:
+            0 14px;
+    }
+
+
+    .vg-header-title {
+
+        gap:
+            9px;
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-bell {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+        border-radius:
+            10px;
+
+        font-size:
+            18px;
+    }
+
+
+    .vg-header-count {
+
+        min-width:
+            27px;
+
+        height:
+            27px;
+
+        font-size:
+            11px;
+    }
+
+
+    .vg-notification-list {
+
+        min-height:
+            calc(100vh - 68px);
+
+        padding:
+            14px;
+    }
+
+
+    .vg-notification-card {
+
+        gap:
+            12px;
+
+        padding:
+            14px;
+
+        margin-bottom:
+            12px;
+
+        border-radius:
+            10px;
+    }
+
+
+    .vg-notification-icon {
+
+        width:
+            40px;
+
+        min-width:
+            40px;
+
+        height:
+            40px;
+
+        border-radius:
+            11px;
+
+        font-size:
+            20px;
+    }
+
+
+    .vg-notification-content {
+
+        padding-right:
+            8px;
+    }
+
+
+    .vg-notification-title-row {
+
+        gap:
+            7px;
+
+        margin-bottom:
+            5px;
+    }
+
+
+    .vg-notification-title-row h3 {
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-type-badge {
+
+        min-height:
+            24px;
+
+        padding:
+            3px 8px;
+
+        border-radius:
+            6px;
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-notification-message {
+
+        font-size:
+            13px;
+
+        line-height:
+            1.55;
+    }
+
+
+    .vg-time {
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-unread-dot {
+
+        right:
+            10px;
+
+        top:
+            10px;
+
+        width:
+            7px;
+
+        height:
+            7px;
+    }
+
+
+    .vg-empty {
+
+        min-height:
+            350px;
+
+        padding:
+            50px 20px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 430px) {
+
+    .vg-notification-header {
+
+        min-height:
+            62px;
+    }
+
+
+    .vg-header-title {
+
+        font-size:
+            15px;
+    }
+
+
+    .vg-bell {
+
+        width:
+            34px;
+
+        height:
+            34px;
+
+        min-width:
+            34px;
+
+        font-size:
+            17px;
+    }
+
+
+    .vg-notification-list {
+
+        padding:
+            11px;
+    }
+
+
+    .vg-notification-card {
+
+        padding:
+            12px;
+
+        gap:
+            10px;
+    }
+
+
+    .vg-notification-icon {
+
+        width:
+            36px;
+
+        min-width:
+            36px;
+
+        height:
+            36px;
+
+        font-size:
+            18px;
+    }
+
+
+    .vg-notification-title-row h3 {
+
+        font-size:
+            15px;
+    }
+
+
+    .vg-notification-message {
+
+        font-size:
+            12px;
+    }
+
+
+    .vg-type-badge {
+
+        font-size:
+            9px;
+
+        padding:
+            3px 7px;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.vg-notifications *:focus-visible {
+
+    outline:
+        2px solid
+        rgba(40,116,232,0.55);
+
+    outline-offset:
+        2px;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .vg-notifications *,
+    .vg-notifications *::before,
+    .vg-notifications *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_notifications</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Notifications</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // =====================================================
+    // VISA GUARDIAN AI
+    // NOTIFICATIONS PAGE SERVER SCRIPT
+    // =====================================================
+
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.notifications = [];
+    data.unreadCount = 0;
+
+
+    // =====================================================
+    // 1. FIND CURRENT STUDENT PROFILE
+    // =====================================================
+
+    var student =
+        new GlideRecord("x_snc_visaguardi_0_student_profile");
+
+    var profileFound = false;
+
+
+    // -----------------------------------------------------
+    // METHOD 1: SESSION STUDENT SYS ID
+    // -----------------------------------------------------
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData("vg_student_sys_id");
+
+
+    if (sessionStudentSysId) {
+
+        if (student.get(sessionStudentSysId)) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // METHOD 2: SESSION STUDENT USERNAME
+    // -----------------------------------------------------
+
+    if (!profileFound) {
+
+        var sessionStudentUserName =
+            gs.getSession().getClientData("vg_student_user_name");
+
+
+        if (sessionStudentUserName) {
+
+            student =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+
+            student.addQuery(
+                "user_name",
+                sessionStudentUserName
+            );
+
+
+            student.setLimit(1);
+
+            student.query();
+
+
+            if (student.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // METHOD 3: SERVICENOW USER REFERENCE
+    // -----------------------------------------------------
+
+    if (!profileFound) {
+
+        var currentUserId =
+            gs.getUserID();
+
+
+        if (currentUserId) {
+
+            student =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+
+            student.addQuery(
+                "user",
+                currentUserId
+            );
+
+
+            student.setLimit(1);
+
+            student.query();
+
+
+            if (student.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // METHOD 4: SERVICENOW USERNAME
+    // -----------------------------------------------------
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+
+        student.setLimit(1);
+
+        student.query();
+
+
+        if (student.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PROFILE NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        gs.info(
+            "VisaGuardian Notifications: Student profile not found for user: " +
+            gs.getUserName()
+        );
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // 2. STUDENT PROFILE SYS ID
+    // =====================================================
+
+    var studentProfileSysId =
+        student.getUniqueValue();
+
+
+    // =====================================================
+    // 3. GET VISA CASES
+    // =====================================================
+
+    var gr =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    if (!gr.isValid()) {
+
+        gs.error(
+            "VisaGuardian Notifications: Visa Case table is invalid."
+        );
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // FILTER CASES FOR CURRENT STUDENT
+    // =====================================================
+
+    if (!gr.isValidField("student")) {
+
+        gs.error(
+            "VisaGuardian Notifications: Student field not found."
+        );
+
+        return;
+
+    }
+
+
+    gr.addQuery(
+        "student",
+        studentProfileSysId
+    );
+
+
+    gr.orderByDesc("sys_updated_on");
+
+    gr.query();
+
+
+    // =====================================================
+    // CONTROL VARIABLES
+    // =====================================================
+
+    var notificationIndex = 0;
+
+    var activeCaseFound = false;
+
+    var deadlineNotificationAdded = false;
+
+    var requestCount = 0;
+
+
+    // =====================================================
+    // 4. PROCESS CASES
+    // =====================================================
+
+    while (gr.next()) {
+
+        requestCount++;
+
+
+        // =================================================
+        // CASE SYS ID
+        // =================================================
+
+        var caseSysId =
+            gr.getUniqueValue();
+
+
+        // =================================================
+        // CASE NUMBER
+        // =================================================
+
+        var caseNumber =
+            gr.getDisplayValue("number");
+
+
+        if (!caseNumber) {
+
+            caseNumber =
+                caseSysId;
+
+        }
+
+
+        // =================================================
+        // REQUEST TYPE
+        // =================================================
+
+        var requestType =
+            "Visa Request";
+
+
+        if (
+            gr.isValidField("request_type") &&
+            gr.getDisplayValue("request_type")
+        ) {
+
+            requestType =
+                gr.getDisplayValue("request_type");
+
+        }
+
+        else if (
+            gr.isValidField("contact_type") &&
+            gr.getDisplayValue("contact_type")
+        ) {
+
+            requestType =
+                gr.getDisplayValue("contact_type");
+
+        }
+
+
+        // =================================================
+        // STATUS
+        // =================================================
+
+        var status =
+            "Submitted";
+
+
+        if (
+            gr.isValidField("case_stage") &&
+            gr.getDisplayValue("case_stage")
+        ) {
+
+            status =
+                gr.getDisplayValue("case_stage");
+
+        }
+
+        else if (
+            gr.isValidField("state") &&
+            gr.getDisplayValue("state")
+        ) {
+
+            status =
+                gr.getDisplayValue("state");
+
+        }
+
+
+        var lowerStatus =
+            String(status).toLowerCase();
+
+
+        // =================================================
+        // DETERMINE CLOSED
+        // =================================================
+
+        var isClosed = false;
+
+
+        if (
+            lowerStatus.indexOf("closed") >= 0 ||
+            lowerStatus.indexOf("complete") >= 0 ||
+            lowerStatus.indexOf("approved") >= 0 ||
+            lowerStatus.indexOf("rejected") >= 0 ||
+            lowerStatus.indexOf("cancelled") >= 0
+        ) {
+
+            isClosed = true;
+
+        }
+
+
+        // =================================================
+        // 5. ACTIVE CASE NOTIFICATION
+        // =================================================
+
+        if (
+            !activeCaseFound &&
+            !isClosed
+        ) {
+
+            activeCaseFound = true;
+
+
+            data.notifications.push({
+
+                sys_id:
+                    caseSysId + "_active",
+
+                is_read:
+                    false,
+
+                notification_type:
+                    "info",
+
+                title:
+                    "Visa Case Update",
+
+                type_label:
+                    "Case Update",
+
+                message:
+                    "Your " +
+                    requestType +
+                    " case " +
+                    caseNumber +
+                    " is currently " +
+                    status +
+                    ".",
+
+                time_ago:
+                    "Recently"
+
+            });
+
+
+            notificationIndex++;
+
+        }
+
+
+        // =================================================
+        // 6. DEADLINE CHECK
+        // =================================================
+
+        if (
+            gr.isValidField("due_date") &&
+            !gr.due_date.nil()
+        ) {
+
+            var dueDate =
+                new GlideDateTime(
+                    gr.getValue("due_date")
+                );
+
+
+            var now =
+                new GlideDateTime();
+
+
+            var milliseconds =
+                dueDate.getNumericValue() -
+                now.getNumericValue();
+
+
+            var days =
+                Math.ceil(
+                    milliseconds /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            // -------------------------------------------------
+            // OVERDUE
+            // -------------------------------------------------
+
+            if (
+                days < 0 &&
+                !deadlineNotificationAdded
+            ) {
+
+                deadlineNotificationAdded = true;
+
+
+                data.notifications.push({
+
+                    sys_id:
+                        caseSysId + "_overdue",
+
+                    is_read:
+                        false,
+
+                    notification_type:
+                        "danger",
+
+                    title:
+                        "Deadline Overdue",
+
+                    type_label:
+                        "Urgent",
+
+                    message:
+                        requestType +
+                        " deadline for case " +
+                        caseNumber +
+                        " has passed. Immediate attention is required.",
+
+                    time_ago:
+                        "Overdue"
+
+                });
+
+
+                notificationIndex++;
+
+            }
+
+
+            // -------------------------------------------------
+            // DUE WITHIN 30 DAYS
+            // -------------------------------------------------
+
+            else if (
+                days >= 0 &&
+                days <= 30 &&
+                !deadlineNotificationAdded
+            ) {
+
+                deadlineNotificationAdded = true;
+
+
+                var deadlineType =
+                    "warning";
+
+
+                var deadlineLabel =
+                    "Upcoming";
+
+
+                if (days <= 7) {
+
+                    deadlineType =
+                        "danger";
+
+                    deadlineLabel =
+                        "Urgent";
+
+                }
+
+
+                data.notifications.push({
+
+                    sys_id:
+                        caseSysId + "_deadline",
+
+                    is_read:
+                        false,
+
+                    notification_type:
+                        deadlineType,
+
+                    title:
+                        "Upcoming Deadline",
+
+                    type_label:
+                        deadlineLabel,
+
+                    message:
+                        requestType +
+                        " deadline expires in " +
+                        days +
+                        " days.",
+
+                    time_ago:
+                        "Upcoming"
+
+                });
+
+
+                notificationIndex++;
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 7. RECENT REQUESTS NOTIFICATION
+    // =====================================================
+
+    if (requestCount > 0) {
+
+        data.notifications.push({
+
+            sys_id:
+                "request_count_" +
+                studentProfileSysId,
+
+            is_read:
+                false,
+
+            notification_type:
+                "success",
+
+            title:
+                "Visa Requests Updated",
+
+            type_label:
+                "Information",
+
+            message:
+                "You currently have " +
+                requestCount +
+                " visa request(s) in the system.",
+
+            time_ago:
+                "Recently"
+
+        });
+
+
+        notificationIndex++;
+
+    }
+
+
+    // =====================================================
+    // 8. NO NOTIFICATIONS
+    // =====================================================
+
+    if (
+        data.notifications.length === 0
+    ) {
+
+        gs.info(
+            "VisaGuardian Notifications: No notifications found for student " +
+            studentProfileSysId
+        );
+
+    }
+
+
+    // =====================================================
+    // 9. UNREAD COUNT
+    // =====================================================
+
+    data.unreadCount = 0;
+
+
+    for (
+        var i = 0;
+        i < data.notifications.length;
+        i++
+    ) {
+
+        if (
+            !data.notifications[i].is_read
+        ) {
+
+            data.unreadCount++;
+
+        }
+
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:27:56</sys_created_on>
+        <sys_id>66bd79b1a86603107f446d9f3e09f604</sys_id>
+        <sys_mod_count>16</sys_mod_count>
+        <sys_name>VG Notifications</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_66bd79b1a86603107f446d9f3e09f604</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 11:28:47</sys_updated_on>
+        <template><![CDATA[<div class="vg-notifications">
+
+    <!-- HEADER -->
+    <div class="vg-notification-header">
+
+        <div class="vg-header-title">
+            <span class="vg-bell">]]>🔔<![CDATA[</span>
+            <span>Notifications &amp; System Alerts</span>
+        </div>
+
+        <div class="vg-header-count"
+             ng-if="data.unreadCount > 0">
+
+            {{data.unreadCount}}
+
+        </div>
+
+    </div>
+
+
+    <!-- EMPTY -->
+    <div class="vg-empty"
+         ng-if="!data.notifications.length">
+
+        <div class="vg-empty-icon">]]>🔔<![CDATA[</div>
+
+        <h3>No notifications</h3>
+
+        <p>
+            You are all caught up. New visa case updates
+            and system alerts will appear here.
+        </p>
+
+    </div>
+
+
+    <!-- NOTIFICATIONS -->
+    <div class="vg-notification-list"
+         ng-if="data.notifications.length">
+
+        <div class="vg-notification-card"
+             ng-repeat="notification in data.notifications track by notification.sys_id"
+             ng-class="{
+                 'vg-unread': !notification.is_read,
+                 'vg-warning': notification.notification_type == 'warning',
+                 'vg-success': notification.notification_type == 'success',
+                 'vg-info': notification.notification_type == 'info',
+                 'vg-danger': notification.notification_type == 'danger'
+             }">
+
+
+            <!-- ICON -->
+            <div class="vg-notification-icon">
+
+                <span ng-if="notification.notification_type == 'warning'">
+                    ⚠
+                </span>
+
+                <span ng-if="notification.notification_type == 'success'">
+                    ✓
+                </span>
+
+                <span ng-if="notification.notification_type == 'info'">
+                    ℹ
+                </span>
+
+                <span ng-if="notification.notification_type == 'danger'">
+                    !
+                </span>
+
+            </div>
+
+
+            <!-- CONTENT -->
+            <div class="vg-notification-content">
+
+                <div class="vg-notification-title-row">
+
+                    <h3>
+                        {{notification.title}}
+                    </h3>
+
+                    <span class="vg-type-badge"
+                          ng-class="{
+                              'warning': notification.notification_type == 'warning',
+                              'success': notification.notification_type == 'success',
+                              'info': notification.notification_type == 'info',
+                              'danger': notification.notification_type == 'danger'
+                          }">
+
+                        {{notification.type_label}}
+
+                    </span>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+                <div class="vg-notification-message">
+
+                    {{notification.message}}
+
+                </div>
+
+
+                <!-- TIME ONLY -->
+                <div class="vg-notification-bottom">
+
+                    <div class="vg-time">
+
+                        {{notification.time_ago}}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- UNREAD INDICATOR -->
+            <div class="vg-unread-dot"
+                 ng-if="!notification.is_read">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>66bd79b1a86603107f446d9f3e09f604</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:27:56</sys_created_on>
+        <sys_id>aabd79b1a86603107f446d9f3e09f607</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:27:56</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

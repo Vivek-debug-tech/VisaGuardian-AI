@@ -1,0 +1,2223 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope) {
+
+    var c = this;
+
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
+
+    c.students = c.data.students || [];
+
+    c.searchTerm = "";
+
+
+    // =========================================================
+    // SUMMARY DATA
+    // =========================================================
+
+    c.getTotalStudents = function() {
+
+        return c.data.total_students || 0;
+
+    };
+
+
+    c.getActiveCases = function() {
+
+        return c.data.active_cases || 0;
+
+    };
+
+
+    c.getCompletedCases = function() {
+
+        return c.data.completed_cases || 0;
+
+    };
+
+
+    // =========================================================
+    // STUDENT SEARCH
+    // =========================================================
+
+    c.getFilteredStudents = function() {
+
+        var search = (c.searchTerm || "").toLowerCase().trim();
+
+        if (!search) {
+            return c.students;
+        }
+
+
+        return c.students.filter(function(student) {
+
+            var name =
+                (student.name || "").toLowerCase();
+
+            var studentId =
+                (student.student_id || "").toLowerCase();
+
+            var email =
+                (student.email || "").toLowerCase();
+
+            var visaType =
+                (student.visa_type || "").toLowerCase();
+
+            var caseType =
+                (student.case_type || "").toLowerCase();
+
+
+            return (
+                name.indexOf(search) !== -1 ||
+                studentId.indexOf(search) !== -1 ||
+                email.indexOf(search) !== -1 ||
+                visaType.indexOf(search) !== -1 ||
+                caseType.indexOf(search) !== -1
+            );
+
+        });
+
+    };
+
+
+    // =========================================================
+    // GET STUDENT INITIAL
+    // =========================================================
+
+    c.getInitial = function(student) {
+
+        if (!student || !student.name) {
+            return "S";
+        }
+
+
+        return student.name
+            .trim()
+            .charAt(0)
+            .toUpperCase();
+
+    };
+
+
+    // =========================================================
+    // CASE STAGE CSS CLASS
+    // =========================================================
+
+    c.getStageClass = function(student) {
+
+        var stage =
+            (student.case_stage_value || "").toLowerCase();
+
+
+        if (stage === "completed") {
+            return "completed";
+        }
+
+
+        if (stage === "advisor_review") {
+            return "review";
+        }
+
+
+        if (stage === "dso_review") {
+            return "dso";
+        }
+
+
+        if (stage === "closed") {
+            return "completed";
+        }
+
+
+        return "review";
+
+    };
+
+
+    // =========================================================
+    // CHECK WHETHER STUDENTS EXIST
+    // =========================================================
+
+    c.hasStudents = function() {
+
+        return c.students.length > 0;
+
+    };
+
+
+    // =========================================================
+    // VIEW STUDENT
+    // =========================================================
+
+   c.viewStudent = function(student) {
+    if (student.case_sys_id) {
+        // Redirects to your Case Management page, passing the specific case sys_id
+        window.location.href = "?id=vg_advisor_my_cases&sys_id=" + student.case_sys_id;
+    } else {
+        console.warn("No case record found for this student.");
+    }
+};
+
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   ADVISOR WORKSPACE
+   MY STUDENTS
+   PREMIUM ENTERPRISE THEME
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE CONTAINER
+   ========================================================= */
+
+.my-students-page {
+
+    width: 100%;
+    max-width: 1440px;
+
+    margin: 0 auto;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    color: #183b63;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.students-header {
+
+    width: 100%;
+
+    min-height: 128px;
+
+    padding: 28px 34px;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #092f60 0%,
+            #123f78 45%,
+            #2864a8 100%
+        );
+
+    border:
+        1px solid
+        rgba(39, 123, 204, .25);
+
+    border-radius: 18px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 12px 32px
+        rgba(17, 55, 95, .17);
+}
+
+
+/* Decorative glow */
+
+.students-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    right: -100px;
+    top: -150px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(76, 168, 255, .12);
+
+    pointer-events: none;
+}
+
+
+.students-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    right: 25%;
+
+    bottom: -140px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+   ========================================================= */
+
+.students-header-content {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.students-icon {
+
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .18);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255, 255, 255, .12);
+
+    color: #ffffff;
+
+    font-size: 26px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, .12),
+        0 6px 18px
+        rgba(0, 0, 0, .12);
+}
+
+
+/* =========================================================
+   HEADER TITLE
+   ========================================================= */
+
+.students-header h1 {
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 30px;
+
+    line-height: 1.15;
+
+    font-weight: 750;
+
+    letter-spacing: -.4px;
+}
+
+
+.students-header p {
+
+    margin: 7px 0 0;
+
+    color:
+        rgba(255, 255, 255, .78);
+
+    font-size: 14px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   SUMMARY SECTION
+   ========================================================= */
+
+.student-summary-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-top: 20px;
+}
+
+
+/* =========================================================
+   SUMMARY CARD
+   ========================================================= */
+
+.summary-card {
+
+    min-height: 124px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 22px 24px;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #dce7f2;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(23, 62, 101, .055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+/* Top accent */
+
+.summary-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1b67c8,
+            #49a4f5
+        );
+}
+
+
+.summary-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #c8dcee;
+
+    box-shadow:
+        0 11px 28px
+        rgba(23, 62, 101, .095);
+}
+
+
+/* =========================================================
+   SUMMARY ICON
+   ========================================================= */
+
+.summary-icon {
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    font-size: 22px;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.summary-card:hover
+.summary-icon {
+
+    transform:
+        scale(1.05);
+}
+
+
+/* =========================================================
+   SUMMARY ICON COLORS
+   ========================================================= */
+
+.summary-icon.blue {
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf5ff,
+            #dfedff
+        );
+
+    color:
+        #2167c8;
+}
+
+
+.summary-icon.green {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf9f1,
+            #dff5e8
+        );
+
+    color:
+        #159c58;
+}
+
+
+.summary-icon.purple {
+
+    background:
+        linear-gradient(
+            145deg,
+            #f3edff,
+            #e9e0ff
+        );
+
+    color:
+        #7147cc;
+}
+
+
+/* =========================================================
+   SUMMARY CONTENT
+   ========================================================= */
+
+.summary-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+
+.summary-label {
+
+    color:
+        #73879f;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        .8px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.summary-value {
+
+    color:
+        #123f70;
+
+    font-size:
+        30px;
+
+    line-height:
+        1;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.5px;
+}
+
+
+/* =========================================================
+   STUDENTS LIST CARD
+   ========================================================= */
+
+.students-list-card {
+
+    margin-top:
+        20px;
+
+    overflow:
+        hidden;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #dce7f2;
+
+    border-radius:
+        17px;
+
+    box-shadow:
+        0 7px 24px
+        rgba(23, 62, 101, .065);
+}
+
+
+/* =========================================================
+   LIST HEADER
+   ========================================================= */
+
+.students-list-header {
+
+    min-height:
+        108px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        25px;
+
+    padding:
+        24px 28px;
+
+    box-sizing:
+        border-box;
+
+    border-bottom:
+        1px solid
+        #e3ebf3;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+.students-list-header h2 {
+
+    margin:
+        0;
+
+    color:
+        #123f70;
+
+    font-size:
+        22px;
+
+    line-height:
+        1.2;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.2px;
+}
+
+
+.students-list-header p {
+
+    margin:
+        7px 0 0;
+
+    color:
+        #7d91a8;
+
+    font-size:
+        12px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.student-search {
+
+    width:
+        350px;
+
+    max-width:
+        100%;
+
+    position:
+        relative;
+}
+
+
+.student-search i {
+
+    position:
+        absolute;
+
+    left:
+        16px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        #8ca1b8;
+
+    font-size:
+        15px;
+
+    pointer-events:
+        none;
+}
+
+
+.student-search input {
+
+    width:
+        100%;
+
+    height:
+        46px;
+
+    padding:
+        0 16px 0 43px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        #d7e2ee;
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    background:
+        #ffffff;
+
+    color:
+        #193e67;
+
+    font-size:
+        13px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.student-search input::placeholder {
+
+    color:
+        #94a4b7;
+}
+
+
+.student-search input:hover {
+
+    border-color:
+        #c5d5e5;
+}
+
+
+.student-search input:focus {
+
+    border-color:
+        #3175c9;
+
+    background:
+        #fbfdff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(49, 117, 201, .11);
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.student-table-wrapper {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.student-table {
+
+    width:
+        100%;
+
+    min-width:
+        950px;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+
+    /*
+       IMPORTANT:
+       Use auto instead of fixed so
+       Student Name and Student ID
+       don't overlap.
+    */
+
+    table-layout:
+        auto;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.student-table thead {
+
+    background:
+        #f6f9fc;
+}
+
+
+.student-table th {
+
+    padding:
+        14px 22px;
+
+    color:
+        #6f8299;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    text-align:
+        left;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .7px;
+
+    white-space:
+        nowrap;
+
+    border-bottom:
+        1px solid
+        #dfe8f1;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+   ========================================================= */
+
+/*
+   These prevent the Student ID
+   from crowding the student column.
+*/
+
+.student-table th:nth-child(1),
+.student-table td:nth-child(1) {
+
+    min-width:
+        220px;
+
+    width:
+        24%;
+}
+
+
+.student-table th:nth-child(2),
+.student-table td:nth-child(2) {
+
+    min-width:
+        130px;
+
+    width:
+        13%;
+}
+
+
+.student-table th:nth-child(3),
+.student-table td:nth-child(3) {
+
+    min-width:
+        130px;
+
+    width:
+        14%;
+}
+
+
+.student-table th:nth-child(4),
+.student-table td:nth-child(4) {
+
+    min-width:
+        180px;
+
+    width:
+        18%;
+}
+
+
+.student-table th:nth-child(5),
+.student-table td:nth-child(5) {
+
+    min-width:
+        160px;
+
+    width:
+        17%;
+}
+
+
+.student-table th:nth-child(6),
+.student-table td:nth-child(6) {
+
+    min-width:
+        90px;
+
+    width:
+        8%;
+
+    text-align:
+        center;
+}
+
+
+/* =========================================================
+   TABLE CELLS
+   ========================================================= */
+
+.student-table td {
+
+    padding:
+        16px 22px;
+
+    color:
+        #2b4666;
+
+    font-size:
+        13px;
+
+    vertical-align:
+        middle;
+
+    white-space:
+        nowrap;
+
+    border-bottom:
+        1px solid
+        #edf2f7;
+
+    background:
+        #ffffff;
+
+    transition:
+        background .15s ease;
+}
+
+
+.student-table tbody tr {
+
+    transition:
+        background .15s ease;
+}
+
+
+.student-table tbody tr:hover td {
+
+    background:
+        #f8fbff;
+}
+
+
+.student-table tbody tr:last-child td {
+
+    border-bottom:
+        none;
+}
+
+
+/* =========================================================
+   STUDENT NAME CELL
+   ========================================================= */
+
+.student-name-cell {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+    min-width:
+        210px;
+}
+
+
+/* =========================================================
+   STUDENT AVATAR
+   ========================================================= */
+
+.student-avatar {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    min-width:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid
+        #d9e7f8;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf5ff,
+            #e3efff
+        );
+
+    color:
+        #2365be;
+
+    font-size:
+        14px;
+
+    font-weight:
+        750;
+
+    box-shadow:
+        0 2px 6px
+        rgba(38, 101, 190, .05);
+}
+
+
+/* =========================================================
+   STUDENT NAME
+   ========================================================= */
+
+.student-name {
+
+    display:
+        block;
+
+    color:
+        #123f70;
+
+    font-size:
+        13px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   STUDENT EMAIL
+   ========================================================= */
+
+.student-email {
+
+    display:
+        block;
+
+    margin-top:
+        4px;
+
+    color:
+        #8295aa;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        400;
+}
+
+
+/* =========================================================
+   STUDENT ID
+   ========================================================= */
+
+.student-id {
+
+    display:
+        inline-block;
+
+    color:
+        #466482;
+
+    font-family:
+        "Consolas",
+        "Courier New",
+        monospace;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    letter-spacing:
+        .2px;
+}
+
+
+/* =========================================================
+   VISA TYPE
+   ========================================================= */
+
+.student-table td:nth-child(3) {
+
+    color:
+        #285277;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   CASE TYPE
+   ========================================================= */
+
+.student-table td:nth-child(4) {
+
+    color:
+        #234c72;
+
+    font-weight:
+        500;
+}
+
+
+/* =========================================================
+   CASE STAGE
+   ========================================================= */
+
+.case-stage {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        30px;
+
+    padding:
+        5px 12px;
+
+    box-sizing:
+        border-box;
+
+    border-radius:
+        20px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   SUBMITTED / PENDING
+   ========================================================= */
+
+.case-stage.review,
+.case-stage.submitted,
+.case-stage.pending {
+
+    background:
+        #fff4df;
+
+    border:
+        1px solid
+        #f8dfad;
+
+    color:
+        #a96d09;
+}
+
+
+/* =========================================================
+   ADVISOR APPROVED
+   ========================================================= */
+
+.case-stage.advisor-approved {
+
+    background:
+        #eaf3ff;
+
+    border:
+        1px solid
+        #d4e5fa;
+
+    color:
+        #2364b8;
+}
+
+
+/* =========================================================
+   DSO APPROVED
+   ========================================================= */
+
+.case-stage.dso,
+.case-stage.dso-approved {
+
+    background:
+        #f0ebff;
+
+    border:
+        1px solid
+        #e1d7ff;
+
+    color:
+        #6948bd;
+}
+
+
+/* =========================================================
+   FINAL APPROVED
+   ========================================================= */
+
+.case-stage.completed,
+.case-stage.approved {
+
+    background:
+        #e8f8ef;
+
+    border:
+        1px solid
+        #d0eedc;
+
+    color:
+        #21894d;
+}
+
+
+/* =========================================================
+   REJECTED
+   ========================================================= */
+
+.case-stage.rejected {
+
+    background:
+        #fff0f0;
+
+    border:
+        1px solid
+        #f5d4d4;
+
+    color:
+        #c43e3e;
+}
+
+
+/* =========================================================
+   VIEW BUTTON
+   ========================================================= */
+
+.view-student-button {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin:
+        0 auto;
+
+    padding:
+        0;
+
+    border:
+        1px solid
+        #d5e2ef;
+
+    border-radius:
+        9px;
+
+    background:
+        #ffffff;
+
+    color:
+        #2467c5;
+
+    cursor:
+        pointer;
+
+    font-size:
+        14px;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.view-student-button:hover {
+
+    background:
+        #edf5ff;
+
+    border-color:
+        #bcd4ee;
+
+    color:
+        #135bb8;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 5px 12px
+        rgba(36, 103, 197, .10);
+}
+
+
+.view-student-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.students-empty-state {
+
+    padding:
+        60px 25px;
+
+    text-align:
+        center;
+
+    color:
+        #8192a8;
+}
+
+
+.students-empty-state i {
+
+    display:
+        block;
+
+    margin-bottom:
+        15px;
+
+    color:
+        #b3c2d3;
+
+    font-size:
+        40px;
+}
+
+
+.students-empty-state h3 {
+
+    margin:
+        0;
+
+    color:
+        #304d70;
+
+    font-size:
+        18px;
+
+    font-weight:
+        700;
+}
+
+
+.students-empty-state p {
+
+    margin:
+        7px 0 0;
+
+    color:
+        #8798ab;
+
+    font-size:
+        13px;
+}
+
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
+
+.student-table-wrapper::-webkit-scrollbar {
+
+    height:
+        7px;
+}
+
+
+.student-table-wrapper::-webkit-scrollbar-track {
+
+    background:
+        #f0f4f8;
+}
+
+
+.student-table-wrapper::-webkit-scrollbar-thumb {
+
+    background:
+        #b8c9da;
+
+    border-radius:
+        10px;
+}
+
+
+.student-table-wrapper::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #8ea8c0;
+}
+
+
+/* =========================================================
+   RESPONSIVE - 1100px
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .my-students-page {
+
+        padding:
+            15px 18px 30px;
+    }
+
+
+    .student-summary-grid {
+
+        gap:
+            14px;
+    }
+
+
+    .summary-card {
+
+        padding:
+            20px;
+    }
+
+
+    .students-list-header {
+
+        padding:
+            22px 24px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 850px
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .student-summary-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .summary-card {
+
+        min-height:
+            105px;
+    }
+
+
+    .students-list-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .student-search {
+
+        width:
+            100%;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 650px
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .my-students-page {
+
+        padding:
+            10px 10px 25px;
+    }
+
+
+    .students-header {
+
+        min-height:
+            105px;
+
+        padding:
+            21px;
+
+        border-radius:
+            14px;
+    }
+
+
+    .students-header-content {
+
+        gap:
+            14px;
+    }
+
+
+    .students-icon {
+
+        width:
+            52px;
+
+        height:
+            52px;
+
+        min-width:
+            52px;
+
+        font-size:
+            21px;
+    }
+
+
+    .students-header h1 {
+
+        font-size:
+            24px;
+    }
+
+
+    .students-header p {
+
+        font-size:
+            12px;
+    }
+
+
+    .students-list-card {
+
+        border-radius:
+            14px;
+    }
+
+
+    .students-list-header {
+
+        min-height:
+            auto;
+
+        padding:
+            20px;
+    }
+
+
+    .students-list-header h2 {
+
+        font-size:
+            19px;
+    }
+
+
+    .student-table {
+
+        min-width:
+            950px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .students-header {
+
+        padding:
+            18px;
+    }
+
+
+    .students-header h1 {
+
+        font-size:
+            21px;
+    }
+
+
+    .students-icon {
+
+        width:
+            48px;
+
+        height:
+            48px;
+
+        min-width:
+            48px;
+    }
+
+
+    .summary-card {
+
+        padding:
+            18px;
+    }
+
+
+    .summary-icon {
+
+        width:
+            52px;
+
+        height:
+            52px;
+    }
+
+
+    .summary-value {
+
+        font-size:
+            27px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_my_students</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Advisor My students</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.students = [];
+    data.total_students = 0;
+    data.active_cases = 0;
+    data.completed_cases = 0;
+    data.error = "";
+    data.authenticated = false;
+
+    // =====================================================
+    // GET CURRENT LOGGED-IN ADVISOR
+    // =====================================================
+    var userSysId = gs.getUserID();
+
+    // Check if session data exists from the custom advisor login
+    var sessionAdvisorSysId = gs.getSession().getClientData("vg_advisor_sys_id");
+    if (sessionAdvisorSysId) {
+        userSysId = sessionAdvisorSysId;
+    }
+
+    if (!userSysId) {
+        data.error = "Unable to identify the logged-in advisor.";
+        return;
+    }
+
+    data.authenticated = true;
+
+    // =====================================================
+    // FIND VISA CASES ASSIGNED TO THIS ADVISOR
+    // =====================================================
+    var caseGR = new GlideRecord("x_snc_visaguardi_0_visa_case");
+    caseGR.addQuery("advisor", userSysId);
+    caseGR.orderByDesc("sys_created_on");
+    caseGR.query();
+
+    var uniqueStudents = {};
+    var activeCount = 0;
+    var completedCount = 0;
+
+    // =====================================================
+    // PROCESS ASSIGNED CASES
+    // =====================================================
+    while (caseGR.next()) {
+        var studentSysId = caseGR.getValue("student");
+
+        // Skip cases without a student reference
+        if (!studentSysId) {
+            continue;
+        }
+
+        // Track case stage counts
+        var stageValue = (caseGR.getValue("case_stage") || "").toLowerCase();
+        if (stageValue === "completed" || stageValue === "closed") {
+            completedCount++;
+        } else {
+            activeCount++;
+        }
+
+        // Prevent duplicate student rows in the list view
+        if (uniqueStudents[studentSysId]) {
+            continue;
+        }
+        uniqueStudents[studentSysId] = true;
+
+        // =====================================================
+        // GET STUDENT PROFILE RECORD
+        // =====================================================
+        var studentGR = new GlideRecord("x_snc_visaguardi_0_student_profile");
+        if (!studentGR.get(studentSysId)) {
+            continue;
+        }
+
+        var student = {};
+        student.sys_id = studentGR.getUniqueValue();
+        student.student_id = studentGR.getValue("student_id") || "N/A";
+        student.first_name = studentGR.getValue("first_name") || "";
+        student.last_name = studentGR.getValue("last_name") || "";
+        
+        student.name = studentGR.getValue("name") || 
+                       (student.first_name + " " + student.last_name).trim() || 
+                       "Unknown Student";
+
+        student.email = studentGR.getValue("email") || "";
+        student.mobile_phone = studentGR.getValue("mobile_phone") || "";
+        student.current_visa_status = studentGR.getDisplayValue("current_visa_status") || "N/A";
+        student.visa_type = studentGR.getDisplayValue("visa_type") || "N/A";
+        student.university_name = studentGR.getValue("university_name") || "";
+        student.degree_program = studentGR.getValue("degree_program") || "";
+        student.degree_level = studentGR.getDisplayValue("degree_level") || "";
+        student.current_semester = studentGR.getValue("current_semester") || "";
+        student.photo = studentGR.getValue("photo") || "";
+
+        // =====================================================
+        // VISA CASE DETAILS
+        // =====================================================
+        student.case_sys_id = caseGR.getUniqueValue();
+        student.case_type = caseGR.getDisplayValue("case_type") || "N/A";
+        student.case_stage = caseGR.getDisplayValue("case_stage") || "N/A";
+        student.case_stage_value = caseGR.getValue("case_stage") || "";
+        student.case_created = caseGR.getDisplayValue("sys_created_on") || "";
+
+        data.students.push(student);
+    }
+
+    // =====================================================
+    // SET SUMMARY METRICS
+    // =====================================================
+    data.total_students = data.students.length;
+    data.active_cases = activeCount;
+    data.completed_cases = completedCount;
+
+    // =====================================================
+    // DEBUG INFORMATION
+    // =====================================================
+    data.debug = {
+        logged_in_user_sys_id: userSysId,
+        logged_in_user_name: gs.getUserName(),
+        total_students: data.total_students
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 16:38:16</sys_created_on>
+        <sys_id>6324bac3592e43107f44df2ba8a19b94</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>Advisor My students</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_6324bac3592e43107f44df2ba8a19b94</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 07:58:00</sys_updated_on>
+        <template><![CDATA[<div class="my-students-page">
+
+  <!-- ===================================================== -->
+  <!-- PAGE HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="students-header">
+
+    <div class="students-header-content">
+
+      <div class="students-icon">
+        <i class="fa fa-users"></i>
+      </div>
+
+      <div>
+        <h1>My Students</h1>
+
+        <p>
+          Students assigned to you
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- SUMMARY CARDS -->
+  <!-- ===================================================== -->
+
+  <div class="student-summary-grid">
+
+    <!-- TOTAL STUDENTS -->
+    <div class="summary-card">
+
+      <div class="summary-icon blue">
+        <i class="fa fa-users"></i>
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          Total Students
+        </span>
+
+        <span class="summary-value">
+  {{c.getTotalStudents()}}
+</span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACTIVE CASES -->
+    <div class="summary-card">
+
+      <div class="summary-icon green">
+        <i class="fa fa-folder-open"></i>
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          Active Cases
+        </span>
+
+        <span class="summary-value">
+  {{c.getActiveCases()}}
+</span>
+
+      </div>
+
+    </div>
+
+
+    <!-- COMPLETED -->
+    <div class="summary-card">
+
+      <div class="summary-icon purple">
+        <i class="fa fa-check-circle"></i>
+      </div>
+
+      <div class="summary-content">
+
+        <span class="summary-label">
+          Completed
+        </span>
+
+        <span class="summary-value">
+  {{c.getCompletedCases()}}
+</span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================== -->
+  <!-- STUDENT LIST CARD -->
+  <!-- ===================================================== -->
+
+  <div class="students-list-card">
+
+
+    <!-- LIST HEADER -->
+    <div class="students-list-header">
+
+      <div>
+
+        <h2>
+          Assigned Students
+        </h2>
+
+        <p>
+          View and manage students assigned to you
+        </p>
+
+      </div>
+
+
+      <!-- SEARCH -->
+      <div class="student-search">
+
+        <i class="fa fa-search"></i>
+
+        <input
+          type="text"
+          placeholder="Search students..." />
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================== -->
+    <!-- STUDENT TABLE -->
+    <!-- =================================================== -->
+
+    <div class="student-table-wrapper">
+
+      <table class="student-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Student
+            </th>
+
+            <th>
+              Student ID
+            </th>
+
+            <th>
+              Visa Type
+            </th>
+
+            <th>
+              Case Type
+            </th>
+
+            <th>
+              Case Stage
+            </th>
+
+            <th>
+              Action
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+  <!-- =================================================== -->
+  <!-- STUDENTS -->
+  <!-- =================================================== -->
+
+  <tr
+    ng-repeat="student in c.getFilteredStudents() track by student.sys_id">
+
+    <!-- STUDENT -->
+    <td>
+
+      <div class="student-name-cell">
+
+        <div class="student-avatar">
+          {{c.getInitial(student)}}
+        </div>
+
+        <div>
+
+          <div class="student-name">
+            {{student.name}}
+          </div>
+
+          <div class="student-email">
+            {{student.email || 'No email available'}}
+          </div>
+
+        </div>
+
+      </div>
+
+    </td>
+
+
+    <!-- STUDENT ID -->
+    <td>
+
+      <span class="student-id">
+        {{student.student_id || 'N/A'}}
+      </span>
+
+    </td>
+
+
+    <!-- VISA TYPE -->
+    <td>
+      {{student.visa_type || 'N/A'}}
+    </td>
+
+
+    <!-- CASE TYPE -->
+    <td>
+      {{student.case_type || 'N/A'}}
+    </td>
+
+
+    <!-- CASE STAGE -->
+    <td>
+
+      <span
+        class="case-stage"
+        ng-class="c.getStageClass(student)">
+
+        {{student.case_stage || 'N/A'}}
+
+      </span>
+
+    </td>
+
+
+    <!-- ACTION -->
+    <td>
+
+      <button
+        class="view-student-button"
+        title="View Case & Student Details"
+        ng-click="c.viewStudent(student)">
+
+        <i class="fa fa-eye"></i>
+
+      </button>
+
+    </td>
+
+  </tr>
+
+
+  <!-- =================================================== -->
+  <!-- NO SEARCH RESULTS -->
+  <!-- =================================================== -->
+
+  <tr
+    ng-if="c.hasStudents() && c.getFilteredStudents().length === 0">
+
+    <td
+      colspan="6"
+      style="text-align:center; padding:40px;">
+
+      No students match your search.
+
+    </td>
+
+  </tr>
+
+</tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- =================================================== -->
+    <!-- EMPTY STATE -->
+    <!-- =================================================== -->
+
+    <div class="students-empty-state"
+         ng-if="!c.hasStudents()">
+
+      <i class="fa fa-users"></i>
+
+      <h3>
+        No Students Assigned
+      </h3>
+
+      <p>
+        Students assigned to you will appear here.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>6324bac3592e43107f44df2ba8a19b94</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 16:38:16</sys_created_on>
+        <sys_id>2724bac3592e43107f44df2ba8a19b98</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 16:38:16</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,2218 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   STUDENT HELP &amp; SUPPORT
+   ========================================================= */
+
+.vg-student-support-page {
+
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 0 0 40px;
+
+    box-sizing: border-box;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    color: #173f6d;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7faff 0%,
+            #f4f7fb 100%
+        );
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-student-support-hero {
+
+    position: relative;
+
+    width: 100%;
+    min-height: 122px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 24px 36px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border-radius:
+        0 0 18px 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #102f5f 0%,
+            #17457e 48%,
+            #2863a1 100%
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 28px
+        rgba(16,47,95,.17);
+}
+
+
+/* Decorative background */
+
+.vg-student-support-hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    right: -110px;
+    top: -200px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.055);
+
+    pointer-events: none;
+}
+
+
+.vg-student-support-hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: 30%;
+    bottom: -190px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(80,170,255,.08);
+
+    pointer-events: none;
+}
+
+
+/* Hero content */
+
+.vg-student-hero-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    min-width: 0;
+}
+
+
+/* Hero icon */
+
+.vg-student-hero-icon {
+
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.11);
+
+    border:
+        1px solid
+        rgba(255,255,255,.20);
+
+    color: #ffffff;
+
+    font-size: 21px;
+}
+
+
+/* Hero text */
+
+.vg-student-hero-text {
+    min-width: 0;
+}
+
+
+.vg-student-eyebrow {
+
+    margin-bottom: 3px;
+
+    color:
+        rgba(255,255,255,.64);
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+
+.vg-student-support-hero h1 {
+
+    margin:
+        0 0 4px;
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    line-height: 1.2;
+
+    font-weight: 750;
+
+    letter-spacing: -.35px;
+}
+
+
+.vg-student-support-hero p {
+
+    margin: 0;
+
+    color:
+        rgba(255,255,255,.82);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* Hero button */
+
+.vg-student-hero-button {
+
+    position: relative;
+
+    z-index: 3;
+
+    flex-shrink: 0;
+
+    min-height: 43px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 9px 18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.36);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all .2s ease;
+}
+
+
+.vg-student-hero-button:hover {
+
+    background: #ffffff;
+
+    color: #17457e;
+
+    border-color: #ffffff;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 7px 16px
+        rgba(0,0,0,.12);
+}
+
+
+/* =========================================================
+   QUICK ACCESS
+   ========================================================= */
+
+.vg-student-quick-grid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap: 22px;
+
+    margin-top: 24px;
+}
+
+
+.vg-student-quick-card {
+
+    position: relative;
+
+    min-height: 112px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    padding: 18px 22px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        #dce6f0;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px
+        rgba(24,63,101,.045);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-student-quick-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #c5d7e8;
+
+    box-shadow:
+        0 12px 25px
+        rgba(24,63,101,.09);
+}
+
+
+/* Quick icons */
+
+.vg-student-quick-icon {
+
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 19px;
+}
+
+
+.vg-student-quick-icon.blue {
+
+    background: #eaf2ff;
+
+    color: #2864e8;
+}
+
+
+.vg-student-quick-icon.orange {
+
+    background: #fff3dc;
+
+    color: #f29a3d;
+}
+
+
+.vg-student-quick-icon.green {
+
+    background: #e8f7ef;
+
+    color: #10a866;
+}
+
+
+/* Quick content */
+
+.vg-student-quick-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.vg-student-quick-title {
+
+    margin-bottom: 3px;
+
+    font-size: 17px;
+
+    line-height: 1.25;
+
+    font-weight: 750;
+}
+
+
+.blue-text {
+    color: #2864e8;
+}
+
+
+.orange-text {
+    color: #f29a3d;
+}
+
+
+.green-text {
+    color: #0ba666;
+}
+
+
+.vg-student-quick-label {
+
+    margin-bottom: 3px;
+
+    color: #7c91a9;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    letter-spacing: .65px;
+
+    text-transform: uppercase;
+}
+
+
+.vg-student-quick-description {
+
+    color: #496983;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+/* Arrow */
+
+.vg-student-quick-arrow {
+
+    margin-left: auto;
+
+    color: #a5b4c4;
+
+    font-size: 15px;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+
+.vg-student-quick-card:hover
+.vg-student-quick-arrow {
+
+    color: #2864e8;
+
+    transform:
+        translateX(3px);
+}
+
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
+.vg-student-support-main-grid {
+
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1.35fr)
+        minmax(390px,.95fr);
+
+    gap: 24px;
+
+    margin-top: 24px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+.vg-student-support-panel,
+.vg-student-support-panel {
+
+    background: #ffffff;
+
+    border:
+        1px solid
+        #dce6f0;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(24,63,101,.045);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.vg-student-panel-header {
+
+    min-height: 76px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 17px 28px;
+
+    border-bottom:
+        1px solid
+        #e5edf4;
+
+    box-sizing: border-box;
+}
+
+
+.vg-student-panel-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+
+.vg-student-panel-icon {
+
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #edf4ff;
+
+    color: #2864e8;
+
+    font-size: 15px;
+}
+
+
+.vg-student-panel-title h2 {
+
+    margin:
+        0 0 3px;
+
+    color:
+        #173f6d;
+
+    font-size:
+        16px;
+
+    line-height:
+        1.3;
+
+    font-weight:
+        750;
+}
+
+
+.vg-student-panel-title p {
+
+    margin: 0;
+
+    color:
+        #8395a8;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.vg-student-search {
+
+    position: relative;
+
+    width: 240px;
+
+    flex-shrink: 0;
+}
+
+
+.vg-student-search i {
+
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        #8ba0b5;
+
+    font-size:
+        12px;
+}
+
+
+.vg-student-search input {
+
+    width: 100%;
+
+    height: 38px;
+
+    padding:
+        7px 12px 7px 34px;
+
+    box-sizing:
+        border-box;
+
+    background:
+        #f6f9fd;
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    border-radius:
+        8px;
+
+    color:
+        #173f6d;
+
+    font-size:
+        11px;
+
+    outline:
+        none;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-student-search input:focus {
+
+    background:
+        #ffffff;
+
+    border-color:
+        #2864e8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(40,100,232,.08);
+}
+
+
+/* =========================================================
+   PANEL BODY
+   ========================================================= */
+
+.vg-student-panel-body {
+
+    padding:
+        20px 28px 25px;
+}
+
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+
+.vg-student-faq-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        9px;
+}
+
+
+.vg-student-faq-item {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #e1e9f1;
+
+    border-radius:
+        9px;
+
+    background:
+        #ffffff;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.vg-student-faq-item:hover {
+
+    border-color:
+        #cbdbea;
+}
+
+
+.vg-student-faq-item.expanded {
+
+    border-color:
+        #2864e8;
+
+    box-shadow:
+        0 5px 14px
+        rgba(40,100,232,.07);
+}
+
+
+/* FAQ question */
+
+.vg-student-faq-question {
+
+    min-height:
+        56px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        10px 14px;
+
+    background:
+        #f9fbfe;
+
+    cursor:
+        pointer;
+}
+
+
+.vg-student-faq-item.expanded
+.vg-student-faq-question {
+
+    background:
+        #f6f9ff;
+}
+
+
+.vg-student-faq-category {
+
+    flex-shrink:
+        0;
+
+    padding:
+        4px 9px;
+
+    border-radius:
+        5px;
+
+    background:
+        #e9f1ff;
+
+    color:
+        #2864e8;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+
+    text-transform:
+        uppercase;
+}
+
+
+.vg-student-faq-title {
+
+    flex:
+        1;
+
+    color:
+        #173f6d;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.45;
+
+    font-weight:
+        650;
+}
+
+
+.vg-student-faq-chevron {
+
+    width:
+        22px;
+
+    min-width:
+        22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #8da0b4;
+
+    font-size:
+        10px;
+}
+
+
+/* FAQ answer */
+
+.vg-student-faq-answer {
+
+    padding:
+        15px 16px 16px;
+
+    background:
+        #ffffff;
+
+    border-top:
+        1px solid
+        #e5edf4;
+}
+
+
+.vg-student-faq-answer-content {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        10px;
+}
+
+
+.vg-student-answer-icon {
+
+    width:
+        22px;
+
+    height:
+        22px;
+
+    min-width:
+        22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #2864e8;
+
+    font-size:
+        13px;
+}
+
+
+.vg-student-faq-answer p {
+
+    margin:
+        0;
+
+    color:
+        #506a82;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.65;
+}
+
+
+.vg-student-faq-footer {
+
+    margin:
+        12px 0 0 32px;
+}
+
+
+.vg-student-faq-link {
+
+    color:
+        #2864e8;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-student-empty {
+
+    min-height:
+        190px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-direction:
+        column;
+
+    gap:
+        5px;
+
+    color:
+        #8193a5;
+
+    text-align:
+        center;
+}
+
+
+.vg-student-empty-icon {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        #edf4ff;
+
+    color:
+        #2864e8;
+}
+
+
+.vg-student-empty strong {
+
+    color:
+        #506a82;
+
+    font-size:
+        12px;
+}
+
+
+.vg-student-empty span {
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   TICKET FORM
+   ========================================================= */
+
+.vg-student-ticket-wrapper {
+
+    padding:
+        22px 28px 25px;
+}
+
+
+.vg-student-form-group {
+
+    margin-bottom:
+        18px;
+}
+
+
+.vg-student-form-group label {
+
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        #173f6d;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+}
+
+
+.required {
+
+    color:
+        #dc4545;
+}
+
+
+.vg-student-form-control {
+
+    width:
+        100%;
+
+    min-height:
+        41px;
+
+    padding:
+        9px 12px;
+
+    box-sizing:
+        border-box;
+
+    background:
+        #f7faff;
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    border-radius:
+        8px;
+
+    color:
+        #173f6d;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    outline:
+        none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.vg-student-form-control:focus {
+
+    background:
+        #ffffff;
+
+    border-color:
+        #2864e8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(40,100,232,.08);
+}
+
+
+.vg-student-form-control::placeholder {
+
+    color:
+        #94a5b6;
+}
+
+
+.vg-student-textarea {
+
+    min-height:
+        112px;
+
+    resize:
+        vertical;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   PRIORITY
+   ========================================================= */
+
+.vg-student-priority-group {
+
+    width:
+        100%;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+}
+
+
+.vg-student-priority-button {
+
+    min-height:
+        39px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    background:
+        #f7faff;
+
+    border:
+        1px solid
+        #d7e2ed;
+
+    color:
+        #7d91a7;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .18s ease;
+}
+
+
+.vg-student-priority-button:first-child {
+
+    border-radius:
+        8px 0 0 8px;
+}
+
+
+.vg-student-priority-button:last-child {
+
+    border-radius:
+        0 8px 8px 0;
+}
+
+
+.vg-student-priority-button
++ .vg-student-priority-button {
+
+    border-left:
+        none;
+}
+
+
+.vg-student-priority-button:hover {
+
+    background:
+        #ffffff;
+
+    color:
+        #173f6d;
+}
+
+
+/* Priority dots */
+
+.priority-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+}
+
+
+.priority-dot.low {
+
+    background:
+        #16a86a;
+}
+
+
+.priority-dot.medium {
+
+    background:
+        #f1a13e;
+}
+
+
+.priority-dot.urgent {
+
+    background:
+        #e55252;
+}
+
+
+/* Active */
+
+.vg-student-priority-button.low-active {
+
+    background:
+        #eaf8f0;
+
+    border-color:
+        #18a86a;
+
+    color:
+        #098050;
+}
+
+
+.vg-student-priority-button.medium-active {
+
+    background:
+        #fff5e3;
+
+    border-color:
+        #f1a13e;
+
+    color:
+        #d77d18;
+}
+
+
+.vg-student-priority-button.urgent-active {
+
+    background:
+        #fff0f0;
+
+    border-color:
+        #e55252;
+
+    color:
+        #c83c3c;
+}
+
+
+/* =========================================================
+   FIELD HINT
+   ========================================================= */
+
+.vg-student-field-hint {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    margin-top:
+        7px;
+
+    color:
+        #899aaa;
+
+    font-size:
+        9px;
+}
+
+
+.vg-student-field-hint i {
+
+    color:
+        #6e91b4;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.vg-student-submit-button {
+
+    width:
+        100%;
+
+    min-height:
+        44px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        10px 15px;
+
+    border:
+        none;
+
+    border-radius:
+        8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2864e8 0%,
+            #2058cb 100%
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 5px 12px
+        rgba(40,100,232,.17);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.vg-student-submit-button:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(40,100,232,.23);
+}
+
+
+.vg-student-submit-button span {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+}
+
+
+/* =========================================================
+   TRUST
+   ========================================================= */
+
+.vg-student-trust {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    margin-top:
+        13px;
+
+    color:
+        #8496a8;
+
+    font-size:
+        9px;
+
+    text-align:
+        center;
+}
+
+
+.vg-student-trust i {
+
+    color:
+        #2864e8;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .vg-student-support-main-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .vg-student-support-hero {
+
+        padding:
+            22px 24px;
+    }
+
+    .vg-student-support-hero h1 {
+
+        font-size:
+            21px;
+    }
+
+    .vg-student-quick-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .vg-student-panel-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+    .vg-student-search {
+
+        width:
+            100%;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .vg-student-support-hero {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+        gap:
+            20px;
+
+        padding:
+            24px 20px;
+    }
+
+    .vg-student-hero-button {
+
+        width:
+            100%;
+    }
+
+    .vg-student-panel-header {
+
+        padding:
+            17px 19px;
+    }
+
+    .vg-student-panel-body {
+
+        padding:
+            17px 19px 20px;
+    }
+
+    .vg-student-ticket-wrapper {
+
+        padding:
+            19px;
+    }
+
+}
+
+
+@media (max-width: 430px) {
+
+    .vg-student-support-hero h1 {
+
+        font-size:
+            19px;
+    }
+
+    .vg-student-support-hero p {
+
+        font-size:
+            10px;
+    }
+
+    .vg-student-quick-card {
+
+        min-height:
+            96px;
+
+        padding:
+            15px 17px;
+    }
+
+    .vg-student-quick-icon {
+
+        width:
+            45px;
+
+        height:
+            45px;
+
+        min-width:
+            45px;
+    }
+
+    .vg-student-quick-title {
+
+        font-size:
+            15px;
+    }
+
+}
+
+
+/* =========================================================
+   BOX SIZING
+   ========================================================= */
+
+.vg-student-support-page *,
+.vg-student-support-page *::before,
+.vg-student-support-page *::after {
+
+    box-sizing:
+        border-box;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>student_help_and_support</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>student help and support</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-16 06:23:54</sys_created_on>
+        <sys_id>85875e2488b603107f4426cfbe93a5fb</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>student help and support</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_85875e2488b603107f4426cfbe93a5fb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 06:24:44</sys_updated_on>
+        <template><![CDATA[<div class="vg-student-support-page">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+    <section class="vg-student-support-hero">
+
+        <div class="vg-student-hero-content">
+
+            <div class="vg-student-hero-icon">
+                <i class="fa fa-question-circle"></i>
+            </div>
+
+            <div class="vg-student-hero-text">
+
+                <div class="vg-student-eyebrow">
+                    STUDENT SUPPORT CENTER
+                </div>
+
+                <h1>
+                    Student Help &amp; Support
+                </h1>
+
+                <p>
+                    Get help with your visa case, documents, SEVIS requirements,
+                    and immigration questions.
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="vg-student-hero-button"
+            ng-click="c.scrollToSection('studentSupportTicket')">
+
+            <i class="fa fa-ticket"></i>
+
+            <span>Get Support</span>
+
+        </button>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUICK ACCESS CARDS
+         ===================================================== -->
+    <section class="vg-student-quick-grid">
+
+        <!-- VISA & IMMIGRATION -->
+        <div
+            class="vg-student-quick-card"
+            ng-click="c.setFaqFilter('Visa')">
+
+            <div class="vg-student-quick-icon blue">
+                <i class="fa fa-globe"></i>
+            </div>
+
+            <div class="vg-student-quick-content">
+
+                <span class="vg-student-quick-title blue-text">
+                    Visa &amp; Immigration
+                </span>
+
+                <span class="vg-student-quick-label">
+                    VISA GUIDANCE
+                </span>
+
+                <span class="vg-student-quick-description">
+                    Visa process and requirements
+                </span>
+
+            </div>
+
+            <div class="vg-student-quick-arrow">
+                <i class="fa fa-angle-right"></i>
+            </div>
+
+        </div>
+
+
+        <!-- SEVIS -->
+        <div
+            class="vg-student-quick-card"
+            ng-click="c.setFaqFilter('SEVIS')">
+
+            <div class="vg-student-quick-icon orange">
+                <i class="fa fa-file-text-o"></i>
+            </div>
+
+            <div class="vg-student-quick-content">
+
+                <span class="vg-student-quick-title orange-text">
+                    SEVIS &amp; Compliance
+                </span>
+
+                <span class="vg-student-quick-label">
+                    COMPLIANCE CENTER
+                </span>
+
+                <span class="vg-student-quick-description">
+                    Maintain your immigration status
+                </span>
+
+            </div>
+
+            <div class="vg-student-quick-arrow">
+                <i class="fa fa-angle-right"></i>
+            </div>
+
+        </div>
+
+
+        <!-- DOCUMENTS -->
+        <div
+            class="vg-student-quick-card"
+            ng-click="c.setFaqFilter('Documents')">
+
+            <div class="vg-student-quick-icon green">
+                <i class="fa fa-folder-open"></i>
+            </div>
+
+            <div class="vg-student-quick-content">
+
+                <span class="vg-student-quick-title green-text">
+                    Documents
+                </span>
+
+                <span class="vg-student-quick-label">
+                    DOCUMENT CENTER
+                </span>
+
+                <span class="vg-student-quick-description">
+                    Upload and manage required documents
+                </span>
+
+            </div>
+
+            <div class="vg-student-quick-arrow">
+                <i class="fa fa-angle-right"></i>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+    <section class="vg-student-support-main-grid">
+
+
+        <!-- =================================================
+             FAQ SECTION
+             ================================================= -->
+        <div class="vg-student-support-panel">
+
+            <div class="vg-student-panel-header">
+
+                <div class="vg-student-panel-title">
+
+                    <div class="vg-student-panel-icon">
+                        <i class="fa fa-question-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Frequently Asked Questions
+                        </h2>
+
+                        <p>
+                            Find answers to common student questions
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-student-search">
+
+                    <i class="fa fa-search"></i>
+
+                    <input
+                        type="text"
+                        placeholder="Search questions..."
+                        ng-model="c.faqSearch">
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-student-panel-body">
+
+                <div class="vg-student-faq-list">
+
+                    <div
+                        class="vg-student-faq-item"
+                        ng-repeat="faq in c.data.faqs | filter:c.filterFaqs"
+                        ng-class="{'expanded': faq.isOpen}">
+
+
+                        <!-- QUESTION -->
+                        <div
+                            class="vg-student-faq-question"
+                            ng-click="faq.isOpen = !faq.isOpen">
+
+                            <span class="vg-student-faq-category">
+                                {{faq.category}}
+                            </span>
+
+                            <span class="vg-student-faq-title">
+                                {{faq.question}}
+                            </span>
+
+                            <span class="vg-student-faq-chevron">
+
+                                <i
+                                    class="fa"
+                                    ng-class="faq.isOpen
+                                        ? 'fa-chevron-up'
+                                        : 'fa-chevron-down'">
+                                </i>
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- ANSWER -->
+                        <div
+                            class="vg-student-faq-answer"
+                            ng-if="faq.isOpen">
+
+                            <div class="vg-student-faq-answer-content">
+
+                                <div class="vg-student-answer-icon">
+                                    <i class="fa fa-info-circle"></i>
+                                </div>
+
+                                <p>
+                                    {{faq.answer}}
+                                </p>
+
+                            </div>
+
+
+                            <div
+                                class="vg-student-faq-footer"
+                                ng-if="faq.link">
+
+                                <a
+                                    href="javascript:void(0)"
+                                    class="vg-student-faq-link">
+
+                                    <i class="fa fa-external-link"></i>
+
+                                    {{faq.linkLabel}}
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMPTY STATE -->
+                    <div
+                        ng-if="(c.data.faqs | filter:c.filterFaqs).length === 0"
+                        class="vg-student-empty">
+
+                        <div class="vg-student-empty-icon">
+                            <i class="fa fa-search"></i>
+                        </div>
+
+                        <strong>
+                            No matching questions found
+                        </strong>
+
+                        <span>
+                            Try searching with another keyword.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STUDENT SUPPORT REQUEST
+             ================================================= -->
+        <div
+            class="vg-student-support-panel"
+            id="studentSupportTicket">
+
+
+            <div class="vg-student-panel-header">
+
+                <div class="vg-student-panel-title">
+
+                    <div class="vg-student-panel-icon">
+                        <i class="fa fa-paper-plane-o"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Contact Student Support
+                        </h2>
+
+                        <p>
+                            Submit a request to your support team
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-student-ticket-wrapper">
+
+                <form
+                    ng-submit="c.submitTicket()"
+                    class="vg-student-ticket-form">
+
+
+                    <!-- REQUEST TYPE -->
+                    <div class="vg-student-form-group">
+
+                        <label>
+                            Request Type
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            class="vg-student-form-control"
+                            ng-model="c.ticket.category"
+                            required>
+
+                            <option value="">
+                                -- Select Request Type --
+                            </option>
+
+                            <option value="Visa Question">
+                                Visa Question
+                            </option>
+
+                            <option value="SEVIS Issue">
+                                SEVIS / Immigration Issue
+                            </option>
+
+                            <option value="Document Issue">
+                                Document Issue
+                            </option>
+
+                            <option value="Case Status">
+                                Case Status Question
+                            </option>
+
+                            <option value="Technical Issue">
+                                Technical / Portal Issue
+                            </option>
+
+                            <option value="Other">
+                                Other Question
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PRIORITY -->
+                    <div class="vg-student-form-group">
+
+                        <label>
+                            Priority
+                        </label>
+
+                        <div class="vg-student-priority-group">
+
+                            <button
+                                type="button"
+                                class="vg-student-priority-button"
+                                ng-class="{
+                                    'low-active':
+                                    c.ticket.priority === 'Low'
+                                }"
+                                ng-click="c.ticket.priority = 'Low'">
+
+                                <span class="priority-dot low"></span>
+
+                                Low
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="vg-student-priority-button"
+                                ng-class="{
+                                    'medium-active':
+                                    c.ticket.priority === 'Medium'
+                                }"
+                                ng-click="c.ticket.priority = 'Medium'">
+
+                                <span class="priority-dot medium"></span>
+
+                                Medium
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="vg-student-priority-button"
+                                ng-class="{
+                                    'urgent-active':
+                                    c.ticket.priority === 'Urgent'
+                                }"
+                                ng-click="c.ticket.priority = 'Urgent'">
+
+                                <span class="priority-dot urgent"></span>
+
+                                Urgent
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBJECT -->
+                    <div class="vg-student-form-group">
+
+                        <label>
+                            Subject
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            class="vg-student-form-control"
+                            placeholder="e.g. Question about my OPT application"
+                            ng-model="c.ticket.subject"
+                            required>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="vg-student-form-group">
+
+                        <label>
+                            Description
+                            <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            class="vg-student-form-control vg-student-textarea"
+                            rows="5"
+                            placeholder="Describe your question or issue..."
+                            ng-model="c.ticket.description"
+                            required>
+                        </textarea>
+
+                        <div class="vg-student-field-hint">
+                            <i class="fa fa-info-circle"></i>
+                            Include your Student ID or Case ID when relevant.
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+                    <button
+                        type="submit"
+                        class="vg-student-submit-button">
+
+                        <span>
+                            <i class="fa fa-send"></i>
+                            Submit Support Request
+                        </span>
+
+                        <i class="fa fa-arrow-right"></i>
+
+                    </button>
+
+
+                    <!-- TRUST MESSAGE -->
+                    <div class="vg-student-trust">
+
+                        <i class="fa fa-shield"></i>
+
+                        Your request will be securely routed
+                        to the appropriate support team.
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>85875e2488b603107f4426cfbe93a5fb</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-16 06:23:54</sys_created_on>
+        <sys_id>01879e2488b603107f4426cfbe93a500</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 06:23:54</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

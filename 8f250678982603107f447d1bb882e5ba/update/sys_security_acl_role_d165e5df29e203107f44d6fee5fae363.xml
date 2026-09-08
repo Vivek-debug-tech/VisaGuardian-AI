@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:32:32</sys_created_on>
+        <sys_id>d165e5df29e203107f44d6fee5fae363</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0_document_configuration.x_snc_visaguardi_0.document_configuration_user</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_security_acl display_value="x_snc_visaguardi_0_document_configuration">5d65e5df29e203107f44d6fee5fae359</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_d165e5df29e203107f44d6fee5fae363</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:32:32</sys_updated_on>
+        <sys_user_role display_value="x_snc_visaguardi_0.document_configuration_user" name="x_snc_visaguardi_0.document_configuration_user">f465a5df29e203107f44d6fee5fae344</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

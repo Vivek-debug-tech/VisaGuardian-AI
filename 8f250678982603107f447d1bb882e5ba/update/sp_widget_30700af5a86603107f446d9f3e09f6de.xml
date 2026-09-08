@@ -1,0 +1,4194 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope) {
+
+    var c = this;
+
+
+    // =====================================================
+    // INITIAL STATE
+    // =====================================================
+
+    c.loading = false;
+
+    c.saving = false;
+
+    c.editMode = false;
+
+    c.error = "";
+
+    c.success = "";
+
+
+    // =====================================================
+    // EDIT PROFILE
+    // =====================================================
+
+    c.editProfile = function() {
+
+        c.error = "";
+
+        c.success = "";
+
+        c.editMode = true;
+
+
+        // Create editable copy
+
+        c.editStudent = angular.copy(
+            c.data.student
+        );
+
+    };
+
+
+    // =====================================================
+    // CANCEL EDIT
+    // =====================================================
+
+    c.cancelEdit = function() {
+
+        c.editMode = false;
+
+        c.error = "";
+
+        c.success = "";
+
+        c.editStudent = null;
+
+    };
+
+
+    // =====================================================
+    // SAVE PROFILE
+    // =====================================================
+
+    c.saveProfile = function() {
+
+        if (c.saving) {
+            return;
+        }
+
+
+        c.error = "";
+
+        c.success = "";
+
+        c.saving = true;
+
+
+        // =================================================
+        // SEND UPDATE REQUEST
+        // =================================================
+
+        c.data.action =
+            "update_profile";
+
+
+        c.data.first_name =
+            c.editStudent.first_name || "";
+
+
+        c.data.last_name =
+            c.editStudent.last_name || "";
+
+
+        c.data.date_of_birth =
+            c.editStudent.date_of_birth || "";
+
+
+        c.data.gender =
+            c.editStudent.gender || "";
+
+
+        c.data.nationality =
+            c.editStudent.nationality || "";
+
+
+        c.data.mobile_phone =
+            c.editStudent.mobile_phone || "";
+
+
+        c.data.home_phone =
+            c.editStudent.home_phone || "";
+
+
+        c.data.emergency_contact_name =
+            c.editStudent.emergency_contact_name || "";
+
+
+        c.data.emergency_contact_number =
+            c.editStudent.emergency_contact_number || "";
+
+
+        c.data.emergency_contact_relationship =
+            c.editStudent.emergency_contact_relationship || "";
+
+
+        c.data.degree_program =
+            c.editStudent.degree_program || "";
+
+
+        c.data.department =
+            c.editStudent.department || "";
+
+
+        c.data.degree_level =
+            c.editStudent.degree_level || "";
+
+
+        c.data.current_semester =
+            c.editStudent.current_semester || "";
+
+
+        c.data.intake_year =
+            c.editStudent.intake_year || "";
+
+
+        c.data.sevis_id =
+            c.editStudent.sevis_id || "";
+
+
+        c.data.visa_type =
+            c.editStudent.visa_type || "";
+
+
+        c.data.current_visa_status =
+            c.editStudent.current_visa_status || "";
+
+
+        c.data.visa_expiry_date =
+            c.editStudent.visa_expiry_date || "";
+
+
+        c.data.passport_number =
+            c.editStudent.passport_number || "";
+
+
+        c.data.passport_expiry_date =
+            c.editStudent.passport_expiry_date || "";
+
+
+        // =================================================
+        // SERVER UPDATE
+        // =================================================
+
+        c.server.update().then(
+
+            function() {
+
+                c.saving = false;
+
+
+                if (c.data.error) {
+
+                    c.error =
+                        c.data.error;
+
+                    return;
+
+                }
+
+
+                // -----------------------------------------
+                // Updated data returned from server
+                // -----------------------------------------
+
+                c.success =
+                    c.data.success ||
+                    "Profile updated successfully.";
+
+
+                c.editMode = false;
+
+                c.editStudent = null;
+
+
+                // -----------------------------------------
+                // Clear action
+                // -----------------------------------------
+
+                c.data.action = "";
+
+
+                // -----------------------------------------
+                // Refresh Angular view
+                // -----------------------------------------
+
+                if (!$scope.$$phase) {
+
+                    $scope.$applyAsync();
+
+                }
+
+            },
+
+            function(error) {
+
+                c.saving = false;
+
+                c.error =
+                    "Unable to update your profile.";
+
+                console.warn(
+                    "Profile update error:",
+                    error
+                );
+
+            }
+
+        );
+
+    };
+
+
+    // =====================================================
+    // INITIAL ERROR
+    // =====================================================
+
+    if (
+        c.data &&
+        c.data.error
+    ) {
+
+        c.error =
+            c.data.error;
+
+        console.warn(
+            "VisaGuardian Student Profile: " +
+            c.data.error
+        );
+
+    }
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   STUDENT PROFILE
+   PREMIUM ENTERPRISE UI
+   DARK BRAND + LIGHT WORKSPACE
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+/* Reset margins &amp; padding on root container */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Page Container - Edge to Edge */
+.vg-profile-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0; /* Set padding to 0 to remove inner space on all 4 sides */
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background:
+        radial-gradient(
+            circle at 88% 5%,
+            rgba(25, 135, 255, 0.08),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 8% 95%,
+            rgba(111, 45, 220, 0.06),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #f7faff 0%,
+            #f1f6fb 55%,
+            #eef4fa 100%
+        );
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    color: #18304d;
+}
+/* =========================================================
+   SUBTLE PAGE GRID
+   ========================================================= */
+
+.vg-profile-page::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .22;
+
+    background-image:
+
+        linear-gradient(
+            rgba(30, 115, 200, .025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(30, 115, 200, .025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        42px 42px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-profile-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    min-height: 78px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 24px;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #062c59 0%,
+            #0b427d 58%,
+            #123f78 100%
+        );
+
+    border:
+        1px solid
+        rgba(42, 145, 255, .20);
+
+    box-shadow:
+
+        0 8px 25px
+        rgba(3, 39, 78, .14),
+
+        0 0 30px
+        rgba(0, 110, 255, .04);
+
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.vg-header-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    margin-right: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.97);
+
+    border:
+        2px solid
+        rgba(80, 175, 255, .35);
+
+    color:
+        #51308f;
+
+    font-size:
+        21px;
+
+    box-shadow:
+
+        0 4px 12px
+        rgba(0,0,0,.12),
+
+        0 0 15px
+        rgba(50, 150, 255, .12);
+}
+
+
+/* =========================================================
+   HEADER TEXT
+   ========================================================= */
+
+.vg-header-text {
+
+    min-width: 0;
+}
+
+
+.vg-header-title {
+
+    color:
+        #ffffff;
+
+    font-size:
+        21px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1.2;
+
+    letter-spacing:
+        -.3px;
+}
+
+
+.vg-header-subtitle {
+
+    color:
+        #bfd2e7;
+
+    font-size:
+        12px;
+
+    margin-top:
+        5px;
+
+    letter-spacing:
+        .1px;
+}
+
+
+/* =========================================================
+   HEADER ACTION
+   ========================================================= */
+
+.vg-header-action {
+
+    margin-left:
+        auto;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+}
+
+
+/* =========================================================
+   EDIT PROFILE
+   ========================================================= */
+
+.vg-edit-button {
+
+    min-height:
+        40px;
+
+    padding:
+        0 18px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.65);
+
+    border-radius:
+        8px;
+
+    background:
+        #ffffff;
+
+    color:
+        #073b73;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    cursor:
+        pointer;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    transition:
+        all .22s ease;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0,0,0,.10);
+}
+
+
+.vg-edit-button:hover {
+
+    background:
+        #edf6ff;
+
+    color:
+        #075aa9;
+
+    border-color:
+        #ffffff;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0,0,0,.16);
+}
+
+
+.vg-edit-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+.vg-edit-button .glyphicon {
+
+    margin-right:
+        7px;
+
+    font-size:
+        12px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.vg-loading {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        20px;
+
+    padding:
+        18px;
+
+    text-align:
+        center;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d5e1ed;
+
+    border-radius:
+        10px;
+
+    color:
+        #24558a;
+
+    box-shadow:
+        0 4px 14px
+        rgba(20,60,100,.05);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-error {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        18px;
+
+    padding:
+        13px 17px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    background:
+        #fff4f3;
+
+    border:
+        1px solid
+        #efb8b3;
+
+    border-radius:
+        9px;
+
+    color:
+        #b42318;
+
+    font-size:
+        13px;
+
+    box-shadow:
+        0 3px 10px
+        rgba(180,35,24,.04);
+}
+
+
+.vg-error-icon {
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(180,35,24,.08);
+
+    font-size:
+        14px;
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.vg-success {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        18px;
+
+    padding:
+        13px 17px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    background:
+        #effaf4;
+
+    border:
+        1px solid
+        #a8dfc0;
+
+    border-radius:
+        9px;
+
+    color:
+        #16834b;
+
+    font-size:
+        13px;
+
+    font-weight:
+        550;
+
+    box-shadow:
+        0 3px 10px
+        rgba(20,130,70,.04);
+}
+
+
+.vg-success .glyphicon {
+
+    font-size:
+        14px;
+}
+
+
+/* =========================================================
+   MAIN PROFILE LAYOUT
+   ========================================================= */
+
+.vg-profile-container {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    width:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        stretch;
+
+    gap:
+        20px;
+
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   STUDENT CARD
+   ========================================================= */
+
+.vg-student-card {
+
+    width:
+        285px;
+
+    min-width:
+        285px;
+
+    padding:
+        27px 22px;
+
+    box-sizing:
+        border-box;
+
+    text-align:
+        center;
+
+    background:
+
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f9fbfe 100%
+        );
+
+    border:
+        1px solid
+        #d5e1ed;
+
+    border-radius:
+        12px;
+
+    box-shadow:
+
+        0 7px 22px
+        rgba(0, 45, 90, .07),
+
+        0 1px 2px
+        rgba(0,0,0,.03);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+.vg-student-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 12px 30px
+        rgba(0,45,90,.10);
+}
+
+
+/* =========================================================
+   PHOTO
+   ========================================================= */
+
+.vg-photo-wrapper {
+
+    width:
+        128px;
+
+    height:
+        128px;
+
+    margin:
+        0 auto 17px;
+
+    border-radius:
+        50%;
+
+    overflow:
+        hidden;
+
+    border:
+        3px solid
+        #174c86;
+
+    background:
+        #edf4ff;
+
+    box-shadow:
+
+        0 0 0 6px
+        rgba(24, 111, 204, .06),
+
+        0 7px 18px
+        rgba(10,65,120,.10);
+}
+
+
+.vg-student-photo {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+}
+
+
+.vg-photo-placeholder {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    color:
+        #51318c;
+
+    font-size:
+        53px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf4ff,
+            #e5edfc
+        );
+}
+
+
+/* =========================================================
+   STUDENT NAME
+   ========================================================= */
+
+.vg-student-name {
+
+    margin:
+        9px 0 5px;
+
+    color:
+        #122d4d;
+
+    font-size:
+        22px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -.3px;
+}
+
+
+/* =========================================================
+   VISA TYPE
+   ========================================================= */
+
+.vg-student-visa {
+
+    color:
+        #8797a9;
+
+    font-size:
+        12px;
+
+    margin-bottom:
+        15px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.vg-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        7px 14px;
+
+    border-radius:
+        18px;
+
+    background:
+        #e9f8ef;
+
+    color:
+        #159447;
+
+    border:
+        1px solid
+        #ccebd8;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+
+    box-shadow:
+        0 2px 7px
+        rgba(20,140,70,.05);
+}
+
+
+.vg-status-dot {
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        currentColor;
+
+    display:
+        inline-block;
+
+    box-shadow:
+        0 0 5px
+        currentColor;
+}
+
+
+/* =========================================================
+   SIDE INFORMATION
+   ========================================================= */
+
+.vg-side-info {
+
+    margin-top:
+        19px;
+
+    padding-top:
+        13px;
+
+    border-top:
+        1px solid
+        #e2e9f1;
+
+    text-align:
+        left;
+}
+
+
+.vg-side-label {
+
+    display:
+        block;
+
+    color:
+        #8191a3;
+
+    font-size:
+        10px;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .5px;
+
+    margin-bottom:
+        6px;
+}
+
+
+.vg-side-value {
+
+    display:
+        block;
+
+    color:
+        #123f77;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   MAIN INFORMATION CARD
+   ========================================================= */
+
+.vg-main-card {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d5e1ed;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+
+        0 7px 22px
+        rgba(0,45,90,.07),
+
+        0 1px 2px
+        rgba(0,0,0,.03);
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.vg-card-title {
+
+    min-height:
+        62px;
+
+    padding:
+        0 22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    border-bottom:
+        1px solid
+        #dce5ef;
+
+    color:
+        #102f53;
+
+    font-size:
+        19px;
+
+    font-weight:
+        650;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+.vg-title-icon {
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        8px;
+
+    background:
+        #edf5ff;
+
+    border:
+        1px solid
+        #d4e8ff;
+
+    font-size:
+        16px;
+}
+
+
+/* =========================================================
+   INFORMATION TABLE
+   ========================================================= */
+
+.vg-info-row {
+
+    display:
+        flex;
+
+    min-height:
+        48px;
+
+    border-bottom:
+        1px solid
+        #e2e8ef;
+
+    transition:
+        background .18s ease;
+}
+
+
+.vg-info-row:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.vg-info-row:hover {
+
+    background:
+        #f8fbff;
+}
+
+
+/* =========================================================
+   INFORMATION LABEL
+   ========================================================= */
+
+.vg-info-label {
+
+    width:
+        240px;
+
+    min-width:
+        240px;
+
+    padding:
+        10px 15px;
+
+    box-sizing:
+        border-box;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #073b70,
+            #0b4b87
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    position:
+        relative;
+}
+
+
+.vg-info-label::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    right:
+        0;
+
+    top:
+        0;
+
+    bottom:
+        0;
+
+    width:
+        2px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #179cff,
+            #6738df
+        );
+
+    opacity:
+        .75;
+}
+
+
+/* =========================================================
+   INFORMATION VALUE
+   ========================================================= */
+
+.vg-info-value {
+
+    flex:
+        1;
+
+    padding:
+        10px 17px;
+
+    box-sizing:
+        border-box;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    color:
+        #40556d;
+
+    font-size:
+        12px;
+
+    word-break:
+        break-word;
+
+    background:
+        #ffffff;
+}
+
+
+.vg-strong {
+
+    color:
+        #123f77;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   INLINE STATUS
+   ========================================================= */
+
+.vg-inline-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        15px;
+
+    color:
+        #159447;
+
+    background:
+        #edf9f2;
+
+    border:
+        1px solid
+        #d0eddb;
+
+    font-size:
+        11px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   EDIT FORM
+   ========================================================= */
+
+.vg-edit-form {
+
+    padding:
+        24px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        18px;
+
+    background:
+        #f7faff;
+}
+
+
+/* =========================================================
+   EDIT SECTION TITLE
+   ========================================================= */
+
+.vg-edit-section-title {
+
+    grid-column:
+        1 / -1;
+
+    padding:
+        0 0 11px;
+
+    margin-bottom:
+        1px;
+
+    border-bottom:
+        1px solid
+        #dce5ef;
+
+    color:
+        #073b73;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.vg-form-field {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        6px;
+}
+
+
+.vg-form-field label {
+
+    color:
+        #536a81;
+
+    font-size:
+        10px;
+
+    font-weight:
+        650;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .35px;
+}
+
+
+/* =========================================================
+   FORM CONTROL
+   ========================================================= */
+
+.vg-form-control {
+
+    width:
+        100%;
+
+    min-height:
+        41px;
+
+    padding:
+        8px 12px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        #c9d8e7;
+
+    border-radius:
+        8px;
+
+    background:
+        #ffffff;
+
+    color:
+        #243b53;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size:
+        12px;
+
+    outline:
+        none;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0,45,90,.035);
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.vg-form-control:hover {
+
+    border-color:
+        #a8bed3;
+}
+
+
+.vg-form-control:focus {
+
+    border-color:
+        #178ff5;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(23,143,245,.10),
+
+        0 3px 10px
+        rgba(20,100,190,.06);
+}
+
+
+.vg-form-control::placeholder {
+
+    color:
+        #9aa9b8;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+select.vg-form-control {
+
+    cursor:
+        pointer;
+
+    appearance:
+        auto;
+}
+
+
+/* =========================================================
+   DATE INPUT
+   ========================================================= */
+
+input[type="date"].vg-form-control {
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   PERSONAL INFORMATION CARD
+   ========================================================= */
+
+.vg-personal-card {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        20px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #d5e1ed;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+
+        0 7px 22px
+        rgba(0,45,90,.07),
+
+        0 1px 2px
+        rgba(0,0,0,.03);
+}
+
+
+/* =========================================================
+   PERSONAL HEADER
+   ========================================================= */
+
+.vg-personal-header {
+
+    min-height:
+        62px;
+
+    padding:
+        0 22px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    border-bottom:
+        1px solid
+        #dce5ef;
+
+    color:
+        #102f53;
+
+    font-size:
+        19px;
+
+    font-weight:
+        650;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+/* =========================================================
+   PERSONAL GRID
+   ========================================================= */
+
+.vg-personal-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+}
+
+
+/* =========================================================
+   PERSONAL ITEM
+   ========================================================= */
+
+.vg-personal-item {
+
+    min-height:
+        82px;
+
+    padding:
+        15px 20px;
+
+    box-sizing:
+        border-box;
+
+    border-right:
+        1px solid
+        #e0e7ef;
+
+    border-bottom:
+        1px solid
+        #e0e7ef;
+
+    transition:
+        background .18s ease;
+}
+
+
+.vg-personal-item:hover {
+
+    background:
+        #f8fbff;
+}
+
+
+.vg-personal-item:nth-child(3n) {
+
+    border-right:
+        none;
+}
+
+
+/* =========================================================
+   PERSONAL LABEL
+   ========================================================= */
+
+.vg-personal-item span {
+
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        #8191a3;
+
+    font-size:
+        10px;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .5px;
+}
+
+
+/* =========================================================
+   PERSONAL VALUE
+   ========================================================= */
+
+.vg-personal-item strong {
+
+    color:
+        #263f5c;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   PERSONAL EDIT GRID
+   ========================================================= */
+
+.vg-edit-personal-grid {
+
+    padding:
+        24px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        18px;
+
+    background:
+        #f7faff;
+}
+
+
+/* =========================================================
+   FULL WIDTH
+   ========================================================= */
+
+.vg-full-width {
+
+    grid-column:
+        1 / -1;
+}
+
+
+/* =========================================================
+   EDIT ACTION BAR
+   ========================================================= */
+
+.vg-edit-actions {
+
+    display:
+        flex;
+
+    justify-content:
+        flex-end;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    padding:
+        17px 22px;
+
+    border-top:
+        1px solid
+        #dce5ef;
+
+    background:
+        #f4f8fc;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.vg-cancel-button {
+
+    min-height:
+        40px;
+
+    padding:
+        0 19px;
+
+    border:
+        1px solid
+        #c7d4e1;
+
+    border-radius:
+        8px;
+
+    background:
+        #ffffff;
+
+    color:
+        #526a82;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-cancel-button:hover {
+
+    background:
+        #eef3f7;
+
+    border-color:
+        #aebdcc;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.vg-save-button {
+
+    min-height:
+        40px;
+
+    padding:
+        0 21px;
+
+    border:
+        1px solid
+        rgba(50,150,255,.25);
+
+    border-radius:
+        8px;
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #087df0 0%,
+            #2859dc 55%,
+            #7137d5 100%
+        );
+
+    color:
+        #ffffff;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    cursor:
+        pointer;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    box-shadow:
+        0 6px 16px
+        rgba(25,88,220,.18);
+
+    transition:
+        all .22s ease;
+}
+
+
+.vg-save-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.07);
+
+    box-shadow:
+        0 9px 22px
+        rgba(25,88,220,.27);
+}
+
+
+.vg-save-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+.vg-save-button .glyphicon {
+
+    margin-right:
+        6px;
+}
+
+
+/* =========================================================
+   DISABLED BUTTONS
+   ========================================================= */
+
+.vg-save-button:disabled,
+.vg-cancel-button:disabled,
+.vg-edit-button:disabled {
+
+    opacity:
+        .6;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   SAVE SPINNER
+   ========================================================= */
+
+.vg-button-spinner {
+
+    display:
+        inline-block;
+
+    animation:
+        vg-profile-spin
+        1s linear infinite;
+}
+
+
+@keyframes vg-profile-spin {
+
+    from {
+
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+
+        transform:
+            rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   EDIT MODE ENHANCEMENT
+   ========================================================= */
+
+.vg-edit-form .vg-form-field,
+.vg-edit-personal-grid .vg-form-field {
+
+    min-width:
+        0;
+}
+
+
+.vg-edit-form .vg-form-control,
+.vg-edit-personal-grid .vg-form-control {
+
+    box-shadow:
+        0 1px 3px
+        rgba(0,45,90,.035);
+}
+
+
+/* =========================================================
+   PROFILE FOOTER
+   ========================================================= */
+
+.vg-profile-footer {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin-top:
+        17px;
+
+    padding:
+        12px 4px;
+
+    color:
+        #71849a;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        .1px;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.vg-edit-button:focus,
+.vg-save-button:focus,
+.vg-cancel-button:focus,
+.vg-form-control:focus {
+
+    outline:
+        none;
+}
+
+
+/* =========================================================
+   DISABLED FORM CONTROL
+   ========================================================= */
+
+.vg-form-control:disabled {
+
+    background:
+        #f1f5f8;
+
+    color:
+        #7d8997;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================================
+   EDITING STATE
+   ========================================================= */
+
+.vg-main-card:has(.vg-edit-form) {
+
+    box-shadow:
+
+        0 10px 30px
+        rgba(0,45,90,.10),
+
+        0 0 0 1px
+        rgba(20,130,220,.03);
+}
+
+
+.vg-personal-card:has(.vg-edit-personal-grid) {
+
+    box-shadow:
+
+        0 10px 30px
+        rgba(0,45,90,.10),
+
+        0 0 0 1px
+        rgba(20,130,220,.03);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 1000px) {
+
+    .vg-profile-container {
+
+        flex-direction:
+            column;
+    }
+
+
+    .vg-student-card {
+
+        width:
+            100%;
+
+        min-width:
+            0;
+    }
+
+
+    .vg-personal-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .vg-edit-personal-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   MEDIUM SCREEN
+   ========================================================= */
+
+@media screen and (max-width: 850px) {
+
+    .vg-info-label {
+
+        width:
+            190px;
+
+        min-width:
+            190px;
+    }
+
+
+    .vg-edit-form {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media screen and (max-width: 600px) {
+
+    .vg-profile-page {
+
+        padding:
+            10px;
+    }
+
+
+    .vg-profile-header {
+
+        min-height:
+            auto;
+
+        padding:
+            14px 15px;
+
+        flex-wrap:
+            wrap;
+    }
+
+
+    .vg-header-icon {
+
+        width:
+            40px;
+
+        height:
+            40px;
+
+        min-width:
+            40px;
+
+        font-size:
+            18px;
+    }
+
+
+    .vg-header-title {
+
+        font-size:
+            17px;
+    }
+
+
+    .vg-header-subtitle {
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-header-action {
+
+        width:
+            100%;
+
+        margin-top:
+            12px;
+    }
+
+
+    .vg-edit-button {
+
+        width:
+            100%;
+    }
+
+
+    .vg-profile-container {
+
+        gap:
+            14px;
+
+        margin-top:
+            14px;
+    }
+
+
+    .vg-student-card {
+
+        padding:
+            23px 18px;
+    }
+
+
+    .vg-photo-wrapper {
+
+        width:
+            105px;
+
+        height:
+            105px;
+    }
+
+
+    .vg-student-name {
+
+        font-size:
+            20px;
+    }
+
+
+    .vg-card-title,
+    .vg-personal-header {
+
+        min-height:
+            55px;
+
+        padding:
+            0 16px;
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-info-row {
+
+        flex-direction:
+            column;
+    }
+
+
+    .vg-info-label {
+
+        width:
+            100%;
+
+        min-width:
+            0;
+
+        min-height:
+            38px;
+    }
+
+
+    .vg-info-label::after {
+
+        right:
+            auto;
+
+        left:
+            0;
+
+        top:
+            auto;
+
+        bottom:
+            0;
+
+        width:
+            100%;
+
+        height:
+            2px;
+    }
+
+
+    .vg-info-value {
+
+        min-height:
+            42px;
+
+        padding:
+            10px 14px;
+    }
+
+
+    .vg-personal-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-personal-item {
+
+        border-right:
+            none;
+    }
+
+
+    .vg-edit-form {
+
+        grid-template-columns:
+            1fr;
+
+        padding:
+            17px;
+    }
+
+
+    .vg-edit-personal-grid {
+
+        grid-template-columns:
+            1fr;
+
+        padding:
+            17px;
+    }
+
+
+    .vg-edit-actions {
+
+        flex-direction:
+            column;
+
+        padding:
+            15px;
+    }
+
+
+    .vg-cancel-button,
+    .vg-save-button {
+
+        width:
+            100%;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media screen and (max-width: 420px) {
+
+    .vg-profile-page {
+
+        padding:
+            7px;
+    }
+
+
+    .vg-header-title {
+
+        font-size:
+            15px;
+    }
+
+
+    .vg-card-title,
+    .vg-personal-header {
+
+        font-size:
+            15px;
+    }
+
+
+    .vg-info-value {
+
+        font-size:
+            11px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_student_profile</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Student Profile</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.student = null;
+    data.error = "";
+    data.success = "";
+    data.edit_mode = false;
+
+    data.choice_options = {
+        gender: [],
+        degree_level: [],
+        visa_type: [],
+        current_visa_status: []
+    };
+
+
+    // =========================================================
+    // FUNCTION: FIND LOGGED-IN STUDENT
+    // =========================================================
+
+    var student =
+        new GlideRecord("x_snc_visaguardi_0_student_profile");
+
+    var profileFound = false;
+
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData("vg_student_sys_id");
+
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData("vg_student_user_name");
+
+
+    // =========================================================
+    // 1. FIND BY SESSION STUDENT SYS ID
+    // =========================================================
+
+    if (sessionStudentSysId) {
+
+        if (student.get(sessionStudentSysId)) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // 2. FALLBACK - SESSION USER NAME
+    // =========================================================
+
+    if (!profileFound && sessionStudentUserName) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        student.setLimit(1);
+        student.query();
+
+
+        if (student.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // 3. FALLBACK - SERVICENOW USER REFERENCE
+    // =========================================================
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+
+        if (userSysId) {
+
+            student =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+            student.addQuery(
+                "user",
+                userSysId
+            );
+
+            student.setLimit(1);
+            student.query();
+
+
+            if (student.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // =========================================================
+    // 4. FALLBACK - SERVICENOW USER NAME
+    // =========================================================
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        student.setLimit(1);
+        student.query();
+
+
+        if (student.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // PROFILE NOT FOUND
+    // =========================================================
+
+    if (!profileFound) {
+
+        data.error =
+            "Student profile was not found for the logged-in student.";
+
+        return;
+
+    }
+
+
+    // =========================================================
+    // FUNCTION: LOAD CHOICE OPTIONS
+    // =========================================================
+
+    function loadChoices(fieldName) {
+
+        var choices = [];
+
+        var choice =
+            new GlideRecord("sys_choice");
+
+
+        if (fieldName === "gender") {
+
+            choice.addQuery(
+                "name",
+                "IN",
+                "x_snc_visaguardi_0_student_profile,sys_user"
+            );
+
+        } else {
+
+            choice.addQuery(
+                "name",
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        }
+
+
+        choice.addQuery(
+            "element",
+            fieldName
+        );
+
+        choice.addQuery(
+            "inactive",
+            false
+        );
+
+        choice.orderBy("sequence");
+
+        choice.query();
+
+
+        while (choice.next()) {
+
+            // Prevent empty values such as "-- None --"
+            if (choice.getValue("value") !== "") {
+
+                choices.push({
+
+                    value:
+                        choice.getValue("value"),
+
+                    label:
+                        choice.getValue("label")
+
+                });
+
+            }
+
+        }
+
+
+        return choices;
+
+    }
+
+
+    // =========================================================
+    // LOAD CHOICES
+    // =========================================================
+
+    data.choice_options.gender =
+        loadChoices("gender");
+
+
+    data.choice_options.degree_level =
+        loadChoices("degree_level");
+
+
+    data.choice_options.visa_type =
+        loadChoices("visa_type");
+
+
+    data.choice_options.current_visa_status =
+        loadChoices("current_visa_status");
+
+
+    // =========================================================
+    // UPDATE PROFILE
+    // =========================================================
+
+    if (
+        input &&
+        input.action == "update_profile"
+    ) {
+
+        try {
+
+
+            // -------------------------------------------------
+            // PERSONAL INFORMATION
+            // -------------------------------------------------
+
+            if (
+                input.first_name !== undefined
+            ) {
+
+                student.setValue(
+                    "first_name",
+                    String(input.first_name).trim()
+                );
+
+            }
+
+
+            if (
+                input.last_name !== undefined
+            ) {
+
+                student.setValue(
+                    "last_name",
+                    String(input.last_name).trim()
+                );
+
+            }
+
+
+            if (
+                input.date_of_birth !== undefined
+            ) {
+
+                student.setValue(
+                    "date_of_birth",
+                    String(input.date_of_birth).trim()
+                );
+
+            }
+
+
+            if (
+                input.gender !== undefined
+            ) {
+
+                student.setValue(
+                    "gender",
+                    String(input.gender).trim()
+                );
+
+            }
+
+
+            if (
+                input.nationality !== undefined
+            ) {
+
+                student.setValue(
+                    "nationality",
+                    String(input.nationality).trim()
+                );
+
+            }
+
+
+            if (
+                input.mobile_phone !== undefined
+            ) {
+
+                student.setValue(
+                    "mobile_phone",
+                    String(input.mobile_phone).trim()
+                );
+
+            }
+
+
+            if (
+                input.home_phone !== undefined
+            ) {
+
+                student.setValue(
+                    "home_phone",
+                    String(input.home_phone).trim()
+                );
+
+            }
+
+
+            // -------------------------------------------------
+            // EMERGENCY CONTACT
+            // -------------------------------------------------
+
+            if (
+                input.emergency_contact_name !== undefined
+            ) {
+
+                student.setValue(
+                    "emergency_contact_name",
+                    String(
+                        input.emergency_contact_name
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.emergency_contact_number !== undefined
+            ) {
+
+                student.setValue(
+                    "emergency_contact_number",
+                    String(
+                        input.emergency_contact_number
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.emergency_contact_relationship !== undefined
+            ) {
+
+                student.setValue(
+                    "emergency_contact_relationship",
+                    String(
+                        input.emergency_contact_relationship
+                    ).trim()
+                );
+
+            }
+
+
+            // -------------------------------------------------
+            // ACADEMIC INFORMATION
+            // -------------------------------------------------
+
+            if (
+                input.degree_program !== undefined
+            ) {
+
+                student.setValue(
+                    "degree_program",
+                    String(
+                        input.degree_program
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.department !== undefined
+            ) {
+
+                student.setValue(
+                    "department",
+                    String(
+                        input.department
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.degree_level !== undefined
+            ) {
+
+                student.setValue(
+                    "degree_level",
+                    String(
+                        input.degree_level
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.current_semester !== undefined
+            ) {
+
+                student.setValue(
+                    "current_semester",
+                    String(
+                        input.current_semester
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.intake_year !== undefined
+            ) {
+
+                student.setValue(
+                    "intake_year",
+                    String(
+                        input.intake_year
+                    ).trim()
+                );
+
+            }
+
+
+            // -------------------------------------------------
+            // IMMIGRATION
+            // -------------------------------------------------
+
+            if (
+                input.sevis_id !== undefined
+            ) {
+
+                student.setValue(
+                    "sevis_id",
+                    String(
+                        input.sevis_id
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.visa_type !== undefined
+            ) {
+
+                student.setValue(
+                    "visa_type",
+                    String(
+                        input.visa_type
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.current_visa_status !== undefined
+            ) {
+
+                student.setValue(
+                    "current_visa_status",
+                    String(
+                        input.current_visa_status
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.visa_expiry_date !== undefined
+            ) {
+
+                student.setValue(
+                    "visa_expiry_date",
+                    String(
+                        input.visa_expiry_date
+                    ).trim()
+                );
+
+            }
+
+
+            // -------------------------------------------------
+            // PASSPORT
+            // -------------------------------------------------
+
+            if (
+                input.passport_number !== undefined
+            ) {
+
+                student.setValue(
+                    "passport_number",
+                    String(
+                        input.passport_number
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                input.passport_expiry_date !== undefined
+            ) {
+
+                student.setValue(
+                    "passport_expiry_date",
+                    String(
+                        input.passport_expiry_date
+                    ).trim()
+                );
+
+            }
+
+
+            // =================================================
+            // SAVE DATABASE RECORD
+            // =================================================
+
+            student.update();
+
+
+            data.success =
+                "Profile updated successfully.";
+
+        }
+
+        catch (e) {
+
+            data.error =
+                "Unable to update your profile. " +
+                e.message;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // SEND DATABASE VALUES TO CLIENT
+    // =========================================================
+
+    data.student = {
+
+        name:
+            student.getDisplayValue("name"),
+
+        first_name:
+            student.getValue("first_name"),
+
+        last_name:
+            student.getValue("last_name"),
+
+        email:
+            student.getValue("email"),
+
+        student_id:
+            student.getValue("student_id"),
+
+        sevis_id:
+            student.getValue("sevis_id"),
+
+        university_name:
+            student.getValue("university_name"),
+
+        degree_program:
+            student.getValue("degree_program"),
+
+        degree_level:
+            student.getDisplayValue("degree_level"),
+
+        department:
+            student.getDisplayValue("department"),
+
+        current_semester:
+            student.getValue("current_semester"),
+
+        intake_year:
+            student.getValue("intake_year"),
+
+        visa_type:
+            student.getDisplayValue("visa_type"),
+
+        current_visa_status:
+            student.getDisplayValue(
+                "current_visa_status"
+            ),
+
+        visa_expiry_date:
+            student.getDisplayValue(
+                "visa_expiry_date"
+            ),
+
+        passport_number:
+            student.getValue(
+                "passport_number"
+            ),
+
+        passport_expiry_date:
+            student.getDisplayValue(
+                "passport_expiry_date"
+            ),
+
+        date_of_birth:
+            student.getDisplayValue(
+                "date_of_birth"
+            ),
+
+        nationality:
+            student.getDisplayValue(
+                "nationality"
+            ),
+
+        gender:
+            student.getDisplayValue(
+                "gender"
+            ),
+
+        mobile_phone:
+            student.getValue(
+                "mobile_phone"
+            ),
+
+        home_phone:
+            student.getValue(
+                "home_phone"
+            ),
+
+        emergency_contact_name:
+            student.getValue(
+                "emergency_contact_name"
+            ),
+
+        emergency_contact_number:
+            student.getValue(
+                "emergency_contact_number"
+            ),
+
+        emergency_contact_relationship:
+            student.getValue(
+                "emergency_contact_relationship"
+            )
+
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:39:50</sys_created_on>
+        <sys_id>30700af5a86603107f446d9f3e09f6de</sys_id>
+        <sys_mod_count>32</sys_mod_count>
+        <sys_name>VG Student Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_30700af5a86603107f446d9f3e09f6de</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 20:56:35</sys_updated_on>
+        <template><![CDATA[<div class="vg-profile-page">
+
+    <!-- ==================================================
+         HEADER
+         ================================================== -->
+
+    <div class="vg-profile-header">
+
+        <div class="vg-header-icon">
+            ]]>👤
+<![CDATA[        </div>
+
+        <div class="vg-header-text">
+
+            <div class="vg-header-title">
+                Student Profile &amp; SEVIS Record
+            </div>
+
+            <div class="vg-header-subtitle">
+                VisaGuardian AI • International Student Services
+            </div>
+
+        </div>
+
+        <!-- EDIT BUTTON -->
+
+        <div class="vg-header-action"
+             ng-if="c.data.student && !c.editMode">
+
+            <button
+                type="button"
+                class="vg-edit-button"
+                ng-click="c.editProfile()">
+
+                <span class="glyphicon glyphicon-pencil"></span>
+
+                Edit Profile
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         LOADING
+         ================================================== -->
+
+    <div
+        class="vg-loading"
+        ng-if="c.loading">
+
+        Loading student profile...
+
+    </div>
+
+
+    <!-- ==================================================
+         ERROR
+         ================================================== -->
+
+    <div
+        class="vg-error"
+        ng-if="c.error || c.data.error">
+
+        <span class="vg-error-icon">
+            ⚠
+        </span>
+
+        <span>
+            {{c.error || c.data.error}}
+        </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         SUCCESS
+         ================================================== -->
+
+    <div
+        class="vg-success"
+        ng-if="c.success">
+
+        <span class="glyphicon glyphicon-ok"></span>
+
+        <span>
+            {{c.success}}
+        </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         PROFILE
+         ================================================== -->
+
+    <div
+        class="vg-profile-container"
+        ng-if="!c.data.error && c.data.student">
+
+
+        <!-- ==================================================
+             LEFT STUDENT CARD
+             ================================================== -->
+
+        <div class="vg-student-card">
+
+
+            <!-- PHOTO -->
+
+            <div class="vg-photo-wrapper">
+
+                <img
+                    ng-if="c.data.student.photo"
+                    ng-src="{{c.data.student.photo}}"
+                    class="vg-student-photo"
+                    alt="Student Photo">
+
+                <div
+                    ng-if="!c.data.student.photo"
+                    class="vg-photo-placeholder">
+
+                    <span>]]>👤<![CDATA[</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAME -->
+
+            <h2 class="vg-student-name">
+
+                {{c.data.student.name || "Student"}}
+
+            </h2>
+
+
+            <!-- VISA -->
+
+            <div class="vg-student-visa">
+
+                {{c.data.student.visa_type ||
+                "International Student"}}
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="vg-status">
+
+                <span class="vg-status-dot"></span>
+
+                {{c.data.student.current_visa_status ||
+                "Active"}}
+
+            </div>
+
+
+            <!-- STUDENT ID -->
+
+            <div class="vg-side-info">
+
+                <span class="vg-side-label">
+                    Student ID
+                </span>
+
+                <strong class="vg-side-value">
+
+                    {{c.data.student.student_id || "—"}}
+
+                </strong>
+
+            </div>
+
+
+            <!-- SEVIS -->
+
+            <div class="vg-side-info">
+
+                <span class="vg-side-label">
+                    SEVIS ID
+                </span>
+
+                <strong class="vg-side-value">
+
+                    {{c.data.student.sevis_id || "—"}}
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             RIGHT INFORMATION CARD
+             ================================================== -->
+
+        <div class="vg-main-card">
+
+
+            <div class="vg-card-title">
+
+                <span class="vg-title-icon">
+                    ]]>🎓
+<![CDATA[                </span>
+
+                <span>
+                    Immigration &amp; Academic Information
+                </span>
+
+            </div>
+
+
+            <!-- ================= VIEW MODE ================= -->
+
+            <div
+                class="vg-info-table"
+                ng-if="!c.editMode">
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Student ID
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.student_id || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        SEVIS ID
+                    </div>
+
+                    <div class="vg-info-value vg-strong">
+
+                        {{c.data.student.sevis_id || "—"}}
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Degree Program
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.degree_program || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Degree Level
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.degree_level || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        University Name
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.university_name || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Current Semester
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.current_semester || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Intake Year
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.intake_year || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Visa Type
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.visa_type || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Visa Status
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        <span class="vg-inline-status">
+
+                            <span class="vg-status-dot"></span>
+
+                            {{c.data.student.current_visa_status || "—"}}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Visa Expiry Date
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.visa_expiry_date || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Passport Number
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.passport_number || "—"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-info-row">
+
+                    <div class="vg-info-label">
+                        Passport Expiry
+                    </div>
+
+                    <div class="vg-info-value">
+
+                        {{c.data.student.passport_expiry_date || "—"}}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================= EDIT MODE ================= -->
+
+            <div
+                class="vg-edit-form"
+                ng-if="c.editMode">
+
+
+                <div class="vg-edit-section-title">
+                    Academic &amp; Immigration Information
+                </div>
+
+
+                <!-- SEVIS -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        SEVIS ID
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.sevis_id">
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Academic Major
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.department">
+
+                </div>
+
+
+                <!-- DEGREE PROGRAM -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Degree Program
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.degree_program">
+
+                </div>
+
+
+                <!-- DEGREE LEVEL -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Degree Level
+                    </label>
+
+                    <select
+                        class="vg-form-control"
+                        ng-model="c.editStudent.degree_level"
+                        ng-options="choice.value as choice.label for choice in c.data.choice_options.degree_level">
+
+                        <option value="">
+                            Select Degree Level
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEMESTER -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Current Semester
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.current_semester">
+
+                </div>
+
+
+                <!-- INTAKE -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Intake Year
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.intake_year">
+
+                </div>
+
+
+                <!-- VISA TYPE -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Visa Type
+                    </label>
+
+                    <select
+                        class="vg-form-control"
+                        ng-model="c.editStudent.visa_type"
+                        ng-options="choice.value as choice.label for choice in c.data.choice_options.visa_type">
+
+                        <option value="">
+                            Select Visa Type
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- VISA STATUS -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Current Visa Status
+                    </label>
+
+                    <select
+                        class="vg-form-control"
+                        ng-model="c.editStudent.current_visa_status"
+                        ng-options="choice.value as choice.label for choice in c.data.choice_options.current_visa_status">
+
+                        <option value="">
+                            Select Visa Status
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- VISA EXPIRY -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Visa Expiry Date
+                    </label>
+
+                    <input
+                        type="date"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.visa_expiry_date">
+
+                </div>
+
+
+                <!-- PASSPORT NUMBER -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Passport Number
+                    </label>
+
+                    <input
+                        type="text"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.passport_number">
+
+                </div>
+
+
+                <!-- PASSPORT EXPIRY -->
+
+                <div class="vg-form-field">
+
+                    <label>
+                        Passport Expiry Date
+                    </label>
+
+                    <input
+                        type="date"
+                        class="vg-form-control"
+                        ng-model="c.editStudent.passport_expiry_date">
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         PERSONAL INFORMATION
+         ================================================== -->
+
+    <div
+        class="vg-personal-card"
+        ng-if="!c.data.error && c.data.student">
+
+
+        <div class="vg-personal-header">
+
+            ]]>👤<![CDATA[ Personal Information
+
+        </div>
+
+
+        <!-- ================= VIEW ================= -->
+
+        <div
+            class="vg-personal-grid"
+            ng-if="!c.editMode">
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    First Name
+                </span>
+
+                <strong>
+                    {{c.data.student.first_name || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Last Name
+                </span>
+
+                <strong>
+                    {{c.data.student.last_name || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Date of Birth
+                </span>
+
+                <strong>
+                    {{c.data.student.date_of_birth || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Gender
+                </span>
+
+                <strong>
+                    {{c.data.student.gender || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Nationality
+                </span>
+
+                <strong>
+                    {{c.data.student.nationality || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Email
+                </span>
+
+                <strong>
+                    {{c.data.student.email || "—"}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-personal-item">
+
+                <span>
+                    Mobile Phone
+                </span>
+
+                <strong>
+                    {{c.data.student.mobile_phone || "—"}}
+                </strong>
+
+            </div>
+
+
+           
+
+
+        </div>
+
+
+        <!-- ================= EDIT ================= -->
+
+        <div
+            class="vg-edit-personal-grid"
+            ng-if="c.editMode">
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.first_name">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.last_name">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Date of Birth
+                </label>
+
+                <input
+                    type="date"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.date_of_birth">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Gender
+                </label>
+
+                <select
+                    class="vg-form-control"
+                    ng-model="c.editStudent.gender"
+                    ng-options="choice.value as choice.label for choice in c.data.choice_options.gender">
+
+                    <option value="">
+                        Select Gender
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Nationality
+                </label>
+
+                <input
+                    type="text"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.nationality">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Mobile Phone
+                </label>
+
+                <input
+                    type="tel"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.mobile_phone">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Home Phone
+                </label>
+
+                <input
+                    type="tel"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.home_phone">
+
+            </div>
+
+
+            <!-- EMERGENCY CONTACT -->
+
+            <div class="vg-edit-section-title vg-full-width">
+
+                Emergency Contact
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Emergency Contact Name
+                </label>
+
+                <input
+                    type="text"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.emergency_contact_name">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Emergency Contact Number
+                </label>
+
+                <input
+                    type="tel"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.emergency_contact_number">
+
+            </div>
+
+
+            <div class="vg-form-field">
+
+                <label>
+                    Emergency Contact Relationship
+                </label>
+
+                <input
+                    type="text"
+                    class="vg-form-control"
+                    ng-model="c.editStudent.emergency_contact_relationship">
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             ACTION BUTTONS
+             ================================================== -->
+
+        <div
+            class="vg-edit-actions"
+            ng-if="c.editMode">
+
+            <button
+                type="button"
+                class="vg-cancel-button"
+                ng-click="c.cancelEdit()"
+                ng-disabled="c.saving">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="vg-save-button"
+                ng-click="c.saveProfile()"
+                ng-disabled="c.saving">
+
+                <span
+                    class="glyphicon glyphicon-refresh vg-button-spinner"
+                    ng-if="c.saving">
+                </span>
+
+                <span
+                    class="glyphicon glyphicon-save"
+                    ng-if="!c.saving">
+                </span>
+
+                {{c.saving ? "Saving..." : "Save Changes"}}
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         FOOTER
+         ================================================== -->
+
+    <div
+        class="vg-profile-footer"
+        ng-if="!c.data.error && c.data.student">
+
+        ]]>🔒<![CDATA[ Your information is securely managed by
+        VisaGuardian AI.
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>30700af5a86603107f446d9f3e09f6de</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:39:50</sys_created_on>
+        <sys_id>b0708ef5a86603107f446d9f3e09f614</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:39:50</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

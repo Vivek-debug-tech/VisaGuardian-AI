@@ -1,0 +1,1853 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($window, $timeout) {
+
+    var c = this;
+
+    c.loading = false;
+    c.error = "";
+    c.success = "";
+    c.showPassword = false;
+
+    c.login = function() {
+        c.error = "";
+        c.success = "";
+
+        if (!c.data.form || !c.data.form.user_name || !c.data.form.password) {
+            c.error = "Please enter your username and password.";
+            return;
+        }
+
+        c.loading = true;
+
+        // Tell the server script EXACTLY what action we are doing
+        c.data.action = 'login';
+
+        c.server.update().then(function(response) {
+            c.loading = false;
+            
+            // Reset the action so it doesn't fire continuously
+            c.data.action = '';
+
+            if (c.data.login_success) {
+                c.success = "Advisor verified. Opening workspace...";
+                $timeout(function() {
+                    $window.location.href = "?id=advisor_workspace";
+                }, 500);
+                return;
+            }
+
+            c.error = c.data.login_error || "You are not authorized as an Advisor.";
+
+        }).catch(function(error) {
+            c.loading = false;
+            c.data.action = ''; // Reset on error too
+            c.error = "Unable to verify Advisor account.";
+            console.error("Advisor verification error:", error);
+        });
+    };
+
+    c.goBack = function() {
+        $window.location.href = "?id=visa_home_page";
+    };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   ADVISOR LOGIN PAGE
+   PREMIUM DARK BLUE ENTERPRISE UI
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN PAGE CONTAINER
+   ========================================================= */
+
+.vg-advisor-login-page {
+
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 40px 25px;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background:
+        radial-gradient(
+            circle at 18% 15%,
+            rgba(0, 108, 255, .16),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 82% 25%,
+            rgba(32, 71, 255, .13),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(105, 0, 230, .10),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817 0%,
+            #03132d 48%,
+            #020918 100%
+        );
+}
+
+
+/* =========================================================
+   BACKGROUND GLOWS
+   ========================================================= */
+
+.guardian-bg-glow {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    filter: blur(60px);
+}
+
+
+.guardian-glow-one {
+
+    width: 420px;
+    height: 420px;
+
+    top: -200px;
+    left: -150px;
+
+    background:
+        rgba(0, 120, 255, .12);
+}
+
+
+.guardian-glow-two {
+
+    width: 500px;
+    height: 500px;
+
+    right: -220px;
+    bottom: -250px;
+
+    background:
+        rgba(93, 0, 255, .10);
+}
+
+
+/* =========================================================
+   BACKGROUND GRID / LINES
+   ========================================================= */
+
+.guardian-bg-lines {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .45;
+
+    background-image:
+
+        linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(45, 145, 255, .09) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            35deg,
+            transparent 0%,
+            rgba(0, 194, 255, .06) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(35, 125, 230, .035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            0deg,
+            rgba(35, 125, 230, .025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 100%,
+        100% 100%,
+        80px 80px,
+        80px 80px;
+}
+
+
+/* =========================================================
+   DECORATIVE PARTICLES
+   ========================================================= */
+
+.guardian-particle {
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #35aaff;
+
+    box-shadow:
+        0 0 12px rgba(0, 150, 255, .85);
+
+    opacity: .8;
+
+    pointer-events: none;
+}
+
+
+.particle-one {
+    top: 18%;
+    left: 15%;
+}
+
+
+.particle-two {
+
+    top: 28%;
+    right: 16%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-three {
+
+    bottom: 20%;
+    left: 9%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-four {
+
+    bottom: 14%;
+    right: 20%;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+   ========================================================= */
+
+.vg-advisor-login-card {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    border:
+        1px solid rgba(91, 163, 255, .25);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(9, 31, 62, .97),
+            rgba(3, 15, 34, .98)
+        );
+
+    backdrop-filter: blur(20px);
+
+    box-shadow:
+
+        0 30px 90px rgba(0, 0, 0, .48),
+
+        0 0 45px rgba(0, 110, 255, .10),
+
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+
+    animation:
+        vgCardEnter .55s ease both;
+}
+
+
+.vg-advisor-login-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 420px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 125, 255, .16),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+.vg-advisor-login-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 12%;
+
+    width: 76%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(25, 145, 255, .45),
+            rgba(120, 45, 255, .45),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   CARD ANIMATION
+   ========================================================= */
+
+@keyframes vgCardEnter {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(.98);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.vg-advisor-back {
+
+    position: relative;
+
+    z-index: 3;
+
+    padding:
+        20px 22px 0;
+}
+
+
+.vg-advisor-back button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid transparent;
+
+    border-radius: 8px;
+
+    background:
+        transparent;
+
+    color: #8db4dc;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        all .22s ease;
+}
+
+
+.vg-advisor-back button:hover {
+
+    color: #42aaff;
+
+    background:
+        rgba(0, 110, 255, .08);
+
+    border-color:
+        rgba(40, 145, 255, .16);
+
+    transform:
+        translateX(-2px);
+}
+
+
+.vg-advisor-back button:active {
+
+    transform:
+        translateX(-4px);
+}
+
+
+.vg-advisor-back button:focus {
+
+    outline: none;
+}
+
+
+/* =========================================================
+   BRANDING
+   =========================================================
+   
+   IMPORTANT:
+   Logo + VisaGuardian AI are now CENTERED.
+   ========================================================= */
+
+.vg-advisor-brand {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding:
+        28px 32px 10px;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.vg-advisor-shield {
+
+    width: 82px;
+    height: 82px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin:
+        0 auto 8px;
+
+    flex-shrink: 0;
+}
+
+
+.vg-advisor-shield img {
+
+    width: 76px;
+    height: 76px;
+
+    display: block;
+
+    margin: 0 auto;
+
+    object-fit: contain;
+
+    filter:
+
+        drop-shadow(
+            0 0 7px
+            rgba(0, 150, 255, .78)
+        )
+
+        drop-shadow(
+            0 0 18px
+            rgba(0, 105, 255, .32)
+        );
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
+}
+
+
+.vg-advisor-shield:hover img {
+
+    transform:
+        scale(1.05);
+
+    filter:
+
+        drop-shadow(
+            0 0 9px
+            rgba(0, 170, 255, .85)
+        )
+
+        drop-shadow(
+            0 0 22px
+            rgba(0, 110, 255, .40)
+        );
+}
+
+
+/* =========================================================
+   BRAND TEXT
+   ========================================================= */
+
+.vg-advisor-brand-text {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   VISA GUARDIAN AI
+   ========================================================= */
+
+.vg-advisor-brand-name {
+
+    width: 100%;
+
+    margin: 0 auto;
+
+    color: #ffffff;
+
+    font-size: 30px;
+
+    line-height: 1.15;
+
+    font-weight: 750;
+
+    letter-spacing: -.9px;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+.vg-advisor-brand-name span {
+
+    color: #1598ff;
+}
+
+
+/* =========================================================
+   ADVISOR WORKSPACE
+   ========================================================= */
+
+.vg-advisor-brand-subtitle {
+
+    width: 100%;
+
+    margin:
+        6px auto 0;
+
+    color: #8298b4;
+
+    font-size: 12px;
+
+    line-height: 1.3;
+
+    font-weight: 600;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   LOGIN HEADING
+   ========================================================= */
+
+.vg-advisor-login-heading {
+
+    position: relative;
+
+    z-index: 3;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        22px 38px 18px;
+
+    text-align: center;
+}
+
+
+.vg-advisor-login-heading h1 {
+
+    margin: 0;
+
+    color: #f4f8ff;
+
+    font-size: 28px;
+
+    line-height: 1.2;
+
+    font-weight: 750;
+
+    letter-spacing: -.6px;
+
+    text-align: center;
+}
+
+
+.vg-advisor-login-heading p {
+
+    margin:
+        7px 0 0;
+
+    color: #8298b4;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   ALERT
+   ========================================================= */
+
+.vg-advisor-alert {
+
+    position: relative;
+
+    z-index: 3;
+
+    margin:
+        0 32px 18px;
+
+    padding:
+        11px 13px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+
+    line-height: 18px;
+
+    background:
+        rgba(220, 40, 60, .08);
+
+    border:
+        1px solid
+        rgba(255, 90, 105, .25);
+
+    color: #ff9da7;
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.vg-advisor-success {
+
+    position: relative;
+
+    z-index: 3;
+
+    margin:
+        0 32px 18px;
+
+    padding:
+        11px 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+
+    background:
+        rgba(20, 190, 105, .08);
+
+    border:
+        1px solid
+        rgba(38, 203, 119, .25);
+
+    color: #77b99a;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.vg-advisor-login-form {
+
+    position: relative;
+
+    z-index: 3;
+
+    padding:
+        0 32px;
+}
+
+
+/*
+   Your current HTML uses:
+
+   &lt;form ng-submit="c.login()"&gt;
+
+   rather than:
+
+   &lt;form class="vg-advisor-login-form"&gt;
+
+   So this selector makes sure the styling
+   works without changing your HTML/functionality.
+*/
+
+.vg-advisor-login-card form {
+
+    position: relative;
+
+    z-index: 3;
+
+    padding:
+        0 32px;
+}
+
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.vg-advisor-field {
+
+    margin-bottom: 19px;
+}
+
+
+.vg-advisor-field label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #d6e2f0;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    letter-spacing: .15px;
+}
+
+
+/* =========================================================
+   INPUT CONTAINER
+   ========================================================= */
+
+.vg-advisor-input {
+
+    position: relative;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   INPUT ICON
+   ========================================================= */
+
+.vg-advisor-input &gt; span {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    width: 24px;
+
+    height: 24px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    color: #52a9ee;
+
+    background:
+        rgba(0, 120, 255, .08);
+
+    font-size: 12px;
+
+    pointer-events: none;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   TEXT INPUTS
+   ========================================================= */
+
+.vg-advisor-field input[type="text"],
+.vg-advisor-field input[type="password"] {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding:
+        10px 14px 10px 50px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(91, 137, 184, .25);
+
+    border-radius: 9px;
+
+    background:
+        rgba(5, 25, 52, .72);
+
+    color: #eaf4ff;
+
+    font-size: 13px;
+
+    outline: none;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.025);
+
+    transition:
+        border-color .22s ease,
+        box-shadow .22s ease,
+        background .22s ease;
+}
+
+
+.vg-advisor-field input::placeholder {
+
+    color: #647d9a;
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+.vg-advisor-field input:focus {
+
+    background:
+        rgba(7, 34, 68, .88);
+
+    border-color:
+        rgba(30, 148, 255, .85);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(20, 130, 255, .09),
+
+        0 0 18px
+        rgba(0, 120, 255, .07);
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.vg-advisor-options {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+
+    font-size: 12px;
+
+    color: #8298b4;
+}
+
+
+.vg-advisor-options label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    color: #d6e2f0;
+}
+
+
+.vg-advisor-options input[type="checkbox"] {
+
+    accent-color: #0876df;
+
+    width: 15px;
+    height: 15px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.vg-advisor-login-button {
+
+    width: 100%;
+
+    height: 51px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            100deg,
+            #0876df,
+            #1455d0,
+            #6332df
+        );
+
+    background-size:
+        180% 100%;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    letter-spacing: .15px;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 9px 25px
+        rgba(0, 105, 230, .22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.12);
+
+    transition:
+        all .28s ease;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.vg-advisor-login-button::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 65%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.16),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left .55s ease;
+}
+
+
+.vg-advisor-login-button:hover::before {
+
+    left: 140%;
+}
+
+
+.vg-advisor-login-button:hover {
+
+    background-position:
+        100% 0;
+
+    box-shadow:
+
+        0 12px 30px
+        rgba(0, 110, 255, .30),
+
+        0 0 20px
+        rgba(80, 50, 255, .10);
+
+    transform:
+        translateY(-2px);
+}
+
+
+.vg-advisor-login-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+.vg-advisor-login-button:disabled {
+
+    opacity: .60;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   REGISTER LINK
+   ========================================================= */
+
+.vg-advisor-register {
+
+    margin-top: 20px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    color: #687f9b;
+}
+
+
+.vg-advisor-register a {
+
+    color: #35a6ff;
+
+    font-weight: 650;
+
+    text-decoration: none;
+
+    margin-left: 5px;
+
+    transition:
+        color .2s ease;
+}
+
+
+.vg-advisor-register a:hover {
+
+    color: #72c4ff;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   SECURITY FOOTER
+   ========================================================= */
+
+.vg-advisor-security {
+
+    position: relative;
+
+    z-index: 3;
+
+    margin-top: 22px;
+
+    padding:
+        16px 32px;
+
+    text-align: center;
+
+    background:
+        rgba(3, 17, 38, .72);
+
+    border-top:
+        1px solid
+        rgba(91, 137, 184, .12);
+
+    color: #607995;
+
+    font-size: 10px;
+
+    letter-spacing: .3px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .vg-advisor-login-page {
+
+        padding:
+            20px 14px;
+    }
+
+
+    .vg-advisor-login-card {
+
+        max-width: 100%;
+
+        border-radius: 18px;
+    }
+
+
+    .vg-advisor-back {
+
+        padding:
+            15px 17px 0;
+    }
+
+
+    .vg-advisor-brand {
+
+        padding:
+            22px 20px 8px;
+    }
+
+
+    .vg-advisor-shield {
+
+        width: 72px;
+        height: 72px;
+    }
+
+
+    .vg-advisor-shield img {
+
+        width: 68px;
+        height: 68px;
+    }
+
+
+    .vg-advisor-brand-name {
+
+        font-size: 25px;
+
+        letter-spacing: -.6px;
+    }
+
+
+    .vg-advisor-brand-subtitle {
+
+        font-size: 10px;
+    }
+
+
+    .vg-advisor-login-heading {
+
+        padding:
+            18px 20px 15px;
+    }
+
+
+    .vg-advisor-login-heading h1 {
+
+        font-size: 24px;
+    }
+
+
+    .vg-advisor-login-form,
+
+    .vg-advisor-login-card form {
+
+        padding:
+            0 20px;
+    }
+
+
+    .vg-advisor-alert,
+
+    .vg-advisor-success {
+
+        margin-left: 20px;
+
+        margin-right: 20px;
+    }
+
+
+    .vg-advisor-options {
+
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .vg-advisor-login-page {
+
+        padding:
+            12px 10px;
+    }
+
+
+    .vg-advisor-login-card {
+
+        border-radius: 16px;
+    }
+
+
+    .vg-advisor-brand {
+
+        padding:
+            18px 14px 8px;
+    }
+
+
+    .vg-advisor-shield {
+
+        width: 65px;
+        height: 65px;
+    }
+
+
+    .vg-advisor-shield img {
+
+        width: 61px;
+        height: 61px;
+    }
+
+
+    .vg-advisor-brand-name {
+
+        font-size: 22px;
+    }
+
+
+    .vg-advisor-login-heading h1 {
+
+        font-size: 22px;
+    }
+
+
+    .vg-advisor-options {
+
+        gap: 10px;
+    }
+
+
+    .vg-advisor-security {
+
+        padding:
+            14px 18px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_login</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Advisor Login</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // ==========================================
+    // DEFAULT RESPONSE
+    // ==========================================
+
+    data.login_success = false;
+    data.login_error = "";
+
+
+    // ==========================================
+    // INITIAL FORM
+    // ==========================================
+
+    data.form = data.form || {
+
+        user_name: "",
+        password: "",
+        remember: false
+
+    };
+
+
+    // ==========================================
+    // LOGIN REQUEST
+    // ==========================================
+
+    if (input) {
+
+        var username =
+            String(input.form.user_name || "").trim();
+
+        var password =
+            String(input.form.password || "");
+
+
+        // ======================================
+        // VALIDATION
+        // ======================================
+
+        if (!username || !password) {
+
+            data.login_error =
+                "Please enter username and password.";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // FIND USER
+        // ======================================
+
+        var userGR =
+            new GlideRecord("sys_user");
+
+        userGR.addQuery(
+            "user_name",
+            username
+        );
+
+        userGR.addQuery(
+            "active",
+            true
+        );
+
+        userGR.setLimit(1);
+
+        userGR.query();
+
+
+        // ======================================
+        // USER NOT FOUND
+        // ======================================
+
+        if (!userGR.next()) {
+
+            data.login_error =
+                "Invalid username or password.";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // CHECK ADVISOR ROLE
+        // ======================================
+
+        var advisorRole =
+            "x_snc_visaguardi_0.advisor";
+
+        var roleGR =
+            new GlideRecord("sys_user_has_role");
+
+        roleGR.addQuery(
+            "user",
+            userGR.getUniqueValue()
+        );
+
+        roleGR.addQuery(
+            "role.name",
+            advisorRole
+        );
+
+        roleGR.setLimit(1);
+
+        roleGR.query();
+
+
+        if (!roleGR.next()) {
+
+            data.login_error =
+                "This account is not registered as an Advisor.";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // AUTHENTICATE
+        // ======================================
+
+        // ======================================
+    // AUTHENTICATE
+    // ======================================
+
+    var authHelper = new global.ScopedLoginHelper();
+    var authenticated = authHelper.login(username, password);
+
+
+        // ======================================
+        // LOGIN FAILED
+        // ======================================
+
+			  if (!authenticated) {
+        data.login_error = "Invalid username or password.";
+            return;
+        }
+
+        gs.getSession().putClientData("vg_advisor_sys_id", userGR.getUniqueValue());
+        gs.getSession().putClientData("vg_advisor_user_name", userGR.getValue("user_name"));
+
+        data.login_success = true;
+        data.login_error = "";
+        data.advisor_name = userGR.getDisplayValue();
+        data.advisor_sys_id = userGR.getUniqueValue();
+
+
+        // ======================================
+        // SUCCESS
+        // ======================================
+
+        data.login_success = true;
+
+        data.login_error = "";
+
+        data.advisor_name =
+            userGR.getDisplayValue();
+
+        data.advisor_sys_id =
+            userGR.getUniqueValue();
+
+
+    }
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:35:14</sys_created_on>
+        <sys_id>56ed4f5a1ceac3107f44ac71430964be</sys_id>
+        <sys_mod_count>56</sys_mod_count>
+        <sys_name>Advisor Login</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_56ed4f5a1ceac3107f44ac71430964be</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 15:09:43</sys_updated_on>
+        <template><![CDATA[<div class="vg-advisor-login-page">
+
+    <!-- ============================================
+         BACKGROUND
+         ============================================ -->
+
+    <div class="guardian-bg-lines"></div>
+
+    <div class="guardian-bg-glow guardian-glow-one"></div>
+    <div class="guardian-bg-glow guardian-glow-two"></div>
+
+    <!-- Decorative particles -->
+    <span class="guardian-particle particle-one"></span>
+    <span class="guardian-particle particle-two"></span>
+    <span class="guardian-particle particle-three"></span>
+    <span class="guardian-particle particle-four"></span>
+
+
+    <!-- ============================================
+         ADVISOR LOGIN CARD
+         ============================================ -->
+
+    <div class="vg-advisor-login-card">
+
+
+        <!-- ========================================
+             BACK TO HOME
+             ======================================== -->
+
+        <div class="vg-advisor-back">
+
+            <button
+                type="button"
+                ng-click="c.goBack()">
+
+                ← Back to Home
+
+            </button>
+
+        </div>
+
+
+        <!-- ========================================
+     CENTERED BRAND
+     ======================================== -->
+
+<div class="vg-advisor-brand">
+
+    <div class="vg-advisor-shield">
+
+        <img
+            src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+            alt="VisaGuardian AI">
+
+    </div>
+
+    <div class="vg-advisor-brand-text">
+
+        <div class="vg-advisor-brand-name">
+            Visa<span>Guardian</span> AI
+        </div>
+
+        <div class="vg-advisor-brand-subtitle">
+            Advisor Workspace
+        </div>
+
+    </div>
+
+</div>
+
+
+        <!-- ========================================
+             LOGIN HEADING
+             ======================================== -->
+
+        <div class="vg-advisor-login-heading">
+
+            <h1>
+                Welcome Back
+            </h1>
+
+            <p>
+                Sign in to your Advisor Workspace
+            </p>
+
+        </div>
+
+
+        <!-- ========================================
+             ERROR MESSAGE
+             ======================================== -->
+
+        <div
+            class="vg-advisor-alert"
+            ng-if="c.error">
+
+            <span>⚠</span>
+
+            <span>
+                {{c.error}}
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             SUCCESS MESSAGE
+             ======================================== -->
+
+        <div
+            class="vg-advisor-success"
+            ng-if="c.success">
+
+            <span>✓</span>
+
+            <span>
+                {{c.success}}
+            </span>
+
+        </div>
+
+
+        <!-- ========================================
+             LOGIN FORM
+             ======================================== -->
+
+        <form
+            class="vg-advisor-login-form"
+            ng-submit="c.login()"
+            novalidate>
+
+
+            <!-- ====================================
+                 USERNAME
+                 ==================================== -->
+
+            <div class="vg-advisor-field">
+
+                <label>
+                    Username
+                </label>
+
+                <div class="vg-advisor-input">
+
+                    <span>
+                        ]]>👤
+<![CDATA[                    </span>
+
+                    <input
+                        type="text"
+                        ng-model="c.data.form.user_name"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <!-- ====================================
+                 PASSWORD
+                 ==================================== -->
+
+            <div class="vg-advisor-field">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="vg-advisor-input">
+
+                    <span>
+                        ]]>🔒
+<![CDATA[                    </span>
+
+                    <input
+                        type="password"
+                        ng-model="c.data.form.password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <!-- ====================================
+                 REMEMBER ME
+                 ==================================== -->
+
+            <div class="vg-advisor-options">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        ng-model="c.data.form.remember">
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <span>
+                    Secure Advisor Login
+                </span>
+
+            </div>
+
+
+            <!-- ====================================
+                 LOGIN BUTTON
+                 ==================================== -->
+
+            <button
+                type="submit"
+                class="vg-advisor-login-button"
+                ng-disabled="c.loading">
+
+                <span ng-if="!c.loading">
+
+                    Sign In
+                    <span>→</span>
+
+                </span>
+
+
+                <span ng-if="c.loading">
+
+                    Signing In...
+
+                </span>
+
+            </button>
+
+        </form>
+
+
+        <!-- ========================================
+             REGISTER
+             ======================================== -->
+
+        <div class="vg-advisor-register">
+
+            Don't have an advisor account?
+
+            <a href="?id=advisor_registration">
+                Register here
+            </a>
+
+        </div>
+
+
+        <!-- ========================================
+             SECURITY
+             ======================================== -->
+
+        <div class="vg-advisor-security">
+
+            ]]>🔐<![CDATA[ Authorized Advisor Access
+
+        </div>
+
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>56ed4f5a1ceac3107f44ac71430964be</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:35:14</sys_created_on>
+        <sys_id>e2ed4f5a1ceac3107f44ac71430964c2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 10:35:14</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

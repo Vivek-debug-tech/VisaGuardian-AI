@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl">
+    <sys_security_acl action="DELETE">
+        <active>true</active>
+        <admin_overrides>true</admin_overrides>
+        <advanced>true</advanced>
+        <applies_to/>
+        <condition/>
+        <controlled_by_refs/>
+        <decision_type>allow</decision_type>
+        <description>Allow read for records in x_snc_visaguardi_0_visa_case, for users with role x_snc_visaguardi_0.student, and if the ACL script returns true.</description>
+        <local_or_existing>Existing</local_or_existing>
+        <name>x_snc_visaguardi_0_visa_case</name>
+        <operation display_value="read">read</operation>
+        <script><![CDATA[answer = current.isNewRecord() ||
+    current.student.user == gs.getUserID();]]></script>
+        <security_attribute/>
+        <sys_class_name>sys_security_acl</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 03:45:06</sys_created_on>
+        <sys_id>e1e09a9d596203107f44d1c73e33a110</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0_visa_case</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_security_acl_e1e09a9d596203107f44d1c73e33a110</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:21:28</sys_updated_on>
+        <type display_value="record">record</type>
+    </sys_security_acl>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_security_acl_e1e09a9d596203107f44d1c73e33a110</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_security_acl"&gt;&lt;sys_security_acl action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;admin_overrides&gt;true&lt;/admin_overrides&gt;&lt;advanced&gt;true&lt;/advanced&gt;&lt;applies_to/&gt;&lt;condition/&gt;&lt;controlled_by_refs/&gt;&lt;decision_type&gt;allow&lt;/decision_type&gt;&lt;description&gt;Allow read for records in x_snc_visaguardi_0_visa_case, for users with role x_snc_visaguardi_0.student, and if the ACL script returns true.&lt;/description&gt;&lt;local_or_existing&gt;Existing&lt;/local_or_existing&gt;&lt;name&gt;x_snc_visaguardi_0_visa_case&lt;/name&gt;&lt;operation display_value="read"&gt;read&lt;/operation&gt;&lt;script&gt;&lt;![CDATA[answer = current.isNewRecord() ||
+    current.student.user == gs.getUserID();]]&gt;&lt;/script&gt;&lt;security_attribute/&gt;&lt;sys_class_name&gt;sys_security_acl&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2026-08-06 03:45:06&lt;/sys_created_on&gt;&lt;sys_id&gt;e1e09a9d596203107f44d1c73e33a110&lt;/sys_id&gt;&lt;sys_mod_count&gt;12&lt;/sys_mod_count&gt;&lt;sys_name&gt;x_snc_visaguardi_0_visa_case&lt;/sys_name&gt;&lt;sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0"&gt;8f250678982603107f447d1bb882e5ba&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="VisaGuardian AI"&gt;8f250678982603107f447d1bb882e5ba&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_security_acl_e1e09a9d596203107f44d1c73e33a110&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-08-07 15:21:28&lt;/sys_updated_on&gt;&lt;type display_value="record"&gt;record&lt;/type&gt;&lt;/sys_security_acl&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>1862751773</payload_hash>
+        <record_name>x_snc_visaguardi_0_visa_case</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:21:28</sys_created_on>
+        <sys_id>ff3cb1fda82603107f446d9f3e09f66f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fdcd0a4240000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:21:28</sys_updated_on>
+        <type>Access Control</type>
+        <update_guid>f33cb1fd80260310a8a83a8c49741b6f</update_guid>
+        <update_guid_history>f33cb1fd80260310a8a83a8c49741b6f:1862751773,dc7b757db2260310cb09c973fa89e527:-154092282,45b9f9f583260310cb96a5dae8377e2b:1862751773,2179357508260310efa52e22841cc00d:-1503292235,4e4a81a5c82a0310e8bb3ebf478f941e:821975824,182949e10d2a03104d3219d5f4dd2b8a:1461169228,517592d5d3a203103be91afe3c65332f:821975824,e14352d1bea2031035a5d4a8c53f7cae:-1893283451</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 16:16:06</sys_created_on>
+        <sys_db_object display_value="" name="sys_security_acl">sys_security_acl</sys_db_object>
+        <sys_id>229e8702304d46649a7e34443dd192e4</sys_id>
+        <sys_metadata>e1e09a9d596203107f44d1c73e33a110</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0_visa_case</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent display_value="x_snc_visaguardi_0_visa_case">1312be3898aa03107f447d1bb882e5ac</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_security_acl_e1e09a9d596203107f44d1c73e33a110</sys_update_name>
+        <sys_update_version display_value="sys_security_acl_e1e09a9d596203107f44d1c73e33a110">ff3cb1fda82603107f446d9f3e09f66f</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 16:16:06</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

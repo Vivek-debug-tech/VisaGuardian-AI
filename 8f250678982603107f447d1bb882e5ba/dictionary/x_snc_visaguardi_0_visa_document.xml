@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="74a40770986e03107f447d1bb882e5c7" label="Visa Documents" max_length="40" name="x_snc_visaguardi_0_visa_document" type="collection">
+        <element label="Visa Case" mandatory="true" max_length="32" name="visa_case" reference="x_snc_visaguardi_0_visa_case" type="reference"/>
+        <element label="Verification Date" max_length="40" name="verification_date" type="glide_date_time"/>
+        <element label="Issue Date" max_length="40" name="issue_date" type="glide_date"/>
+        <element choice="1" label="Document Type" mandatory="true" max_length="40" name="document_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="I-20" value="i-20"/>
+                <element inactive_on_update="false" label="Photograph" value="photograph"/>
+                <element inactive_on_update="false" label="Financial Statement" value="financial_statement"/>
+                <element inactive_on_update="false" label="Visa" value="visa"/>
+                <element inactive_on_update="false" label="Academic Transcript" value="academic_transcript"/>
+                <element inactive_on_update="false" label="DS-160" value="ds-160"/>
+                <element inactive_on_update="false" label="Insurance" value="insurance"/>
+                <element inactive_on_update="false" label="Other" value="other"/>
+                <element inactive_on_update="false" label="Admission Letter" value="admission_letter"/>
+                <element inactive_on_update="false" label="Passport" value="passport"/>
+                <element inactive_on_update="false" label="English Proficiency Certificate" value="english_proficiency_certificate"/>
+            </choice>
+        </element>
+        <element label="Document Number" max_length="50" name="document_number" type="string"/>
+        <element label="Expiry Date" max_length="40" name="expiry_date" type="glide_date"/>
+        <element choice="3" label="Document Status" max_length="40" name="document_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Uploaded" sequence="0" value="uploaded"/>
+                <element inactive_on_update="false" label="Expired" sequence="4" value="expired"/>
+                <element inactive_on_update="false" label="Verified" sequence="2" value="verified"/>
+                <element inactive_on_update="false" label="Rejected" sequence="3" value="rejected"/>
+                <element inactive_on_update="false" label="Pending Verification" sequence="1" value="pending_verification"/>
+            </choice>
+        </element>
+        <element label="Verified By" max_length="32" name="verified_by" reference="sys_user" type="reference"/>
+        <element label="Verification Comments" max_length="255" name="remarks" type="journal_input"/>
+        <element choice="1" default="Pending" label="Verification Status" mandatory="true" max_length="40" name="verification_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Verified" value="verifed"/>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Under Review" value="under_review"/>
+                <element inactive_on_update="false" label="Uploaded" value="uploaded"/>
+            </choice>
+        </element>
+        <element label="Upload Date" mandatory="true" max_length="40" name="upload_date" type="glide_date_time"/>
+        <index name="index">
+            <element name="verified_by"/>
+        </index>
+        <index name="index2">
+            <element name="visa_case"/>
+        </index>
+    </element>
+</database>

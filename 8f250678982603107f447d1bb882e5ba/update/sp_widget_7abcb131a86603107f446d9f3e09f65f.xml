@@ -1,0 +1,4807 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $http) {
+
+    var c = this;
+
+
+    /* ==========================================
+       INITIAL STATE
+       ========================================== */
+
+    c.loading = true;
+    c.uploading = false;
+    c.progress = 0;
+    c.dragging = false;
+
+    c.error = "";
+    c.success = "";
+
+    c.selectedFiles = [];
+
+    c.documents = [];
+    c.otherAttachments = [];
+
+    c.case = {
+        number: "Loading...",
+        request_type: ""
+    };
+
+    /*
+     * The Server Script will decide which case
+     * should initially be selected.
+     */
+    c.selectedCase = c.data.case_sys_id || "";
+
+
+    /* ==========================================
+       CHANGE CASE - DROPDOWN
+       ========================================== */
+
+    c.changeCase = function() {
+
+        if (!c.selectedCase) {
+            return;
+        }
+
+        c.loading = true;
+        c.error = "";
+        c.success = "";
+
+        /*
+         * Tell the Server Script which case
+         * the student selected.
+         */
+        c.data.action = "load";
+        c.data.selected_case_sys_id = c.selectedCase;
+
+        c.server.update().then(function() {
+
+            c.loading = false;
+
+            if (c.data && c.data.error) {
+                c.error = c.data.error;
+                return;
+            }
+
+            /*
+             * Update the case information.
+             */
+            c.case = c.data.case || {};
+
+            /*
+             * Load documents for the selected case.
+             */
+            c.documents = c.data.documents || [];
+
+            c.otherAttachments = c.data.otherAttachments || [];
+
+            /*
+             * Keep dropdown synchronized with
+             * the case actually loaded by server.
+             */
+            if (c.data.case_sys_id) {
+                c.selectedCase = c.data.case_sys_id;
+            }
+
+        }, function(error) {
+
+            c.loading = false;
+
+            c.error = "Unable to load the selected visa case.";
+
+            console.warn("Case change error:", error);
+        });
+    };
+
+
+    /* ==========================================
+       FORMAT FILE SIZE
+       ========================================== */
+
+    c.formatFileSize = function(bytes) {
+
+        if (!bytes) {
+            return "0 KB";
+        }
+
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(1) + " KB";
+        }
+
+        return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+    };
+
+
+    /* ==========================================
+       OPEN FILE PICKER
+       ========================================== */
+
+    c.openFilePicker = function() {
+
+        var input = document.getElementById("vgFileInput");
+
+        if (input) {
+            input.click();
+        }
+    };
+
+
+    /* ==========================================
+       VALIDATE FILE
+       ========================================== */
+
+    c.validateFile = function(file) {
+
+        if (!file) {
+            return false;
+        }
+
+        var maxSize = 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+
+            c.error =
+                file.name +
+                " exceeds the 5 MB limit.";
+
+            return false;
+        }
+
+        var allowedTypes = [
+            "application/pdf",
+            "image/png",
+            "image/jpeg"
+        ];
+
+        if (allowedTypes.indexOf(file.type) === -1) {
+
+            c.error =
+                file.name +
+                " is not a supported file type. Use PDF, PNG, or JPG.";
+
+            return false;
+        }
+
+        return true;
+    };
+
+
+    /* ==========================================
+       FILES SELECTED
+       ========================================== */
+
+    c.filesSelected = function(files) {
+
+        c.error = "";
+        c.success = "";
+        c.selectedFiles = [];
+
+        for (var i = 0; i < files.length; i++) {
+
+            if (c.validateFile(files[i])) {
+                c.selectedFiles.push(files[i]);
+            }
+        }
+
+        /*
+         * Automatically upload selected files.
+         */
+        if (c.selectedFiles.length > 0) {
+            c.uploadFiles();
+        }
+    };
+
+
+    /* ==========================================
+       DRAG OVER
+       ========================================== */
+
+    c.dragOver = function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        c.dragging = true;
+
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
+    };
+
+
+    /* ==========================================
+       DRAG LEAVE
+       ========================================== */
+
+    c.dragLeave = function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        c.dragging = false;
+    };
+
+
+    /* ==========================================
+       DROP FILES
+       ========================================== */
+
+    c.dropFiles = function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        c.dragging = false;
+
+        var files = event.dataTransfer.files;
+
+        c.filesSelected(files);
+    };
+
+
+    /* ==========================================
+       REMOVE SELECTED FILE
+       ========================================== */
+
+    c.removeSelected = function(index) {
+
+        c.selectedFiles.splice(index, 1);
+    };
+
+
+    /* ==========================================
+       UPLOAD FILES
+       ========================================== */
+
+    c.uploadFiles = function() {
+
+        if (!c.selectedFiles ||
+            c.selectedFiles.length === 0) {
+
+            return;
+        }
+
+        c.uploadNextFile(0);
+    };
+
+
+    /* ==========================================
+       UPLOAD ONE FILE
+       ========================================== */
+
+    c.uploadNextFile = function(index) {
+
+        /*
+         * Make sure the user selected
+         * a checklist document.
+         */
+        if (!c.targetDocument) {
+
+            c.uploading = false;
+
+            c.error =
+                "Please click Upload beside a checklist document first.";
+
+            return;
+        }
+
+
+        /*
+         * All files have been uploaded.
+         */
+        if (index >= c.selectedFiles.length) {
+
+            c.selectedFiles = [];
+
+            c.targetDocument = null;
+
+            c.uploading = false;
+
+            c.progress = 100;
+
+            c.success =
+                "Document uploaded successfully.";
+
+            c.loadData();
+
+            return;
+        }
+
+
+        var file = c.selectedFiles[index];
+
+        c.uploading = true;
+
+        c.uploadFileName = file.name;
+
+        c.progress = 0;
+
+        c.error = "";
+        c.success = "";
+
+
+        /* ==========================================
+           PREPARE SERVER DOCUMENT RECORD
+           ========================================== */
+
+        c.data.action = "prepare_upload";
+
+        c.data.document_key =
+            c.targetDocument.key;
+
+        c.data.document_name =
+            c.targetDocument.name;
+
+        c.data.file_name =
+            file.name;
+
+
+        c.server.update().then(function() {
+
+            if (c.data.error) {
+
+                c.uploading = false;
+
+                c.error = c.data.error;
+
+                return;
+            }
+
+
+            if (!c.data.upload_table ||
+                !c.data.upload_sys_id) {
+
+                c.uploading = false;
+
+                c.error =
+                    "Unable to prepare document upload.";
+
+                return;
+            }
+
+
+            /* ==========================================
+               ATTACHMENT UPLOAD
+               ========================================== */
+
+            var formData = new FormData();
+
+            formData.append("file", file);
+
+
+            var url =
+                "/api/now/attachment/file" +
+                "?table_name=" +
+                encodeURIComponent(
+                    c.data.upload_table
+                ) +
+                "&table_sys_id=" +
+                encodeURIComponent(
+                    c.data.upload_sys_id
+                ) +
+                "&file_name=" +
+                encodeURIComponent(
+                    file.name
+                );
+
+
+            $http({
+
+                method: "POST",
+
+                url: url,
+
+                data: formData,
+
+                headers: {
+                    "Content-Type": undefined,
+                    "Accept": "application/json"
+                },
+
+                transformRequest: angular.identity
+
+            }).then(function(response) {
+
+                c.progress = 100;
+
+
+                /* ==========================================
+                   COMPLETE UPLOAD
+                   ========================================== */
+
+                c.data.action =
+                    "complete_upload";
+
+                c.data.visa_document_sys_id =
+                    c.data.upload_sys_id;
+
+                c.data.attachment_sys_id =
+                    response.data &&
+                    response.data.result &&
+                    response.data.result.sys_id;
+
+
+                c.server.update().then(function() {
+
+                    /*
+                     * Upload next selected file.
+                     */
+                    c.uploadNextFile(index + 1);
+
+                });
+
+            }, function(error) {
+
+                c.uploading = false;
+
+                c.error =
+                    "Unable to upload " +
+                    file.name +
+                    ".";
+
+                console.warn(
+                    "Attachment upload error:",
+                    error
+                );
+            });
+
+        });
+    };
+
+
+    /* ==========================================
+       UPLOAD FOR DOCUMENT
+       ========================================== */
+
+    c.uploadForDocument = function(doc) {
+
+        c.targetDocument = doc;
+
+        c.openFilePicker();
+    };
+
+
+    /* ==========================================
+       DELETE ATTACHMENT
+       ========================================== */
+
+    c.deleteAttachment = function(file) {
+
+        if (!file ||
+            !file.visa_document_sys_id) {
+
+            return;
+        }
+
+
+        if (!confirm("Delete this document?")) {
+            return;
+        }
+
+
+        c.data.action =
+            "delete_document";
+
+        c.data.visa_document_sys_id =
+            file.visa_document_sys_id;
+
+
+        c.server.update().then(function() {
+
+            if (c.data.error) {
+
+                c.error = c.data.error;
+
+                return;
+            }
+
+
+            c.success =
+                "Document deleted successfully.";
+
+            c.loadData();
+
+        }, function(error) {
+
+            c.error =
+                "Unable to delete the document.";
+
+            console.warn(
+                "Delete error:",
+                error
+            );
+        });
+    };
+
+
+    /* ==========================================
+       LOAD SERVER DATA
+       ========================================== */
+
+    c.loadData = function() {
+
+        c.loading = true;
+
+        c.error = "";
+
+        /*
+         * Normal data loading.
+         */
+        c.data.action = "load";
+
+
+        c.server.update().then(
+
+            function() {
+
+                c.loading = false;
+
+
+                if (c.data &&
+                    c.data.error) {
+
+                    c.error =
+                        c.data.error;
+
+                    return;
+                }
+
+
+                /*
+                 * Update current case.
+                 */
+                c.case =
+                    c.data.case ||
+                    c.case;
+
+
+                /*
+                 * Update checklist.
+                 */
+                c.documents =
+                    c.data.documents ||
+                    [];
+
+
+                /*
+                 * Update other attachments.
+                 */
+                c.otherAttachments =
+                    c.data.otherAttachments ||
+                    [];
+
+
+                /*
+                 * Server decides the selected case.
+                 */
+                if (c.data.case_sys_id) {
+
+                    c.selectedCase =
+                        c.data.case_sys_id;
+                }
+
+            },
+
+            function(error) {
+
+                c.loading = false;
+
+                c.error =
+                    "Unable to load the visa case.";
+
+                console.warn(
+                    "Load data error:",
+                    error
+                );
+            }
+        );
+    };
+
+
+    /* ==========================================
+       INITIAL LOAD
+       ========================================== */
+
+    c.loadData();
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   SUPPORTING DOCUMENT UPLOAD
+   PREMIUM ENTERPRISE UI
+   FULL PAGE
+   UI ONLY — NO FUNCTIONALITY CHANGES
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+
+.vg-upload-widget,
+.vg-upload-widget *,
+.vg-upload-widget *::before,
+.vg-upload-widget *::after {
+
+    box-sizing: border-box;
+
+}
+
+
+/* =========================================================
+   MAIN UPLOAD PAGE
+   ========================================================= */
+
+.vg-upload-widget {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    margin: 0;
+
+    background:
+
+        radial-gradient(
+            circle at 92% 5%,
+            rgba(35, 128, 220, 0.12),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 5% 95%,
+            rgba(83, 62, 190, 0.07),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            145deg,
+            #f8fbff 0%,
+            #f3f7fc 52%,
+            #edf4fa 100%
+        );
+
+    border:
+        1px solid #d6e3ef;
+
+    border-radius:
+        16px;
+
+    overflow:
+        hidden;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color:
+        #203c59;
+
+    box-shadow:
+
+        0 18px 45px
+        rgba(24, 62, 99, 0.09),
+
+        0 4px 12px
+        rgba(24, 62, 99, 0.05);
+
+}
+
+
+/* =========================================================
+   SUBTLE BACKGROUND GRID
+   ========================================================= */
+
+.vg-upload-widget::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .25;
+
+    background-image:
+
+        linear-gradient(
+            rgba(34,105,168,.025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(34,105,168,.025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        42px 42px;
+
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-upload-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    height:
+        70px;
+
+    min-height:
+        70px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    padding:
+        0 24px;
+
+    background:
+
+        linear-gradient(
+            120deg,
+            #062f61 0%,
+            #073f78 48%,
+            #125a9b 100%
+        );
+
+    color:
+        #ffffff;
+
+    font-size:
+        20px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.2px;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* =========================================================
+   HEADER GLOW
+   ========================================================= */
+
+.vg-upload-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width:
+        230px;
+
+    height:
+        230px;
+
+    right:
+        -100px;
+
+    top:
+        -145px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(66,163,255,.12);
+
+    pointer-events:
+        none;
+
+}
+
+
+/* =========================================================
+   HEADER ICON
+   ========================================================= */
+
+.vg-upload-header .glyphicon {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(255,255,255,.13);
+
+    border:
+        1px solid
+        rgba(255,255,255,.20);
+
+    color:
+        #ffffff;
+
+    font-size:
+        19px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.10);
+
+}
+
+
+/* =========================================================
+   CASE SELECTOR
+   ========================================================= */
+
+.vg-case-selector-wrapper {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin:
+        24px 24px 0;
+
+}
+
+
+/* =========================================================
+   SELECTOR LABEL
+   ========================================================= */
+
+.vg-case-selector-wrapper label {
+
+    display:
+        block;
+
+    margin-bottom:
+        9px;
+
+    color:
+        #173d66;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+
+}
+
+
+/* =========================================================
+   CASE SELECT
+   ========================================================= */
+
+.vg-case-selector-wrapper select.form-control {
+
+    width:
+        100%;
+
+    height:
+        49px;
+
+    padding:
+        10px 15px;
+
+    border:
+        1px solid
+        #c8d9e8;
+
+    border-radius:
+        10px;
+
+    background:
+        #fbfdff;
+
+    color:
+        #173d66;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    box-shadow:
+        0 2px 6px
+        rgba(30,75,110,.035);
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.vg-case-selector-wrapper select.form-control:hover {
+
+    border-color:
+        #8fb6d5;
+
+    background:
+        #ffffff;
+
+}
+
+
+.vg-case-selector-wrapper select.form-control:focus {
+
+    border-color:
+        #2081ce;
+
+    background:
+        #ffffff;
+
+    outline:
+        none;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(32,129,206,.10),
+
+        0 5px 12px
+        rgba(32,129,206,.05);
+
+}
+
+
+/* =========================================================
+   CASE BANNER
+   ========================================================= */
+
+.vg-case-banner {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin:
+        20px 24px 27px;
+
+    padding:
+        20px 22px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #eef6fd,
+            #f5f9fd
+        );
+
+    border:
+        1px solid
+        #d3e4f1;
+
+    border-left:
+        4px solid
+        #2380c7;
+
+    border-radius:
+        11px;
+
+    color:
+        #123e69;
+
+    font-size:
+        18px;
+
+    font-weight:
+        650;
+
+    box-shadow:
+        0 5px 14px
+        rgba(29,85,130,.045);
+
+}
+
+
+/* =========================================================
+   CASE NUMBER
+   ========================================================= */
+
+.vg-case-number {
+
+    font-weight:
+        800;
+
+    margin-left:
+        5px;
+
+    color:
+        #0b63a7;
+
+}
+
+
+/* =========================================================
+   CASE TYPE
+   ========================================================= */
+
+.vg-case-type {
+
+    font-weight:
+        800;
+
+    color:
+        #123f6c;
+
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.vg-alert {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    margin:
+        14px 24px;
+
+    padding:
+        12px 15px;
+
+    border-radius:
+        9px;
+
+    font-size:
+        12px;
+
+    line-height:
+        18px;
+
+}
+
+
+.vg-alert .glyphicon {
+
+    margin-right:
+        7px;
+
+}
+
+
+/* =========================================================
+   ERROR ALERT
+   ========================================================= */
+
+.vg-alert-error {
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff5f5,
+            #fff0f0
+        );
+
+    border:
+        1px solid
+        #efc0c0;
+
+    color:
+        #c62828;
+
+}
+
+
+/* =========================================================
+   SUCCESS ALERT
+   ========================================================= */
+
+.vg-alert-success {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f0faf3,
+            #e8f7ed
+        );
+
+    border:
+        1px solid
+        #b8dfc2;
+
+    color:
+        #19743a;
+
+}
+
+
+/* =========================================================
+   MAIN TWO-COLUMN LAYOUT
+   ========================================================= */
+
+.vg-upload-layout {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    display:
+        flex;
+
+    gap:
+        26px;
+
+    padding:
+        0 24px 25px;
+
+}
+
+
+/* =========================================================
+   LEFT COLUMN
+   ========================================================= */
+
+.vg-upload-column {
+
+    flex:
+        1.05;
+
+    min-width:
+        0;
+
+}
+
+
+/* =========================================================
+   RIGHT COLUMN
+   ========================================================= */
+
+.vg-checklist-column {
+
+    flex:
+        .95;
+
+    min-width:
+        0;
+
+}
+
+
+/* =========================================================
+   DROP ZONE
+   ========================================================= */
+
+.vg-drop-zone {
+
+    position:
+        relative;
+
+    min-height:
+        330px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        30px;
+
+    border:
+        2px dashed
+        #b9d2e8;
+
+    border-radius:
+        14px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #f8fbfe,
+            #f2f7fb
+        );
+
+    cursor:
+        pointer;
+
+    transition:
+        all .25s ease;
+
+    overflow:
+        hidden;
+
+}
+
+
+/* inner glow */
+
+.vg-drop-zone::before {
+
+    content: "";
+
+    position:
+        absolute;
+
+    width:
+        190px;
+
+    height:
+        190px;
+
+    border-radius:
+        50%;
+
+    top:
+        -110px;
+
+    right:
+        -70px;
+
+    background:
+        rgba(48,137,218,.06);
+
+    pointer-events:
+        none;
+
+}
+
+
+.vg-drop-zone:hover {
+
+    background:
+        linear-gradient(
+            145deg,
+            #f3f9fe,
+            #eaf4fb
+        );
+
+    border-color:
+        #4d9bd4;
+
+    box-shadow:
+        0 10px 24px
+        rgba(35,111,170,.08);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* drag state */
+
+.vg-drop-zone.vg-dragging {
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf5ff,
+            #e5f2ff
+        );
+
+    border-color:
+        #1478c9;
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(20,120,201,.08),
+
+        0 12px 25px
+        rgba(20,120,201,.10);
+
+    transform:
+        scale(1.005);
+
+}
+
+
+/* =========================================================
+   UPLOAD ICON
+   ========================================================= */
+
+.vg-upload-icon {
+
+    position:
+        relative;
+
+    margin-bottom:
+        16px;
+
+    width:
+        76px;
+
+    height:
+        76px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e5f1fc,
+            #dcecf9
+        );
+
+    border:
+        1px solid
+        #c4def2;
+
+    color:
+        #4b96cc;
+
+    font-size:
+        38px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(48,117,168,.08);
+
+}
+
+
+.vg-upload-icon .glyphicon {
+
+    font-size:
+        38px;
+
+}
+
+
+/* =========================================================
+   DROP TITLE
+   ========================================================= */
+
+.vg-drop-title {
+
+    color:
+        #123f69;
+
+    font-size:
+        21px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.2px;
+
+}
+
+
+/* =========================================================
+   DROP SUBTITLE
+   ========================================================= */
+
+.vg-drop-subtitle {
+
+    margin-top:
+        10px;
+
+    color:
+        #7c91a4;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.8;
+
+}
+
+
+.vg-drop-subtitle strong {
+
+    color:
+        #506d86;
+
+}
+
+
+/* =========================================================
+   BROWSE BUTTON
+   ========================================================= */
+
+.vg-browse-button {
+
+    margin-top:
+        18px;
+
+    min-width:
+        125px;
+
+    height:
+        40px;
+
+    padding:
+        0 18px;
+
+    background:
+        #ffffff;
+
+    border:
+        1px solid
+        #287bbb;
+
+    border-radius:
+        9px;
+
+    color:
+        #1765a0;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.vg-browse-button:hover {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #087fa7,
+            #2857c7
+        );
+
+    border-color:
+        transparent;
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 7px 15px
+        rgba(24,108,173,.18);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   CHECKLIST CONTAINER
+   ========================================================= */
+
+.vg-checklist {
+
+    border:
+        1px solid
+        #d4e1ec;
+
+    border-radius:
+        14px;
+
+    overflow:
+        hidden;
+
+    background:
+        rgba(255,255,255,.96);
+
+    box-shadow:
+        0 8px 24px
+        rgba(24,62,99,.055);
+
+}
+
+
+/* =========================================================
+   CHECKLIST HEADER
+   ========================================================= */
+
+.vg-checklist-header {
+
+    min-height:
+        62px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    padding:
+        0 20px;
+
+    color:
+        #173d66;
+
+    font-size:
+        18px;
+
+    font-weight:
+        750;
+
+    border-bottom:
+        1px solid
+        #dbe6ef;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f9fbfd
+        );
+
+}
+
+
+.vg-checklist-header .glyphicon {
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        9px;
+
+    background:
+        #e9f7ef;
+
+    color:
+        #38a95d;
+
+    font-size:
+        18px;
+
+}
+
+
+/* =========================================================
+   DOCUMENT ROW
+   ========================================================= */
+
+.vg-document {
+
+    min-height:
+        82px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        14px 20px;
+
+    border-bottom:
+        1px solid
+        #e4ebf1;
+
+    background:
+        #ffffff;
+
+    transition:
+        background .2s ease;
+
+}
+
+
+.vg-document:hover {
+
+    background:
+        #f8fbfe;
+
+}
+
+
+.vg-document:last-child {
+
+    border-bottom:
+        none;
+
+}
+
+
+/* =========================================================
+   DOCUMENT INFO
+   ========================================================= */
+
+.vg-document-info {
+
+    flex:
+        1;
+
+    min-width:
+        0;
+
+}
+
+
+/* =========================================================
+   DOCUMENT NAME
+   ========================================================= */
+
+.vg-document-name {
+
+    color:
+        #143e67;
+
+    font-size:
+        13px;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   UPLOADED FILE
+   ========================================================= */
+
+.vg-uploaded-file {
+
+    margin-top:
+        6px;
+
+    color:
+        #6e8295;
+
+    font-size:
+        11px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.vg-uploaded-file .glyphicon {
+
+    margin-right:
+        5px;
+
+    color:
+        #3b9b64;
+
+}
+
+
+.vg-file-size-small {
+
+    color:
+        #9aa9b6;
+
+}
+
+
+/* =========================================================
+   REQUIRED
+   ========================================================= */
+
+.vg-required {
+
+    margin-top:
+        6px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    color:
+        #df4141;
+
+    font-size:
+        11px;
+
+}
+
+
+.vg-required .glyphicon {
+
+    margin-right:
+        5px;
+
+}
+
+
+/* =========================================================
+   ACTION AREA
+   ========================================================= */
+
+.vg-document-action {
+
+    flex-shrink:
+        0;
+
+}
+
+
+/* =========================================================
+   UPLOADED STATUS
+   ========================================================= */
+
+.vg-status-uploaded {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    padding:
+        7px 11px;
+
+    border-radius:
+        20px;
+
+    background:
+        #e7f7ed;
+
+    border:
+        1px solid
+        #c1e8ce;
+
+    color:
+        #218343;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   UPLOAD BUTTON
+   ========================================================= */
+
+.vg-upload-small {
+
+    min-width:
+        68px;
+
+    height:
+        35px;
+
+    padding:
+        0 12px;
+
+    border:
+        1px solid
+        #b7cad9;
+
+    background:
+        #ffffff;
+
+    color:
+        #1e5f91;
+
+    border-radius:
+        8px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.vg-upload-small:hover {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #087fa7,
+            #2857c7
+        );
+
+    color:
+        #ffffff;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 6px 14px
+        rgba(20,103,165,.16);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   OTHER DOCUMENTS
+   ========================================================= */
+
+.vg-other-documents {
+
+    padding:
+        14px 20px;
+
+    background:
+        #f8fafc;
+
+}
+
+
+/* =========================================================
+   OTHER TITLE
+   ========================================================= */
+
+.vg-other-title {
+
+    margin-bottom:
+        9px;
+
+    color:
+        #536a80;
+
+    font-size:
+        11px;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   OTHER FILE
+   ========================================================= */
+
+.vg-other-file {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        8px 0;
+
+    border-bottom:
+        1px solid
+        #e3eaf0;
+
+    font-size:
+        11px;
+
+}
+
+
+.vg-other-file a {
+
+    flex:
+        1;
+
+    color:
+        #2375ad;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.vg-other-size {
+
+    color:
+        #8b98a5;
+
+}
+
+
+.vg-delete-file {
+
+    width:
+        28px;
+
+    height:
+        28px;
+
+    border:
+        none;
+
+    border-radius:
+        7px;
+
+    background:
+        transparent;
+
+    color:
+        #d64545;
+
+    font-size:
+        12px;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .2s ease;
+
+}
+
+
+.vg-delete-file:hover {
+
+    background:
+        #fff0f0;
+
+    color:
+        #b91f1f;
+
+}
+
+
+/* =========================================================
+   SELECTED FILES
+   ========================================================= */
+
+.vg-selected-files {
+
+    margin-top:
+        14px;
+
+    border:
+        1px solid
+        #d7e3ec;
+
+    border-radius:
+        9px;
+
+    overflow:
+        hidden;
+
+    background:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   SELECTED TITLE
+   ========================================================= */
+
+.vg-selected-title {
+
+    padding:
+        10px 13px;
+
+    background:
+        #f2f7fb;
+
+    color:
+        #526a80;
+
+    font-size:
+        11px;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   SELECTED FILE
+   ========================================================= */
+
+.vg-selected-file {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        9px 13px;
+
+    border-top:
+        1px solid
+        #e5ebf0;
+
+    font-size:
+        11px;
+
+}
+
+
+.vg-file-name {
+
+    flex:
+        1;
+
+    overflow:
+        hidden;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.vg-file-size {
+
+    color:
+        #8b98a5;
+
+}
+
+
+.vg-remove-selected {
+
+    width:
+        28px;
+
+    height:
+        28px;
+
+    border:
+        none;
+
+    border-radius:
+        7px;
+
+    background:
+        transparent;
+
+    color:
+        #d23f3f;
+
+    font-size:
+        17px;
+
+    cursor:
+        pointer;
+
+}
+
+
+.vg-remove-selected:hover {
+
+    background:
+        #fff0f0;
+
+}
+
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.vg-progress-wrapper {
+
+    margin-top:
+        15px;
+
+}
+
+
+.vg-progress-label {
+
+    margin-bottom:
+        6px;
+
+    color:
+        #526679;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+
+}
+
+
+.vg-progress {
+
+    height:
+        8px;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+    background:
+        #e2eaf1;
+
+}
+
+
+.vg-progress-bar {
+
+    height:
+        100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #087fa7,
+            #2874c7,
+            #4d58d8
+        );
+
+    border-radius:
+        10px;
+
+    transition:
+        width .2s ease;
+
+}
+
+
+.vg-progress-percent {
+
+    margin-top:
+        5px;
+
+    text-align:
+        right;
+
+    color:
+        #748595;
+
+    font-size:
+        10px;
+
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.vg-upload-footer {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    padding:
+        13px 24px;
+
+    border-top:
+        1px solid
+        #dbe5ed;
+
+    background:
+        rgba(248,251,253,.95);
+
+    color:
+        #718497;
+
+    font-size:
+        10px;
+
+}
+
+
+.vg-upload-footer .glyphicon {
+
+    margin-right:
+        6px;
+
+    color:
+        #3f88bd;
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    .vg-upload-header {
+
+        height:
+            78px;
+
+        min-height:
+            78px;
+
+        padding:
+            0 28px;
+
+        font-size:
+            21px;
+
+    }
+
+
+    .vg-case-selector-wrapper {
+
+        margin-left:
+            30px;
+
+        margin-right:
+            30px;
+
+    }
+
+
+    .vg-case-banner {
+
+        margin-left:
+            30px;
+
+        margin-right:
+            30px;
+
+    }
+
+
+    .vg-upload-layout {
+
+        padding-left:
+            30px;
+
+        padding-right:
+            30px;
+
+        gap:
+            30px;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .vg-upload-layout {
+
+        flex-direction:
+            column;
+
+        gap:
+            22px;
+
+    }
+
+
+    .vg-upload-column,
+    .vg-checklist-column {
+
+        width:
+            100%;
+
+    }
+
+
+    .vg-drop-zone {
+
+        min-height:
+            290px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    .vg-upload-widget {
+
+        border-radius:
+            10px;
+
+    }
+
+
+    .vg-upload-header {
+
+        height:
+            62px;
+
+        min-height:
+            62px;
+
+        padding:
+            0 15px;
+
+        font-size:
+            16px;
+
+    }
+
+
+    .vg-upload-header .glyphicon {
+
+        width:
+            34px;
+
+        height:
+            34px;
+
+        font-size:
+            16px;
+
+    }
+
+
+    .vg-case-selector-wrapper {
+
+        margin:
+            17px 14px 0;
+
+    }
+
+
+    .vg-case-selector-wrapper label {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .vg-case-selector-wrapper select.form-control {
+
+        height:
+            44px;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .vg-case-banner {
+
+        margin:
+            15px 14px 20px;
+
+        padding:
+            15px;
+
+        font-size:
+            14px;
+
+    }
+
+
+    .vg-upload-layout {
+
+        padding:
+            0 14px 18px;
+
+    }
+
+
+    .vg-drop-zone {
+
+        min-height:
+            250px;
+
+        padding:
+            22px 15px;
+
+    }
+
+
+    .vg-upload-icon {
+
+        width:
+            64px;
+
+        height:
+            64px;
+
+        font-size:
+            30px;
+
+    }
+
+
+    .vg-upload-icon .glyphicon {
+
+        font-size:
+            30px;
+
+    }
+
+
+    .vg-drop-title {
+
+        font-size:
+            18px;
+
+    }
+
+
+    .vg-drop-subtitle {
+
+        font-size:
+            11px;
+
+    }
+
+
+    .vg-checklist-header {
+
+        min-height:
+            55px;
+
+        padding:
+            0 15px;
+
+        font-size:
+            16px;
+
+    }
+
+
+    .vg-document {
+
+        min-height:
+            76px;
+
+        padding:
+            12px 15px;
+
+    }
+
+
+    .vg-document-name {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .vg-upload-small {
+
+        min-width:
+            60px;
+
+        height:
+            32px;
+
+    }
+
+
+    .vg-upload-footer {
+
+        padding:
+            11px 14px;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .vg-upload-header {
+
+        font-size:
+            14px;
+
+    }
+
+
+    .vg-case-banner {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .vg-drop-title {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .vg-document {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .vg-document-action {
+
+        width:
+            100%;
+
+    }
+
+
+    .vg-upload-small {
+
+        width:
+            100%;
+
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_upload_documents</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Upload Documents</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+
+    /* ==========================================
+       TABLES
+       ========================================== */
+
+    var VISA_CASE_TABLE =
+        "x_snc_visaguardi_0_visa_case";
+
+    var VISA_DOCUMENT_TABLE =
+        "x_snc_visaguardi_0_visa_document";
+
+    var STUDENT_PROFILE_TABLE =
+        "x_snc_visaguardi_0_student_profile";
+
+    var DOCUMENT_CONFIGURATION_TABLE =
+        "x_snc_visaguardi_0_document_configuration";
+
+
+    /* ==========================================
+       DOCUMENT STATUS VALUES
+       ========================================== */
+
+    var STATUS_UPLOADED = "uploaded";
+    var STATUS_PENDING = "pending";
+    var STATUS_MISSING = "missing";
+
+
+    /* ==========================================
+       INITIAL DATA
+       ========================================== */
+
+    data.error = "";
+
+    data.student = null;
+
+    data.case = {};
+
+    data.documents = [];
+
+    data.otherAttachments = [];
+
+    data.available_cases = [];
+
+    data.case_sys_id = "";
+
+    data.upload_table = "";
+
+    data.upload_sys_id = "";
+
+
+    /* ==========================================
+       FIND LOGGED-IN STUDENT PROFILE
+       ========================================== */
+
+    var student =
+        new GlideRecord(
+            STUDENT_PROFILE_TABLE
+        );
+
+    var profileFound = false;
+
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData(
+            "vg_student_sys_id"
+        );
+
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData(
+            "vg_student_user_name"
+        );
+
+
+    /* ==========================================
+       1. FIND BY SESSION STUDENT SYS_ID
+       ========================================== */
+
+    if (sessionStudentSysId) {
+
+        if (
+            student.get(
+                sessionStudentSysId
+            )
+        ) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       2. FALLBACK - SESSION USER NAME
+       ========================================== */
+
+    if (
+        !profileFound &&
+        sessionStudentUserName
+    ) {
+
+        student =
+            new GlideRecord(
+                STUDENT_PROFILE_TABLE
+            );
+
+        student.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       3. FALLBACK - SERVICENOW USER REFERENCE
+       ========================================== */
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+
+        if (userSysId) {
+
+            student =
+                new GlideRecord(
+                    STUDENT_PROFILE_TABLE
+                );
+
+            student.addQuery(
+                "user",
+                userSysId
+            );
+
+            student.setLimit(1);
+
+            student.query();
+
+            if (student.next()) {
+
+                profileFound = true;
+            }
+        }
+    }
+
+
+    /* ==========================================
+       4. FALLBACK - SERVICENOW USER NAME
+       ========================================== */
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                STUDENT_PROFILE_TABLE
+            );
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+        if (student.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    /* ==========================================
+       PROFILE NOT FOUND
+       ========================================== */
+
+    if (!profileFound) {
+
+        data.error =
+            "Student profile was not found for the logged-in student.";
+
+        return;
+    }
+
+
+    /* ==========================================
+       GET ACTUAL STUDENT PROFILE SYS_ID
+       ========================================== */
+
+    var studentProfileSysId =
+        student.getUniqueValue();
+
+
+    /* ==========================================
+       STUDENT INFORMATION
+       ========================================== */
+
+    data.student = {
+
+        sys_id:
+            studentProfileSysId,
+
+        name:
+            student.getDisplayValue(
+                "name"
+            ),
+
+        student_id:
+            student.getValue(
+                "student_id"
+            ),
+
+        email:
+            student.getValue(
+                "email"
+            )
+    };
+
+
+    /* ==========================================
+       DETERMINE SELECTED CASE
+       ========================================== */
+
+    var caseSysId = "";
+
+
+    if (
+        input &&
+        input.selected_case_sys_id
+    ) {
+
+        caseSysId =
+            input.selected_case_sys_id;
+    }
+
+
+    /* ==========================================
+       GET CASES FOR THIS STUDENT
+       ========================================== */
+
+    var allCases =
+        new GlideRecord(
+            VISA_CASE_TABLE
+        );
+
+
+    /* ==========================================
+       ONLY ACTIVE CASES
+       ========================================== */
+
+    if (
+        allCases.isValidField(
+            "active"
+        )
+    ) {
+
+        allCases.addQuery(
+            "active",
+            true
+        );
+    }
+
+
+    /* ==========================================
+       CRITICAL STUDENT FILTER
+       ========================================== */
+
+    allCases.addQuery(
+        "student",
+        studentProfileSysId
+    );
+
+
+    /* ==========================================
+       NEWEST CASE FIRST
+       ========================================== */
+
+    allCases.orderByDesc(
+        "sys_created_on"
+    );
+
+
+    allCases.query();
+
+
+    /* ==========================================
+       BUILD CASE DROPDOWN
+       ========================================== */
+
+    while (
+        allCases.next()
+    ) {
+
+        var currentCaseSysId =
+            allCases.getUniqueValue();
+
+
+        var currentCaseNumber =
+            allCases.isValidField(
+                "number"
+            )
+                ? allCases.getDisplayValue(
+                    "number"
+                )
+                : currentCaseSysId;
+
+
+        var currentRequestType =
+            getRequestType(
+                allCases
+            );
+
+
+        data.available_cases.push({
+
+            sys_id:
+                currentCaseSysId,
+
+            display:
+                currentCaseNumber +
+                " (" +
+                currentRequestType +
+                ")"
+        });
+
+
+        /*
+         * If no case was selected,
+         * use the newest case.
+         */
+
+        if (!caseSysId) {
+
+            caseSysId =
+                currentCaseSysId;
+        }
+    }
+
+
+    /* ==========================================
+       NO CASE FOUND
+       ========================================== */
+
+    if (!caseSysId) {
+
+        data.error =
+            "No visa case found for this student. Please create a visa case first.";
+
+        return;
+    }
+
+
+    /* ==========================================
+       LOAD SELECTED VISA CASE
+       ========================================== */
+
+    var caseGR =
+        new GlideRecord(
+            VISA_CASE_TABLE
+        );
+
+
+    if (!caseGR.isValid()) {
+
+        data.error =
+            "Visa Cases table could not be found.";
+
+        return;
+    }
+
+
+    if (
+        !caseGR.get(
+            caseSysId
+        )
+    ) {
+
+        data.error =
+            "Visa case could not be found.";
+
+        return;
+    }
+
+
+    /* ==========================================
+       SECURITY
+       ========================================== */
+
+    var belongsToStudent =
+        false;
+
+
+    /*
+     * Primary relationship:
+     *
+     * Visa Case.student
+     *      ↓
+     * Student Profile
+     */
+
+    if (
+        caseGR.isValidField(
+            "student"
+        ) &&
+        caseGR.getValue(
+            "student"
+        ) ===
+            studentProfileSysId
+    ) {
+
+        belongsToStudent = true;
+    }
+
+
+    /*
+     * Optional fallback:
+     * requested_for
+     */
+
+    if (
+        !belongsToStudent &&
+        caseGR.isValidField(
+            "requested_for"
+        ) &&
+        caseGR.getValue(
+            "requested_for"
+        ) ===
+            gs.getUserID()
+    ) {
+
+        belongsToStudent = true;
+    }
+
+
+    /*
+     * Optional fallback:
+     * caller_id
+     */
+
+    if (
+        !belongsToStudent &&
+        caseGR.isValidField(
+            "caller_id"
+        ) &&
+        caseGR.getValue(
+            "caller_id"
+        ) ===
+            gs.getUserID()
+    ) {
+
+        belongsToStudent = true;
+    }
+
+
+    /* ==========================================
+       PREVENT UNAUTHORIZED ACCESS
+       ========================================== */
+
+    if (!belongsToStudent) {
+
+        data.error =
+            "You are not authorized to view this visa case.";
+
+        return;
+    }
+
+
+    /* ==========================================
+       RETURN SELECTED CASE SYS_ID
+       ========================================== */
+
+    data.case_sys_id =
+        caseGR.getUniqueValue();
+
+
+    /* ==========================================
+       GET REQUEST TYPE
+       ========================================== */
+
+    var selectedRequestType =
+        getRequestType(
+            caseGR
+        );
+
+
+    /* ==========================================
+       CASE INFORMATION
+       ========================================== */
+
+    data.case = {
+
+        number:
+            caseGR.isValidField(
+                "number"
+            )
+                ? caseGR.getDisplayValue(
+                    "number"
+                )
+                : caseGR.getUniqueValue(),
+
+        request_type:
+            selectedRequestType,
+
+        status:
+            caseGR.isValidField(
+                "case_stage"
+            )
+                ? caseGR.getDisplayValue(
+                    "case_stage"
+                )
+                : "",
+
+        due_date:
+            caseGR.isValidField(
+                "due_date"
+            )
+                ? caseGR.getDisplayValue(
+                    "due_date"
+                )
+                : ""
+    };
+
+
+    /* ==========================================
+       ACTION:
+       PREPARE UPLOAD
+       ========================================== */
+
+    if (
+        input &&
+        input.action ===
+            "prepare_upload" &&
+        input.document_key &&
+        input.document_name
+    ) {
+
+        var uploadDoc =
+            getOrCreateVisaDocument(
+
+                caseSysId,
+
+                input.document_key,
+
+                input.document_name
+            );
+
+
+        if (
+            !uploadDoc ||
+            !uploadDoc.isValidRecord()
+        ) {
+
+            data.error =
+                "Unable to prepare document upload.";
+
+            return;
+        }
+
+
+        data.upload_table =
+            VISA_DOCUMENT_TABLE;
+
+
+        data.upload_sys_id =
+            uploadDoc.getUniqueValue();
+
+
+        return;
+    }
+
+
+    /* ==========================================
+       ACTION:
+       COMPLETE UPLOAD
+       ========================================== */
+
+    if (
+        input &&
+        input.action ===
+            "complete_upload" &&
+        input.visa_document_sys_id
+    ) {
+
+        var completeDoc =
+            new GlideRecord(
+                VISA_DOCUMENT_TABLE
+            );
+
+
+        if (
+            !completeDoc.get(
+                input.visa_document_sys_id
+            )
+        ) {
+
+            data.error =
+                "Visa document record was not found.";
+
+            return;
+        }
+
+
+        /*
+         * Ensure document belongs
+         * to selected case.
+         */
+
+        if (
+            completeDoc.getValue(
+                "visa_case"
+            ) !==
+                caseSysId
+        ) {
+
+            data.error =
+                "This document does not belong to the selected visa case.";
+
+            return;
+        }
+
+
+        if (
+            completeDoc.isValidField(
+                "document_status"
+            )
+        ) {
+
+            completeDoc.setValue(
+                "document_status",
+                STATUS_UPLOADED
+            );
+        }
+
+
+        if (
+            completeDoc.isValidField(
+                "upload_date"
+            )
+        ) {
+
+            completeDoc.setValue(
+                "upload_date",
+                new GlideDateTime()
+            );
+        }
+
+
+        completeDoc.update();
+
+
+        return;
+    }
+
+
+    /* ==========================================
+       ACTION:
+       DELETE DOCUMENT
+       ========================================== */
+
+    if (
+        input &&
+        input.action ===
+            "delete_document" &&
+        input.visa_document_sys_id
+    ) {
+
+        var deleteDoc =
+            new GlideRecord(
+                VISA_DOCUMENT_TABLE
+            );
+
+
+        if (
+            !deleteDoc.get(
+                input.visa_document_sys_id
+            )
+        ) {
+
+            data.error =
+                "Visa document record was not found.";
+
+            return;
+        }
+
+
+        /*
+         * Ensure document belongs
+         * to selected case.
+         */
+
+        if (
+            deleteDoc.getValue(
+                "visa_case"
+            ) !==
+                caseSysId
+        ) {
+
+            data.error =
+                "This document does not belong to the selected visa case.";
+
+            return;
+        }
+
+
+        deleteAttachmentsForRecord(
+
+            VISA_DOCUMENT_TABLE,
+
+            deleteDoc.getUniqueValue()
+        );
+
+
+        if (
+            deleteDoc.isValidField(
+                "document_status"
+            )
+        ) {
+
+            deleteDoc.setValue(
+                "document_status",
+                STATUS_MISSING
+            );
+        }
+
+
+        if (
+            deleteDoc.isValidField(
+                "upload_date"
+            )
+        ) {
+
+            deleteDoc.setValue(
+                "upload_date",
+                ""
+            );
+        }
+
+
+        deleteDoc.update();
+
+
+        return;
+    }
+
+
+    /* ==========================================
+       DOCUMENT CHECKLIST
+       ========================================== */
+
+    /*
+     * IMPORTANT:
+     *
+     * The checklist is now completely
+     * configuration-driven.
+     *
+     * No hard-coded CPT,
+     * OPT, Travel, I-20 etc.
+     * document lists are used.
+     */
+
+    var requiredDocuments =
+        getRequiredDocuments(
+            selectedRequestType
+        );
+
+
+    /* ==========================================
+       LOAD EXISTING VISA DOCUMENT RECORDS
+       ========================================== */
+
+    var documentMap =
+        loadVisaDocuments(
+            caseSysId
+        );
+
+
+    /* ==========================================
+       BUILD REQUIRED DOCUMENT CHECKLIST
+       ========================================== */
+
+    for (
+        var i = 0;
+        i < requiredDocuments.length;
+        i++
+    ) {
+
+        var doc =
+            requiredDocuments[i];
+
+
+        var visaDocument =
+            documentMap[
+                doc.key
+            ];
+
+
+        var attachment =
+            null;
+
+
+        if (visaDocument) {
+
+            attachment =
+                getFirstAttachment(
+
+                    VISA_DOCUMENT_TABLE,
+
+                    visaDocument.sys_id
+                );
+        }
+
+
+        /* ==========================================
+           DOCUMENT EXISTS + ATTACHMENT EXISTS
+           ========================================== */
+
+        if (
+            visaDocument &&
+            attachment
+        ) {
+
+            data.documents.push({
+
+                key:
+                    doc.key,
+
+                name:
+                    doc.name,
+
+                uploaded:
+                    true,
+
+                file_name:
+                    attachment.file_name,
+
+                size:
+                    attachment.size,
+
+                sys_id:
+                    attachment.sys_id,
+
+                visa_document_sys_id:
+                    visaDocument.sys_id,
+
+                url:
+                    attachment.url
+            });
+
+
+        } else {
+
+
+            /* ==========================================
+               DOCUMENT MISSING
+               ========================================== */
+
+            data.documents.push({
+
+                key:
+                    doc.key,
+
+                name:
+                    doc.name,
+
+                uploaded:
+                    false,
+
+                file_name:
+                    "",
+
+                size:
+                    0,
+
+                sys_id:
+                    "",
+
+                visa_document_sys_id:
+                    visaDocument
+                        ? visaDocument.sys_id
+                        : "",
+
+                url:
+                    ""
+            });
+        }
+    }
+
+
+    /* ==========================================
+       OTHER VISA DOCUMENT RECORDS
+       ========================================== */
+
+    for (
+        var key in documentMap
+    ) {
+
+        if (
+            !documentMap.hasOwnProperty(
+                key
+            )
+        ) {
+
+            continue;
+        }
+
+
+        if (
+            isRequiredDocument(
+                key,
+                requiredDocuments
+            )
+        ) {
+
+            continue;
+        }
+
+
+        var otherDocument =
+            documentMap[key];
+
+
+        var otherAttachment =
+            getFirstAttachment(
+
+                VISA_DOCUMENT_TABLE,
+
+                otherDocument.sys_id
+            );
+
+
+        if (otherAttachment) {
+
+            data.otherAttachments.push({
+
+                sys_id:
+                    otherAttachment.sys_id,
+
+                visa_document_sys_id:
+                    otherDocument.sys_id,
+
+                file_name:
+                    otherAttachment.file_name,
+
+                size:
+                    otherAttachment.size,
+
+                content_type:
+                    otherAttachment.content_type,
+
+                url:
+                    otherAttachment.url
+            });
+        }
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET OR CREATE VISA DOCUMENT
+       ========================================== */
+
+    function getOrCreateVisaDocument(
+        caseId,
+        documentType,
+        documentName
+    ) {
+
+        var docGR =
+            new GlideRecord(
+                VISA_DOCUMENT_TABLE
+            );
+
+
+        docGR.addQuery(
+            "visa_case",
+            caseId
+        );
+
+
+        docGR.addQuery(
+            "document_type",
+            documentType
+        );
+
+
+        docGR.setLimit(1);
+
+        docGR.query();
+
+
+        if (docGR.next()) {
+
+            return docGR;
+        }
+
+
+        /* ==========================================
+           CREATE NEW VISA DOCUMENT
+           ========================================== */
+
+        docGR =
+            new GlideRecord(
+                VISA_DOCUMENT_TABLE
+            );
+
+
+        docGR.initialize();
+
+
+        docGR.setValue(
+            "visa_case",
+            caseId
+        );
+
+
+        docGR.setValue(
+            "document_type",
+            documentType
+        );
+
+
+        if (
+            docGR.isValidField(
+                "document_number"
+            )
+        ) {
+
+            docGR.setValue(
+
+                "document_number",
+
+                data.case.number +
+                "-" +
+                documentType
+            );
+        }
+
+
+        if (
+            docGR.isValidField(
+                "document_status"
+            )
+        ) {
+
+            docGR.setValue(
+                "document_status",
+                STATUS_PENDING
+            );
+        }
+
+
+        var docSysId =
+            docGR.insert();
+
+
+        if (!docSysId) {
+
+            return null;
+        }
+
+
+        docGR.get(
+            docSysId
+        );
+
+
+        return docGR;
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       LOAD VISA DOCUMENTS
+       ========================================== */
+
+    function loadVisaDocuments(
+        caseId
+    ) {
+
+        var map = {};
+
+
+        var docGR =
+            new GlideRecord(
+                VISA_DOCUMENT_TABLE
+            );
+
+
+        docGR.addQuery(
+            "visa_case",
+            caseId
+        );
+
+
+        docGR.query();
+
+
+        while (
+            docGR.next()
+        ) {
+
+            var typeValue =
+                docGR.getValue(
+                    "document_type"
+                );
+
+
+            if (!typeValue) {
+
+                continue;
+            }
+
+
+            /*
+             * Normalize the document type
+             * so configuration values and
+             * existing document records
+             * can be matched consistently.
+             */
+
+            var documentKey =
+                normalizeValue(
+                    typeValue
+                );
+
+
+            map[documentKey] = {
+
+                sys_id:
+                    docGR.getUniqueValue(),
+
+                document_type:
+                    typeValue,
+
+                document_status:
+                    docGR.getValue(
+                        "document_status"
+                    )
+            };
+        }
+
+
+        return map;
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET FIRST ATTACHMENT
+       ========================================== */
+
+    function getFirstAttachment(
+        tableName,
+        recordSysId
+    ) {
+
+        var attachmentGR =
+            new GlideRecord(
+                "sys_attachment"
+            );
+
+
+        attachmentGR.addQuery(
+            "table_name",
+            tableName
+        );
+
+
+        attachmentGR.addQuery(
+            "table_sys_id",
+            recordSysId
+        );
+
+
+        attachmentGR.orderByDesc(
+            "sys_created_on"
+        );
+
+
+        attachmentGR.setLimit(1);
+
+
+        attachmentGR.query();
+
+
+        if (
+            !attachmentGR.next()
+        ) {
+
+            return null;
+        }
+
+
+        return {
+
+            sys_id:
+                attachmentGR.getUniqueValue(),
+
+            file_name:
+                attachmentGR.getValue(
+                    "file_name"
+                ),
+
+            size:
+                parseInt(
+                    attachmentGR.getValue(
+                        "size_bytes"
+                    ),
+                    10
+                ) || 0,
+
+            content_type:
+                attachmentGR.getValue(
+                    "content_type"
+                ),
+
+            url:
+                "/sys_attachment.do?sys_id=" +
+                attachmentGR.getUniqueValue()
+        };
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       DELETE ATTACHMENTS
+       ========================================== */
+
+    function deleteAttachmentsForRecord(
+        tableName,
+        recordSysId
+    ) {
+
+        var attachmentGR =
+            new GlideRecord(
+                "sys_attachment"
+            );
+
+
+        attachmentGR.addQuery(
+            "table_name",
+            tableName
+        );
+
+
+        attachmentGR.addQuery(
+            "table_sys_id",
+            recordSysId
+        );
+
+
+        attachmentGR.query();
+
+
+        while (
+            attachmentGR.next()
+        ) {
+
+            attachmentGR.deleteRecord();
+        }
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET REQUIRED DOCUMENTS
+       ========================================== */
+
+    function getRequiredDocuments(
+        requestType
+    ) {
+
+        var documents = [];
+
+
+        /*
+         * If the case type cannot be determined,
+         * do NOT invent a document checklist.
+         */
+
+        if (!requestType) {
+
+            return documents;
+        }
+
+
+        var requestedCategory =
+            normalizeValue(
+                requestType
+            );
+
+
+        /*
+         * Load ALL active configuration
+         * records.
+         */
+
+        var configGR =
+            new GlideRecord(
+                DOCUMENT_CONFIGURATION_TABLE
+            );
+
+
+        if (!configGR.isValid()) {
+
+            gs.error(
+                "VisaGuardian: Document Configuration table could not be found: " +
+                DOCUMENT_CONFIGURATION_TABLE
+            );
+
+            return documents;
+        }
+
+
+        if (
+            configGR.isValidField(
+                "active"
+            )
+        ) {
+
+            configGR.addQuery(
+                "active",
+                true
+            );
+        }
+
+
+        /*
+         * Order by priority first,
+         * then display order if available.
+         */
+
+        if (
+            configGR.isValidField(
+                "priority"
+            )
+        ) {
+
+            configGR.orderBy(
+                "priority"
+            );
+        }
+
+
+        configGR.query();
+
+
+        /*
+         * Process every configuration
+         * record.
+         */
+
+        while (
+            configGR.next()
+        ) {
+
+
+            /* ==========================================
+               GET CONFIGURATION CATEGORY
+               ========================================== */
+
+            var configCategoryValue =
+                configGR.getValue(
+                    "visa_category"
+                );
+
+
+            var configCategoryDisplay =
+                configGR.getDisplayValue(
+                    "visa_category"
+                );
+
+
+            var normalizedConfigValue =
+                normalizeValue(
+                    configCategoryValue
+                );
+
+
+            var normalizedConfigDisplay =
+                normalizeValue(
+                    configCategoryDisplay
+                );
+
+
+            /*
+             * Match using either the stored
+             * choice value OR display value.
+             *
+             * This protects us from choice
+             * value/display differences.
+             */
+
+            var categoryMatches =
+                (
+                    normalizedConfigValue ===
+                    requestedCategory
+                ) ||
+                (
+                    normalizedConfigDisplay ===
+                    requestedCategory
+                );
+
+
+            if (!categoryMatches) {
+
+                continue;
+            }
+
+
+            /* ==========================================
+               REQUIRED CHECK
+               ========================================== */
+
+            if (
+                configGR.isValidField(
+                    "required"
+                )
+            ) {
+
+                var requiredValue =
+                    String(
+                        configGR.getValue(
+                            "required"
+                        ) || ""
+                    ).toLowerCase();
+
+
+                if (
+                    requiredValue !== "1" &&
+                    requiredValue !== "true"
+                ) {
+
+                    continue;
+                }
+            }
+
+
+            /* ==========================================
+               DOCUMENT TYPE
+               ========================================== */
+
+            var documentTypeValue =
+                configGR.getValue(
+                    "document_type"
+                );
+
+
+            var documentTypeDisplay =
+                configGR.getDisplayValue(
+                    "document_type"
+                );
+
+
+            var documentName =
+                documentTypeDisplay ||
+                documentTypeValue ||
+                configGR.getValue(
+                    "description"
+                );
+
+
+            if (!documentName) {
+
+                continue;
+            }
+
+
+            /*
+             * Use normalized document type
+             * as the internal checklist key.
+             */
+
+            var documentKey =
+                normalizeValue(
+                    documentTypeValue ||
+                    documentTypeDisplay
+                );
+
+
+            if (!documentKey) {
+
+                continue;
+            }
+
+
+            /* ==========================================
+               PREVENT DUPLICATES
+               ========================================== */
+
+            var duplicate =
+                false;
+
+
+            for (
+                var d = 0;
+                d < documents.length;
+                d++
+            ) {
+
+                if (
+                    documents[d].key ===
+                    documentKey
+                ) {
+
+                    duplicate = true;
+
+                    break;
+                }
+            }
+
+
+            if (duplicate) {
+
+                continue;
+            }
+
+
+            /* ==========================================
+               ADD DOCUMENT
+               ========================================== */
+
+            documents.push({
+
+                key:
+                    documentKey,
+
+                name:
+                    documentName,
+
+                required:
+                    true,
+
+                priority:
+                    configGR.isValidField(
+                        "priority"
+                    )
+                        ? parseInt(
+                            configGR.getValue(
+                                "priority"
+                            ) || "0",
+                            10
+                        )
+                        : 0
+            });
+        }
+
+
+        return documents;
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       CHECK REQUIRED DOCUMENT
+       ========================================== */
+
+    function isRequiredDocument(
+        key,
+        docs
+    ) {
+
+        for (
+            var i = 0;
+            i < docs.length;
+            i++
+        ) {
+
+            if (
+                docs[i].key ===
+                key
+            ) {
+
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       GET REQUEST TYPE
+       ========================================== */
+
+    function getRequestType(
+        gr
+    ) {
+
+
+        /*
+         * PRIMARY FIELD
+         *
+         * Start New Request now stores
+         * the selected category in:
+         *
+         * case_type
+         */
+
+        if (
+            gr.isValidField(
+                "case_type"
+            ) &&
+            gr.getValue(
+                "case_type"
+            )
+        ) {
+
+            return gr.getDisplayValue(
+                "case_type"
+            );
+        }
+
+
+        /*
+         * FALLBACK:
+         * request_category
+         */
+
+        if (
+            gr.isValidField(
+                "request_category"
+            ) &&
+            gr.getValue(
+                "request_category"
+            )
+        ) {
+
+            return gr.getDisplayValue(
+                "request_category"
+            );
+        }
+
+
+        /*
+         * FALLBACK:
+         * contact_type
+         */
+
+        if (
+            gr.isValidField(
+                "contact_type"
+            ) &&
+            gr.getValue(
+                "contact_type"
+            )
+        ) {
+
+            return gr.getDisplayValue(
+                "contact_type"
+            );
+        }
+
+
+        /*
+         * FALLBACK:
+         * short description
+         */
+
+        if (
+            gr.isValidField(
+                "short_description"
+            ) &&
+            gr.getValue(
+                "short_description"
+            )
+        ) {
+
+            return gr.getValue(
+                "short_description"
+            );
+        }
+
+
+        /*
+         * IMPORTANT:
+         *
+         * Do not return a fake category.
+         * If we cannot determine the case type,
+         * return empty so the configuration table
+         * cannot accidentally give the student
+         * the wrong checklist.
+         */
+
+        return "";
+    }
+
+
+    /* ==========================================
+       FUNCTION:
+       NORMALIZE VALUE
+       ========================================== */
+
+    function normalizeValue(
+        value
+    ) {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+
+            return "";
+        }
+
+
+        return String(
+            value
+        )
+            .toLowerCase()
+            .trim()
+            .replace(
+                /[^a-z0-9]+/g,
+                "_"
+            )
+            .replace(
+                /^_+|_+$/g,
+                ""
+            );
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:23:35</sys_created_on>
+        <sys_id>7abcb131a86603107f446d9f3e09f65f</sys_id>
+        <sys_mod_count>23</sys_mod_count>
+        <sys_name>VG Upload Documents</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_7abcb131a86603107f446d9f3e09f65f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 11:10:10</sys_updated_on>
+        <template><![CDATA[<div class="vg-upload-widget">
+
+    <!-- HEADER -->
+    <div class="vg-upload-header">
+        <span class="glyphicon glyphicon-cloud-upload"></span>
+        <span>Upload Supporting Documents</span>
+    </div>
+
+    <!-- CASE SELECTOR DROPDOWN -->
+    <div class="vg-case-selector-wrapper" ng-if="data.available_cases.length > 1">
+        <label for="caseSelector"><strong>Select Case to Upload Documents:</strong></label>
+        <select id="caseSelector" 
+                class="form-control" 
+                ng-model="c.selectedCase" 
+                ng-change="c.changeCase()" 
+                ng-options="case.sys_id as case.display for case in data.available_cases">
+        </select>
+    </div>
+
+    <!-- CASE INFORMATION -->
+    <div class="vg-case-banner">
+
+        <strong>
+            Uploading Documents for Case:
+        </strong>
+
+        <span class="vg-case-number">
+            {{c.case.number}}
+        </span>
+
+        <span class="vg-case-type">
+            ({{c.case.request_type}})
+        </span>
+
+    </div>
+
+
+    <!-- ERROR -->
+    <div
+        class="vg-alert vg-alert-error"
+        ng-if="c.error">
+
+        <span class="glyphicon glyphicon-warning-sign"></span>
+
+        {{c.error}}
+
+    </div>
+
+
+    <!-- SUCCESS -->
+    <div
+        class="vg-alert vg-alert-success"
+        ng-if="c.success">
+
+        <span class="glyphicon glyphicon-ok"></span>
+
+        {{c.success}}
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="vg-upload-layout">
+
+
+        <!-- LEFT - UPLOAD AREA -->
+        <div class="vg-upload-column">
+
+            <div
+                class="vg-drop-zone"
+                ng-class="{'vg-dragging': c.dragging}"
+                ng-click="c.openFilePicker()"
+                ondragover="angular.element(this).scope().c.dragOver($event)"
+                ondragleave="angular.element(this).scope().c.dragLeave($event)"
+                ondrop="angular.element(this).scope().c.dropFiles($event)">
+
+                <div class="vg-upload-icon">
+                    <span class="glyphicon glyphicon-cloud-upload"></span>
+                </div>
+
+                <div class="vg-drop-title">
+                    Drag &amp; Drop Files Here
+                </div>
+
+                <div class="vg-drop-subtitle">
+                    Supported Formats:
+                    PDF, PNG, JPG
+
+                    <br>
+
+                    <strong>Maximum 5 MB</strong>
+                </div>
+
+                <button
+                    type="button"
+                    class="vg-browse-button"
+                    ng-click="$event.stopPropagation(); c.openFilePicker()">
+
+                    Browse Files
+
+                </button>
+
+                <input
+                    id="vgFileInput"
+                    type="file"
+                    multiple
+                    accept=".pdf,.png,.jpg,.jpeg"
+                    style="display:none"
+                    onchange="angular.element(this).scope().c.filesSelected(this.files)" />
+
+            </div>
+
+
+            <!-- UPLOAD PROGRESS -->
+            <div
+                class="vg-progress-wrapper"
+                ng-if="c.uploading">
+
+                <div class="vg-progress-label">
+                    Uploading
+                    <strong>{{c.uploadFileName}}</strong>
+                </div>
+
+                <div class="vg-progress">
+                    <div
+                        class="vg-progress-bar"
+                        ng-style="{'width': c.progress + '%'}">
+                    </div>
+                </div>
+
+                <div class="vg-progress-percent">
+                    {{c.progress}}%
+                </div>
+
+            </div>
+
+
+            <!-- SELECTED FILES -->
+            <div
+                class="vg-selected-files"
+                ng-if="c.selectedFiles.length > 0">
+
+                <div class="vg-selected-title">
+                    Selected Files
+                </div>
+
+                <div
+                    class="vg-selected-file"
+                    ng-repeat="file in c.selectedFiles track by $index">
+
+                    <span class="glyphicon glyphicon-file"></span>
+
+                    <span class="vg-file-name">
+                        {{file.name}}
+                    </span>
+
+                    <span class="vg-file-size">
+                        {{c.formatFileSize(file.size)}}
+                    </span>
+
+                    <button
+                        type="button"
+                        class="vg-remove-selected"
+                        ng-click="c.removeSelected($index)">
+
+                        ×
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT - DOCUMENT CHECKLIST -->
+        <div class="vg-checklist-column">
+
+            <div class="vg-checklist">
+
+                <!-- CHECKLIST HEADER -->
+                <div class="vg-checklist-header">
+                    <span class="glyphicon glyphicon-check"></span>
+                    <span>Document Checklist</span>
+                </div>
+
+
+                <!-- DOCUMENTS -->
+                <div
+                    class="vg-document"
+                    ng-repeat="doc in c.documents track by doc.key">
+
+
+                    <!-- DOCUMENT INFORMATION -->
+                    <div class="vg-document-info">
+
+                        <div class="vg-document-name">
+                            {{doc.name}}
+                        </div>
+
+
+                        <!-- UPLOADED FILE -->
+                        <div
+                            class="vg-uploaded-file"
+                            ng-if="doc.uploaded">
+
+                            <span class="glyphicon glyphicon-paperclip"></span>
+
+                            <a
+                                ng-if="doc.url"
+                                ng-href="{{doc.url}}"
+                                target="_blank">
+
+                                {{doc.file_name}}
+
+                            </a>
+
+                            <span ng-if="!doc.url">
+                                {{doc.file_name}}
+                            </span>
+
+                            <span class="vg-file-size-small">
+                                ({{c.formatFileSize(doc.size)}})
+                            </span>
+
+                        </div>
+
+
+                        <!-- MISSING -->
+                        <div
+                            class="vg-required"
+                            ng-if="!doc.uploaded">
+
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+
+                            Document Required
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS / ACTIONS -->
+                    <div class="vg-document-action">
+
+                        <span
+                            class="vg-status-uploaded"
+                            ng-if="doc.uploaded">
+
+                            Uploaded
+
+                        </span>
+
+                        <button
+                            type="button"
+                            class="vg-upload-small"
+                            ng-if="doc.uploaded"
+                            ng-click="c.uploadForDocument(doc)">
+
+                            Re-upload
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="vg-delete-file"
+                            ng-if="doc.uploaded"
+                            ng-click="c.deleteAttachment(doc)">
+
+                            Delete
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="vg-upload-small"
+                            ng-if="!doc.uploaded"
+                            ng-click="c.uploadForDocument(doc)">
+
+                            Upload
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ATTACHMENTS NOT MATCHING CHECKLIST -->
+                <div
+                    class="vg-other-documents"
+                    ng-if="c.otherAttachments.length > 0">
+
+                    <div class="vg-other-title">
+                        Other Uploaded Documents
+                    </div>
+
+                    <div
+                        class="vg-other-file"
+                        ng-repeat="file in c.otherAttachments">
+
+                        <span class="glyphicon glyphicon-paperclip"></span>
+
+                        <a
+                            ng-href="{{file.url}}"
+                            target="_blank">
+
+                            {{file.file_name}}
+
+                        </a>
+
+                        <span class="vg-other-size">
+                            {{c.formatFileSize(file.size)}}
+                        </span>
+
+                        <button
+                            type="button"
+                            class="vg-delete-file"
+                            ng-click="c.deleteAttachment(file)">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="vg-upload-footer">
+
+        <span class="glyphicon glyphicon-info-sign"></span>
+
+        Documents uploaded here will be securely attached to this visa case.
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>7abcb131a86603107f446d9f3e09f65f</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:23:35</sys_created_on>
+        <sys_id>3ebc3531a86603107f446d9f3e09f622</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:23:35</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

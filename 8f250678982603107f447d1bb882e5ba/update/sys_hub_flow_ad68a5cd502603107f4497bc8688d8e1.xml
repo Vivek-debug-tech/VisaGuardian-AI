@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,timeFromCreateToActivate=3105000,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Automates the lifecycle of a Visa Case by assigning advisors, creating a risk assessment, Setting due dates, updating case status, and notifying stakeholders.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source/>
+        <internal_name>visa_case_management_flow</internal_name>
+        <label_cache>[{"name":"Created_1.current","label":"Trigger - Record Created➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{"f2baf4d4-d7d4-452f-8488-16349d4b4a71":["visa_case"],"ba6653f7-4738-4fcf-8946-decf6d4e94eb":["record"],"28e3c2c0-43bc-42d8-90f9-68fa140affcb":["record"],"9400a5ac-73f9-4176-98d4-518be59a0c41":["record"]},"attributes":{}}]</label_cache>
+        <master_snapshot>fb347d0950a603107f4497bc8688d8f2</master_snapshot>
+        <master_snapshot_digest/>
+        <name>Visa Case Management Flow </name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>4844bd0950a603107f4497bc8688d847</remote_trigger_id>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 05:59:19</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>ad68a5cd502603107f4497bc8688d8e1</sys_id>
+        <sys_mod_count>26</sys_mod_count>
+        <sys_name>Visa Case Management Flow </sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_hub_flow_ad68a5cd502603107f4497bc8688d8e1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:05:29</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record>2a671194bc7603107f44871762fe8dba</version_record>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_variable_value action="delete_multiple" query="document_key=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_snc_visaguardi_0_visa_case">^EQ<item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>false</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4844bd0950a603107f4497bc8688d847</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <table>x_snc_visaguardi_0_visa_case</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <data>{"run_on_extended":"false","run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any"}</data>
+        <identifier>ad68a5cd502603107f4497bc8688d8e1</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>0844bd0950a603107f4497bc8688d855</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:58</sys_updated_on>
+        <trigger display_value="">4844bd0950a603107f4497bc8688d847</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=ad68a5cd502603107f4497bc8688d8e1^sys_idNOT IN0844bd0950a603107f4497bc8688d855"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=ad68a5cd502603107f4497bc8688d8e1^sys_idNOT IN6d68a5cd502603107f4497bc8688d8e4"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>ad68a5cd502603107f4497bc8688d8e1</id>
+        <name>Visa Case Management Flow </name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 05:59:19</sys_created_on>
+        <sys_id>6d68a5cd502603107f4497bc8688d8e4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 05:59:19</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=6d68a5cd502603107f4497bc8688d8e4"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=ad68a5cd502603107f4497bc8688d8e1^sys_idNOT IN21986101506603107f4497bc8688d846,c1982101506603107f4497bc8688d894"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name,uiTypeLabel=Table Name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Visa Case Management Flow ">ad68a5cd502603107f4497bc8688d8e1</model>
+        <model_id>ad68a5cd502603107f4497bc8688d8e1</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_ad68a5cd502603107f4497bc8688d8e1</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:00:09</sys_created_on>
+        <sys_id>21986101506603107f4497bc8688d846</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:04</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=21986101506603107f4497bc8688d846"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id,uiTypeLabel=Document ID</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Visa Case Management Flow ">ad68a5cd502603107f4497bc8688d8e1</model>
+        <model_id>ad68a5cd502603107f4497bc8688d8e1</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_ad68a5cd502603107f4497bc8688d8e1</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:00:06</sys_created_on>
+        <sys_id>c1982101506603107f4497bc8688d894</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:04</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=c1982101506603107f4497bc8688d894"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_ad68a5cd502603107f4497bc8688d8e1</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:00:10</sys_created_on>
+        <sys_id>3d986101506603107f4497bc8688d84c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:00:10</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_ad68a5cd502603107f4497bc8688d8e1</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:00:09</sys_created_on>
+        <sys_id>ad986101506603107f4497bc8688d826</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:00:09</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_ad68a5cd502603107f4497bc8688d8e1"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Automates the lifecycle of a Visa Case by assigning advisors, creating a risk assessment, Setting due dates, updating case status, and notifying stakeholders.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>visa_case_management_flow</internal_name>
+        <label_cache>[{"name":"Created_1.current","label":"Trigger - Record Created➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{"f2baf4d4-d7d4-452f-8488-16349d4b4a71":["visa_case"],"ba6653f7-4738-4fcf-8946-decf6d4e94eb":["record"],"28e3c2c0-43bc-42d8-90f9-68fa140affcb":["record"],"9400a5ac-73f9-4176-98d4-518be59a0c41":["record"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>Visa Case Management Flow </name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="Visa Case Management Flow ">ad68a5cd502603107f4497bc8688d8e1</parent_flow>
+        <remote_trigger_id/>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>fb347d0950a603107f4497bc8688d8f2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_variable_value action="delete_multiple" query="document_key=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=fb347d0950a603107f4497bc8688d8f2^sys_idNOT IN77347d0950a603107f4497bc8688d8f4"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>fb347d0950a603107f4497bc8688d8f2</id>
+        <name>Visa Case Management Flow </name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_id>77347d0950a603107f4497bc8688d8f4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=77347d0950a603107f4497bc8688d8f4"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=fb347d0950a603107f4497bc8688d8f2^sys_idNOT IN3f34bd0950a603107f4497bc8688d822,73347d0950a603107f4497bc8688d8f6"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name,uiTypeLabel=Table Name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</model>
+        <model_id>fb347d0950a603107f4497bc8688d8f2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_fb347d0950a603107f4497bc8688d8f2</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_id>3f34bd0950a603107f4497bc8688d822</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=3f34bd0950a603107f4497bc8688d822"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id,uiTypeLabel=Document ID</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</model>
+        <model_id>fb347d0950a603107f4497bc8688d8f2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_fb347d0950a603107f4497bc8688d8f2</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_id>73347d0950a603107f4497bc8688d8f6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=73347d0950a603107f4497bc8688d8f6"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=fb347d0950a603107f4497bc8688d8f2^sys_idNOT IN8044bd0950a603107f4497bc8688d837"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>8044bd0950a603107f4497bc8688d837</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/9VYXW/iOBT9K1GediVGygeU0rdZ2tFW6rZaysw+VN3IiW2w1jhM7KRlRv3ve50PCPmgUKBDXyrF1/U99/j4XJuHnyZHPuHmhTlGPidmx2RCkUggPl7MCQwrPewJNNOxGRIYqTBamBcqiknHpFE4G5PZnCMFkyniEgbDCJPIvLA7ZoJ4TO4X8hrDSvD/6TL5mmYehu9nT4rAS5hEkxhFmHlW+uEFSOppmElIsPiWz/4GIWMIIQmxYMo4jogwLx4eO+YcRZBB6ew/KyEF5XhrtRq3WVFMgwtogAYOsQLXdh3Hspzzru2fub7tYBcRy4J5VaIqxagGvlZMkGdFBCZ4SVKNyoggfCf4YjljCjuR0TZDz5L9gNXPLT2PEqgqIFls+enlNGXDwTRkAbmbKxaKbCTDmQVDHs/EbYZfE0woirkqCIaRWMJ6ZK4haxA5Ino/DZ9GRcIvTKTV5UEeBogvv5BSEfNjBZsEW0EZh03xMm5kGEcp+tHV8G506f3zeTz882rkja7ux6Pr4fjq0nxJ6/K+x3rFDGGOxcvKeVmq4gsjXG+giGc+oOmYMojYXH0OFEsKSb50VjIfhgKzlJWa1IMiJNelXlS/SeuW1ar2oJSxUPy/V3/XhZ0Nvk3RwzL2VNFnZwhhgloU7dOSosucNIBWDfSU696k7XxkG3F3LesXyTv3sreqexZiwi9Xy5kQnExA70zMY6XZekJCSU+FHsLYK/GopwKm1+Se1fbyqrajWMA/eMv9qCs8pW3J3w2TAPcBzuc9+R5npH8Cs6IFVWkGmE5v8gyjWBgh7CP8MYI4AqaUURggvZ6hSU4wLMhJoEqaoF9l+esvJiUTk1IRbRhShmoQltlBakZRcAZF7onl8ZCHv74lSYXbigm83QGKvU1Pv21T6hPqWH199m3L9alt9a0eoti1rMApnf46xFbsqiKjo7jAbh4gUwHzLfRZJT4Hb5VP0FbiStaVWZCghZNbzfAw0OwDQXM0tIplujt55lKs2fDlumY3lXbgmwTCCYL/wNta55auSXn4BHa9v2P6KPhvEoWxwFXP0ikMJozVDOO3nM7fj+eeNIzIZjzrM07JN1ebUsgaicXRHNOltj8gXWKBUbrgkX5vMPAD5FDaP+sTx6445gpcI+IP4ZSvSDJp0nSbazbKKWlS4Q5+uQfAmnfuDHB/18zl2uiZWexjuOPTlAgPoEYe1/5XM8kJZ5gUscN6QC11sjr1h/KBm7wonZ2eD4Ke3e8HfXgxgQvQLvGR3XV6aNA/c897FReowdsEXTWw9S7vKLmQKZAWh/iahU7rJ4NjSlkSpXTj2rvbC7gep0ugLGepxepdMlLfCSPjNhSfrlfzjHsCnTN9Wx+p7W8DSm+78a6o/FBNa9cQQPIHjK8h0ZfbFs5O7nVXUVSyXuuRXneke94bULfZpeigyaVWENvBn/ytZctTlbSez6bry7anImk8XK33jTcIuyKe8kVkw03pUKTYByfFOR4p7t63s+KEtj5p3wL2A3XB9GpywFaoIRAvpGWHvwwNCBiQ02DUyH8XJdjwF4aaEmCYw60c8hsazL7WvqHz1JEt9f1LcWWvgFpDhGEjv7CdXq+r6OY93uYE91Gv57bcygfVt3kTzFeqOPnOt/NJSpoO5sb2t9u61TUbG2BJyOs62bK1HbTq5v62X9WNHe61qvfvXZt+WWhAcaJd6fF/+IRHzn8gAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=fb347d0950a603107f4497bc8688d8f2^sys_idNOT IN0844bd0950a603107f4497bc8688d833,8444bd0950a603107f4497bc8688d834,4c44bd0950a603107f4497bc8688d834,0c44bd0950a603107f4497bc8688d835"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>0844bd0950a603107f4497bc8688d833</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <ui_id>f2baf4d4-d7d4-452f-8488-16349d4b4a71</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9VVy25aMRD9FeT1DfKFBBF2UaKs2kRKqmzSYA32AFZ9H/WDhCL+veNrQ1Aeait1A2LjmTP2OceeuY8bphWbsFGJ/Oy8HMlhORwOOB+MT8vZaDgrB2oIiKesYDVUSEgPM4OiWxRsBSbE4ItwtRQr7WARwCotuLDa/RDgHDpXYe0JrLRrDawfcs0dAXoXe4AjhFxqoyzWbPL4VLAWLJ3i0bLJ5k3qbzkbmKEh6LdI+hMNft1+GPtyWNu7SYnGqsiHFwxfPNYKicgcjMOCVVAr8I1ds4m3gQIWQd3WZr1HLDX5MGEsYl+c/kXHjnnEzZGUSUy5/VJkw1J4fgUe7mln6YPNULlstESXPFE4h2D85WEsAW5br5s6lXQyc3VjQlXfJEvYfoPd/VAkOCKBbdQZmWcZ8/tl83y3Y3mt686SnDSNBLNfgfdWz4KPfDYMDcabFhW0ra4XorXNSnfFxKXqLwwt+nPTPNOhTi/qPshIvE+2Qv+a4ldd+AGsjiq+0jZUvC2YW7tLQ2/tVQuZKH6GyCQpyxpEsiGWSKtbf0EHrDDT3Ra7ZlDIzz99WOXs9SF1798dNEJsASHB4ffA+VBtNpf0CjwqUfZlsGSY326nXWsYXKFJKFI2JQNaoyFeu5ONzfV8+tpBwnnwwaVE1EMWTivtXLRSNTJ0XSRkE2q/qyZT/EETCnIy7zzgg9EJH5/ws15ZTjin//sWPXI1/zhO/nzru3FyrdEo98Ez2M0SJPlETqRn8Wae5GTvISfzTCn/10wpR7z7HdFkSeKOfrAcfEM+GTFPvwFrr4LccQcAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=0844bd0950a603107f4497bc8688d833"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>8444bd0950a603107f4497bc8688d834</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <ui_id>ba6653f7-4738-4fcf-8946-decf6d4e94eb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VVW2vbMBT+K0HPJshx4rp5KwmFja6FduRlKUKW5EQgy54kp81C/vuOZTkNbelS6EuY387V3/nORb92SHI0RWPBcXwZpyyJk2SE8Sgbx3ma5PGIJ1SIGEVI01KApxGsMhzkDVVNq9jtZkZQJziJh6wxRmi334OdS1srul0EN9CwtVQc7Gj66zFCNTWQ0QmDprtXplMhKZoLBa73PabXGN22bmVesaYEXET2ypsQOQ+Wwbc5WCCohRPjCIlnJzQXAKSgyooIlVRz6iqzRVNnGlBA0fxOq+3BYy216wot6bOVf+DPY9z6FQIqY4GEg0gCQZ26mFNHHyAzc4058FVJJmzHCRcFbZSbHes6h7vayUp3IY7mqo+uVFPq244RdEhw1I/GAghRt3W2yLuyiod19XTfg7yW2lMSSlQVo+ogUeeMzBvXwtkhoYTnuKR1LfWK1KbaSB8MUMrhSoEwLFT1BP+0cqWHlLW4h8AqHV6Dfu7VC2pkW8QPSAPB+wjZrZ0pau1LKcAh+d20SLrCQgnEs+ApIH4S2mBmZO2u4FcbEYDvozD0+eSjCWOXLwN1lPNl8J+J1YxspKWrhhouCfYCYdSKt/O/ANNgBib76U04AWe/CT99/9/HHZbhje7mOHZw2xnCKky+bBWyc1qFUMbZ78K/NgCPPryxR5Pkh94eTT+AAIRw9V21bDBO+G7Zj/wSTZfoe7XWgysOG1GZJYqWXaA3ZRd5nsbZZILTFCcxvijG48uLnGVplvGswN7dt8+7Q80E+tNlaQXJT0zzzjN0LrA/dyFO6GN/Ia6lUNy+09j+PIgSyHCCdI1+dSKCcbAIxsOL+WV3Ik6x/87oWvw3D+fjXzj/hU4vCgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8444bd0950a603107f4497bc8688d834"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>4c44bd0950a603107f4497bc8688d834</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <ui_id>28e3c2c0-43bc-42d8-90f9-68fa140affcb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VVTW/aQBD9K2jPBK1tggi3CBSpUppIScUlTaxhd4CV1h/dDwJF/PeO7TUgEqWJmktUxGVmdmbfe55nP2yZkmzE+ih5dBENRBIlScx5POxHs0Eyi2KZAGLEuiyHDOmkQVEYSfEKtK8S2+3YIDiUadQT3hjM3W5HdalsqWEzDccoI5ZKS6qz0cNjl5VgaKJDw0bbk9J7IWmYoaajdy2mU4xuU1axLITPCFeq2uR16JyESufbhCrUVMGJeJfh2mEukYDMQVvssgxyCa4wGzZyxlOCSMvbXG/2J5Yqdw3RDNZW/aab+7w6N0diJoII+zANAjXp+QQc3NNk4bzZ61UogbbRROIcvHbj41xz4LZ0qsibFgcz3XYX2mf5TaMI2w84eh7eEggsK54V8obW/H5ZPN+1IK9UXksSKOpCgN5H4JxRM+8qOFuGGmuNMyhLlS/S0hQrVTcTlKy30BT05rp4pjutWuQ9EBXuHqkKvSvKT+r0FIyqSHynMdS86zK7sWMN1h6okIbpL18haYgFCmmtQi1BWm9C1SyMKt0lXbXCAHzXDUs/O39rw8TFYaGOZh4Wf53aXKQrZWHhwUiV8jpIBVh8uf9TKnXGVLIfdsI7cLZO+FE//9dxBzO8yF0f93ZumkKwwvmnWWH4lawQaHx5L/zNATx+8x17tEn10tuj7beO3vk/PeeJjJ9Kowqj3KaJkyfpSc5DnceDMz48i+JOFI84p/9Lf/zzvI956h3MW09dKdTSviJFayjMiIjDtJHmxFSh2JmG4v4b82nOiga8/n0hf/03n5rHP1LgMjhhCQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4c44bd0950a603107f4497bc8688d834"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Notification">0d8dd9f10f11101051218e8ebc767e27</action_type>
+        <action_type_parent display_value="Send Notification">7eda5d710f11101051218e8ebc767ec1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>0d8dd9f10f11101051218e8ebc767e27</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Visa Case Management Flow ">fb347d0950a603107f4497bc8688d8f2</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_id>0c44bd0950a603107f4497bc8688d835</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <ui_id>9400a5ac-73f9-4176-98d4-518be59a0c41</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9WW207jMBCGXwXluqlyapNyh0BISCxIwHKDUDSxx8WSc8BxCt2Kd99xkp6gHHdZaS89Pv3zz3xxbhaO5M6+E/GE84nwPeH7vud7Iz/wE0wwY/E4xiBxBk4BOdJKjazUnMYzUI0NLBaHGsEgT/0ha7TGwjw90TyXdaVgft0vowi7k4rTvLN/cztwKtB0okHt7C+eTX1UkoIMFS29WGp6rtHMKzvmJWty0pXKZfC033nUz+ydHNEMbbJy/IGDjwYLjqRDgKpx4ORQcDClnq8ilDQ/L9Q6cCcL0yWaw2Mtf9HNYWDXCaTMWG/Capj2BnVhcQQGLo1umGn0yq9SMqw7TzgKaJQ53Ix1C84rI8ui22IgU8vdpWry4qxzxFkdsFGPpiYRWNlErXK6nLIQl3flw8VS5LEsWkv6FFXJQK1GYIyWWWOsnIXTyKtdbnfh3X6jwnZhDlUli2la6XIm2/tIfT6cKhoMhSofSGYtp8UQmE11SJWA4THFj9rwNWhp8/5Bx9Bme+fPQt43eGL7iPteHE485sbBKHQjj4GbJTxzIQvEKIrGyTjznaeBU8/rQwV1vXaMSpXeNzbhzr/eqbQ1u3U6bRvObmZaVuaA5M2w9+dp0LOV+G81chis+3bjzDVfj2ldsHQma5g2oLlMvXaQMqjxJWbXNLV3SFP1p4H7gM4lcFdtm+3W3TP3Ina6uXfvrJvoiQs+SVzXqjuAS7z/CLg+rT8nbsvrbeC23P4nvLEsy0SGE9fPGHOjGBM3CSB2ceSxUASh58XiC7y9R1n0dvduvGBFaaSQDNoirjnzQvCyUeKPPBh7IX00RBRN4owl4yThiXiLtb2D2vqC/POP3Puql8ydbcvenUwP3xqBbfYuNuI9euHb6HWkfeWto/rizJYPc5Aq7VrpFR6f5faX2XxNyRawIAQy+xcjJCpOPZe2e77l4RSXCJrdHdubbA07Orfh3iosIU53vIB7s5zfx/bVy56q0aS9Lak9IBWlzsF2RJvh809CNPExDoPEnYwD+iRgOHIzHoauT58IREAR8O95gm9/AwMnBQrgCgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=0c44bd0950a603107f4497bc8688d835"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_fb347d0950a603107f4497bc8688d8f2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_id>7334bd0950a603107f4497bc8688d829</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_fb347d0950a603107f4497bc8688d8f2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:05</sys_created_on>
+        <sys_id>7734bd0950a603107f4497bc8688d81e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:05</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_fb347d0950a603107f4497bc8688d8f2"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>ad68a5cd502603107f4497bc8688d8e1</sys_id>
+        <latest_snapshot>fb347d0950a603107f4497bc8688d8f2</latest_snapshot>
+        <compiler_build>glide-australia-02-11-2026__patch2-04-17-2026_04-29-2026_2044.zip</compiler_build>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=ad68a5cd502603107f4497bc8688d8e1^sys_idNOT IN0044bd0950a603107f4497bc8688d858"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan>{"@class":"com.snc.process_flow.engine.serialization.plan_data.ChunkingPlanData","chunk_data":{"table":"sys_flow_trigger_plan","id":"0044bd0950a603107f4497bc8688d858","name":"plan","plan_signature":null},"plan_data":"CHUNKING_PLAN"}</plan>
+        <plan_id>ad68a5cd502603107f4497bc8688d8e1</plan_id>
+        <snapshot>93a12241506e03107f4497bc8688d822</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>0044bd0950a603107f4497bc8688d858</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <trigger display_value="">4844bd0950a603107f4497bc8688d847</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=ad68a5cd502603107f4497bc8688d8e1"/>
+</record_update>

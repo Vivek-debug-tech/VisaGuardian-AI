@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_gen_ai_feature_mapping">
+    <sys_gen_ai_feature_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <customer_updatable>true</customer_updatable>
+        <default_tier>false</default_tier>
+        <document>962d65c0013a43107f44f465f050133e</document>
+        <document_table>sys_one_extend_capability</document_table>
+        <feature_name>AI Recommendations</feature_name>
+        <licensable>true</licensable>
+        <metadata/>
+        <skip_on_group_call>false</skip_on_group_call>
+        <sys_class_name>sys_gen_ai_feature_mapping</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 14:01:54</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6e2d65c0013a43107f44f465f0501343</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AI Recommendations</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_gen_ai_feature_mapping_6e2d65c0013a43107f44f465f0501343</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 14:01:54</sys_updated_on>
+        <tier/>
+    </sys_gen_ai_feature_mapping>
+    <sys_translated_text action="delete_multiple" query="documentkey=6e2d65c0013a43107f44f465f0501343"/>
+</record_update>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_column">
+    <sp_column action="DELETE">
+        <aria_label/>
+        <class_name/>
+        <order>1</order>
+        <semantic_tag/>
+        <size>12</size>
+        <size_lg/>
+        <size_sm/>
+        <size_xs/>
+        <sp_row display_value="1">7ac307c359ae43107f44df2ba8a19b23</sp_row>
+        <sys_class_name>sp_column</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:46:29</sys_created_on>
+        <sys_id>b6c34b4b59ae43107f44df2ba8a19b7f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>1</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_column_b6c34b4b59ae43107f44df2ba8a19b7f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 17:46:29</sys_updated_on>
+    </sp_column>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sp_column_b6c34b4b59ae43107f44df2ba8a19b7f</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_column"><sp_column action="INSERT_OR_UPDATE"><aria_label/><class_name/><order>1</order><semantic_tag/><size>12</size><size_lg/><size_sm/><size_xs/><sp_row display_value="1">7ac307c359ae43107f44df2ba8a19b23</sp_row><sys_class_name>sp_column</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-11 17:46:29</sys_created_on><sys_id>b6c34b4b59ae43107f44df2ba8a19b7f</sys_id><sys_mod_count>0</sys_mod_count><sys_name>1</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sp_column_b6c34b4b59ae43107f44df2ba8a19b7f</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-11 17:46:29</sys_updated_on></sp_column></record_update>]]></payload>
+        <payload_hash>-1261829230</payload_hash>
+        <record_name>1</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:46:29</sys_created_on>
+        <sys_id>7ec34b4b59ae43107f44df2ba8a19b81</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19ff1eed5390000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 17:46:29</sys_updated_on>
+        <type>Column</type>
+        <update_guid>72c34b4bd6ae4310fdf4904a81b56681</update_guid>
+        <update_guid_history>72c34b4bd6ae4310fdf4904a81b56681:-1261829230</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="1">9c34078b59ae43107f44df2ba8a19bd5</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:48:14</sys_created_on>
+        <sys_db_object display_value="" name="sp_column">sp_column</sys_db_object>
+        <sys_id>15a83e6985ee4c1882417312200fee29</sys_id>
+        <sys_metadata>b6c34b4b59ae43107f44df2ba8a19b7f</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>1</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sp_column_b6c34b4b59ae43107f44df2ba8a19b7f</sys_update_name>
+        <sys_update_version display_value="sp_column_b6c34b4b59ae43107f44df2ba8a19b7f">7ec34b4b59ae43107f44df2ba8a19b81</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 17:48:14</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

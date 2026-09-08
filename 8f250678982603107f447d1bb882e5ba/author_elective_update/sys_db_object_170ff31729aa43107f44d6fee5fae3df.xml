@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_db_object">
+    <sys_db_object action="DELETE">
+        <access>public</access>
+        <actions_access>false</actions_access>
+        <alter_access>false</alter_access>
+        <caller_access/>
+        <client_scripts_access>false</client_scripts_access>
+        <configuration_access>false</configuration_access>
+        <create_access>false</create_access>
+        <create_access_controls>true</create_access_controls>
+        <delete_access>false</delete_access>
+        <filter_extension/>
+        <is_data_interface>false</is_data_interface>
+        <is_df_table>false</is_df_table>
+        <is_extendable>false</is_extendable>
+        <label>Advisor Profile</label>
+        <live_feed_enabled>false</live_feed_enabled>
+        <name>x_snc_visaguardi_0_advisor_profile</name>
+        <number_ref/>
+        <provider_class/>
+        <read_access>true</read_access>
+        <scriptable_table>false</scriptable_table>
+        <super_class/>
+        <sys_class_name>sys_db_object</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 16:44:31</sys_created_on>
+        <sys_id>170ff31729aa43107f44d6fee5fae3df</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Advisor Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_db_object_170ff31729aa43107f44d6fee5fae3df</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 16:44:31</sys_updated_on>
+        <update_access>false</update_access>
+        <user_role display_value="x_snc_visaguardi_0.advisor_profile_user" name="x_snc_visaguardi_0.advisor_profile_user">fb3b2638986a03107f447d1bb882e5a1</user_role>
+        <ws_access>true</ws_access>
+    </sys_db_object>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_db_object_170ff31729aa43107f44d6fee5fae3df</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_db_object"><sys_db_object action="INSERT_OR_UPDATE"><access>public</access><actions_access>false</actions_access><alter_access>false</alter_access><caller_access/><client_scripts_access>false</client_scripts_access><configuration_access>false</configuration_access><create_access>false</create_access><create_access_controls>true</create_access_controls><delete_access>false</delete_access><filter_extension/><is_data_interface>false</is_data_interface><is_df_table>false</is_df_table><is_extendable>false</is_extendable><label>Advisor Profile</label><live_feed_enabled>false</live_feed_enabled><name>x_snc_visaguardi_0_advisor_profile</name><number_ref/><provider_class/><read_access>true</read_access><scriptable_table>false</scriptable_table><super_class/><sys_class_name>sys_db_object</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-12 16:44:31</sys_created_on><sys_id>170ff31729aa43107f44d6fee5fae3df</sys_id><sys_mod_count>0</sys_mod_count><sys_name>Advisor Profile</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sys_db_object_170ff31729aa43107f44d6fee5fae3df</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-12 16:44:31</sys_updated_on><update_access>false</update_access><user_role display_value="x_snc_visaguardi_0.advisor_profile_user" name="x_snc_visaguardi_0.advisor_profile_user">fb3b2638986a03107f447d1bb882e5a1</user_role><ws_access>true</ws_access></sys_db_object></record_update>]]></payload>
+        <payload_hash>-1963861181</payload_hash>
+        <record_name>Advisor Profile</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 16:44:34</sys_created_on>
+        <sys_id>7d3ffb1729aa43107f44d6fee5fae3e6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19ff6dc82d60000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 16:44:34</sys_updated_on>
+        <type>Table</type>
+        <update_guid>713ffb17f2aa431072d3f179c2491be6</update_guid>
+        <update_guid_history>713ffb17f2aa431072d3f179c2491be6:-1963861181</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 17:26:37</sys_created_on>
+        <sys_db_object display_value="" name="sys_db_object">sys_db_object</sys_db_object>
+        <sys_id>00d69f6c4a92499d8afa665e6b5e2c49</sys_id>
+        <sys_metadata>170ff31729aa43107f44d6fee5fae3df</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Advisor Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_db_object_170ff31729aa43107f44d6fee5fae3df</sys_update_name>
+        <sys_update_version display_value="sys_db_object_170ff31729aa43107f44d6fee5fae3df">7d3ffb1729aa43107f44d6fee5fae3e6</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 17:26:37</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_one_extend_capability">
+    <sys_one_extend_capability action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description>ACTION ROUTING RULES
+
+When the student asks for current visa information or available
+visa cases, use Get Current Student Visa Case Context.
+
+When the student asks to summarize, review, explain, or provide
+an overview of a visa case or visa cases, use Get AI Case Summary.
+
+Summary requests MUST use Get AI Case Summary.
+
+Examples of summary requests:
+- summarize my case
+- summarize my visa case
+- summarize my visa cases
+- summarize all my visa cases
+- can you summarize my case
+- can you summarize my visa cases
+- give me a case summary
+- give me a summary
+- case summary
+- overview of my visa cases
+- review my visa case
+- explain my visa case
+
+Do not route summary requests to Get Current Student Visa Case
+Context.
+
+Examples of current-information requests:
+- what are my current visa cases
+- show my visa cases
+- list my visa cases
+- what is my visa status
+- what is my visa type
+- what is my SEVIS ID
+- when does my visa expire
+
+If the student asks for a summary and does not specify a case
+number, use Get AI Case Summary with the available student
+case context.
+
+If the student provides a specific case number, summarize only
+that case.</description>
+        <external>true</external>
+        <metadata>{"isGuidedStep":false}</metadata>
+        <name>AI Case Summary</name>
+        <offglide_enabled>false</offglide_enabled>
+        <short_description/>
+        <sys_class_name>sys_one_extend_capability</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 18:01:43</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>7fd0982f292e43107f44d6fee5fae32f</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>AI Case Summary</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_one_extend_capability_7fd0982f292e43107f44d6fee5fae32f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 12:58:23</sys_updated_on>
+        <type>skill</type>
+    </sys_one_extend_capability>
+    <sys_translated_text action="delete_multiple" query="documentkey=7fd0982f292e43107f44d6fee5fae32f"/>
+</record_update>

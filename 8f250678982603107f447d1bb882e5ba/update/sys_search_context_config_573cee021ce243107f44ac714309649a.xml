@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_search_context_config">
+    <sys_search_context_config action="INSERT_OR_UPDATE">
+        <attachment_limit>5</attachment_limit>
+        <collapse_attachment>true</collapse_attachment>
+        <document_match_count>3</document_match_count>
+        <document_match_threshold>0.65</document_match_threshold>
+        <enable_exact_match>true</enable_exact_match>
+        <enable_hybrid_search>false</enable_hybrid_search>
+        <enable_semantic_search>false</enable_semantic_search>
+        <evam_definition/>
+        <filter_genius_results_by_search_source>false</filter_genius_results_by_search_source>
+        <genius_results_limit>1</genius_results_limit>
+        <hit_highlighting>false</hit_highlighting>
+        <log_signals_server_side>false</log_signals_server_side>
+        <name>VisaGuardian AI Search Application</name>
+        <search_engine>ai_search</search_engine>
+        <search_profile display_value="VisaGuardian AI Search Profile">f1456ec21ca243107f44ac714309643d</search_profile>
+        <search_results_limit>10</search_results_limit>
+        <semantic_groupby>none</semantic_groupby>
+        <semantic_search_mode>keyword</semantic_search_mode>
+        <semantic_type>standard</semantic_type>
+        <show_disabled_facets>false</show_disabled_facets>
+        <show_tab_counts>true</show_tab_counts>
+        <spell_check>true</spell_check>
+        <suggestions_to_show_limit>10</suggestions_to_show_limit>
+        <sys_class_name>sys_search_context_config</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 13:31:00</sys_created_on>
+        <sys_id>573cee021ce243107f44ac714309649a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>VisaGuardian AI Search Application</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_search_context_config_573cee021ce243107f44ac714309649a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 13:31:00</sys_updated_on>
+        <ts_index_group/>
+        <view/>
+    </sys_search_context_config>
+    <sys_translated_text action="delete_multiple" query="documentkey=573cee021ce243107f44ac714309649a"/>
+</record_update>

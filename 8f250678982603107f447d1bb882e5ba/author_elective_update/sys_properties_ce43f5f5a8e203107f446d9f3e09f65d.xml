@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="DELETE">
+        <choices/>
+        <description>If true, portal css would be in rem units</description>
+        <ignore_cache>true</ignore_cache>
+        <is_private>false</is_private>
+        <name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</name>
+        <read_roles/>
+        <suffix/>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:42:17</sys_created_on>
+        <sys_id>ce43f5f5a8e203107f446d9f3e09f65d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_properties_ce43f5f5a8e203107f446d9f3e09f65d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:42:17</sys_updated_on>
+        <type>boolean</type>
+        <value>true</value>
+        <write_roles/>
+    </sys_properties>
+    <sys_translated_text action="DELETE" query="documentkey=ce43f5f5a8e203107f446d9f3e09f65d"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_properties_ce43f5f5a8e203107f446d9f3e09f65d</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties"><sys_properties action="INSERT_OR_UPDATE"><choices/><description>If true, portal css would be in rem units</description><ignore_cache>true</ignore_cache><is_private>false</is_private><name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</name><read_roles/><suffix/><sys_class_name>sys_properties</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-07 14:42:17</sys_created_on><sys_id>ce43f5f5a8e203107f446d9f3e09f65d</sys_id><sys_mod_count>0</sys_mod_count><sys_name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sys_properties_ce43f5f5a8e203107f446d9f3e09f65d</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-07 14:42:17</sys_updated_on><type>boolean</type><value>true</value><write_roles/></sys_properties><sys_translated_text action="delete_multiple" query="documentkey=ce43f5f5a8e203107f446d9f3e09f65d"/></record_update>]]></payload>
+        <payload_hash>-1655244645</payload_hash>
+        <record_name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:42:18</sys_created_on>
+        <sys_id>c243f5f5a8e203107f446d9f3e09f67c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fdcacc6970000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:42:18</sys_updated_on>
+        <type>System Property</type>
+        <update_guid>4643f5f527e20310a63a2b34ecf58862</update_guid>
+        <update_guid_history>4643f5f527e20310a63a2b34ecf58862:-1655244645</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 10:38:36</sys_created_on>
+        <sys_db_object display_value="" name="sys_properties">sys_properties</sys_db_object>
+        <sys_id>ca04b3899abe4800a2af51857b190000</sys_id>
+        <sys_metadata>ce43f5f5a8e203107f446d9f3e09f65d</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>glide.service_portal.resize_text.visaguardian.enable_rem_conversion</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_properties_ce43f5f5a8e203107f446d9f3e09f65d</sys_update_name>
+        <sys_update_version display_value="sys_properties_ce43f5f5a8e203107f446d9f3e09f65d">c243f5f5a8e203107f446d9f3e09f67c</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 10:38:36</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

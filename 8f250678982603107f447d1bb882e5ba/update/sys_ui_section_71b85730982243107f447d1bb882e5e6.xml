@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_section caption="Case Overview" section_id="71b85730982243107f447d1bb882e5e6" sys_domain="global" table="x_snc_visaguardi_0_visa_case" version="3" view="">
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>number</element>
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>9f4b0471142603107f44d3bd3b5dc747</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>student</element>
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>df4b0471142603107f44d3bd3b5dc748</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>case_type</element>
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>1b4b0471142603107f44d3bd3b5dc749</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>state</element>
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>534b0471142603107f44d3bd3b5dc74a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>short_description</element>
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>9b4b0471142603107f44d3bd3b5dc74a</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>visa_category</element>
+            <position>5</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>d34b0471142603107f44d3bd3b5dc74b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>priority</element>
+            <position>6</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>1f4b0471142603107f44d3bd3b5dc74b</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>close_notes</element>
+            <position>7</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>574b0471142603107f44d3bd3b5dc74c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>submission_date</element>
+            <position>8</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>9f4b0471142603107f44d3bd3b5dc74c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>documents_submitted</element>
+            <position>9</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>d74b0471142603107f44d3bd3b5dc74d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>advisor</element>
+            <position>10</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>134b0471142603107f44d3bd3b5dc74e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_element action="INSERT_OR_UPDATE">
+            <element>dso</element>
+            <position>11</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-07 07:08:01</sys_created_on>
+            <sys_id>5b4b0471142603107f44d3bd3b5dc74e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_ui_formatter/>
+            <sys_ui_section caption="Case Overview" display_value="Case Overview" name="x_snc_visaguardi_0_visa_case" sys_domain="global" view="Default view">71b85730982243107f447d1bb882e5e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-07 07:08:01</sys_updated_on>
+            <sys_user/>
+            <type/>
+        </sys_ui_element>
+        <sys_ui_section action="INSERT_OR_UPDATE">
+            <caption>Case Overview</caption>
+            <header>false</header>
+            <name>x_snc_visaguardi_0_visa_case</name>
+            <roles/>
+            <sys_class_name>sys_ui_section</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:31:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>71b85730982243107f447d1bb882e5e6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_snc_visaguardi_0_visa_case</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+            <sys_update_name>sys_ui_section_71b85730982243107f447d1bb882e5e6</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:31:33</sys_updated_on>
+            <sys_user/>
+            <title>false</title>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_section>
+    </sys_ui_section>
+</record_update>

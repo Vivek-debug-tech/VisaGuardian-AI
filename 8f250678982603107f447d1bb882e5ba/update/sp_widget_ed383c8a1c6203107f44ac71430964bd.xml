@@ -1,0 +1,8892 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $timeout, $window) {
+
+    var c = this;
+
+
+    // =====================================================
+    // ACTIVE PAGE NAVIGATION
+    // =====================================================
+
+    c.activePage = "";
+
+
+    // =====================================================
+    // GET CURRENT SERVICE NOW PAGE
+    // =====================================================
+
+    function getCurrentPage() {
+
+        var pageId = "";
+
+        try {
+
+            var urlParams =
+                new URLSearchParams(
+                    $window.location.search
+                );
+
+            pageId =
+                urlParams.get("id") || "";
+
+        } catch (e) {
+
+            // Fallback for older browsers
+
+            var match =
+                $window.location.search.match(
+                    /[?&]id=([^&]+)/i
+                );
+
+            if (match && match[1]) {
+
+                pageId =
+                    decodeURIComponent(
+                        match[1]
+                    );
+
+            }
+
+        }
+
+
+        // Remove any unwanted whitespace
+
+        return String(
+            pageId || ""
+        ).trim();
+
+    }
+
+
+    // =====================================================
+    // SET ACTIVE PAGE
+    // =====================================================
+
+    function updateActivePage() {
+
+        var currentPage =
+            getCurrentPage();
+
+
+        // Special handling for Student Help & Support
+
+        if (
+            currentPage ===
+            "student_help_and_support"
+        ) {
+
+            c.activePage =
+                "student_help_and_support";
+
+            return;
+
+        }
+
+
+        // Normal pages
+
+        c.activePage =
+            currentPage;
+
+    }
+
+
+    // =====================================================
+    // INITIAL ACTIVE PAGE
+    // =====================================================
+
+    updateActivePage();
+
+
+    // =====================================================
+    // INITIAL STATE - AI CHAT
+    // =====================================================
+
+    c.aiChatOpen = false;
+
+    c.question = "";
+
+    c.sending = false;
+
+
+    // =====================================================
+    // MESSAGES
+    // =====================================================
+
+    c.data.messages =
+        c.data.messages || [];
+
+
+    // =====================================================
+    // TOGGLE FLOATING AI CHAT
+    // =====================================================
+
+    c.toggleAIChat = function() {
+
+        c.aiChatOpen =
+            !c.aiChatOpen;
+
+
+        if (c.aiChatOpen) {
+
+            $timeout(
+                function() {
+
+                    var input =
+                        document.querySelector(
+                            ".vg-ai-input"
+                        );
+
+
+                    if (input) {
+
+                        input.focus();
+
+                    }
+
+
+                    scrollChatToBottom();
+
+                },
+                100
+            );
+
+        }
+
+    };
+
+
+    // =====================================================
+    // CLOSE CHAT
+    // =====================================================
+
+    c.closeAIChat = function() {
+
+        c.aiChatOpen = false;
+
+    };
+
+
+    // =====================================================
+    // SUGGESTION QUESTION
+    // =====================================================
+
+    c.askSuggestion = function(question) {
+
+        if (!question) {
+
+            return;
+
+        }
+
+
+        c.question =
+            question;
+
+
+        c.sendQuestion();
+
+    };
+
+
+    // =====================================================
+    // SEND QUESTION
+    // =====================================================
+
+    c.sendQuestion = function() {
+
+        var question =
+            String(
+                c.question || ""
+            ).trim();
+
+
+        if (!question) {
+
+            return;
+
+        }
+
+
+        if (c.sending) {
+
+            return;
+
+        }
+
+
+        c.sending = true;
+
+
+        // -------------------------------------------------
+        // ADD USER MESSAGE
+        // -------------------------------------------------
+
+        c.data.messages.push({
+
+            type: "user",
+
+            text: question
+
+        });
+
+
+        // -------------------------------------------------
+        // CLEAR INPUT
+        // -------------------------------------------------
+
+        c.question = "";
+
+
+        // -------------------------------------------------
+        // SEARCHING MESSAGE
+        // -------------------------------------------------
+
+        c.data.messages.push({
+
+            type: "searching",
+
+            text:
+                "VisaGuardian AI is checking your information..."
+
+        });
+
+
+        scrollChatToBottom();
+
+
+        // =================================================
+        // SEND TO SERVER
+        // =================================================
+
+        c.server.get({
+
+            action: "ask",
+
+            question: question
+
+        }).then(
+
+            function(response) {
+
+                c.sending = false;
+
+
+                // -------------------------------------------------
+                // REMOVE SEARCHING MESSAGE
+                // -------------------------------------------------
+
+                removeSearchingMessage();
+
+
+                var result =
+                    response &&
+                    response.data
+                        ? response.data
+                        : null;
+
+
+                // -------------------------------------------------
+                // ERROR
+                // -------------------------------------------------
+
+                if (
+                    !result ||
+                    !result.success
+                ) {
+
+                    c.data.messages.push({
+
+                        type: "error",
+
+                        text:
+                            (
+                                result &&
+                                result.error
+                            ) ||
+                            "I couldn't process your question. Please try again."
+
+                    });
+
+
+                    scrollChatToBottom();
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // AI ANSWER
+                // =================================================
+
+                c.data.messages.push({
+
+                    type: "answer",
+
+                    title:
+                        result.title ||
+                        "VisaGuardian AI",
+
+                    introduction:
+                        result.introduction ||
+                        "",
+
+                    sections:
+                        result.sections ||
+                        [],
+
+                    summary:
+                        result.summary ||
+                        ""
+
+                });
+
+
+                scrollChatToBottom();
+
+            },
+
+
+            // =================================================
+            // SERVER ERROR
+            // =================================================
+
+            function(error) {
+
+                c.sending = false;
+
+
+                removeSearchingMessage();
+
+
+                c.data.messages.push({
+
+                    type: "error",
+
+                    text:
+                        "There was a problem connecting to VisaGuardian AI. Please try again."
+
+                });
+
+
+                console.error(
+                    "VisaGuardian AI Client Error:",
+                    error
+                );
+
+
+                scrollChatToBottom();
+
+            }
+
+        );
+
+    };
+
+
+    // =====================================================
+    // ENTER KEY
+    // =====================================================
+
+    c.handleKeyPress = function(event) {
+
+        if (!event) {
+
+            return;
+
+        }
+
+
+        if (
+            event.which === 13 ||
+            event.keyCode === 13
+        ) {
+
+            event.preventDefault();
+
+            c.sendQuestion();
+
+        }
+
+    };
+
+
+    // =====================================================
+    // REMOVE SEARCHING MESSAGE
+    // =====================================================
+
+    function removeSearchingMessage() {
+
+        for (
+            var i =
+                c.data.messages.length - 1;
+
+            i >= 0;
+
+            i--
+        ) {
+
+            if (
+                c.data.messages[i].type ===
+                "searching"
+            ) {
+
+                c.data.messages.splice(
+                    i,
+                    1
+                );
+
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SCROLL CHAT TO BOTTOM
+    // =====================================================
+
+    function scrollChatToBottom() {
+
+        $timeout(
+
+            function() {
+
+                var chat =
+                    document.querySelector(
+                        "#vg-chat .vg-chat-message-list"
+                    );
+
+
+                if (chat) {
+
+                    chat.scrollTop =
+                        chat.scrollHeight;
+
+                }
+
+            },
+
+            50
+
+        );
+
+    }
+
+
+    // =====================================================
+    // WATCH URL CHANGES
+    // =====================================================
+
+    $scope.$on(
+        "$locationChangeSuccess",
+        function() {
+
+            updateActivePage();
+
+        }
+    );
+
+
+    // =====================================================
+    // ALSO CHECK AFTER NAVIGATION
+    // =====================================================
+
+    $timeout(
+        function() {
+
+            updateActivePage();
+
+        },
+        100
+    );
+
+
+    // =====================================================
+    // INITIALIZE MESSAGES
+    // =====================================================
+
+    if (!c.data.messages) {
+
+        c.data.messages = [];
+
+    }
+
+
+    // =====================================================
+    // DESTROY
+    // =====================================================
+
+    $scope.$on(
+        "$destroy",
+        function() {
+
+            c.aiChatOpen = false;
+
+        }
+    );
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   PREMIUM STUDENT SIDEBAR
+   DARK NAVY / ELECTRIC BLUE THEME
+   ========================================================= */
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.vg-sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: 350px;
+
+    height: 100vh;
+
+    color: #ffffff;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(0, 115, 255, .10),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            180deg,
+            #061a38 0%,
+            #04152e 48%,
+            #030f23 100%
+        );
+
+    border-right:
+        1px solid
+        rgba(48, 129, 220, .14);
+
+    box-shadow:
+        12px 0 40px
+        rgba(0, 0, 0, .18);
+}
+
+
+/* =========================================================
+   SIDEBAR AMBIENT GLOW
+   ========================================================= */
+
+.vg-sidebar::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+    left: -120px;
+
+    width: 380px;
+    height: 380px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 125, 255, .12),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BRAND / LOGO AREA
+   ========================================================= */
+
+.vg-sidebar-logo {
+
+    height: 104px;
+
+    min-height: 104px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+        13px 22px;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    z-index: 2;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(8, 38, 78, .95),
+            rgba(4, 22, 48, .96)
+        );
+
+    border-bottom:
+        1px solid
+        rgba(70, 140, 220, .14);
+}
+
+
+/* =========================================================
+   BRAND ICON
+   ========================================================= */
+
+.vg-sidebar-brand-icon {
+
+    width: 58px;
+
+    min-width: 58px;
+
+    height: 65px;
+
+    margin-right: 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+}
+
+
+/* Logo glow behind shield */
+
+.vg-sidebar-brand-icon::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 130, 255, .18),
+            transparent 70%
+        );
+
+    filter:
+        blur(5px);
+}
+
+
+/* Actual logo */
+
+.vg-sidebar-logo-image {
+
+    width: 55px;
+
+    height: 62px;
+
+    object-fit: contain;
+
+    display: block;
+
+    position: relative;
+
+    z-index: 2;
+
+    filter:
+
+        drop-shadow(
+            0 0 6px
+            rgba(0, 145, 255, .65)
+        )
+
+        drop-shadow(
+            0 0 13px
+            rgba(0, 105, 255, .25)
+        );
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
+}
+
+
+.vg-sidebar-logo:hover
+.vg-sidebar-logo-image {
+
+    transform:
+        scale(1.05);
+
+    filter:
+
+        drop-shadow(
+            0 0 9px
+            rgba(0, 170, 255, .85)
+        )
+
+        drop-shadow(
+            0 0 18px
+            rgba(0, 110, 255, .35)
+        );
+}
+
+
+/* =========================================================
+   LOGO TEXT
+   ========================================================= */
+
+.vg-logo-text {
+
+    overflow: hidden;
+
+    min-width: 0;
+}
+
+
+.vg-logo-title {
+
+    font-size:
+        21px;
+
+    font-weight:
+        750;
+
+    line-height:
+        23px;
+
+    letter-spacing:
+        -.5px;
+
+    color:
+        #ffffff;
+
+    white-space:
+        nowrap;
+}
+
+
+.vg-logo-title span {
+
+    color:
+        #1598ff;
+}
+
+
+.vg-logo-title strong {
+
+    color:
+        #963cff;
+}
+
+
+.vg-logo-subtitle {
+
+    margin-top:
+        6px;
+
+    font-size:
+        11px;
+
+    color:
+        #829ab8;
+
+    letter-spacing:
+        .2px;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.vg-sidebar-nav {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding:
+        12px 0;
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        rgba(80, 150, 230, .25)
+        transparent;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.vg-sidebar-nav::-webkit-scrollbar {
+
+    width:
+        5px;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-track {
+
+    background:
+        transparent;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(80, 150, 230, .25);
+
+    border-radius:
+        10px;
+}
+
+
+/* =========================================================
+   NAVIGATION ITEM
+   ========================================================= */
+
+.vg-nav-item {
+
+    position:
+        relative;
+
+    width:
+        calc(100% - 18px);
+
+    margin:
+        3px 9px;
+
+    min-height:
+        56px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        0 17px;
+
+    box-sizing:
+        border-box;
+
+    border-radius:
+        10px;
+
+    color:
+        #c7d6e9 !important;
+
+    background:
+        transparent;
+
+    text-decoration:
+        none !important;
+
+    font-size:
+        14px;
+
+    font-weight:
+        500;
+
+    transition:
+        background .22s ease,
+        color .22s ease,
+        transform .22s ease,
+        border-color .22s ease;
+
+    border:
+        1px solid
+        transparent;
+}
+
+
+/* =========================================================
+   NORMAL ITEM
+   ========================================================= */
+
+.vg-nav-item:not(.active) {
+
+    background:
+        transparent;
+
+    color:
+        #c7d6e9 !important;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.vg-nav-item:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 110, 255, .12),
+            rgba(0, 95, 200, .04)
+        );
+
+    border-color:
+        rgba(30, 140, 255, .10);
+
+    color:
+        #ffffff !important;
+
+    text-decoration:
+        none !important;
+
+    transform:
+        translateX(3px);
+}
+
+
+/* =========================================================
+   ACTIVE PAGE
+   ========================================================= */
+
+.vg-nav-item.active {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            rgba(17, 107, 235, .95),
+            rgba(34, 75, 205, .82)
+        );
+
+    color:
+        #ffffff !important;
+
+    font-weight:
+        650;
+
+    border:
+        1px solid
+        rgba(76, 163, 255, .28);
+
+    box-shadow:
+
+        0 8px 24px
+        rgba(0, 83, 210, .20),
+
+        inset 0 1px 0
+        rgba(255,255,255,.10);
+}
+
+
+/* Active left indicator */
+
+.vg-nav-item.active::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        12px;
+
+    bottom:
+        12px;
+
+    width:
+        3px;
+
+    border-radius:
+        0 4px 4px 0;
+
+    background:
+        #63c2ff;
+
+    box-shadow:
+        0 0 10px
+        rgba(80, 190, 255, .75);
+}
+
+
+/* =========================================================
+   ACTIVE HOVER
+   ========================================================= */
+
+.vg-nav-item.active:hover {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #1477ee,
+            #3157d8
+        );
+
+    transform:
+        translateX(2px);
+}
+
+
+/* =========================================================
+   NAVIGATION ICON
+   ========================================================= */
+
+.vg-nav-icon {
+
+    width:
+        42px;
+
+    min-width:
+        42px;
+
+    height:
+        34px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-start;
+
+    color:
+        #7fb7ed;
+
+    font-size:
+        17px;
+
+    transition:
+        color .22s ease,
+        transform .22s ease;
+}
+
+
+/* =========================================================
+   ICON HOVER
+   ========================================================= */
+
+.vg-nav-item:hover .vg-nav-icon {
+
+    color:
+        #43adff;
+
+    transform:
+        scale(1.06);
+}
+
+
+/* =========================================================
+   ACTIVE ICON
+   ========================================================= */
+
+.vg-nav-item.active .vg-nav-icon {
+
+    color:
+        #ffffff;
+
+    text-shadow:
+        0 0 9px
+        rgba(100, 205, 255, .35);
+}
+
+
+/* =========================================================
+   DIGITAL TWIN
+   ========================================================= */
+
+.vg-nav-item[data-page="vg_digital_twin"]
+.vg-nav-icon {
+
+    color:
+        #55c4ff;
+
+    font-size:
+        17px;
+}
+
+
+.vg-nav-item[data-page="vg_digital_twin"]:hover
+.vg-nav-icon {
+
+    color:
+        #76d4ff;
+}
+
+
+/* =========================================================
+   NAVIGATION TEXT
+   ========================================================= */
+
+.vg-nav-text {
+
+    display:
+        block;
+
+    line-height:
+        20px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+/* =========================================================
+   AI INDICATOR
+   ========================================================= */
+
+.vg-ai-indicator {
+
+    margin-left:
+        auto;
+
+    padding:
+        3px 7px;
+
+    border-radius:
+        10px;
+
+    border:
+        1px solid
+        rgba(150, 70, 255, .35);
+
+    background:
+        rgba(120, 40, 255, .10);
+
+    color:
+        #b36cff;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .7px;
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+.vg-notification-badge {
+
+    margin-left:
+        auto;
+
+    width:
+        22px;
+
+    height:
+        22px;
+
+    min-width:
+        22px;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff5360,
+            #d92742
+        );
+
+    color:
+        #ffffff;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    box-shadow:
+        0 0 10px
+        rgba(255, 60, 75, .25);
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.vg-sidebar-footer {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    padding:
+        8px 0;
+
+    background:
+        rgba(2, 12, 28, .72);
+
+    border-top:
+        1px solid
+        rgba(80, 135, 205, .13);
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.vg-nav-item.logout-item {
+
+    color:
+        #91a7c2 !important;
+}
+
+
+.vg-nav-item.logout-item .vg-nav-icon {
+
+    color:
+        #e88c75;
+}
+
+
+/* =========================================================
+   LOGOUT HOVER
+   ========================================================= */
+
+.vg-nav-item.logout-item:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(205, 55, 65, .12),
+            rgba(140, 30, 40, .04)
+        );
+
+    border-color:
+        rgba(255, 80, 90, .10);
+
+    color:
+        #ffb0b5 !important;
+}
+
+
+.vg-nav-item.logout-item:hover
+.vg-nav-icon {
+
+    color:
+        #ff777f;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   SIDEBAR WIDTH = 350PX
+   ========================================================= */
+
+.vg-main-content {
+
+    margin-left:
+        350px;
+
+    min-height:
+        100vh;
+
+    width:
+        calc(100% - 350px);
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =========================================================
+   PREVENT SIDEBAR FROM AFFECTING OTHER WIDGETS
+   ========================================================= */
+
+.vg-sidebar * {
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-sidebar {
+
+        width:
+            250px;
+    }
+
+
+    .vg-sidebar-logo {
+
+        height:
+            86px;
+
+        min-height:
+            86px;
+
+        padding:
+            10px 15px;
+    }
+
+
+    .vg-sidebar-brand-icon {
+
+        width:
+            46px;
+
+        min-width:
+            46px;
+
+        height:
+            52px;
+
+        margin-right:
+            9px;
+    }
+
+
+    .vg-sidebar-logo-image {
+
+        width:
+            45px;
+
+        height:
+            50px;
+    }
+
+
+    .vg-logo-title {
+
+        font-size:
+            17px;
+
+        line-height:
+            20px;
+    }
+
+
+    .vg-logo-subtitle {
+
+        font-size:
+            9px;
+    }
+
+
+    .vg-nav-item {
+
+        width:
+            calc(100% - 12px);
+
+        margin:
+            3px 6px;
+
+        min-height:
+            51px;
+
+        padding:
+            0 13px;
+
+        font-size:
+            13px;
+    }
+
+
+    .vg-nav-icon {
+
+        width:
+            36px;
+
+        min-width:
+            36px;
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-main-content {
+
+        margin-left:
+            250px;
+
+        width:
+            calc(100% - 250px);
+    }
+
+
+    .vg-ai-indicator {
+
+        display:
+            none;
+    }
+}
+
+/* =========================================================
+   VISAGUARDIAN AI — FLOATING ASSISTANT
+   ========================================================= */
+
+.vg-ai-floating-wrapper {
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   MAIN AI FLOATING BUTTON
+   ========================================================= */
+
+.vg-ai-floating-btn {
+    position: relative;
+
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #8b7cff 0%,
+            #6654e8 35%,
+            #4b3bd0 65%,
+            #3929ad 100%
+        );
+
+    box-shadow:
+        0 0 0 5px rgba(112, 91, 255, 0.10),
+        0 0 15px rgba(101, 79, 238, 0.38),
+        0 6px 20px rgba(36, 28, 110, 0.22);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   OUTER COSMIC RING
+   ========================================================= */
+
+.vg-ai-floating-btn::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -4px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(126, 112, 255, 0.20);
+
+    box-shadow:
+        0 0 12px rgba(117, 100, 255, 0.18);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   THREE-STAR AI ICON
+   ========================================================= */
+
+.vg-ai-stars {
+    width: 40px;
+    height: 40px;
+
+    display: block;
+
+    filter:
+        drop-shadow(
+            0 0 3px rgba(255, 255, 255, 0.45)
+        )
+        drop-shadow(
+            0 0 6px rgba(179, 165, 255, 0.30)
+        );
+
+    transition:
+        transform 0.25s ease,
+        filter 0.25s ease;
+}
+
+
+/* =========================================================
+   HOVER — BUTTON
+   ========================================================= */
+
+.vg-ai-floating-wrapper:hover .vg-ai-floating-btn {
+    transform: translateY(-3px) scale(1.05);
+
+    box-shadow:
+        0 0 0 6px rgba(112, 91, 255, 0.12),
+        0 0 22px rgba(101, 79, 238, 0.52),
+        0 8px 25px rgba(36, 28, 110, 0.28);
+}
+
+
+/* =========================================================
+   HOVER — AI ICON
+   ========================================================= */
+
+.vg-ai-floating-wrapper:hover .vg-ai-stars {
+    transform: scale(1.08) rotate(3deg);
+
+    filter:
+        drop-shadow(
+            0 0 5px rgba(255, 255, 255, 0.70)
+        )
+        drop-shadow(
+            0 0 12px rgba(179, 165, 255, 0.50)
+        );
+}
+
+
+/* =========================================================
+   HOVER LABEL
+   ========================================================= */
+
+.vg-ai-hover-label {
+    position: absolute;
+
+    right: 54px;
+    top: 50%;
+
+    transform:
+        translateY(-50%)
+        translateX(8px);
+
+    padding: 6px 10px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    border: 1px solid rgba(139, 124, 255, 0.30);
+
+    border-radius: 7px;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.25);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+}
+
+
+/* =========================================================
+   LABEL ARROW
+   ========================================================= */
+
+.vg-ai-hover-label::after {
+    content: "";
+
+    position: absolute;
+
+    right: -5px;
+    top: 50%;
+
+    width: 15px;
+    height: 15px;
+
+    background: #111827;
+
+    border-top:
+        1px solid rgba(139, 124, 255, 0.30);
+
+    border-right:
+        1px solid rgba(139, 124, 255, 0.30);
+
+    transform:
+        translateY(-50%)
+        rotate(45deg);
+}
+
+
+/* =========================================================
+   SHOW LABEL ON HOVER
+   ========================================================= */
+
+.vg-ai-floating-wrapper:hover .vg-ai-hover-label {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+        translateY(-50%)
+        translateX(0);
+}
+
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+.vg-ai-floating-btn:focus {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.85),
+        0 0 0 6px rgba(91, 76, 220, 0.45),
+        0 0 20px rgba(101, 79, 238, 0.45);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-ai-floating-wrapper {
+        right: 18px;
+        bottom: 18px;
+    }
+
+    .vg-ai-floating-btn {
+        width: 52px;
+        height: 52px;
+    }
+
+    .vg-ai-stars {
+        width: 40px;
+        height: 40px;
+    }
+
+    .vg-ai-hover-label {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .vg-ai-floating-wrapper {
+        right: 15px;
+        bottom: 15px;
+    }
+
+    .vg-ai-floating-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .vg-ai-stars {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+
+
+/* =========================================================
+   VISA GUARDIAN AI — CHAT OVERLAY (COMPACT PANEL)
+   ======================================================== */
+
+.vg-ai-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 56px; /* Positions perfectly right above the 44px floating button */
+  width: 390px;
+  max-width: calc(100vw - 32px);
+  height: 530px;
+  z-index: 99998;
+  animation: vgAIChatOpen 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vg-ai-chat-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafc;
+  border-radius: 18px;
+  border: 1px solid rgba(36, 67, 130, 0.16);
+  box-shadow: 0 24px 60px rgba(7, 29, 73, 0.28), 0 8px 24px rgba(7, 29, 73, 0.16);
+}
+
+/* HEADER STYLING */
+.vg-ai-chat-header {
+  flex: 0 0 64px;
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #061B45 0%, #0B2B68 55%, #123E86 100%);
+  color: #ffffff;
+}
+
+.vg-ai-chat-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vg-ai-mini-icon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #7185ff 0%, #4c5fe0 42%, #283cb9 100%);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: 0 0 10px rgba(91, 115, 255, 0.42);
+}
+
+.vg-ai-mini-stars {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.vg-ai-header-text .vg-ai-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  color: #ffffff;
+}
+
+.vg-ai-header-text .vg-ai-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.vg-ai-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.vg-ai-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* WELCOME BANNER &amp; SUGGESTION CHIPS */
+.vg-ai-welcome-box {
+  padding: 12px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.vg-ai-greeting-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.vg-ai-avatar-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.vg-ai-greeting-text {
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.vg-ai-greeting-text p {
+  margin: 2px 0 0 0;
+  font-weight: 400;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.vg-ai-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.vg-suggestion-chip {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.vg-suggestion-chip:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  color: #0369a1;
+}
+
+/* CHAT CONTENT BACKEND CONTAINER */
+.vg-ai-chat-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* DISCLAIMER FOOTER */
+.vg-ai-footer-disclaimer {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  font-size: 10px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* OPEN ANIMATION */
+@keyframes vgAIChatOpen {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* RESPONSIVE MOBILE OVERRIDE */
+@media (max-width: 600px) {
+  .vg-ai-overlay {
+    right: 12px;
+    bottom: 60px;
+    width: calc(100vw - 24px);
+    height: 70vh;
+  }
+}
+
+/* =========================================================
+   VISA GUARDIAN AI — CHAT INPUT AREA STYLING
+   ======================================================== */
+
+.vg-ai-input-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  flex: 0 0 auto;
+}
+
+.vg-ai-input {
+  flex: 1;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.vg-ai-input:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.vg-ai-send {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.vg-ai-send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+}
+
+/* =========================================================
+   VISA GUARDIAN AI — OVERLAY CHAT CONTENT SCROLL FIX
+   ======================================================== */
+
+.vg-ai-chat-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.vg-chat-message-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_left_sidebar</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Left Sidebar</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function () {
+
+    // =========================================================
+    // VISAGUARDIAN AI
+    // STUDENT AI CHAT SERVER SCRIPT
+    // Service Portal Widget: VG AI Chat
+    // =========================================================
+
+
+    // =========================================================
+    // CONFIGURATION
+    // =========================================================
+
+    /*
+     * IMPORTANT:
+     *
+     * Replace this with the actual INTERNAL NAME of the
+     * "Get Current Student Risk Assessment" Action Designer action.
+     *
+     * Example:
+     * x_snc_visaguardi_0.get_current_student_risk_assessment
+     *
+     * Do NOT use the display label if your action has a different
+     * internal name.
+     */
+
+    var RISK_ACTION_NAME =
+        "x_snc_visaguardi_0.get_current_student_risk_assessment";
+
+
+    // =========================================================
+    // INITIAL DATA
+    // =========================================================
+
+    data.success = false;
+    data.error = "";
+
+    data.student = {};
+    data.visa_case = {};
+    data.advisor = {};
+    data.documents = [];
+
+    data.title = "VisaGuardian AI";
+    data.introduction = "";
+    data.sections = [];
+    data.summary = "";
+    data.articles = [];
+
+    data.user_id = "";
+
+
+    // =========================================================
+    // CHECK LOGIN
+    // =========================================================
+
+    if (
+        !gs.isLoggedIn() ||
+        gs.getUserName() == "guest"
+    ) {
+
+        data.error =
+            "Please log in to access VisaGuardian AI.";
+
+        return;
+    }
+
+
+    // =========================================================
+    // CURRENT LOGGED-IN USER
+    // =========================================================
+
+    var currentUserSysId =
+        gs.getUserID();
+
+    var currentUserName =
+        gs.getUserName();
+
+    data.user_id =
+        currentUserSysId;
+
+
+    // =========================================================
+    // ASK QUESTION
+    // =========================================================
+
+    if (
+        input &&
+        input.action == "ask"
+    ) {
+
+        var question =
+            String(
+                input.question || ""
+            ).trim();
+
+
+        if (!question) {
+
+            data.error =
+                "Please enter a question.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // GET CURRENT STUDENT
+        // =====================================================
+
+        var studentResult =
+            getCurrentStudent(
+                currentUserSysId
+            );
+
+
+        if (!studentResult.found) {
+
+            data.error =
+                "Your student profile could not be found.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // LOAD CURRENT STUDENT DATA
+        // =====================================================
+
+        data.student =
+            studentResult.student;
+
+
+        // =====================================================
+        // NO AUTOMATIC CASE SELECTION
+        // =====================================================
+
+        var caseResult = {
+
+            found: false,
+
+            caseSysId: "",
+
+            case: {}
+
+        };
+
+
+        // =====================================================
+        // ADVISOR STARTS EMPTY
+        // =====================================================
+
+        data.advisor = {
+
+            name: "",
+
+            email: ""
+
+        };
+
+
+        // =====================================================
+        // DOCUMENTS START EMPTY
+        // =====================================================
+
+        data.documents = [];
+
+
+        // =====================================================
+        // NORMALIZE QUESTION
+        // =====================================================
+
+        var normalizedQuestion =
+            question.toLowerCase();
+
+
+        // =====================================================
+        // PERSONAL STUDENT QUESTIONS
+        // =====================================================
+
+
+        // -----------------------------------------------------
+        // MY EMAIL
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my email",
+                    "my email address",
+                    "what is my email",
+                    "what's my email",
+                    "what is my email address",
+                    "what's my email address"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Your Email Address";
+
+            data.introduction =
+                "Here is your registered email address:";
+
+            data.sections = [
+
+                {
+                    title: "Email",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Email: " +
+                        safeValue(
+                            data.student.email
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This email address belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY NAME
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my name",
+                    "student name",
+                    "who am i"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Your Name";
+
+            data.introduction =
+                "Here is your name:";
+
+            data.sections = [
+
+                {
+                    title: "Student Name",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Name: " +
+                        safeValue(
+                            data.student.name
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY PHONE
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my phone",
+                    "my phone number",
+                    "my mobile",
+                    "my mobile number"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Your Phone Number";
+
+            data.introduction =
+                "Here is your registered phone number:";
+
+            data.sections = [
+
+                {
+                    title: "Contact Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Mobile: " +
+                        safeValue(
+                            data.student.mobile_phone
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This contact information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY UNIVERSITY
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my university",
+                    "what university do i attend",
+                    "which university do i attend"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Your University";
+
+            data.introduction =
+                "Here is your university information:";
+
+            data.sections = [
+
+                {
+                    title: "University",
+
+                    text: "",
+
+                    bullets: [
+
+                        "University: " +
+                        safeValue(
+                            data.student.university_name
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY DEGREE
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my degree",
+                    "my degree program",
+                    "what is my degree",
+                    "what am i studying"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Your Degree Program";
+
+            data.introduction =
+                "Here is your current degree information:";
+
+            data.sections = [
+
+                {
+                    title: "Academic Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Degree Program: " +
+                        safeValue(
+                            data.student.degree_program
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY SEMESTER
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my semester",
+                    "current semester",
+                    "what semester am i in",
+                    "which semester am i in",
+                    "what is my current semester",
+                    "what's my current semester"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "Current Semester";
+
+            data.introduction =
+                "Here is your current semester information:";
+
+            data.sections = [
+
+                {
+                    title: "Academic Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Current Semester: " +
+                        safeValue(
+                            data.student.current_semester
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // -----------------------------------------------------
+        // MY DETAILS / PROFILE
+        // -----------------------------------------------------
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my details",
+                    "my profile",
+                    "my information",
+                    "my student information",
+                    "show my details",
+                    "show my profile"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "My Student Information";
+
+            data.introduction =
+                "Here is your current student information:";
+
+            data.sections = [
+
+                {
+                    title: "Student Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Name: " +
+                        safeValue(
+                            data.student.name
+                        ),
+
+                        "Student ID: " +
+                        safeValue(
+                            data.student.student_id
+                        ),
+
+                        "Email: " +
+                        safeValue(
+                            data.student.email
+                        ),
+
+                        "Mobile: " +
+                        safeValue(
+                            data.student.mobile_phone
+                        ),
+
+                        "University: " +
+                        safeValue(
+                            data.student.university_name
+                        ),
+
+                        "Degree Program: " +
+                        safeValue(
+                            data.student.degree_program
+                        ),
+
+                        "Current Semester: " +
+                        safeValue(
+                            data.student.current_semester
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information belongs to the currently logged-in student.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // VISA QUESTIONS
+        // =====================================================
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my visa",
+                    "visa status",
+                    "visa type",
+                    "sevis",
+                    "sevis id",
+                    "visa expiry",
+                    "passport expiry",
+                    "my immigration"
+                ]
+            )
+        ) {
+
+            data.success = true;
+
+            data.title =
+                "My Visa Information";
+
+            data.introduction =
+                "Here is your current visa information:";
+
+            data.sections = [
+
+                {
+                    title: "Visa Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Current Visa Status: " +
+                        safeValue(
+                            data.student.current_visa_status
+                        ),
+
+                        "Visa Type: " +
+                        safeValue(
+                            data.student.visa_type
+                        ),
+
+                        "SEVIS ID: " +
+                        safeValue(
+                            data.student.sevis_id
+                        ),
+
+                        "Visa Expiry Date: " +
+                        safeValue(
+                            data.student.visa_expiry_date
+                        ),
+
+                        "Passport Expiry Date: " +
+                        safeValue(
+                            data.student.passport_expiry_date
+                        )
+
+                    ],
+
+                    steps: []
+                }
+
+            ];
+
+            data.summary =
+                "This information was retrieved for your currently logged-in student profile.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // RISK ASSESSMENT
+        // =====================================================
+
+        if (
+            isRiskAssessmentQuestion(
+                normalizedQuestion
+            )
+        ) {
+
+            var riskResult =
+                getCurrentStudentRiskAssessment();
+
+
+            if (
+                riskResult.success
+            ) {
+
+                data.success = true;
+
+                data.title =
+                    "Student Risk Assessment";
+
+                data.introduction =
+                    "Here is your current operational risk assessment:";
+
+                data.sections = [
+
+                    {
+
+                        title:
+                            "Risk Assessment",
+
+                        text: "",
+
+                        bullets: [
+
+                            "Risk Score: " +
+                            safeValue(
+                                riskResult.risk_score,
+                                "Not available"
+                            ) +
+                            "/100",
+
+                            "Risk Level: " +
+                            safeValue(
+                                riskResult.risk_level,
+                                "Not available"
+                            ).toUpperCase(),
+
+                            "Why this score was assigned: " +
+                            safeValue(
+                                riskResult.risk_explanation,
+                                "No explanation available."
+                            )
+
+                        ],
+
+                        steps: []
+
+                    }
+
+                ];
+
+
+                data.summary =
+                    safeValue(
+                        riskResult.risk_assessment_response,
+                        "Your current risk assessment has been calculated."
+                    );
+
+
+                return;
+
+            }
+
+
+            data.success = true;
+
+            data.title =
+                "Risk Assessment";
+
+            data.introduction =
+                "I could not retrieve your current risk assessment.";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Risk Assessment",
+
+                    text: "",
+
+                    bullets: [
+
+                        "The risk assessment action could not be completed.",
+
+                        "Please try again in a moment.",
+
+                        "If the problem continues, contact your international student advisor."
+
+                    ],
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "Your risk assessment could not be retrieved at this time.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // CASE SUMMARY
+        // =====================================================
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "summarize my case",
+                    "summarize the case",
+                    "summarize my visa case",
+                    "can you summarize the visa case",
+                    "summary of my case",
+                    "summary of my visa case",
+                    "give me a summary",
+                    "give me the summary",
+                    "give me summary",
+                    "summarize my cases",
+                    "summarize all my cases",
+                    "summary of my cases",
+                    "summary of all my cases",
+                    "can you summarize my visa cases",
+                    "can you summarize my cases",
+                    "can you summarize my visa case",
+                    "what should i do"
+                ]
+            )
+        ) {
+
+            var summaryCaseNumber =
+                extractCaseNumber(
+                    question
+                );
+
+
+            if (summaryCaseNumber) {
+
+                var summaryCaseResult =
+                    getVisaCaseByNumber(
+                        summaryCaseNumber,
+                        studentResult.profileSysId
+                    );
+
+
+                if (!summaryCaseResult.found) {
+
+                    data.success = true;
+
+                    data.title =
+                        "Visa Case Summary";
+
+                    data.introduction =
+                        "I could not find " +
+                        summaryCaseNumber +
+                        " in your student profile.";
+
+                    data.sections = [];
+
+                    data.summary =
+                        "For security, VisaGuardian only provides summaries for cases belonging to the currently logged-in student.";
+
+                    return;
+                }
+
+
+                data.visa_case =
+                    summaryCaseResult.case;
+
+
+                data.advisor =
+                    getAdvisor(
+                        summaryCaseResult.case,
+                        summaryCaseResult.caseSysId
+                    );
+
+
+                data.documents =
+                    getStudentDocuments(
+                        studentResult.profileSysId,
+                        summaryCaseResult.caseSysId,
+                        summaryCaseResult.case.case_type_raw
+                    );
+
+
+                var specificSummaryText =
+                    buildCaseSummary(
+                        data.student,
+                        data.visa_case,
+                        data.advisor,
+                        data.documents
+                    );
+
+
+                data.success = true;
+
+                data.title =
+                    "AI Case Summary";
+
+                data.introduction =
+                    "Here is a summary of your selected VisaGuardian case:";
+
+                data.sections = [
+
+                    {
+
+                        title:
+                            "Case Summary",
+
+                        text: "",
+
+                        bullets:
+                            convertToPoints(
+                                specificSummaryText
+                            ),
+
+                        steps: []
+
+                    }
+
+                ];
+
+                data.summary =
+                    "Review the case information and follow any outstanding requirements. For important immigration decisions, confirm requirements with your university international student advisor.";
+
+                return;
+            }
+
+
+            var summaryCases =
+                getStudentVisaCases(
+                    studentResult.profileSysId
+                );
+
+
+            if (
+                !summaryCases ||
+                summaryCases.length === 0
+            ) {
+
+                data.success = true;
+
+                data.title =
+                    "Visa Case Summary";
+
+                data.introduction =
+                    "No visa cases were found for your student profile.";
+
+                data.sections = [];
+
+                data.summary =
+                    "If you believe a case should exist, please contact your international student advisor.";
+
+                return;
+            }
+
+
+            if (
+                summaryCases.length === 1
+            ) {
+
+                var singleSummaryCase =
+                    getVisaCaseByNumber(
+                        summaryCases[0].case_id,
+                        studentResult.profileSysId
+                    );
+
+
+                if (
+                    singleSummaryCase.found
+                ) {
+
+                    data.visa_case =
+                        singleSummaryCase.case;
+
+
+                    data.advisor =
+                        getAdvisor(
+                            singleSummaryCase.case,
+                            singleSummaryCase.caseSysId
+                        );
+
+
+                    data.documents =
+                        getStudentDocuments(
+                            studentResult.profileSysId,
+                            singleSummaryCase.caseSysId,
+                            singleSummaryCase.case.case_type_raw
+                        );
+
+
+                    var singleSummaryText =
+                        buildCaseSummary(
+                            data.student,
+                            data.visa_case,
+                            data.advisor,
+                            data.documents
+                        );
+
+
+                    data.success = true;
+
+                    data.title =
+                        "AI Case Summary";
+
+                    data.introduction =
+                        "Here is a summary of your current visa case:";
+
+                    data.sections = [
+
+                        {
+
+                            title:
+                                "Case Summary",
+
+                            text: "",
+
+                            bullets:
+                                convertToPoints(
+                                    singleSummaryText
+                                ),
+
+                            steps: []
+
+                        }
+
+                    ];
+
+                    data.summary =
+                        "Review the case information and follow any outstanding requirements. For important immigration decisions, confirm requirements with your university international student advisor.";
+
+                    return;
+                }
+
+
+                data.success = true;
+
+                data.title =
+                    "Visa Case Summary";
+
+                data.introduction =
+                    "I could not load your visa case.";
+
+                data.sections = [];
+
+                data.summary =
+                    "Please try again or provide the case number.";
+
+                return;
+            }
+
+
+            var overallSummaryText =
+                buildAllCasesSummary(
+                    data.student,
+                    summaryCases
+                );
+
+
+            data.success = true;
+
+            data.title =
+                "AI Visa Case Summary";
+
+            data.introduction =
+                "Here is an overview of all visa cases associated with your student profile:";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Visa Case Summary",
+
+                    text: "",
+
+                    bullets:
+                        convertToPoints(
+                            overallSummaryText
+                        ),
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "This summary covers all visa cases associated with your student profile. Review each case for outstanding actions and confirm important immigration requirements with your university international student advisor.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // DOCUMENT QUESTIONS
+        // =====================================================
+
+        if (
+            isDocumentQuestion(
+                normalizedQuestion
+            )
+        ) {
+
+            var documentCaseNumber =
+                extractCaseNumber(
+                    question
+                );
+
+
+            if (
+                documentCaseNumber
+            ) {
+
+                var documentCaseResult =
+                    getVisaCaseByNumber(
+                        documentCaseNumber,
+                        studentResult.profileSysId
+                    );
+
+
+                if (
+                    !documentCaseResult.found
+                ) {
+
+                    data.success = true;
+
+                    data.title =
+                        "Document Access";
+
+                    data.introduction =
+                        "I could not find " +
+                        documentCaseNumber +
+                        " in your student profile.";
+
+                    data.sections = [
+
+                        {
+
+                            title:
+                                "Access Check",
+
+                            text: "",
+
+                            bullets: [
+
+                                "The case number may be incorrect.",
+
+                                "The case may not belong to the currently logged-in student.",
+
+                                "For security, VisaGuardian only provides document information for your own visa cases."
+
+                            ],
+
+                            steps: []
+
+                        }
+
+                    ];
+
+                    data.summary =
+                        "No document records were returned for this case.";
+
+                    return;
+                }
+
+
+                data.visa_case =
+                    documentCaseResult.case;
+
+
+                data.documents =
+                    getStudentDocuments(
+                        studentResult.profileSysId,
+                        documentCaseResult.caseSysId,
+                        documentCaseResult.case.case_type_raw
+                    );
+
+
+                return buildDocumentResponse(
+                    question,
+                    documentCaseNumber,
+                    data.documents,
+                    data.visa_case
+                );
+
+            }
+
+
+            var documentCases =
+                getStudentVisaCases(
+                    studentResult.profileSysId
+                );
+
+
+            if (
+                !documentCases ||
+                documentCases.length === 0
+            ) {
+
+                data.success = true;
+
+                data.title =
+                    "My Documents";
+
+                data.introduction =
+                    "I could not find a visa case associated with your student profile.";
+
+                data.sections = [
+
+                    {
+
+                        title:
+                            "Document Access",
+
+                        text: "",
+
+                        bullets: [
+
+                            "No visa case is currently associated with your student profile.",
+
+                            "Document information can be checked once a visa case is available."
+
+                        ],
+
+                        steps: []
+
+                    }
+
+                ];
+
+                data.summary =
+                    "Please contact your international student advisor if you believe a visa case should be available.";
+
+                return;
+            }
+
+
+            if (
+                documentCases.length === 1
+            ) {
+
+                var documentOnlyCase =
+                    getVisaCaseByNumber(
+                        documentCases[0].case_id,
+                        studentResult.profileSysId
+                    );
+
+
+                if (
+                    !documentOnlyCase.found
+                ) {
+
+                    data.success = true;
+
+                    data.title =
+                        "My Documents";
+
+                    data.introduction =
+                        "I could not load the visa case associated with your student profile.";
+
+                    data.sections = [];
+
+                    data.summary =
+                        "Please try again or contact your international student advisor.";
+
+                    return;
+                }
+
+
+                data.visa_case =
+                    documentOnlyCase.case;
+
+
+                data.documents =
+                    getStudentDocuments(
+                        studentResult.profileSysId,
+                        documentOnlyCase.caseSysId,
+                        documentOnlyCase.case.case_type_raw
+                    );
+
+
+                return buildDocumentResponse(
+                    question,
+                    documentOnlyCase.case.case_id,
+                    data.documents,
+                    data.visa_case
+                );
+
+            }
+
+
+            var documentCaseBullets = [];
+
+
+            for (
+                var dc = 0;
+                dc < documentCases.length;
+                dc++
+            ) {
+
+                documentCaseBullets.push(
+
+                    (dc + 1) +
+                    ". " +
+                    safeValue(
+                        documentCases[dc].case_id,
+                        "Unknown Case"
+                    ) +
+                    " — Type: " +
+                    safeValue(
+                        documentCases[dc].case_type,
+                        "Not available"
+                    ) +
+                    " — Status: " +
+                    safeValue(
+                        documentCases[dc].case_stage,
+                        "Not available"
+                    )
+
+                );
+
+            }
+
+
+            data.success = true;
+
+            data.title =
+                "Choose a Visa Case";
+
+            data.introduction =
+                "You have multiple visa cases. Please tell me which case you want to check documents for:";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Your Visa Cases",
+
+                    text: "",
+
+                    bullets:
+                        documentCaseBullets,
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "Please provide the case number, for example TASK12345.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // CASE QUESTIONS
+        // =====================================================
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my case",
+                    "visa case",
+                    "case status",
+                    "case stage",
+                    "case priority",
+                    "case type",
+                    "case details",
+                    "case information",
+                    "my cases",
+                    "all my cases",
+                    "my visa cases",
+                    "show my cases",
+                    "list my cases",
+                    "what are my cases",
+                    "what visa cases do i have",
+                    "current visa cases",
+                    "what are my current visa cases"
+                ]
+            )
+            ||
+            extractCaseNumber(question)
+        ) {
+
+            var requestedCaseNumber =
+                extractCaseNumber(
+                    question
+                );
+
+
+            if (requestedCaseNumber) {
+
+                var specificCaseResult =
+                    getVisaCaseByNumber(
+                        requestedCaseNumber,
+                        studentResult.profileSysId
+                    );
+
+
+                if (!specificCaseResult.found) {
+
+                    data.success = true;
+
+                    data.title =
+                        "Visa Case";
+
+                    data.introduction =
+                        "I could not find " +
+                        requestedCaseNumber +
+                        " in your student profile.";
+
+                    data.sections = [
+
+                        {
+
+                            title:
+                                "Case Access",
+
+                            text: "",
+
+                            bullets: [
+
+                                "The case number may be incorrect.",
+
+                                "The case may not belong to your student profile.",
+
+                                "For security, VisaGuardian only provides access to your own visa cases."
+
+                            ],
+
+                            steps: []
+
+                        }
+
+                    ];
+
+                    data.summary =
+                        "You can ask me to list your available visa cases.";
+
+                    return;
+                }
+
+
+                caseResult =
+                    specificCaseResult;
+
+
+                data.visa_case =
+                    caseResult.case;
+
+
+                data.advisor =
+                    getAdvisor(
+                        caseResult.case,
+                        caseResult.caseSysId
+                    );
+
+
+                data.documents =
+                    getStudentDocuments(
+                        studentResult.profileSysId,
+                        caseResult.caseSysId,
+                        caseResult.case.case_type_raw
+                    );
+
+
+                data.success = true;
+
+                data.title =
+                    "My Visa Case";
+
+                data.introduction =
+                    "Here is the visa case you requested:";
+
+                data.sections = [
+
+                    {
+
+                        title:
+                            "Case Information",
+
+                        text: "",
+
+                        bullets: [
+
+                            "Case ID: " +
+                            safeValue(
+                                data.visa_case.case_id
+                            ),
+
+                            "Case Type: " +
+                            safeValue(
+                                data.visa_case.case_type
+                            ),
+
+                            "Visa Category: " +
+                            safeValue(
+                                data.visa_case.visa_category
+                            ),
+
+                            "Priority: " +
+                            safeValue(
+                                data.visa_case.priority
+                            ),
+
+                            "Status: " +
+                            safeValue(
+                                data.visa_case.case_stage
+                            ),
+
+                            "Assigned Advisor: " +
+                            safeValue(
+                                data.advisor.name,
+                                "Not Assigned"
+                            ),
+
+                            "Created On: " +
+                            safeValue(
+                                data.visa_case.created_on
+                            ),
+
+                            "Last Updated: " +
+                            safeValue(
+                                data.visa_case.updated_on
+                            )
+
+                        ],
+
+                        steps: []
+
+                    }
+
+                ];
+
+                data.summary =
+                    safeValue(
+                        data.visa_case.description,
+                        "Your selected visa case information is shown above."
+                    );
+
+                return;
+            }
+
+
+            var studentCases =
+                getStudentVisaCases(
+                    studentResult.profileSysId
+                );
+
+
+            if (
+                !studentCases ||
+                studentCases.length === 0
+            ) {
+
+                data.success = true;
+
+                data.title =
+                    "My Visa Cases";
+
+                data.introduction =
+                    "I could not find any visa cases associated with your student profile.";
+
+                data.sections = [];
+
+                data.summary =
+                    "If you believe you should have a visa case, please contact your international student advisor.";
+
+                return;
+            }
+
+
+            var caseBullets = [];
+
+
+            for (
+                var c = 0;
+                c < studentCases.length;
+                c++
+            ) {
+
+                var currentCase =
+                    studentCases[c];
+
+
+                caseBullets.push(
+
+                    (c + 1) +
+                    ". " +
+                    safeValue(
+                        currentCase.case_id,
+                        "Unknown Case"
+                    ) +
+                    " — Type: " +
+                    safeValue(
+                        currentCase.case_type,
+                        "Not available"
+                    ) +
+                    " — Status: " +
+                    safeValue(
+                        currentCase.case_stage,
+                        "Not available"
+                    )
+
+                );
+
+            }
+
+
+            data.success = true;
+
+            data.title =
+                "My Visa Cases";
+
+            data.introduction =
+                "I found the following visa cases associated with your student profile:";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Available Visa Cases",
+
+                    text: "",
+
+                    bullets:
+                        caseBullets,
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "Please tell me the case number you want to view, for example TASK0020673.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // ADVISOR QUESTIONS
+        // =====================================================
+
+        if (
+            containsAny(
+                normalizedQuestion,
+                [
+                    "my advisor",
+                    "assigned advisor",
+                    "who is my advisor",
+                    "advisor name",
+                    "advisor email",
+                    "my advisors",
+                    "show my advisors",
+                    "assigned advisors",
+                    "show assigned advisors"
+                ]
+            )
+        ) {
+
+            var advisorCaseNumber =
+                extractCaseNumber(
+                    question
+                );
+
+
+            if (advisorCaseNumber) {
+
+                var advisorCaseResult =
+                    getVisaCaseByNumber(
+                        advisorCaseNumber,
+                        studentResult.profileSysId
+                    );
+
+
+                if (
+                    advisorCaseResult.found
+                ) {
+
+                    data.visa_case =
+                        advisorCaseResult.case;
+
+
+                    data.advisor =
+                        getAdvisor(
+                            advisorCaseResult.case,
+                            advisorCaseResult.caseSysId
+                        );
+
+                }
+
+            }
+            else {
+
+                var advisorCases =
+                    getStudentVisaCases(
+                        studentResult.profileSysId
+                    );
+
+
+                if (
+                    !advisorCases ||
+                    advisorCases.length === 0
+                ) {
+
+                    data.success = true;
+
+                    data.title =
+                        "My Advisor";
+
+                    data.introduction =
+                        "No visa cases were found in your student profile.";
+
+                    data.sections = [];
+
+                    data.summary =
+                        "There are no case-specific advisors to display.";
+
+                    return;
+                }
+
+
+                if (
+                    advisorCases.length == 1
+                ) {
+
+                    var advisorOnlyCase =
+                        getVisaCaseByNumber(
+                            advisorCases[0].case_id,
+                            studentResult.profileSysId
+                        );
+
+
+                    if (
+                        advisorOnlyCase.found
+                    ) {
+
+                        data.visa_case =
+                            advisorOnlyCase.case;
+
+                        data.advisor =
+                            getAdvisor(
+                                advisorOnlyCase.case,
+                                advisorOnlyCase.caseSysId
+                            );
+
+                    }
+
+
+                    data.success = true;
+
+                    data.title =
+                        "My Advisor";
+
+                    data.introduction =
+                        "Here is the advisor assigned to your visa case:";
+
+                    data.sections = [
+
+                        {
+
+                            title:
+                                "Advisor Information",
+
+                            text: "",
+
+                            bullets: [
+
+                                "Case Number: " +
+                                safeValue(
+                                    data.visa_case.case_id
+                                ),
+
+                                "Advisor Name: " +
+                                safeValue(
+                                    data.advisor.name,
+                                    "Not Assigned"
+                                ),
+
+                                "Advisor Email: " +
+                                safeValue(
+                                    data.advisor.email,
+                                    "Not Available"
+                                )
+
+                            ],
+
+                            steps: []
+
+                        }
+
+                    ];
+
+                    data.summary =
+                        "Advisor information is based on the advisor assigned to your visa case.";
+
+                    return;
+                }
+
+
+                if (
+                    advisorCases.length > 1
+                ) {
+
+                    var advisorCaseBullets = [];
+
+
+                    for (
+                        var ac = 0;
+                        ac < advisorCases.length;
+                        ac++
+                    ) {
+
+                        var currentAdvisorCase =
+                            advisorCases[ac];
+
+
+                        var advisorName =
+                            safeValue(
+                                currentAdvisorCase.assigned_advisor_name,
+                                "Not Assigned"
+                            );
+
+
+                        var advisorEmail =
+                            safeValue(
+                                currentAdvisorCase.assigned_advisor_email,
+                                ""
+                            );
+
+
+                        var advisorLine =
+
+                            (ac + 1) +
+                            ". " +
+                            safeValue(
+                                currentAdvisorCase.case_id,
+                                "Unknown Case"
+                            ) +
+                            " — Type: " +
+                            safeValue(
+                                currentAdvisorCase.case_type,
+                                "Not available"
+                            ) +
+                            " — Advisor: " +
+                            advisorName;
+
+
+                        if (
+                            advisorEmail &&
+                            advisorEmail != "Not available"
+                        ) {
+
+                            advisorLine +=
+                                " — Email: " +
+                                advisorEmail;
+
+                        }
+
+
+                        advisorLine +=
+                            " — Status: " +
+                            safeValue(
+                                currentAdvisorCase.case_stage,
+                                "Not available"
+                            );
+
+
+                        advisorCaseBullets.push(
+                            advisorLine
+                        );
+
+                    }
+
+
+                    data.success = true;
+
+                    data.title =
+                        "My Visa Advisors";
+
+                    data.introduction =
+                        "Here are the advisors assigned to your visa cases:";
+
+                    data.sections = [
+
+                        {
+
+                            title:
+                                "Your Visa Cases and Advisors",
+
+                            text: "",
+
+                            bullets:
+                                advisorCaseBullets,
+
+                            steps: []
+
+                        }
+
+                    ];
+
+                    data.summary =
+                        "The advisor information shown above is based on the advisor assigned to each visa case.";
+
+                    return;
+                }
+
+            }
+
+
+            data.success = true;
+
+            data.title =
+                "My Advisor";
+
+            data.introduction =
+                "Here is your currently assigned advisor information:";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Advisor Information",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Advisor Name: " +
+                        safeValue(
+                            data.advisor.name,
+                            "Not Assigned"
+                        ),
+
+                        "Advisor Email: " +
+                        safeValue(
+                            data.advisor.email,
+                            "Not Available"
+                        )
+
+                    ],
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "Advisor information is based on the advisor assigned to the selected visa case.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // KNOWLEDGE BASE
+        // =====================================================
+
+        var kbResult =
+            searchKnowledgeBase(
+                question
+            );
+
+
+        if (kbResult.found) {
+
+            data.success = true;
+
+            data.title =
+                "Visa Guidance";
+
+            data.introduction =
+                "Here are the key points related to your question:";
+
+            data.sections =
+                kbResult.sections;
+
+            data.summary =
+                kbResult.summary;
+
+            data.articles = [];
+
+            return;
+        }
+
+
+        // =====================================================
+        // GEMINI FALLBACK
+        // =====================================================
+
+        var aiResult =
+            callGemini(
+                question,
+                data.student,
+                data.visa_case,
+                data.advisor,
+                data.documents
+            );
+
+
+        if (aiResult.success) {
+
+            data.success = true;
+
+            data.title =
+                "Visa Guidance";
+
+            data.introduction =
+                "Here are the key points related to your question:";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Important Points",
+
+                    text: "",
+
+                    bullets:
+                        convertToPoints(
+                            aiResult.answer
+                        ),
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "For important immigration decisions, confirm requirements with your university international student advisor or the appropriate immigration authority.";
+
+            data.articles = [];
+
+            return;
+        }
+
+
+        // =====================================================
+        // CREATE SUPPORT TICKET
+        // =====================================================
+
+        var ticketResult =
+            createSupportTicket(
+                studentResult.profileSysId,
+                question
+            );
+
+
+        if (ticketResult.success) {
+
+            data.success = true;
+
+            data.title =
+                "Support Request Created";
+
+            data.introduction =
+                "I couldn't find a direct answer to that, so I've created a support ticket for your advisor to review.";
+
+            data.sections = [
+
+                {
+
+                    title:
+                        "Ticket Details",
+
+                    text: "",
+
+                    bullets: [
+
+                        "Ticket Number: " +
+                        safeValue(
+                            ticketResult.ticketNumber
+                        ),
+
+                        "Your Question: " +
+                        question
+
+                    ],
+
+                    steps: []
+
+                }
+
+            ];
+
+            data.summary =
+                "Your international student advisor will follow up on this ticket.";
+
+            return;
+        }
+
+
+        // =====================================================
+        // ERROR
+        // =====================================================
+
+        data.success = false;
+
+        data.error =
+            "I could not provide guidance for this question, and I was unable to create a support ticket automatically. Please contact your international student advisor directly.";
+
+    }
+
+
+    // =========================================================
+    // GET CURRENT STUDENT RISK ASSESSMENT
+    // =========================================================
+
+    function getCurrentStudentRiskAssessment() {
+
+        var result = {
+
+            success: false,
+
+            risk_score: 0,
+
+            risk_level: "",
+
+            risk_explanation: "",
+
+            risk_assessment_response: "",
+
+            error: ""
+
+        };
+
+
+        try {
+
+            /*
+             * The Action Designer action resolves the current
+             * logged-in student itself.
+             *
+             * Therefore we intentionally do NOT send the
+             * student sys_id from the browser.
+             */
+
+            var actionInputs = {};
+
+
+            var actionResult =
+                sn_fd.FlowAPI
+                    .getRunner()
+                    .action(
+                        RISK_ACTION_NAME
+                    )
+                    .inForeground()
+                    .withInputs(
+                        actionInputs
+                    )
+                    .run();
+
+
+            var outputs =
+                actionResult.getOutputs();
+
+
+            if (!outputs) {
+
+                result.error =
+                    "Risk assessment action returned no outputs.";
+
+                return result;
+            }
+
+
+            result.risk_score =
+                outputs["risk_score"];
+
+
+            result.risk_level =
+                outputs["risk_level"];
+
+
+            result.risk_explanation =
+                outputs["risk_explanation"];
+
+
+            result.risk_assessment_response =
+                outputs["risk_assessment_response"];
+
+
+            /*
+             * Make sure the action actually returned the
+             * expected values.
+             */
+
+            if (
+                result.risk_score === undefined &&
+                result.risk_level === undefined &&
+                result.risk_explanation === undefined &&
+                result.risk_assessment_response === undefined
+            ) {
+
+                result.error =
+                    "Risk assessment action returned unexpected outputs.";
+
+                return result;
+            }
+
+
+            result.success = true;
+
+            return result;
+
+        }
+        catch (e) {
+
+            result.error =
+                e.message ||
+                String(e);
+
+
+            gs.error(
+                "VisaGuardian Risk Assessment Error: " +
+                result.error
+            );
+
+
+            return result;
+        }
+
+    }
+
+
+    // =========================================================
+    // RISK QUESTION DETECTOR
+    // =========================================================
+
+    function isRiskAssessmentQuestion(
+        normalizedQuestion
+    ) {
+
+        if (!normalizedQuestion) {
+
+            return false;
+
+        }
+
+
+        return containsAny(
+            normalizedQuestion,
+            [
+
+                "my risk",
+
+                "current risk",
+
+                "risk assessment",
+
+                "risk score",
+
+                "risk level",
+
+                "visa risk",
+
+                "case risk",
+
+                "how risky is my case",
+
+                "how risky is my visa",
+
+                "am i at risk",
+
+                "what is my risk",
+
+                "what's my risk",
+
+                "show my risk",
+
+                "check my risk",
+
+                "check my risk assessment",
+
+                "assess my risk",
+
+                "operational risk",
+
+                "student risk"
+
+            ]
+        );
+
+    }
+
+
+    // =========================================================
+    // GET CURRENT STUDENT
+    // =========================================================
+
+    function getCurrentStudent(userSysId) {
+
+        var result = {
+            found: false,
+            profileSysId: "",
+            student: {}
+        };
+
+        var PROFILE_TABLE =
+            "x_snc_visaguardi_0_student_profile";
+
+        try {
+
+            var currentUserName =
+                String(gs.getUserName() || "").trim();
+
+            var currentUserEmail = "";
+
+            try {
+                var userGR =
+                    new GlideRecord("sys_user");
+
+                if (
+                    userGR.get(userSysId) &&
+                    userGR.isValidField("email")
+                ) {
+                    currentUserEmail =
+                        String(
+                            userGR.getValue("email") || ""
+                        ).trim();
+                }
+            } catch (userError) {
+                gs.error(
+                    "VisaGuardian Current User Email Error: " +
+                    userError.message
+                );
+            }
+
+
+            // =================================================
+            // HELPER: ACCEPT PROFILE SAFELY
+            // =================================================
+
+            function acceptProfile(profile) {
+
+                if (!profile || !profile.isValidRecord()) {
+                    return false;
+                }
+
+                // If the profile has a ServiceNow user reference,
+                // never allow another user's profile to be returned.
+                if (profile.isValidField("user")) {
+
+                    var linkedUser =
+                        String(
+                            profile.getValue("user") || ""
+                        ).trim();
+
+                    if (
+                        linkedUser &&
+                        linkedUser != String(userSysId)
+                    ) {
+                        return false;
+                    }
+                }
+
+                result.found = true;
+
+                result.profileSysId =
+                    profile.getUniqueValue();
+
+                result.student =
+                    readStudentProfile(profile);
+
+                return true;
+            }
+
+
+            // =================================================
+            // 1. SESSION STUDENT PROFILE SYS_ID
+            // =================================================
+
+            var sessionProfileSysId =
+                gs.getSession()
+                    .getClientData(
+                        "vg_student_sys_id"
+                    );
+
+            if (sessionProfileSysId) {
+
+                var sessionProfile =
+                    new GlideRecord(PROFILE_TABLE);
+
+                if (
+                    sessionProfile.get(
+                        sessionProfileSysId
+                    )
+                ) {
+
+                    if (acceptProfile(sessionProfile)) {
+                        return result;
+                    }
+                }
+            }
+
+
+            // =================================================
+            // 2. SESSION STUDENT USERNAME
+            // =================================================
+
+            var sessionUserName =
+                gs.getSession()
+                    .getClientData(
+                        "vg_student_user_name"
+                    );
+
+            if (sessionUserName) {
+
+                var profileBySessionUser =
+                    new GlideRecord(PROFILE_TABLE);
+
+                if (
+                    profileBySessionUser.isValidField(
+                        "user_name"
+                    )
+                ) {
+
+                    profileBySessionUser.addQuery(
+                        "user_name",
+                        String(sessionUserName).trim()
+                    );
+
+                    profileBySessionUser.setLimit(1);
+                    profileBySessionUser.query();
+
+                    if (
+                        profileBySessionUser.next() &&
+                        acceptProfile(profileBySessionUser)
+                    ) {
+                        return result;
+                    }
+                }
+            }
+
+
+            // =================================================
+            // 3. DIRECT SERVICE NOW USER REFERENCE
+            // =================================================
+
+            var profile =
+                new GlideRecord(PROFILE_TABLE);
+
+            if (
+                profile.isValidField("user")
+            ) {
+
+                profile.addQuery(
+                    "user",
+                    userSysId
+                );
+
+                profile.setLimit(1);
+                profile.query();
+
+                if (profile.next()) {
+
+                    if (acceptProfile(profile)) {
+                        return result;
+                    }
+                }
+            }
+
+
+            // =================================================
+            // 4. CURRENT SERVICENOW USERNAME
+            // =================================================
+
+            profile =
+                new GlideRecord(PROFILE_TABLE);
+
+            if (
+                profile.isValidField("user_name") &&
+                currentUserName
+            ) {
+
+                profile.addQuery(
+                    "user_name",
+                    currentUserName
+                );
+
+                profile.setLimit(1);
+                profile.query();
+
+                if (profile.next()) {
+
+                    if (acceptProfile(profile)) {
+                        return result;
+                    }
+                }
+            }
+
+
+            // =================================================
+            // 5. CURRENT USER EMAIL
+            // =================================================
+            // Useful when a student profile was recreated and
+            // the username/reference was not populated correctly.
+
+            if (currentUserEmail) {
+
+                profile =
+                    new GlideRecord(PROFILE_TABLE);
+
+                var emailField = "";
+
+                if (
+                    profile.isValidField("email")
+                ) {
+                    emailField = "email";
+                }
+                else if (
+                    profile.isValidField("email_address")
+                ) {
+                    emailField = "email_address";
+                }
+
+                if (emailField) {
+
+                    profile.addQuery(
+                        emailField,
+                        currentUserEmail
+                    );
+
+                    profile.setLimit(1);
+                    profile.query();
+
+                    if (profile.next()) {
+
+                        if (acceptProfile(profile)) {
+                            return result;
+                        }
+                    }
+                }
+            }
+
+
+            // =================================================
+            // 6. CASE OWNERSHIP FALLBACK
+            // =================================================
+            // If the student profile reference was not linked but
+            // the visa case is linked to the current user/profile,
+            // recover the profile from the case safely.
+
+            var caseGR =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_case"
+                );
+
+            var caseUserField = "";
+
+            if (
+                caseGR.isValidField("student")
+            ) {
+                caseUserField = "student";
+            }
+            else if (
+                caseGR.isValidField("student_profile")
+            ) {
+                caseUserField = "student_profile";
+            }
+
+            if (caseUserField) {
+
+                // First try the case's student reference against
+                // the current ServiceNow user.
+                if (
+                    caseUserField == "student" &&
+                    caseGR.isValidField("student")
+                ) {
+
+                    caseGR.addQuery(
+                        "student.user",
+                        userSysId
+                    );
+
+                    caseGR.setLimit(1);
+                    caseGR.query();
+
+                    if (caseGR.next()) {
+
+                        var recoveredProfileId =
+                            caseGR.getValue("student");
+
+                        if (recoveredProfileId) {
+
+                            var recoveredProfile =
+                                new GlideRecord(PROFILE_TABLE);
+
+                            if (
+                                recoveredProfile.get(
+                                    recoveredProfileId
+                                ) &&
+                                acceptProfile(recoveredProfile)
+                            ) {
+                                return result;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Student Error: " +
+                e.message
+            );
+
+        }
+
+        return result;
+    }
+
+
+    // =========================================================
+    // READ STUDENT PROFILE
+    // =========================================================
+
+    function readStudentProfile(profile) {
+
+        var student = {};
+
+
+        student.name =
+            getField(
+                profile,
+                [
+                    "name",
+                    "student_name",
+                    "full_name"
+                ]
+            );
+
+
+        student.student_id =
+            getField(
+                profile,
+                [
+                    "student_id",
+                    "student_number",
+                    "roll_number",
+                    "user_name"
+                ]
+            );
+
+
+        student.email =
+            getField(
+                profile,
+                [
+                    "email",
+                    "email_address"
+                ]
+            );
+
+
+        student.mobile_phone =
+            getField(
+                profile,
+                [
+                    "mobile_phone",
+                    "phone",
+                    "mobile"
+                ]
+            );
+
+
+        student.university_name =
+            getField(
+                profile,
+                [
+                    "university_name",
+                    "university"
+                ]
+            );
+
+
+        student.degree_program =
+            getField(
+                profile,
+                [
+                    "degree_program",
+                    "program",
+                    "course"
+                ]
+            );
+
+
+        student.degree_level =
+            getField(
+                profile,
+                [
+                    "degree_level",
+                    "level"
+                ]
+            );
+
+
+        student.current_semester =
+            getField(
+                profile,
+                [
+                    "current_semester",
+                    "semester"
+                ]
+            );
+
+
+        student.intake_year =
+            getField(
+                profile,
+                [
+                    "intake_year"
+                ]
+            );
+
+
+        student.current_visa_status =
+            getField(
+                profile,
+                [
+                    "current_visa_status",
+                    "visa_status"
+                ]
+            );
+
+
+        student.visa_type =
+            getField(
+                profile,
+                [
+                    "visa_type",
+                    "visa_category"
+                ]
+            );
+
+
+        student.sevis_id =
+            getField(
+                profile,
+                [
+                    "sevis_id",
+                    "sevis"
+                ]
+            );
+
+
+        student.visa_expiry_date =
+            getField(
+                profile,
+                [
+                    "visa_expiry_date",
+                    "visa_expiration_date"
+                ]
+            );
+
+
+        student.passport_expiry_date =
+            getField(
+                profile,
+                [
+                    "passport_expiry_date",
+                    "passport_expiration_date"
+                ]
+            );
+
+
+        return student;
+    }
+
+
+    // =========================================================
+    // EXTRACT CASE NUMBER
+    // =========================================================
+
+    function extractCaseNumber(question) {
+
+        if (!question) {
+
+            return "";
+
+        }
+
+
+        var match =
+            String(question).match(
+                /\b([A-Za-z]{2,10}\d{4,10})\b/
+            );
+
+
+        if (
+            match &&
+            match[1]
+        ) {
+
+            return match[1].toUpperCase();
+
+        }
+
+
+        return "";
+    }
+
+
+    // =========================================================
+    // GET ALL VISA CASES FOR CURRENT STUDENT
+    // =========================================================
+
+    function getStudentVisaCases(
+        profileSysId
+    ) {
+
+        var cases = [];
+
+
+        if (!profileSysId) {
+
+            return cases;
+
+        }
+
+
+        try {
+
+            var gr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_case"
+                );
+
+
+            var ownershipField =
+                "";
+
+
+            if (
+                gr.isValidField("student")
+            ) {
+
+                ownershipField =
+                    "student";
+
+            }
+            else if (
+                gr.isValidField(
+                    "student_profile"
+                )
+            ) {
+
+                ownershipField =
+                    "student_profile";
+
+            }
+
+
+            if (!ownershipField) {
+
+                gs.error(
+                    "VisaGuardian Security: Visa Case table has no student ownership field."
+                );
+
+                return cases;
+
+            }
+
+
+            gr.addQuery(
+                ownershipField,
+                profileSysId
+            );
+
+
+            gr.orderByDesc(
+                "sys_created_on"
+            );
+
+
+            gr.setLimit(50);
+
+            gr.query();
+
+
+            while (
+                gr.next()
+            ) {
+
+                var advisorName = "";
+                var advisorEmail = "";
+                var advisorSysId = "";
+
+
+                if (
+                    gr.isValidField("advisor")
+                ) {
+
+                    advisorSysId =
+                        gr.getValue(
+                            "advisor"
+                        ) || "";
+
+                }
+
+
+                if (
+                    !advisorSysId &&
+                    gr.isValidField(
+                        "assigned_advisor"
+                    )
+                ) {
+
+                    advisorSysId =
+                        gr.getValue(
+                            "assigned_advisor"
+                        ) || "";
+
+                }
+
+
+                if (
+                    advisorSysId
+                ) {
+
+                    try {
+
+                        var advisorGr =
+                            new GlideRecord(
+                                "x_snc_visaguardi_0_advisor_profiles"
+                            );
+
+
+                        if (
+                            advisorGr.get(
+                                advisorSysId
+                            )
+                        ) {
+
+                            advisorName =
+                                getField(
+                                    advisorGr,
+                                    [
+                                        "name",
+                                        "advisor_name",
+                                        "full_name"
+                                    ]
+                                );
+
+
+                            advisorEmail =
+                                getField(
+                                    advisorGr,
+                                    [
+                                        "email",
+                                        "email_address"
+                                    ]
+                                );
+
+                        }
+
+                    }
+                    catch (advisorError) {
+
+                        gs.error(
+                            "VisaGuardian Advisor Lookup Error: " +
+                            advisorError.message
+                        );
+
+                    }
+
+                }
+
+
+                if (
+                    !advisorName &&
+                    gr.isValidField("advisor")
+                ) {
+
+                    advisorName =
+                        gr.getDisplayValue(
+                            "advisor"
+                        ) || "";
+
+                }
+
+
+                if (
+                    !advisorName &&
+                    gr.isValidField(
+                        "assigned_advisor"
+                    )
+                ) {
+
+                    advisorName =
+                        gr.getDisplayValue(
+                            "assigned_advisor"
+                        ) || "";
+
+                }
+
+
+                cases.push({
+
+                    case_id:
+                        getField(
+                            gr,
+                            [
+                                "case_id",
+                                "number",
+                                "case_number"
+                            ]
+                        ),
+
+                    case_type:
+                        getField(
+                            gr,
+                            [
+                                "case_type"
+                            ]
+                        ),
+
+                    visa_category:
+                        getField(
+                            gr,
+                            [
+                                "visa_category",
+                                "visa_type"
+                            ]
+                        ),
+
+                    case_stage:
+                        getField(
+                            gr,
+                            [
+                                "case_stage",
+                                "stage"
+                            ]
+                        ),
+
+                    priority:
+                        getField(
+                            gr,
+                            [
+                                "priority"
+                            ]
+                        ),
+
+                    status:
+                        getField(
+                            gr,
+                            [
+                                "status",
+                                "state"
+                            ]
+                        ),
+
+                    assigned_advisor_name:
+                        advisorName,
+
+                    assigned_advisor_email:
+                        advisorEmail,
+
+                    assigned_advisor_sys_id:
+                        advisorSysId,
+
+                    created_on:
+                        getField(
+                            gr,
+                            [
+                                "created_on",
+                                "sys_created_on"
+                            ]
+                        ),
+
+                    updated_on:
+                        getField(
+                            gr,
+                            [
+                                "updated_on",
+                                "sys_updated_on"
+                            ]
+                        ),
+
+                    sys_id:
+                        gr.getUniqueValue()
+
+                });
+
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Student Cases Error: " +
+                e.message
+            );
+
+        }
+
+
+        return cases;
+    }
+
+
+    // =========================================================
+    // GET VISA CASE BY NUMBER
+    // =========================================================
+
+    function getVisaCaseByNumber(
+        caseNumber,
+        profileSysId
+    ) {
+
+        var result = {
+
+            found: false,
+
+            caseSysId: "",
+
+            case: {}
+
+        };
+
+
+        if (
+            !caseNumber ||
+            !profileSysId
+        ) {
+
+            return result;
+
+        }
+
+
+        try {
+
+            var gr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_case"
+                );
+
+
+            var caseNumberField =
+                "";
+
+
+            if (
+                gr.isValidField("case_id")
+            ) {
+
+                caseNumberField =
+                    "case_id";
+
+            }
+            else if (
+                gr.isValidField("number")
+            ) {
+
+                caseNumberField =
+                    "number";
+
+            }
+            else if (
+                gr.isValidField("case_number")
+            ) {
+
+                caseNumberField =
+                    "case_number";
+
+            }
+
+
+            if (!caseNumberField) {
+
+                gs.error(
+                    "VisaGuardian: No case number field found."
+                );
+
+                return result;
+
+            }
+
+
+            gr.addQuery(
+                caseNumberField,
+                caseNumber
+            );
+
+
+            var ownershipField =
+                "";
+
+
+            if (
+                gr.isValidField("student")
+            ) {
+
+                ownershipField =
+                    "student";
+
+            }
+            else if (
+                gr.isValidField(
+                    "student_profile"
+                )
+            ) {
+
+                ownershipField =
+                    "student_profile";
+
+            }
+
+
+            if (!ownershipField) {
+
+                gs.error(
+                    "VisaGuardian Security: No ownership field found on Visa Case."
+                );
+
+                return result;
+
+            }
+
+
+            gr.addQuery(
+                ownershipField,
+                profileSysId
+            );
+
+
+            gr.setLimit(1);
+
+            gr.query();
+
+
+            if (
+                gr.next()
+            ) {
+
+                result.found = true;
+
+                result.caseSysId =
+                    gr.getUniqueValue();
+
+                result.case =
+                    readVisaCase(
+                        gr
+                    );
+
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Case Lookup Error: " +
+                e.message
+            );
+
+        }
+
+
+        return result;
+    }
+
+
+    // =========================================================
+    // READ VISA CASE
+    // =========================================================
+
+    function readVisaCase(gr) {
+
+        var caseData = {};
+
+
+        caseData.case_id =
+            getField(
+                gr,
+                [
+                    "case_id",
+                    "number",
+                    "case_number"
+                ]
+            );
+
+
+        caseData.case_type =
+            getField(
+                gr,
+                [
+                    "case_type"
+                ]
+            );
+
+
+        caseData.case_type_raw =
+            gr.getValue(
+                "case_type"
+            );
+
+
+        caseData.visa_category =
+            getField(
+                gr,
+                [
+                    "visa_category",
+                    "visa_type"
+                ]
+            );
+
+
+        caseData.case_stage =
+            getField(
+                gr,
+                [
+                    "case_stage",
+                    "stage"
+                ]
+            );
+
+
+        caseData.priority =
+            getField(
+                gr,
+                [
+                    "priority"
+                ]
+            );
+
+
+        caseData.status =
+            getField(
+                gr,
+                [
+                    "status",
+                    "state"
+                ]
+            );
+
+
+        caseData.description =
+            getField(
+                gr,
+                [
+                    "description",
+                    "case_description"
+                ]
+            );
+
+
+        caseData.created_on =
+            getField(
+                gr,
+                [
+                    "created_on",
+                    "sys_created_on"
+                ]
+            );
+
+
+        caseData.updated_on =
+            getField(
+                gr,
+                [
+                    "updated_on",
+                    "sys_updated_on"
+                ]
+            );
+
+
+        var advisorSysId = "";
+        var advisorName = "";
+        var advisorEmail = "";
+
+
+        if (
+            gr.isValidField("advisor")
+        ) {
+
+            advisorSysId =
+                gr.getValue(
+                    "advisor"
+                ) || "";
+
+        }
+
+
+        if (
+            !advisorSysId &&
+            gr.isValidField(
+                "assigned_advisor"
+            )
+        ) {
+
+            advisorSysId =
+                gr.getValue(
+                    "assigned_advisor"
+                ) || "";
+
+        }
+
+
+        if (
+            advisorSysId
+        ) {
+
+            try {
+
+                var advisorGr =
+                    new GlideRecord(
+                        "x_snc_visaguardi_0_advisor_profiles"
+                    );
+
+
+                if (
+                    advisorGr.get(
+                        advisorSysId
+                    )
+                ) {
+
+                    advisorName =
+                        getField(
+                            advisorGr,
+                            [
+                                "name",
+                                "advisor_name",
+                                "full_name"
+                            ]
+                        );
+
+
+                    advisorEmail =
+                        getField(
+                            advisorGr,
+                            [
+                                "email",
+                                "email_address"
+                            ]
+                        );
+
+                }
+
+            }
+            catch (e) {
+
+                gs.error(
+                    "VisaGuardian Read Case Advisor Error: " +
+                    e.message
+                );
+
+            }
+
+        }
+
+
+        if (
+            !advisorName &&
+            gr.isValidField("advisor")
+        ) {
+
+            advisorName =
+                gr.getDisplayValue(
+                    "advisor"
+                ) || "";
+
+        }
+
+
+        if (
+            !advisorName &&
+            gr.isValidField(
+                "assigned_advisor"
+            )
+        ) {
+
+            advisorName =
+                gr.getDisplayValue(
+                    "assigned_advisor"
+                ) || "";
+
+        }
+
+
+        caseData.assigned_advisor_sys_id =
+            advisorSysId;
+
+        caseData.assigned_advisor_name =
+            advisorName;
+
+        caseData.assigned_advisor_email =
+            advisorEmail;
+
+
+        return caseData;
+    }
+
+
+    // =========================================================
+    // GET ADVISOR
+    // =========================================================
+
+    function getAdvisor(
+        caseData,
+        caseSysId
+    ) {
+
+        var advisor = {
+
+            name: "",
+
+            email: ""
+
+        };
+
+
+        try {
+
+            if (
+                caseData
+            ) {
+
+                advisor.name =
+                    safeValue(
+                        caseData.assigned_advisor_name,
+                        ""
+                    );
+
+
+                advisor.email =
+                    safeValue(
+                        caseData.assigned_advisor_email,
+                        ""
+                    );
+
+
+                if (
+                    advisor.name
+                ) {
+
+                    return advisor;
+
+                }
+
+            }
+
+
+            if (
+                !caseData ||
+                !caseData.case_id
+            ) {
+
+                return advisor;
+
+            }
+
+
+            var caseGr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_case"
+                );
+
+
+            var caseNumberField =
+                "";
+
+
+            if (
+                caseGr.isValidField("case_id")
+            ) {
+
+                caseNumberField =
+                    "case_id";
+
+            }
+            else if (
+                caseGr.isValidField("number")
+            ) {
+
+                caseNumberField =
+                    "number";
+
+            }
+            else if (
+                caseGr.isValidField("case_number")
+            ) {
+
+                caseNumberField =
+                    "case_number";
+
+            }
+
+
+            if (!caseNumberField) {
+
+                return advisor;
+
+            }
+
+
+            caseGr.addQuery(
+                caseNumberField,
+                caseData.case_id
+            );
+
+
+            caseGr.setLimit(1);
+
+            caseGr.query();
+
+
+            if (
+                !caseGr.next()
+            ) {
+
+                return advisor;
+
+            }
+
+
+            var advisorSysId =
+                "";
+
+
+            if (
+                caseGr.isValidField("advisor")
+            ) {
+
+                advisorSysId =
+                    caseGr.getValue(
+                        "advisor"
+                    ) || "";
+
+            }
+
+
+            if (
+                !advisorSysId &&
+                caseGr.isValidField(
+                    "assigned_advisor"
+                )
+            ) {
+
+                advisorSysId =
+                    caseGr.getValue(
+                        "assigned_advisor"
+                    ) || "";
+
+            }
+
+
+            if (
+                advisorSysId
+            ) {
+
+                var advisorGr =
+                    new GlideRecord(
+                        "x_snc_visaguardi_0_advisor_profiles"
+                    );
+
+
+                if (
+                    advisorGr.get(
+                        advisorSysId
+                    )
+                ) {
+
+                    advisor.name =
+                        getField(
+                            advisorGr,
+                            [
+                                "name",
+                                "advisor_name",
+                                "full_name"
+                            ]
+                        );
+
+
+                    advisor.email =
+                        getField(
+                            advisorGr,
+                            [
+                                "email",
+                                "email_address"
+                            ]
+                        );
+
+                }
+
+            }
+
+
+            if (
+                !advisor.name &&
+                caseGr.isValidField("advisor")
+            ) {
+
+                advisor.name =
+                    caseGr.getDisplayValue(
+                        "advisor"
+                    ) || "";
+
+            }
+
+
+            if (
+                !advisor.name &&
+                caseGr.isValidField(
+                    "assigned_advisor"
+                )
+            ) {
+
+                advisor.name =
+                    caseGr.getDisplayValue(
+                        "assigned_advisor"
+                    ) || "";
+
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Advisor Error: " +
+                e.message
+            );
+
+        }
+
+
+        return advisor;
+    }
+
+
+    // =========================================================
+    // DOCUMENT QUESTION DETECTOR
+    // =========================================================
+
+    function isDocumentQuestion(
+        normalizedQuestion
+    ) {
+
+        if (!normalizedQuestion) {
+
+            return false;
+
+        }
+
+
+        return containsAny(
+            normalizedQuestion,
+            [
+
+                "my documents",
+                "my document",
+                "document status",
+                "document information",
+                "document details",
+                "document checklist",
+
+                "what documents do i need",
+                "what documents do i need for",
+                "which documents do i need",
+                "which documents are required",
+                "what documents are required",
+                "required documents",
+                "documents required",
+                "documents i need",
+                "documents needed",
+
+                "what documents have i submitted",
+                "which documents have i submitted",
+                "what documents did i submit",
+                "which documents did i submit",
+                "what are the documents submitted",  
+                "documents submitted",
+                "documents i submitted",
+                "submitted documents",
+                "uploaded documents",
+                "what have i uploaded",
+                "what did i upload",
+                "have i submitted",
+                "did i submit",
+                "have i uploaded",
+
+                "what documents am i missing",
+                "which documents am i missing",
+                "what are the missing documents",
+                "what are the documents missing",
+                "what am i missing",
+                "which documents are missing",
+                "what documents are missing",
+                "missing documents",
+                "documents missing",
+                "pending documents",
+                "documents pending",
+
+                "check my documents",
+                "check my document",
+                "can you check my documents",
+                "can you check my document",
+                "review my documents",
+                "review my document",
+                "check document status",
+                "check my document status",
+
+                "are my documents complete",
+                "are my documents completed",
+                "is my document complete",
+                "are all my documents submitted",
+                "is everything submitted",
+                "is my document status complete"
+
+            ]
+        );
+
+    }
+
+
+    // =========================================================
+    // GET STUDENT DOCUMENTS
+    // =========================================================
+
+    function getStudentDocuments(
+        profileSysId,
+        caseSysId,
+        caseTypeRaw
+    ) {
+
+        var documents = [];
+
+
+        if (
+            !caseSysId
+        ) {
+
+            return documents;
+
+        }
+
+
+        try {
+
+            var requiredLabels = [];
+
+
+            var configGr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_document_configuration"
+                );
+
+
+            if (
+                !configGr.isValid()
+            ) {
+
+                gs.error(
+                    "VisaGuardian: Document Configuration table is invalid."
+                );
+
+                return documents;
+
+            }
+
+
+            configGr.addQuery(
+                "visa_category",
+                caseTypeRaw
+            );
+
+
+            configGr.addQuery(
+                "active",
+                true
+            );
+
+
+            configGr.addQuery(
+                "required",
+                true
+            );
+
+
+            configGr.query();
+
+
+            while (
+                configGr.next()
+            ) {
+
+                requiredLabels.push(
+                    configGr.getDisplayValue(
+                        "document_type"
+                    )
+                );
+
+            }
+
+
+            var labelLookup = {};
+
+
+            var configGr2 =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_document_configuration"
+                );
+
+
+            if (
+                configGr2.isValid()
+            ) {
+
+                configGr2.query();
+
+
+                while (
+                    configGr2.next()
+                ) {
+
+                    var rawType =
+                        String(
+                            configGr2.getValue(
+                                "document_type"
+                            )
+                        ).toLowerCase();
+
+
+                    var displayLabel =
+                        configGr2.getDisplayValue(
+                            "document_type"
+                        );
+
+
+                    labelLookup[rawType] =
+                        displayLabel;
+
+                }
+
+            }
+
+
+            var submittedLabels = [];
+
+
+            var gr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_document"
+                );
+
+
+            if (
+                !gr.isValid()
+            ) {
+
+                gs.error(
+                    "VisaGuardian: Visa Document table is invalid."
+                );
+
+                return documents;
+
+            }
+
+
+            gr.addQuery(
+                "visa_case",
+                caseSysId
+            );
+
+
+            gr.query();
+
+
+            while (
+                gr.next()
+            ) {
+
+                var rawDocType =
+                    String(
+                        gr.getValue(
+                            "document_type"
+                        )
+                    );
+
+
+                var displayDocType =
+                    gr.getDisplayValue(
+                        "document_type"
+                    );
+
+
+                var normalizedType =
+                    labelLookup[
+                        rawDocType.toLowerCase()
+                    ] ||
+                    displayDocType;
+
+
+                var docStatus =
+                    gr.getDisplayValue(
+                        "document_status"
+                    );
+
+
+                var verificationStatusRaw =
+                    gr.getValue(
+                        "verification_status"
+                    );
+
+
+                var verificationStatusLabel =
+                    gr.getDisplayValue(
+                        "verification_status"
+                    );
+
+
+                submittedLabels.push(
+                    normalizedType
+                );
+
+
+                documents.push({
+
+                    name:
+                        normalizedType,
+
+                    status:
+                        docStatus,
+
+                    verification_status:
+                        verificationStatusLabel,
+
+                    required:
+                        requiredLabels.indexOf(
+                            normalizedType
+                        ) !== -1,
+
+                    submitted:
+                        true,
+
+                    missing:
+                        (
+                            verificationStatusRaw ===
+                            "rejected"
+                        ),
+
+                    pending:
+                        (
+                            verificationStatusRaw ===
+                            "pending" ||
+                            verificationStatusRaw ===
+                            "under_review"
+                        ),
+
+                    sys_id:
+                        gr.getUniqueValue()
+
+                });
+
+            }
+
+
+            requiredLabels.forEach(
+                function (label) {
+
+                    if (
+                        submittedLabels.indexOf(
+                            label
+                        ) === -1
+                    ) {
+
+                        documents.push({
+
+                            name:
+                                label,
+
+                            status:
+                                "Not Submitted",
+
+                            verification_status:
+                                "Not Submitted",
+
+                            required:
+                                true,
+
+                            submitted:
+                                false,
+
+                            missing:
+                                true,
+
+                            pending:
+                                false
+
+                        });
+
+                    }
+
+                }
+            );
+
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Document Error: " +
+                e.message
+            );
+
+        }
+
+
+        return documents;
+    }
+
+
+    // =========================================================
+    // BUILD DOCUMENT RESPONSE
+    // =========================================================
+
+    function buildDocumentResponse(
+        question,
+        caseNumber,
+        documents,
+        visaCase
+    ) {
+
+        var normalized =
+            String(
+                question || ""
+            ).toLowerCase();
+
+
+        var requiredDocuments = [];
+        var submittedDocuments = [];
+        var missingDocuments = [];
+        var pendingDocuments = [];
+
+
+        for (
+            var i = 0;
+            i < documents.length;
+            i++
+        ) {
+
+            var doc =
+                documents[i];
+
+
+            var status =
+                String(
+                    doc.status || ""
+                ).toLowerCase();
+
+
+            var required =
+                doc.required === true;
+
+
+            var submitted =
+                doc.submitted === true;
+
+
+            var missing =
+                doc.missing === true;
+
+
+            var pending =
+                doc.pending === true;
+
+
+            if (required) {
+
+                requiredDocuments.push(
+                    doc
+                );
+
+            }
+
+
+            if (submitted) {
+
+                submittedDocuments.push(
+                    doc
+                );
+
+            }
+
+
+            if (missing) {
+
+                missingDocuments.push(
+                    doc
+                );
+
+            }
+
+
+            if (pending) {
+
+                pendingDocuments.push(
+                    doc
+                );
+
+            }
+
+
+            if (
+                !required &&
+                !submitted &&
+                !missing &&
+                !pending
+            ) {
+
+                if (
+                    status.indexOf("submitted") !== -1 ||
+                    status.indexOf("uploaded") !== -1 ||
+                    status.indexOf("received") !== -1 ||
+                    status.indexOf("approved") !== -1
+                ) {
+
+                    submittedDocuments.push(
+                        doc
+                    );
+
+                }
+                else if (
+                    status.indexOf("missing") !== -1 ||
+                    status.indexOf("not submitted") !== -1 ||
+                    status.indexOf("not received") !== -1
+                ) {
+
+                    missingDocuments.push(
+                        doc
+                    );
+
+                }
+                else if (
+                    status.indexOf("pending") !== -1 ||
+                    status.indexOf("review") !== -1
+                ) {
+
+                    pendingDocuments.push(
+                        doc
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        if (
+            containsAny(
+                normalized,
+                [
+                    "what documents do i need",
+                    "which documents do i need",
+                    "documents i need",
+                    "documents needed",
+                    "what documents are required",
+                    "which documents are required",
+                    "required documents",
+                    "documents required"
+                ]
+            )
+        ) {
+
+            return showDocumentList(
+                "Required Documents",
+                "Here are the required document records available for your case " +
+                caseNumber +
+                ":",
+                requiredDocuments,
+                "No required document records were found for this case."
+            );
+
+        }
+
+
+        if (
+            containsAny(
+                normalized,
+                [
+                    "what documents have i submitted",
+                    "which documents have i submitted",
+                    "what documents did i submit",
+                    "which documents did i submit",
+                    "documents i submitted",
+                    "submitted documents",
+                    "uploaded documents",
+                    "what have i uploaded",
+                    "what did i upload",
+                    "have i submitted",
+                    "did i submit",
+                    "have i uploaded"
+                ]
+            )
+        ) {
+
+            return showDocumentList(
+                "Submitted Documents",
+                "Here are the documents recorded as submitted or uploaded for case " +
+                caseNumber +
+                ":",
+                submittedDocuments,
+                "No submitted or uploaded document records were found for this case."
+            );
+
+        }
+
+
+        if (
+            containsAny(
+                normalized,
+                [
+                    "what documents am i missing",
+                    "which documents am i missing",
+                    "what am i missing",
+                    "which documents are missing",
+                    "what documents are missing",
+                    "missing documents",
+                    "documents missing"
+                ]
+            )
+        ) {
+
+            return showDocumentList(
+                "Missing Documents",
+                "Here are the document records currently marked as missing for case " +
+                caseNumber +
+                ":",
+                missingDocuments,
+                "No documents are currently marked as missing for this case."
+            );
+
+        }
+
+
+        if (
+            containsAny(
+                normalized,
+                [
+                    "pending documents",
+                    "documents pending"
+                ]
+            )
+        ) {
+
+            return showDocumentList(
+                "Pending Documents",
+                "Here are the documents currently pending or under review for case " +
+                caseNumber +
+                ":",
+                pendingDocuments,
+                "No pending document records were found for this case."
+            );
+
+        }
+
+
+        var allDocumentBullets = [];
+
+
+        if (
+            documents &&
+            documents.length > 0
+        ) {
+
+            for (
+                var d = 0;
+                d < documents.length;
+                d++
+            ) {
+
+                var currentDocument =
+                    documents[d];
+
+
+                var line =
+                    safeValue(
+                        currentDocument.name,
+                        "Document"
+                    );
+
+
+                if (
+                    currentDocument.status
+                ) {
+
+                    line +=
+                        " — Status: " +
+                        currentDocument.status;
+
+                }
+
+
+                if (
+                    currentDocument.required
+                ) {
+
+                    line +=
+                        " — Required";
+
+                }
+
+
+                if (
+                    currentDocument.submitted
+                ) {
+
+                    line +=
+                        " — Submitted";
+
+                }
+
+
+                if (
+                    currentDocument.missing
+                ) {
+
+                    line +=
+                        " — Missing";
+
+                }
+
+
+                if (
+                    currentDocument.pending
+                ) {
+
+                    line +=
+                        " — Pending";
+
+                }
+
+
+                allDocumentBullets.push(
+                    line
+                );
+
+            }
+
+        }
+        else {
+
+            allDocumentBullets.push(
+                "No document records were found for this case."
+            );
+
+        }
+
+
+        data.success = true;
+
+        data.title =
+            "Document Check";
+
+        data.introduction =
+            "Here is the current document information for case " +
+            caseNumber +
+            ":";
+
+        data.sections = [
+
+            {
+
+                title:
+                    "Document Status",
+
+                text: "",
+
+                bullets:
+                    allDocumentBullets,
+
+                steps: []
+
+            }
+
+        ];
+
+
+        var summaryText =
+            "Total document records: " +
+            documents.length +
+            ".";
+
+
+        if (
+            requiredDocuments.length > 0
+        ) {
+
+            summaryText +=
+                " Required: " +
+                requiredDocuments.length +
+                ".";
+
+        }
+
+
+        if (
+            submittedDocuments.length > 0
+        ) {
+
+            summaryText +=
+                " Submitted/uploaded: " +
+                submittedDocuments.length +
+                ".";
+
+        }
+
+
+        if (
+            missingDocuments.length > 0
+        ) {
+
+            summaryText +=
+                " Missing: " +
+                missingDocuments.length +
+                ".";
+
+        }
+
+
+        if (
+            pendingDocuments.length > 0
+        ) {
+
+            summaryText +=
+                " Pending: " +
+                pendingDocuments.length +
+                ".";
+
+        }
+
+
+        data.summary =
+            summaryText;
+
+
+        return;
+    }
+
+
+    // =========================================================
+    // SHOW DOCUMENT LIST
+    // =========================================================
+
+    function showDocumentList(
+        title,
+        introduction,
+        documentList,
+        emptyMessage
+    ) {
+
+        var bullets = [];
+
+
+        if (
+            documentList &&
+            documentList.length > 0
+        ) {
+
+            for (
+                var i = 0;
+                i < documentList.length;
+                i++
+            ) {
+
+                var doc =
+                    documentList[i];
+
+
+                var line =
+                    safeValue(
+                        doc.name,
+                        "Document"
+                    );
+
+
+                if (
+                    doc.status
+                ) {
+
+                    line +=
+                        " — Status: " +
+                        doc.status;
+
+                }
+
+
+                bullets.push(
+                    line
+                );
+
+            }
+
+        }
+        else {
+
+            bullets.push(
+                emptyMessage
+            );
+
+        }
+
+
+        data.success = true;
+
+        data.title =
+            title;
+
+        data.introduction =
+            introduction;
+
+        data.sections = [
+
+            {
+
+                title:
+                    title,
+
+                text: "",
+
+                bullets:
+                    bullets,
+
+                steps: []
+
+            }
+
+        ];
+
+
+        data.summary =
+            documentList &&
+            documentList.length > 0
+                ?
+                "The information above is based on document records associated with your verified visa case."
+                :
+                emptyMessage;
+
+
+        return;
+    }
+
+
+    // =========================================================
+    // SEARCH KNOWLEDGE BASE
+    // =========================================================
+
+    function searchKnowledgeBase(
+        question
+    ) {
+
+        var result = {
+
+            found: false,
+
+            sections: [],
+
+            summary: "",
+
+            articles: []
+
+        };
+
+
+        try {
+
+            var kb =
+                new GlideRecord(
+                    "kb_knowledge"
+                );
+
+
+            kb.addQuery(
+                "workflow_state",
+                "published"
+            );
+
+
+            var q =
+                kb.addQuery(
+                    "short_description",
+                    "CONTAINS",
+                    question
+                );
+
+
+            q.addOrCondition(
+                "text",
+                "CONTAINS",
+                question
+            );
+
+
+            kb.orderByDesc(
+                "sys_updated_on"
+            );
+
+
+            kb.setLimit(1);
+
+            kb.query();
+
+
+            if (
+                kb.next()
+            ) {
+
+                result.found = true;
+
+
+                var articleText =
+                    kb.getValue(
+                        "text"
+                    ) || "";
+
+
+                articleText =
+                    cleanText(
+                        articleText
+                    );
+
+
+                var points =
+                    convertToPoints(
+                        articleText
+                    );
+
+
+                result.sections = [
+
+                    {
+
+                        title:
+                            "Important Points",
+
+                        text: "",
+
+                        bullets:
+                            points,
+
+                        steps: []
+
+                    }
+
+                ];
+
+
+                result.summary =
+                    "Review the points above and follow the applicable requirements for your situation.";
+
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian KB Error: " +
+                e.message
+            );
+
+        }
+
+
+        return result;
+    }
+
+
+    // =========================================================
+    // GEMINI FALLBACK
+    // =========================================================
+
+    function callGemini(
+        question,
+        student,
+        visaCase,
+        advisor,
+        documents
+    ) {
+
+        var result = {
+
+            success: false,
+
+            answer: "",
+
+            error: ""
+
+        };
+
+
+        try {
+
+            var rm =
+                new sn_ws.RESTMessageV2(
+                    "VisaGuardian Gemini AI",
+                    "Generate Visa AI Analysis"
+                );
+
+
+            var studentContext =
+
+                "Student Name: " +
+                safeValue(student.name) +
+
+                "\nStudent ID: " +
+                safeValue(student.student_id) +
+
+                "\nUniversity: " +
+                safeValue(student.university_name) +
+
+                "\nDegree Program: " +
+                safeValue(student.degree_program) +
+
+                "\nDegree Level: " +
+                safeValue(student.degree_level) +
+
+                "\nCurrent Semester: " +
+                safeValue(student.current_semester) +
+
+                "\nIntake Year: " +
+                safeValue(student.intake_year) +
+
+                "\nVisa Type: " +
+                safeValue(student.visa_type) +
+
+                "\nVisa Status: " +
+                safeValue(student.current_visa_status) +
+
+                "\nSEVIS ID: " +
+                safeValue(student.sevis_id) +
+
+                "\nVisa Expiry Date: " +
+                safeValue(student.visa_expiry_date) +
+
+                "\nPassport Expiry Date: " +
+                safeValue(student.passport_expiry_date);
+
+
+            var caseContext = "";
+
+
+            if (
+                visaCase &&
+                visaCase.case_id
+            ) {
+
+                caseContext =
+
+                    "Case ID: " +
+                    safeValue(visaCase.case_id) +
+
+                    "\nCase Type: " +
+                    safeValue(visaCase.case_type) +
+
+                    "\nVisa Category: " +
+                    safeValue(visaCase.visa_category) +
+
+                    "\nCase Stage: " +
+                    safeValue(visaCase.case_stage) +
+
+                    "\nPriority: " +
+                    safeValue(visaCase.priority) +
+
+                    "\nStatus: " +
+                    safeValue(visaCase.status) +
+
+                    "\nAssigned Advisor: " +
+                    safeValue(visaCase.assigned_advisor_name) +
+
+                    "\nAdvisor Email: " +
+                    safeValue(visaCase.assigned_advisor_email);
+
+            }
+            else {
+
+                caseContext =
+                    "No specific visa case has been selected.";
+
+            }
+
+
+            var advisorContext = "";
+
+
+            if (
+                advisor &&
+                advisor.name
+            ) {
+
+                advisorContext =
+
+                    "Advisor: " +
+                    safeValue(advisor.name) +
+
+                    "\nAdvisor Email: " +
+                    safeValue(advisor.email);
+
+            }
+            else {
+
+                advisorContext =
+                    "No specific case advisor has been selected.";
+
+            }
+
+
+            var documentContext =
+                "";
+
+
+            if (
+                documents &&
+                documents.length > 0
+            ) {
+
+                documentContext =
+                    "\n\nDOCUMENTS:\n";
+
+
+                for (
+                    var d = 0;
+                    d < documents.length;
+                    d++
+                ) {
+
+                    documentContext +=
+
+                        "\n- " +
+                        safeValue(
+                            documents[d].name,
+                            "Document"
+                        ) +
+                        " | Status: " +
+                        safeValue(
+                            documents[d].status,
+                            "Unknown"
+                        ) +
+                        " | Required: " +
+                        String(
+                            documents[d].required
+                        ) +
+                        " | Submitted: " +
+                        String(
+                            documents[d].submitted
+                        ) +
+                        " | Missing: " +
+                        String(
+                            documents[d].missing
+                        ) +
+                        " | Pending: " +
+                        String(
+                            documents[d].pending
+                        );
+
+                }
+
+            }
+            else {
+
+                documentContext =
+                    "\n\nNo specific document records have been selected.";
+
+            }
+
+
+            var prompt =
+
+                "You are VisaGuardian AI. " +
+
+                "Answer the student's question about international " +
+                "student visa compliance. " +
+
+                "Use the supplied student, visa case, advisor, " +
+                "and document context only when relevant. " +
+
+                "Never invent student information. " +
+
+                "Never reveal information belonging to another student. " +
+
+                "Do not mention Gemini. " +
+
+                "Do not mention the Knowledge Base. " +
+
+                "Do not mention internal systems. " +
+
+                "Give concise, useful factual guidance. " +
+
+                "Only provide personal student information that is " +
+                "directly relevant to the student's question. " +
+
+                "If no specific visa case has been selected, " +
+                "do not assume or invent a current case. " +
+
+                "If document information is not available, do not invent " +
+                "document names or statuses. " +
+
+                "Use numbered points when appropriate. " +
+
+                "If the question requires steps, provide the steps " +
+                "in the correct order. " +
+
+                "For important immigration decisions, advise the " +
+                "student to confirm requirements with their university " +
+                "international student advisor or appropriate " +
+                "immigration authority. " +
+
+                "\n\nCURRENT STUDENT:\n" +
+                studentContext +
+
+                "\n\nSELECTED VISA CASE:\n" +
+                caseContext +
+
+                "\n\nSELECTED CASE ADVISOR:\n" +
+                advisorContext +
+
+                documentContext +
+
+                "\n\nSTUDENT QUESTION:\n" +
+                question;
+
+
+            var requestBody = {
+
+                contents: [
+
+                    {
+
+                        parts: [
+
+                            {
+
+                                text:
+                                    prompt
+
+                            }
+
+                        ]
+
+                    }
+
+                ],
+
+                generationConfig: {
+
+                    temperature: 0.2,
+
+                    maxOutputTokens: 1200
+
+                }
+
+            };
+
+
+            rm.setRequestBody(
+                JSON.stringify(
+                    requestBody
+                )
+            );
+
+
+            var response =
+                rm.execute();
+
+
+            var status =
+                response.getStatusCode();
+
+
+            var body =
+                response.getBody();
+
+
+            if (
+                status < 200 ||
+                status >= 300
+            ) {
+
+                result.error =
+                    "HTTP " +
+                    status;
+
+
+                gs.error(
+                    "VisaGuardian AI Error: " +
+                    body
+                );
+
+
+                return result;
+
+            }
+
+
+            var json =
+                JSON.parse(
+                    body
+                );
+
+
+            var answer = "";
+
+
+            if (
+                json.candidates &&
+                json.candidates.length > 0
+            ) {
+
+                var candidate =
+                    json.candidates[0];
+
+
+                if (
+                    candidate.content &&
+                    candidate.content.parts
+                ) {
+
+                    for (
+                        var i = 0;
+                        i <
+                        candidate.content.parts.length;
+                        i++
+                    ) {
+
+                        if (
+                            candidate.content.parts[i].text
+                        ) {
+
+                            answer +=
+                                candidate.content.parts[i].text;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+            if (!answer) {
+
+                result.error =
+                    "Empty response.";
+
+                return result;
+
+            }
+
+
+            result.success = true;
+
+            result.answer =
+                cleanText(
+                    answer
+                );
+
+
+            return result;
+
+        }
+        catch (e) {
+
+            result.error =
+                e.message;
+
+
+            gs.error(
+                "VisaGuardian AI Exception: " +
+                e.message
+            );
+
+
+            return result;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CREATE SUPPORT TICKET
+    // =========================================================
+
+    function createSupportTicket(
+        profileSysId,
+        question
+    ) {
+
+        var result = {
+
+            success: false,
+
+            ticketNumber: ""
+
+        };
+
+
+        try {
+
+            var gr =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_visa_case"
+                );
+
+
+            if (
+                !gr.isValid()
+            ) {
+
+                return result;
+
+            }
+
+
+            gr.initialize();
+
+
+            if (
+                gr.isValidField("student")
+            ) {
+
+                gr.setValue(
+                    "student",
+                    profileSysId
+                );
+
+            }
+            else if (
+                gr.isValidField(
+                    "student_profile"
+                )
+            ) {
+
+                gr.setValue(
+                    "student_profile",
+                    profileSysId
+                );
+
+            }
+
+
+            if (
+                gr.isValidField("case_type")
+            ) {
+
+                gr.setValue(
+                    "case_type",
+                    "General Inquiry"
+                );
+
+            }
+
+
+            if (
+                gr.isValidField("priority")
+            ) {
+
+                gr.setValue(
+                    "priority",
+                    "4 - Low"
+                );
+
+            }
+
+
+            if (
+                gr.isValidField("status")
+            ) {
+
+                gr.setValue(
+                    "status",
+                    "Open"
+                );
+
+            }
+            else if (
+                gr.isValidField("state")
+            ) {
+
+                gr.setValue(
+                    "state",
+                    "Open"
+                );
+
+            }
+
+
+            if (
+                gr.isValidField("description")
+            ) {
+
+                gr.setValue(
+                    "description",
+                    "AI Assistant could not directly answer the following student question:\n\n" +
+                    question
+                );
+
+            }
+            else if (
+                gr.isValidField(
+                    "case_description"
+                )
+            ) {
+
+                gr.setValue(
+                    "case_description",
+                    "AI Assistant could not directly answer the following student question:\n\n" +
+                    question
+                );
+
+            }
+
+
+            var newSysId =
+                gr.insert();
+
+
+            if (newSysId) {
+
+                result.success = true;
+
+                result.ticketNumber =
+                    getField(
+                        gr,
+                        [
+                            "case_id",
+                            "number",
+                            "case_number"
+                        ]
+                    ) ||
+                    newSysId;
+
+            }
+
+        }
+        catch (e) {
+
+            gs.error(
+                "VisaGuardian Ticket Creation Error: " +
+                e.message
+            );
+
+        }
+
+
+        return result;
+    }
+
+
+    // =========================================================
+    // SINGLE CASE SUMMARY
+    // =========================================================
+
+    function buildCaseSummary(
+        student,
+        visaCase,
+        advisor,
+        documents
+    ) {
+
+        var points = [];
+
+
+        points.push(
+            "Student: " +
+            safeValue(
+                student.name
+            )
+        );
+
+
+        points.push(
+            "Visa type: " +
+            safeValue(
+                student.visa_type
+            )
+        );
+
+
+        points.push(
+            "Visa status: " +
+            safeValue(
+                student.current_visa_status
+            )
+        );
+
+
+        points.push(
+            "Case ID: " +
+            safeValue(
+                visaCase.case_id
+            )
+        );
+
+
+        points.push(
+            "Case type: " +
+            safeValue(
+                visaCase.case_type
+            )
+        );
+
+
+        if (
+            visaCase.visa_category
+        ) {
+
+            points.push(
+                "Visa category: " +
+                safeValue(
+                    visaCase.visa_category
+                )
+            );
+
+        }
+
+
+        points.push(
+            "Case priority: " +
+            safeValue(
+                visaCase.priority
+            )
+        );
+
+
+        points.push(
+            "Status: " +
+            safeValue(
+                visaCase.case_stage
+            )
+        );
+
+
+        if (
+            advisor &&
+            advisor.name
+        ) {
+
+            points.push(
+                "Assigned advisor: " +
+                advisor.name
+            );
+
+        }
+
+
+        if (
+            advisor &&
+            advisor.email
+        ) {
+
+            points.push(
+                "Advisor email: " +
+                advisor.email
+            );
+
+        }
+
+
+        if (
+            visaCase.created_on
+        ) {
+
+            points.push(
+                "Created on: " +
+                safeValue(
+                    visaCase.created_on
+                )
+            );
+
+        }
+
+
+        if (
+            visaCase.updated_on
+        ) {
+
+            points.push(
+                "Last updated: " +
+                safeValue(
+                    visaCase.updated_on
+                )
+            );
+
+        }
+
+
+        if (
+            documents &&
+            documents.length
+        ) {
+
+            points.push(
+                "Documents currently associated with the record: " +
+                documents.length
+            );
+
+        }
+
+
+        if (
+            visaCase.description
+        ) {
+
+            points.push(
+                "Case description: " +
+                visaCase.description
+            );
+
+        }
+
+
+        return points.join(
+            "\n"
+        );
+
+    }
+
+
+    // =========================================================
+    // ALL CASES SUMMARY
+    // =========================================================
+
+    function buildAllCasesSummary(
+        student,
+        cases
+    ) {
+
+        var points = [];
+
+
+        points.push(
+            "Student: " +
+            safeValue(
+                student.name
+            )
+        );
+
+
+        points.push(
+            "Total visa cases: " +
+            cases.length
+        );
+
+
+        for (
+            var i = 0;
+            i < cases.length;
+            i++
+        ) {
+
+            var currentCase =
+                cases[i];
+
+
+            var caseSummary =
+
+                "Case " +
+                (i + 1) +
+                ": " +
+
+                safeValue(
+                    currentCase.case_id,
+                    "Unknown"
+                ) +
+
+                " — Type: " +
+
+                safeValue(
+                    currentCase.case_type,
+                    "Not available"
+                ) +
+
+                " — Status: " +
+
+                safeValue(
+                    currentCase.case_stage,
+                    "Not available"
+                ) +
+
+                " — Priority: " +
+
+                safeValue(
+                    currentCase.priority,
+                    "Not available"
+                );
+
+
+            if (
+                currentCase.assigned_advisor_name
+            ) {
+
+                caseSummary +=
+                    " — Advisor: " +
+                    safeValue(
+                        currentCase.assigned_advisor_name
+                    );
+
+            }
+
+
+            if (
+                currentCase.visa_category
+            ) {
+
+                caseSummary +=
+                    " — Visa Category: " +
+                    safeValue(
+                        currentCase.visa_category
+                    );
+
+            }
+
+
+            points.push(
+                caseSummary
+            );
+
+        }
+
+
+        var openCount = 0;
+        var rejectedCount = 0;
+
+
+        for (
+            var j = 0;
+            j < cases.length;
+            j++
+        ) {
+
+            var stage =
+                String(
+                    cases[j].case_stage || ""
+                ).toLowerCase();
+
+
+            var status =
+                String(
+                    cases[j].status || ""
+                ).toLowerCase();
+
+
+            if (
+                stage.indexOf("reject") !== -1 ||
+                status.indexOf("reject") !== -1
+            ) {
+
+                rejectedCount++;
+
+            }
+
+
+            if (
+                status == "open" ||
+                status.indexOf("open") !== -1
+            ) {
+
+                openCount++;
+
+            }
+
+        }
+
+
+        points.push(
+            "Overall case status: " +
+            openCount +
+            " case(s) are currently open."
+        );
+
+
+        if (
+            rejectedCount > 0
+        ) {
+
+            points.push(
+                "Attention: " +
+                rejectedCount +
+                " case(s) contain rejection-related status or stage information."
+            );
+
+        }
+
+
+        points.push(
+            "Recommended next step: Review each case individually for its specific requirements or rejection details and consult your assigned international student advisor before making important immigration decisions."
+        );
+
+
+        return points.join(
+            "\n"
+        );
+
+    }
+
+
+    // =========================================================
+    // FIELD READER
+    // =========================================================
+
+    function getField(
+        gr,
+        fieldNames
+    ) {
+
+        if (
+            !gr ||
+            !fieldNames
+        ) {
+
+            return "";
+
+        }
+
+
+        for (
+            var i = 0;
+            i < fieldNames.length;
+            i++
+        ) {
+
+            var field =
+                fieldNames[i];
+
+
+            if (
+                gr.isValidField(field)
+            ) {
+
+                var value =
+                    gr.getDisplayValue(
+                        field
+                    );
+
+
+                if (
+                    value !== null &&
+                    value !== undefined &&
+                    String(value).trim() !== ""
+                ) {
+
+                    return String(
+                        value
+                    ).trim();
+
+                }
+
+            }
+
+        }
+
+
+        return "";
+    }
+
+
+    // =========================================================
+    // SAFE VALUE
+    // =========================================================
+
+    function safeValue(
+        value,
+        fallback
+    ) {
+
+        if (
+            value === null ||
+            value === undefined ||
+            String(value).trim() === ""
+        ) {
+
+            return fallback ||
+                "Not available";
+
+        }
+
+
+        return String(
+            value
+        );
+
+    }
+
+
+    // =========================================================
+    // QUESTION MATCHING
+    // =========================================================
+
+    function containsAny(
+        text,
+        words
+    ) {
+
+        if (!text) {
+
+            return false;
+
+        }
+
+
+        for (
+            var i = 0;
+            i < words.length;
+            i++
+        ) {
+
+            if (
+                text.indexOf(
+                    words[i]
+                ) !== -1
+            ) {
+
+                return true;
+
+            }
+
+        }
+
+
+        return false;
+
+    }
+
+
+    // =========================================================
+    // CONVERT TEXT TO POINTS
+    // =========================================================
+
+    function convertToPoints(
+        text
+    ) {
+
+        if (!text) {
+
+            return [];
+
+        }
+
+
+        text =
+            cleanText(
+                text
+            );
+
+
+        var points = [];
+
+
+        var lines =
+            text.split(
+                /\r?\n/
+            );
+
+
+        for (
+            var i = 0;
+            i < lines.length;
+            i++
+        ) {
+
+            var line =
+                String(
+                    lines[i]
+                ).trim();
+
+
+            if (!line) {
+
+                continue;
+
+            }
+
+
+            line =
+                line.replace(
+                    /^\s*(?:\d+[\.\)]|[-•*])\s*/,
+                    ""
+                );
+
+
+            if (!line) {
+
+                continue;
+
+            }
+
+
+            if (
+                line.toLowerCase()
+                    .indexOf(
+                        "gemini"
+                    ) === 0
+            ) {
+
+                continue;
+
+            }
+
+
+            if (
+                line.toLowerCase()
+                    .indexOf(
+                        "knowledge base"
+                    ) === 0
+            ) {
+
+                continue;
+
+            }
+
+
+            if (
+                line.length > 240
+            ) {
+
+                var sentences =
+                    line.split(
+                        /(?<=[.!?])\s+/
+                    );
+
+
+                for (
+                    var j = 0;
+                    j < sentences.length;
+                    j++
+                ) {
+
+                    var sentence =
+                        sentences[j].trim();
+
+
+                    if (
+                        sentence.length > 10
+                    ) {
+
+                        points.push(
+                            sentence
+                        );
+
+                    }
+
+                }
+
+            }
+            else {
+
+                points.push(
+                    line
+                );
+
+            }
+
+        }
+
+
+        var unique = [];
+
+        var seen = {};
+
+
+        for (
+            var k = 0;
+            k < points.length;
+            k++
+        ) {
+
+            var point =
+                points[k].trim();
+
+
+            if (!point) {
+
+                continue;
+
+            }
+
+
+            var key =
+                point.toLowerCase();
+
+
+            if (!seen[key]) {
+
+                seen[key] = true;
+
+                unique.push(
+                    point
+                );
+
+            }
+
+        }
+
+
+        if (
+            unique.length > 20
+        ) {
+
+            unique =
+                unique.slice(
+                    0,
+                    20
+                );
+
+        }
+
+
+        return unique;
+
+    }
+
+
+    // =========================================================
+    // CLEAN TEXT
+    // =========================================================
+
+    function cleanText(
+        text
+    ) {
+
+        if (!text) {
+
+            return "";
+
+        }
+
+
+        text =
+            String(
+                text
+            );
+
+
+        text =
+            text.replace(
+                /#[a-zA-Z0-9_-]+\s*\{[^}]*\}/g,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /<style[\s\S]*?<\/style>/gi,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /<script[\s\S]*?<\/script>/gi,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /<[^>]+>/g,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /```/g,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /\bGemini AI\b/gi,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /\bGemini\b/gi,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /\bKnowledge Base\b/gi,
+                ""
+            );
+
+
+        text =
+            text.replace(
+                /[ \t]+/g,
+                " "
+            );
+
+
+        text =
+            text.replace(
+                /\n{3,}/g,
+                "\n\n"
+            );
+
+
+        return text.trim();
+
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 05:02:43</sys_created_on>
+        <sys_id>ed383c8a1c6203107f44ac71430964bd</sys_id>
+        <sys_mod_count>114</sys_mod_count>
+        <sys_name>VG Left Sidebar</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_ed383c8a1c6203107f44ac71430964bd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 21:04:05</sys_updated_on>
+        <template><![CDATA[<!-- =====================================================
+     VISA GUARDIAN AI - STUDENT SIDEBAR
+     PREMIUM DARK BLUE UI
+     ===================================================== -->
+
+<div class="vg-sidebar">
+
+    <!-- =================================================
+         BRAND
+         ================================================= -->
+
+    <div class="vg-sidebar-logo">
+
+        <div class="vg-sidebar-brand-icon">
+
+            <img
+                src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+                alt="VisaGuardian AI"
+                class="vg-sidebar-logo-image">
+
+        </div>
+
+        <div class="vg-logo-text">
+
+            <div class="vg-logo-title">
+                Visa<span>Guardian</span> <strong>AI</strong>
+            </div>
+
+            <div class="vg-logo-subtitle">
+                International Student Services
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         NAVIGATION
+         ================================================= -->
+
+    <nav
+        class="vg-sidebar-nav"
+        id="vgSidebarNav">
+
+
+        <!-- =================================================
+             PROFILE
+             ================================================= -->
+
+        <a
+            href="?id=vg_profile"
+            class="vg-nav-item"
+            data-page="vg_profile"
+            ng-class="{'active': c.activePage === 'vg_profile'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-user-circle-o"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Profile
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <a
+            href="?id=vg_student_home"
+            class="vg-nav-item"
+            data-page="vg_student_home"
+            ng-class="{'active': c.activePage === 'vg_student_home'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-home"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             MY REQUESTS
+             ================================================= -->
+
+        <a
+            href="?id=vg_my_requests"
+            class="vg-nav-item"
+            data-page="vg_my_requests"
+            ng-class="{'active': c.activePage === 'vg_my_requests'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-list-alt"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                My Requests
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             START NEW REQUEST
+             ================================================= -->
+
+        <a
+            href="?id=vg_create_case"
+            class="vg-nav-item"
+            data-page="vg_create_case"
+            ng-class="{'active': c.activePage === 'vg_create_case'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-plus-square-o"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Start New Request
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             DOCUMENTS
+             ================================================= -->
+
+        <a
+            href="?id=vg_doc_upload"
+            class="vg-nav-item"
+            data-page="vg_doc_upload"
+            ng-class="{'active': c.activePage === 'vg_doc_upload'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-file-text-o"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Documents
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             COMPLIANCE DIGITAL TWIN
+             ================================================= -->
+
+        <a
+            href="?id=vg_digital_twin"
+            class="vg-nav-item"
+            data-page="vg_digital_twin"
+            ng-class="{'active': c.activePage === 'vg_digital_twin'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-sitemap"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Compliance Digital Twin
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             DEADLINES
+             ================================================= -->
+
+        <a
+            href="?id=vg_deadlines"
+            class="vg-nav-item"
+            data-page="vg_deadlines"
+            ng-class="{'active': c.activePage === 'vg_deadlines'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-calendar"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                My Deadlines
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             AI CHAT
+             ================================================= -->
+
+        <a
+            href="?id=vg_ai_chat"
+            class="vg-nav-item"
+            data-page="vg_ai_chat"
+            ng-class="{'active': c.activePage === 'vg_ai_chat'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-comments-o"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Ask VisaGuardian AI
+            </span>
+
+            <span class="vg-ai-indicator">
+                AI
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             STUDENT HELP & SUPPORT
+             ================================================= -->
+
+        <a
+            href="student?id=student_help_and_support"
+            class="vg-nav-item"
+            data-page="student_help_and_support"
+            ng-class="{'active': c.activePage === 'student_help_and_support'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-life-ring"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Student Help &amp; Support
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             NOTIFICATIONS
+             ================================================= -->
+
+        <a
+            href="?id=vg_notifications"
+            class="vg-nav-item"
+            data-page="vg_notifications"
+            ng-class="{'active': c.activePage === 'vg_notifications'}">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-bell-o"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Notifications
+            </span>
+
+            <!-- Notification badge -->
+
+            <span
+                class="vg-notification-badge"
+                ng-if="data.notification_count > 0">
+
+                {{data.notification_count}}
+
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- =================================================
+         SIDEBAR FOOTER
+         ================================================= -->
+
+    <div class="vg-sidebar-footer">
+
+        <a
+            href="student?id=login_page"
+            class="vg-nav-item logout-item">
+
+            <span class="vg-nav-icon">
+                <i
+                    class="fa fa-sign-out"
+                    aria-hidden="true">
+                </i>
+            </span>
+
+            <span class="vg-nav-text">
+                Logout
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VISA GUARDIAN AI — FLOATING ASSISTANT
+     ========================================================= -->
+
+<div class="vg-ai-floating-wrapper">
+
+    <!-- FLOATING BUTTON -->
+
+    <button
+        type="button"
+        class="vg-ai-floating-btn"
+        ng-click="c.toggleAIChat()"
+        aria-label="Ask VisaGuardian AI"
+        title="Ask VisaGuardian AI">
+
+        <svg
+            class="vg-ai-stars"
+            viewBox="0 0 64 64"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+
+            <path
+                d="M32 8 C33.5 18 36 21 46 22.5 C36 24 33.5 27 32 38 C30.5 27 28 24 18 22.5 C28 21 30.5 18 32 8Z"
+                fill="white" />
+
+            <path
+                d="M17 30 C17.8 35 19.2 36.2 24 37 C19.2 37.8 17.8 39 17 44 C16.2 39 14.8 37.8 10 37 C14.8 36.2 16.2 35 17 30Z"
+                fill="white"
+                opacity="0.9" />
+
+            <path
+                d="M46 35 C46.7 39.2 47.8 40.3 52 41 C47.8 41.7 46.7 42.8 46 47 C45.3 42.8 44.2 41.7 40 41 C44.2 40.3 46 35Z"
+                fill="white"
+                opacity="0.85" />
+
+        </svg>
+
+    </button>
+
+
+    <!-- HOVER LABEL -->
+
+    <div class="vg-ai-hover-label">
+        Ask VisaGuardian AI
+    </div>
+
+
+    <!-- =====================================================
+         AI CHAT OVERLAY
+         ===================================================== -->
+
+    <div
+        class="vg-ai-overlay"
+        ng-if="c.aiChatOpen">
+
+        <div class="vg-ai-chat-panel">
+
+
+            <!-- =================================================
+                 HEADER
+                 ================================================= -->
+
+            <div class="vg-ai-chat-header">
+
+                <div class="vg-ai-chat-title">
+
+                    <div class="vg-ai-mini-icon">
+
+                        <svg
+                            class="vg-ai-mini-stars"
+                            viewBox="0 0 64 64"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+
+                            <path
+                                d="M32 8 C33.5 18 36 21 46 22.5 C36 24 33.5 27 32 38 C30.5 27 28 24 18 22.5 C28 21 30.5 18 32 8Z"
+                                fill="white" />
+
+                            <path
+                                d="M17 30 C17.8 35 19.2 36.2 24 37 C19.2 37.8 17.8 39 17 44 C16.2 39 14.8 37.8 10 37 C14.8 36.2 16.2 35 17 30Z"
+                                fill="white"
+                                opacity="0.9" />
+
+                            <path
+                                d="M46 35 C46.7 39.2 47.8 40.3 52 41 C47.8 41.7 46.7 42.8 46 47 C45.3 42.8 44.2 41.7 40 41 C44.2 40.3 46.7 39.2 46 35Z"
+                                fill="white"
+                                opacity="0.85" />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="vg-ai-header-text">
+
+                        <div class="vg-ai-title">
+                            VisaGuardian AI
+                        </div>
+
+                        <div class="vg-ai-subtitle">
+                            Your AI Visa Assistant
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="vg-ai-close"
+                    ng-click="c.toggleAIChat()"
+                    aria-label="Close VisaGuardian AI">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 WELCOME BOX
+                 ================================================= -->
+
+            <div class="vg-ai-welcome-box">
+
+                <div class="vg-ai-greeting-row">
+
+                    <div class="vg-ai-avatar-badge">
+                        ]]>🤖
+<![CDATA[                    </div>
+
+                    <div class="vg-ai-greeting-text">
+
+                        Hello
+                        <span class="vg-student-name">
+                            {{data.firstName || 'Student'}}
+                        </span>! ]]>👋
+
+<![CDATA[                        <p>
+                            I'm your AI assistant.
+                            How can I help you today?
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUGGESTION CHIPS -->
+
+                <div class="vg-ai-suggestions">
+
+                    <button
+                        type="button"
+                        class="vg-suggestion-chip"
+                        ng-click="c.askSuggestion('What is the status of my visa case?')">
+
+                        What is the status of my visa case?
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="vg-suggestion-chip"
+                        ng-click="c.askSuggestion('What documents are still pending?')">
+
+                        What documents are still pending?
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="vg-suggestion-chip"
+                        ng-click="c.askSuggestion('When is my next deadline?')">
+
+                        When is my next deadline?
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="vg-suggestion-chip"
+                        ng-click="c.askSuggestion('Am I compliant right now?')">
+
+                        Am I compliant right now?
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 AI CHAT CONTENT
+                 ================================================= -->
+
+            <div
+                class="vg-ai-chat-content"
+                id="vg-chat">
+
+                <div
+                    class="vg-chat-message-list"
+                    style="padding:12px; overflow-y:auto;">
+
+                    <div
+                        ng-repeat="msg in c.data.messages track by $index"
+                        class="vg-chat-msg"
+                        style="margin-bottom:10px;">
+
+                        <div
+                            class="msg-bubble"
+                            style="padding:8px 12px; border-radius:8px; font-size:12px;"
+                            ng-style="msg.type === 'user'
+                                ? {
+                                    'background':'#2563eb',
+                                    'color':'#fff',
+                                    'margin-left':'20%'
+                                  }
+                                : {
+                                    'background':'#f1f5f9',
+                                    'color':'#0f172a',
+                                    'margin-right':'20%'
+                                  }">
+
+
+                            <!-- USER -->
+
+                            <div ng-if="msg.type === 'user'">
+                                {{msg.text}}
+                            </div>
+
+
+                            <!-- SEARCHING -->
+
+                            <div ng-if="msg.type === 'searching'">
+
+                                <em>
+                                    {{msg.text}}
+                                </em>
+
+                            </div>
+
+
+                            <!-- ERROR -->
+
+                            <div ng-if="msg.type === 'error'">
+                                {{msg.text}}
+                            </div>
+
+
+                            <!-- ANSWER -->
+
+                            <div ng-if="msg.type === 'answer'">
+
+                                <strong>
+                                    {{msg.title}}
+                                </strong>
+
+                                <p style="margin:4px 0;">
+                                    {{msg.introduction}}
+                                </p>
+
+                                <ul
+                                    ng-if="msg.sections"
+                                    style="margin:0; padding-left:15px;">
+
+                                    <li
+                                        ng-repeat="sec in msg.sections">
+
+                                        <div
+                                            ng-repeat="bullet in sec.bullets">
+
+                                            • {{bullet}}
+
+                                        </div>
+
+                                    </li>
+
+                                </ul>
+
+                                <p
+                                    ng-if="msg.summary"
+                                    style="margin:4px 0;">
+
+                                    {{msg.summary}}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CHAT INPUT
+                 ================================================= -->
+
+            <div class="vg-ai-input-area">
+
+                <input
+                    type="text"
+                    class="vg-ai-input"
+                    ng-model="c.question"
+                    placeholder="Type your question..."
+                    ng-keypress="c.handleKeyPress($event)"
+                    aria-label="Ask VisaGuardian AI">
+
+
+                <button
+                    type="button"
+                    class="vg-ai-send"
+                    ng-click="c.sendQuestion()"
+                    aria-label="Send question">
+
+                    ➤
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 DISCLAIMER
+                 ================================================= -->
+
+            <div class="vg-ai-footer-disclaimer">
+
+                AI responses may not be 100% accurate.
+                Please verify important information.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>ed383c8a1c6203107f44ac71430964bd</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 05:02:43</sys_created_on>
+        <sys_id>b138fc8a1c6203107f44ac71430964f8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 05:02:43</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

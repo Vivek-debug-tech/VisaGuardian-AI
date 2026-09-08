@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="0c09c06f29ea43107f44d6fee5fae373" label="Advisor Profiles" max_length="40" name="x_snc_visaguardi_0_advisor_profiles" type="collection">
+        <element label="Last Name" mandatory="true" max_length="100" name="last_name" type="string"/>
+        <element label="First Name" mandatory="true" max_length="100" name="first_name" type="string"/>
+        <element label="User" mandatory="true" max_length="32" name="user" reference="sys_user" type="reference"/>
+        <element choice="3" label="Specialization" max_length="40" name="specialization" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Visa Extension" sequence="4" value="visa_extension"/>
+                <element inactive_on_update="false" label="CPT Application" sequence="1" value="cpt_application"/>
+                <element inactive_on_update="false" label="SEVIS UPDATE" sequence="5" value="sevis_update"/>
+                <element inactive_on_update="false" label="Status Change" sequence="6" value="status_change"/>
+                <element inactive_on_update="false" label="New Visa Application" sequence="0" value="new_visa_application"/>
+                <element inactive_on_update="false" label="OPT Application" sequence="2" value="opt_application"/>
+                <element inactive_on_update="false" label="Visa Renewal" sequence="3" value="visa_renewal"/>
+                <element inactive_on_update="false" label="General Immigration Support" sequence="7" value="general_immigration_support"/>
+            </choice>
+        </element>
+        <element default="10" label="Max Case Load" max_length="255" name="max_case_load" type="integer"/>
+        <element choice="3" default="Available" label="Availability" max_length="40" name="availability" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Busy" sequence="1" value="busy"/>
+                <element inactive_on_update="false" label="Unavailable" sequence="3" value="unavailable"/>
+                <element inactive_on_update="false" label="Available" sequence="0" value="available"/>
+                <element inactive_on_update="false" label="On Leave" sequence="2" value="on_leave"/>
+            </choice>
+        </element>
+        <element label="Current Case Load" max_length="40" name="current_case_load" type="integer"/>
+        <element label="Email" mandatory="true" max_length="40" name="email" type="string"/>
+        <element label="Mobile Number" max_length="40" name="mobile_number" type="phone_number_e164"/>
+        <element label="Advisor ID" mandatory="true" max_length="40" name="advisor_id" type="string"/>
+        <element label="Department" max_length="40" name="department" type="string"/>
+        <element label="Experience" max_length="40" name="experience" type="integer"/>
+        <element label="Active" max_length="255" name="active" read_only="true" read_only_option="display_read_only" type="boolean"/>
+        <index name="index">
+            <element name="user"/>
+        </index>
+    </element>
+</database>

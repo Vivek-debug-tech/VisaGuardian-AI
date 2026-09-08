@@ -1,0 +1,4644 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope) {
+
+    var c = this;
+
+    c.loading = false;
+
+
+    // =====================================================
+    // DEFAULT FILTERS
+    // =====================================================
+
+    c.filters = {
+
+        dateRange: "ALL",
+
+        visaType: "ALL",
+
+        caseStatus: "ALL",
+
+        advisor: "ALL",
+
+        risk: "ALL"
+
+    };
+
+
+    // =====================================================
+    // REFRESH
+    // =====================================================
+
+    c.refreshReports = function() {
+
+        c.loading = true;
+
+        c.server.get({
+
+            action: "refresh"
+
+        }).then(function(response) {
+
+            c.data = response.data;
+
+            c.loading = false;
+
+        }, function() {
+
+            c.loading = false;
+
+        });
+
+    };
+
+
+    // =====================================================
+    // APPLY FILTERS
+    // =====================================================
+
+    c.applyFilters = function() {
+
+        c.loading = true;
+
+        c.server.get({
+
+            action: "filter",
+
+            filters: c.filters
+
+        }).then(function(response) {
+
+            c.data = response.data;
+
+            c.loading = false;
+
+        }, function() {
+
+            c.loading = false;
+
+        });
+
+    };
+
+
+    // =====================================================
+    // REPORT BUTTON
+    // =====================================================
+
+    c.generateReport = function(type) {
+
+        c.loading = true;
+
+        c.server.get({
+
+            action: "report",
+
+            reportType: type,
+
+            filters: c.filters
+
+        }).then(function(response) {
+
+            c.data = response.data;
+
+            c.loading = false;
+
+        }, function() {
+
+            c.loading = false;
+
+        });
+
+    };
+
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    if (!c.data) {
+
+        c.server.get({
+
+            action: "refresh"
+
+        }).then(function(response) {
+
+            c.data = response.data;
+
+        });
+
+    }
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.vg-reports-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+
+  color: #2b3674;
+  padding: 0px;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-reports-container .vg-hero-banner {
+  background: linear-gradient(
+    135deg,
+    #091e3a 0%,
+    #0d3a78 100%
+  );
+
+  border-radius: 12px;
+  padding: 24px 30px;
+
+  color: #ffffff;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 8px 20px rgba(9, 30, 58, 0.15);
+
+  margin-bottom: 24px;
+}
+
+
+.vg-reports-container .hero-content h2 {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+
+.vg-reports-container .hero-content p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+
+.vg-reports-container .btn-hero-outline {
+  border: 1px solid rgba(255,255,255,0.4);
+
+  background: rgba(255,255,255,0.08);
+
+  color: #ffffff;
+
+  font-weight: 600;
+  font-size: 13px;
+
+  padding: 8px 18px;
+
+  border-radius: 8px;
+
+  transition: all 0.2s ease;
+}
+
+
+.vg-reports-container .btn-hero-outline:hover {
+  background: #ffffff;
+  color: #0d3a78;
+}
+
+
+/* =========================================================
+   COLORS
+   ========================================================= */
+
+.vg-reports-container .text-blue {
+  color: #0066ff;
+}
+
+.vg-reports-container .text-orange {
+  color: #ff9f43;
+}
+
+.vg-reports-container .text-green {
+  color: #00b074;
+}
+
+.vg-reports-container .text-red {
+  color: #ea5455;
+}
+
+.vg-reports-container .text-navy {
+  color: #1b2559;
+}
+
+
+/* =========================================================
+   KPI CARDS
+   ========================================================= */
+
+.vg-reports-container .metric-row {
+  margin-bottom: 24px;
+}
+
+
+.vg-reports-container .vg-metric-card {
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  padding: 18px 20px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+
+  border: 1px solid #eef2f7;
+
+  min-height: 94px;
+}
+
+
+.vg-reports-container .metric-icon {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+
+  flex-shrink: 0;
+}
+
+
+.vg-reports-container .green-circle {
+  background: #e6f4ea;
+  color: #00b074;
+}
+
+
+.vg-reports-container .red-circle {
+  background: #fde8e8;
+  color: #ea5455;
+}
+
+
+.vg-reports-container .blue-circle {
+  background: #e8f0fe;
+  color: #0066ff;
+}
+
+
+.vg-reports-container .orange-circle {
+  background: #fef3d6;
+  color: #ff9f43;
+}
+
+
+.vg-reports-container .metric-data {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.vg-reports-container .metric-number {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+
+.vg-reports-container .metric-label {
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  color: #8f9bba;
+
+  margin-top: 4px;
+}
+
+
+.vg-reports-container .metric-subtext {
+  font-size: 11px;
+
+  font-weight: 600;
+
+  margin-top: 3px;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.vg-reports-container .vg-card {
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+
+  border: 1px solid #eef2f7;
+
+  padding: 20px 24px;
+
+  margin-bottom: 24px;
+}
+
+
+.vg-reports-container .vg-card-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding-bottom: 16px;
+
+  border-bottom: 1px solid #f0f3f8;
+
+  margin-bottom: 18px;
+}
+
+
+.vg-reports-container .vg-card-header h4 {
+  margin: 0;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #1b2559;
+}
+
+
+.vg-reports-container .vg-card-header h4 i {
+  color: #0066ff;
+
+  margin-right: 8px;
+}
+
+
+.vg-reports-container .chart-period {
+  font-size: 11px;
+  color: #8f9bba;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.vg-reports-container .filter-card {
+  margin-bottom: 24px;
+}
+
+
+.vg-reports-container .filter-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr) auto;
+
+  gap: 14px;
+
+  align-items: end;
+}
+
+
+.vg-reports-container .filter-field label {
+  display: block;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  color: #6b7280;
+
+  margin-bottom: 6px;
+}
+
+
+.vg-reports-container .filter-field .form-control {
+  height: 38px;
+
+  border-radius: 8px;
+
+  border: 1px solid #e0e5f2;
+
+  background: #f8faff;
+
+  font-size: 12px;
+
+  color: #2b3674;
+}
+
+
+.vg-reports-container .filter-field .form-control:focus {
+  background: #ffffff;
+
+  border-color: #0066ff;
+
+  box-shadow: none;
+}
+
+
+.vg-reports-container .btn-apply {
+  height: 38px;
+
+  background: #0066ff;
+
+  border: 1px solid #0066ff;
+
+  color: #ffffff;
+
+  font-weight: 600;
+
+  border-radius: 8px;
+
+  padding: 0 18px;
+}
+
+
+.vg-reports-container .btn-apply:hover {
+  background: #0055d6;
+}
+
+
+/* =========================================================
+   TREND CHART
+   ========================================================= */
+
+.vg-reports-container .chart-card {
+  min-height: 300px;
+}
+
+
+.vg-reports-container .trend-area {
+  height: 205px;
+
+  padding-top: 10px;
+}
+
+
+.vg-reports-container .trend-values {
+  height: 100%;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-around;
+
+  border-bottom: 1px solid #eef2f7;
+
+  gap: 12px;
+}
+
+
+.vg-reports-container .trend-column {
+  height: 100%;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  min-width: 30px;
+}
+
+
+.vg-reports-container .trend-value {
+  font-size: 10px;
+
+  color: #6b7280;
+
+  font-weight: 700;
+
+  margin-bottom: 5px;
+}
+
+
+.vg-reports-container .trend-track {
+  height: 145px;
+
+  width: 22px;
+
+  background: #f4f7fe;
+
+  border-radius: 6px 6px 0 0;
+
+  display: flex;
+
+  align-items: flex-end;
+}
+
+
+.vg-reports-container .trend-fill {
+  width: 100%;
+
+  border-radius: 6px 6px 0 0;
+
+  min-height: 3px;
+
+  transition: height 0.3s ease;
+}
+
+
+.vg-reports-container .compliance-fill {
+  background: #00b074;
+}
+
+
+.vg-reports-container .volume-fill {
+  background: #0066ff;
+}
+
+
+.vg-reports-container .trend-label {
+  font-size: 10px;
+
+  color: #8f9bba;
+
+  margin-top: 7px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RISK DISTRIBUTION
+   ========================================================= */
+
+.vg-reports-container .distribution-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+.vg-reports-container .distribution-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  font-size: 13px;
+
+  color: #1b2559;
+
+  margin-bottom: 7px;
+}
+
+
+.vg-reports-container .distribution-header i {
+  margin-right: 6px;
+}
+
+
+.vg-reports-container .risk-high-icon {
+  color: #ea5455;
+}
+
+
+.vg-reports-container .risk-medium-icon {
+  color: #ff9f43;
+}
+
+
+.vg-reports-container .risk-low-icon {
+  color: #00b074;
+}
+
+
+.vg-reports-container .distribution-track {
+  width: 100%;
+
+  height: 9px;
+
+  background: #f4f7fe;
+
+  border-radius: 10px;
+}
+
+
+.vg-reports-container .distribution-fill {
+  height: 100%;
+
+  border-radius: 10px;
+}
+
+
+.vg-reports-container .risk-high-bar {
+  background: #ea5455;
+}
+
+
+.vg-reports-container .risk-medium-bar {
+  background: #ff9f43;
+}
+
+
+.vg-reports-container .risk-low-bar {
+  background: #00b074;
+}
+
+
+.vg-reports-container .distribution-percent {
+  font-size: 10px;
+
+  color: #8f9bba;
+
+  text-align: right;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   SLA
+   ========================================================= */
+
+.vg-reports-container .sla-summary {
+  display: flex;
+
+  align-items: center;
+
+  gap: 35px;
+
+  padding: 12px 10px;
+}
+
+
+.vg-reports-container .sla-circle {
+  width: 125px;
+
+  height: 125px;
+
+  border-radius: 50%;
+
+  border: 12px solid #00b074;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+
+.vg-reports-container .sla-circle span {
+  font-size: 24px;
+
+  font-weight: 800;
+
+  color: #1b2559;
+}
+
+
+.vg-reports-container .sla-circle small {
+  font-size: 10px;
+
+  color: #8f9bba;
+
+  font-weight: 600;
+}
+
+
+.vg-reports-container .sla-details {
+  width: 100%;
+}
+
+
+.vg-reports-container .sla-detail-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  padding: 11px 0;
+
+  border-bottom: 1px solid #f0f3f8;
+
+  font-size: 12px;
+}
+
+
+.vg-reports-container .sla-detail-row:last-child {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-reports-container .vg-table {
+  margin: 0;
+}
+
+
+.vg-reports-container .vg-table th {
+  font-size: 11px;
+
+  text-transform: uppercase;
+
+  font-weight: 700;
+
+  color: #8f9bba;
+
+  letter-spacing: 0.5px;
+
+  border-bottom: 2px solid #eef2f7;
+
+  border-top: none;
+
+  padding: 12px 8px;
+}
+
+
+.vg-reports-container .vg-table td {
+  vertical-align: middle;
+
+  font-size: 13px;
+
+  color: #2b3674;
+
+  border-top: 1px solid #f4f7fe;
+
+  padding: 13px 8px;
+}
+
+
+.vg-reports-container .issue-progress {
+  width: 120px;
+
+  height: 7px;
+
+  display: inline-block;
+
+  vertical-align: middle;
+
+  background: #f4f7fe;
+
+  border-radius: 10px;
+
+  margin-right: 8px;
+}
+
+
+.vg-reports-container .issue-progress-fill {
+  height: 100%;
+
+  background: #0066ff;
+
+  border-radius: 10px;
+}
+
+
+.vg-reports-container .issue-percent {
+  font-size: 11px;
+
+  color: #8f9bba;
+}
+
+
+.vg-reports-container .status-pill {
+  display: inline-block;
+
+  padding: 4px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.vg-reports-container .pill-green {
+  background: #e6f4ea;
+
+  color: #00b074;
+}
+
+
+.vg-reports-container .pill-orange {
+  background: #fef3d6;
+
+  color: #ff9f43;
+}
+
+
+.vg-reports-container .pill-red {
+  background: #fde8e8;
+
+  color: #ea5455;
+}
+
+
+.vg-reports-container .empty-row {
+  padding: 30px !important;
+
+  text-align: center;
+
+  color: #8f9bba;
+}
+
+
+/* =========================================================
+   CASE DISTRIBUTION
+   ========================================================= */
+
+.vg-reports-container .case-distribution {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.vg-reports-container .case-distribution-item {
+  display: flex;
+
+  align-items: center;
+
+  padding: 12px;
+
+  background: #f8faff;
+
+  border: 1px solid #eef2f7;
+
+  border-radius: 8px;
+
+  gap: 12px;
+}
+
+
+.vg-reports-container .case-icon {
+  width: 35px;
+
+  height: 35px;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #e8f0fe;
+
+  color: #0066ff;
+}
+
+
+.vg-reports-container .case-info {
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+}
+
+
+.vg-reports-container .case-info span {
+  font-size: 11px;
+
+  color: #8f9bba;
+}
+
+
+.vg-reports-container .case-info strong {
+  font-size: 14px;
+
+  color: #1b2559;
+}
+
+
+.vg-reports-container .case-percent {
+  font-size: 12px;
+
+  font-weight: 700;
+
+  color: #0066ff;
+}
+
+
+/* =========================================================
+   REPORT LIST
+   ========================================================= */
+
+.vg-reports-container .report-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+.vg-reports-container .report-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px;
+
+  border: 1px solid #eef2f7;
+
+  border-radius: 8px;
+}
+
+
+.vg-reports-container .report-icon {
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.vg-reports-container .blue-bg {
+  background: #e8f0fe;
+
+  color: #0066ff;
+}
+
+
+.vg-reports-container .red-bg {
+  background: #fde8e8;
+
+  color: #ea5455;
+}
+
+
+.vg-reports-container .orange-bg {
+  background: #fef3d6;
+
+  color: #ff9f43;
+}
+
+
+.vg-reports-container .green-bg {
+  background: #e6f4ea;
+
+  color: #00b074;
+}
+
+
+.vg-reports-container .report-item div:last-child {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.vg-reports-container .report-item strong {
+  font-size: 12px;
+
+  color: #1b2559;
+}
+
+
+.vg-reports-container .report-item span {
+  font-size: 10px;
+
+  color: #8f9bba;
+
+  margin-top: 3px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.vg-reports-container .search-wrapper {
+  position: relative;
+}
+
+
+.vg-reports-container .search-icon {
+  position: absolute;
+
+  left: 10px;
+
+  top: 9px;
+
+  color: #8f9bba;
+
+  font-size: 12px;
+
+  z-index: 2;
+}
+
+
+.vg-reports-container .search-input {
+  padding-left: 28px;
+
+  border-radius: 8px;
+
+  border: 1px solid #e0e5f2;
+
+  background: #f4f7fe;
+
+  font-size: 12px;
+
+  width: 220px;
+}
+
+
+/* =========================================================
+   AI INSIGHTS
+   ========================================================= */
+
+.vg-reports-container .ai-report-card {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f8faff 100%
+  );
+}
+
+
+.vg-reports-container .ai-insight-content {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 18px;
+}
+
+
+.vg-reports-container .ai-icon {
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 12px;
+
+  background: #e8f0fe;
+
+  color: #0066ff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 21px;
+
+  flex-shrink: 0;
+}
+
+
+.vg-reports-container .ai-text {
+  flex: 1;
+}
+
+
+.vg-reports-container .ai-text strong {
+  font-size: 14px;
+
+  color: #1b2559;
+}
+
+
+.vg-reports-container .ai-text p {
+  margin: 7px 0 12px;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  color: #4a5568;
+}
+
+
+.vg-reports-container .recommendation {
+  background: #f4f7fe;
+
+  border-left: 4px solid #0066ff;
+
+  border-radius: 0 7px 7px 0;
+
+  padding: 10px 13px;
+
+  display: flex;
+
+  gap: 9px;
+
+  align-items: center;
+
+  font-size: 12px;
+
+  color: #2b3674;
+}
+
+
+.vg-reports-container .recommendation i {
+  color: #00b074;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .vg-reports-container .filter-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .vg-reports-container .vg-hero-banner {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+
+  .vg-reports-container .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .vg-reports-container .sla-summary {
+    flex-direction: column;
+  }
+
+
+  .vg-reports-container .search-input {
+    width: 180px;
+  }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>dso_reports____insights</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>DSO Reports &amp;  Insights</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    /*
+     * =========================================================
+     * VISA GUARDIAN AI
+     * REPORTS & INSIGHTS
+     *
+     * Data Source:
+     * Visa Cases table
+     *
+     * The table is discovered using its LABEL instead of
+     * hard-coding the application table name.
+     * =========================================================
+     */
+
+
+    data.success = true;
+    data.error = "";
+
+
+    // =========================================================
+    // INPUT ACTION
+    // =========================================================
+
+    var action = "";
+
+    if (input && input.action) {
+        action = String(input.action);
+    }
+
+
+    /*
+     * Default
+     */
+
+    if (!action) {
+        action = "refresh";
+    }
+
+
+    // =========================================================
+    // FIND VISA CASE TABLE
+    // =========================================================
+
+    var tableName = findVisaCaseTable();
+
+    data.tableName = tableName;
+
+
+    if (!tableName) {
+
+        data.success = false;
+
+        data.error =
+            "Visa Cases table could not be found. " +
+            "Check that the table label is 'Visa Cases'.";
+
+        setEmptyData();
+
+        return;
+    }
+
+
+    // =========================================================
+    // BUILD REPORT
+    // =========================================================
+
+    var filters = {};
+
+    if (input && input.filters) {
+        filters = input.filters;
+    }
+
+
+    buildReport(tableName, filters);
+
+
+
+    // =========================================================
+    // FIND VISA CASE TABLE
+    // =========================================================
+
+    function findVisaCaseTable() {
+
+        /*
+         * First search by table label.
+         */
+
+        var obj =
+            new GlideRecord("sys_db_object");
+
+        obj.addQuery(
+            "label",
+            "Visa Cases"
+        );
+
+        obj.setLimit(1);
+
+        obj.query();
+
+
+        if (obj.next()) {
+
+            var name =
+                obj.getValue("name");
+
+            if (name) {
+
+                var test =
+                    new GlideRecord(name);
+
+                if (test.isValid()) {
+                    return name;
+                }
+
+            }
+
+        }
+
+
+        /*
+         * Fallback:
+         * Search application tables whose name contains
+         * visaguardi and visa_case.
+         */
+
+        obj =
+            new GlideRecord("sys_db_object");
+
+        obj.addQuery(
+            "name",
+            "CONTAINS",
+            "visaguardi"
+        );
+
+        obj.addQuery(
+            "name",
+            "CONTAINS",
+            "visa"
+        );
+
+        obj.query();
+
+
+        while (obj.next()) {
+
+            var table =
+                obj.getValue("name");
+
+            if (
+                table &&
+                table.toLowerCase().indexOf("case") >= 0
+            ) {
+
+                var check =
+                    new GlideRecord(table);
+
+                if (check.isValid()) {
+                    return table;
+                }
+
+            }
+
+        }
+
+
+        return "";
+    }
+
+
+
+    // =========================================================
+    // BUILD REPORT
+    // =========================================================
+
+    function buildReport(tableName, filters) {
+
+        var gr =
+            new GlideRecord(tableName);
+
+
+        if (!gr.isValid()) {
+
+            data.success = false;
+
+            data.error =
+                "Visa Cases table is not accessible.";
+
+            setEmptyData();
+
+            return;
+        }
+
+
+        /*
+         * Detect fields dynamically.
+         */
+
+        var fields = detectFields(gr);
+
+
+        /*
+         * Containers
+         */
+
+        var cases = [];
+
+        var visaTypes = {};
+
+        var statuses = {};
+
+        var advisors = {};
+
+        var riskCounts = {
+
+            High: 0,
+
+            Medium: 0,
+
+            Low: 0
+
+        };
+
+
+        /*
+         * Query all records.
+         */
+
+        gr.query();
+
+
+        while (gr.next()) {
+
+            var record =
+                readCase(
+                    gr,
+                    fields
+                );
+
+
+            /*
+             * Apply filters.
+             */
+
+            if (
+                !passesFilters(
+                    record,
+                    filters
+                )
+            ) {
+                continue;
+            }
+
+
+            cases.push(record);
+
+
+            /*
+             * Filter options
+             */
+
+            if (record.visa_type) {
+
+                visaTypes[
+                    record.visa_type
+                ] = true;
+
+            }
+
+
+            if (record.status) {
+
+                statuses[
+                    record.status
+                ] = true;
+
+            }
+
+
+            if (record.advisor) {
+
+                advisors[
+                    record.advisor
+                ] = true;
+
+            }
+
+
+            /*
+             * Risk
+             */
+
+            var normalizedRisk =
+                normalizeRisk(
+                    record.risk
+                );
+
+
+            if (normalizedRisk) {
+
+                riskCounts[
+                    normalizedRisk
+                ]++;
+
+            }
+
+        }
+
+
+        /*
+         * =====================================================
+         * KPI
+         * =====================================================
+         */
+
+        var total =
+            cases.length;
+
+
+        var resolved =
+            0;
+
+        var highRisk =
+            0;
+
+        var slaGood =
+            0;
+
+
+        for (
+            var i = 0;
+            i < cases.length;
+            i++
+        ) {
+
+            var current =
+                cases[i];
+
+
+            /*
+             * Resolution
+             */
+
+            if (
+                isResolvedStatus(
+                    current.status
+                )
+            ) {
+
+                resolved++;
+
+            }
+
+
+            /*
+             * High risk
+             */
+
+            if (
+                normalizeRisk(
+                    current.risk
+                ) === "High"
+            ) {
+
+                highRisk++;
+
+            }
+
+
+            /*
+             * SLA
+             */
+
+            if (
+                isSlaGood(
+                    current
+                )
+            ) {
+
+                slaGood++;
+
+            }
+
+        }
+
+
+        var compliance =
+            calculateCompliance(
+                cases
+            );
+
+
+        var resolution =
+            percentage(
+                resolved,
+                total
+            );
+
+
+        var sla =
+            percentage(
+                slaGood,
+                total
+            );
+
+
+        /*
+         * =====================================================
+         * KPI DATA
+         * =====================================================
+         */
+
+        data.kpis = {
+
+            compliance: compliance,
+
+            highRisk: highRisk,
+
+            resolution: resolution,
+
+            sla: sla
+
+        };
+
+
+        /*
+         * =====================================================
+         * RISK DISTRIBUTION
+         * =====================================================
+         */
+
+        data.caseDistribution = [
+
+            {
+
+                label: "High Risk",
+
+                count: riskCounts.High,
+
+                percentage:
+                    percentage(
+                        riskCounts.High,
+                        total
+                    ),
+
+                color: "red"
+
+            },
+
+            {
+
+                label: "Medium Risk",
+
+                count: riskCounts.Medium,
+
+                percentage:
+                    percentage(
+                        riskCounts.Medium,
+                        total
+                    ),
+
+                color: "orange"
+
+            },
+
+            {
+
+                label: "Low Risk",
+
+                count: riskCounts.Low,
+
+                percentage:
+                    percentage(
+                        riskCounts.Low,
+                        total
+                    ),
+
+                color: "green"
+
+            }
+
+        ];
+
+
+        /*
+         * =====================================================
+         * MONTHLY CASE VOLUME
+         * =====================================================
+         */
+
+        data.caseVolume =
+            buildMonthlyVolume(
+                cases
+            );
+
+
+        /*
+         * =====================================================
+         * COMPLIANCE TREND
+         * =====================================================
+         */
+
+        data.complianceTrend =
+            buildComplianceTrend(
+                cases
+            );
+
+
+        /*
+         * =====================================================
+         * RISK TREND
+         * =====================================================
+         */
+
+        data.riskTrend =
+            buildRiskTrend(
+                cases
+            );
+
+
+        /*
+         * =====================================================
+         * SLA TREND
+         * =====================================================
+         */
+
+        data.slaTrend =
+            buildSlaTrend(
+                cases
+            );
+
+
+        /*
+         * =====================================================
+         * COMPLIANCE ISSUES
+         * =====================================================
+         */
+
+        data.complianceIssues =
+            buildComplianceIssues(
+                cases
+            );
+
+
+        /*
+         * =====================================================
+         * FILTER OPTIONS
+         * =====================================================
+         */
+
+        data.filterOptions = {
+
+            visaTypes:
+                objectToArray(
+                    visaTypes
+                ),
+
+            statuses:
+                objectToArray(
+                    statuses
+                ),
+
+            advisors:
+                objectToArray(
+                    advisors
+                )
+
+        };
+
+
+        /*
+         * =====================================================
+         * AI INSIGHTS
+         * =====================================================
+         */
+
+        data.aiInsights =
+            buildAIInsights(
+                cases,
+                total,
+                highRisk,
+                resolved,
+                slaGood
+            );
+
+
+        /*
+         * =====================================================
+         * CASE SUMMARY
+         * =====================================================
+         */
+
+        data.totalCases =
+            total;
+
+    }
+
+
+
+    // =========================================================
+    // DETECT FIELDS
+    // =========================================================
+
+    function detectFields(gr) {
+
+        return {
+
+            caseId:
+                findField(
+                    gr,
+                    [
+                        "case_id",
+                        "case_number",
+                        "number"
+                    ]
+                ),
+
+            student:
+                findField(
+                    gr,
+                    [
+                        "student",
+                        "student_profile"
+                    ]
+                ),
+
+            visaType:
+                findField(
+                    gr,
+                    [
+                        "visa_type",
+                        "visa",
+                        "visa_category"
+                    ]
+                ),
+
+            status:
+                findField(
+                    gr,
+                    [
+                        "status",
+                        "case_status",
+                        "state"
+                    ]
+                ),
+
+            risk:
+                findField(
+                    gr,
+                    [
+                        "risk_level",
+                        "risk",
+                        "risk_rating"
+                    ]
+                ),
+
+            priority:
+                findField(
+                    gr,
+                    [
+                        "priority",
+                        "case_priority"
+                    ]
+                ),
+
+            advisor:
+                findField(
+                    gr,
+                    [
+                        "advisor",
+                        "assigned_advisor",
+                        "case_advisor"
+                    ]
+                ),
+
+            created:
+                findField(
+                    gr,
+                    [
+                        "sys_created_on",
+                        "created_on",
+                        "opened_at"
+                    ]
+                ),
+
+            updated:
+                findField(
+                    gr,
+                    [
+                        "sys_updated_on",
+                        "updated_on"
+                    ]
+                ),
+
+            deadline:
+                findField(
+                    gr,
+                    [
+                        "deadline",
+                        "deadline_date",
+                        "due_date",
+                        "target_date"
+                    ]
+                ),
+
+            document:
+                findField(
+                    gr,
+                    [
+                        "document_status",
+                        "documents_status",
+                        "document_compliance"
+                    ]
+                )
+
+        };
+
+    }
+
+
+
+    // =========================================================
+    // READ CASE
+    // =========================================================
+
+    function readCase(gr, fields) {
+
+        var record = {
+
+            case_id: "",
+
+            student: "",
+
+            visa_type: "",
+
+            status: "",
+
+            risk: "",
+
+            priority: "",
+
+            advisor: "",
+
+            created: "",
+
+            deadline: "",
+
+            document: ""
+
+        };
+
+
+        record.case_id =
+            displayValue(
+                gr,
+                fields.caseId
+            );
+
+
+        record.student =
+            displayValue(
+                gr,
+                fields.student
+            );
+
+
+        record.visa_type =
+            displayValue(
+                gr,
+                fields.visaType
+            );
+
+
+        record.status =
+            displayValue(
+                gr,
+                fields.status
+            );
+
+
+        record.risk =
+            displayValue(
+                gr,
+                fields.risk
+            );
+
+
+        record.priority =
+            displayValue(
+                gr,
+                fields.priority
+            );
+
+
+        record.advisor =
+            displayValue(
+                gr,
+                fields.advisor
+            );
+
+
+        record.created =
+            displayValue(
+                gr,
+                fields.created
+            );
+
+
+        record.deadline =
+            displayValue(
+                gr,
+                fields.deadline
+            );
+
+
+        record.document =
+            displayValue(
+                gr,
+                fields.document
+            );
+
+
+        /*
+         * Also preserve the raw created date.
+         */
+
+        record.createdRaw = "";
+
+        if (fields.created) {
+
+            record.createdRaw =
+                gr.getValue(
+                    fields.created
+                );
+
+        }
+
+
+        return record;
+
+    }
+
+
+
+    // =========================================================
+    // FILTERS
+    // =========================================================
+
+    function passesFilters(
+        record,
+        filters
+    ) {
+
+        if (!filters) {
+            return true;
+        }
+
+
+        /*
+         * Visa
+         */
+
+        if (
+            filters.visaType &&
+            filters.visaType !== "ALL"
+        ) {
+
+            if (
+                record.visa_type !==
+                filters.visaType
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /*
+         * Status
+         */
+
+        if (
+            filters.caseStatus &&
+            filters.caseStatus !== "ALL"
+        ) {
+
+            if (
+                record.status !==
+                filters.caseStatus
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /*
+         * Advisor
+         */
+
+        if (
+            filters.advisor &&
+            filters.advisor !== "ALL"
+        ) {
+
+            if (
+                record.advisor !==
+                filters.advisor
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /*
+         * Risk
+         */
+
+        if (
+            filters.risk &&
+            filters.risk !== "ALL"
+        ) {
+
+            if (
+                normalizeRisk(
+                    record.risk
+                ) !==
+                filters.risk
+            ) {
+
+                return false;
+
+            }
+
+        }
+
+
+        /*
+         * Date
+         */
+
+        if (
+            filters.dateRange &&
+            filters.dateRange !== "ALL"
+        ) {
+
+            var days =
+                parseInt(
+                    filters.dateRange,
+                    10
+                );
+
+
+            if (!isNaN(days)) {
+
+                if (
+                    record.createdRaw
+                ) {
+
+                    var created =
+                        new GlideDateTime(
+                            record.createdRaw
+                        );
+
+
+                    var cutoff =
+                        new GlideDateTime();
+
+
+                    cutoff.addDaysUTC(
+                        -days
+                    );
+
+
+                    if (
+                        created.before(
+                            cutoff
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        return true;
+
+    }
+
+
+
+    // =========================================================
+    // COMPLIANCE
+    // =========================================================
+
+    function calculateCompliance(
+        cases
+    ) {
+
+        if (!cases.length) {
+            return 0;
+        }
+
+
+        var good = 0;
+
+
+        for (
+            var i = 0;
+            i < cases.length;
+            i++
+        ) {
+
+            var c =
+                cases[i];
+
+
+            if (
+                isCompliantCase(
+                    c
+                )
+            ) {
+
+                good++;
+
+            }
+
+        }
+
+
+        return percentage(
+            good,
+            cases.length
+        );
+
+    }
+
+
+
+    function isCompliantCase(
+        record
+    ) {
+
+        var status =
+            String(
+                record.status || ""
+            ).toLowerCase();
+
+
+        var risk =
+            normalizeRisk(
+                record.risk
+            );
+
+
+        /*
+         * Explicit problematic statuses.
+         */
+
+        if (
+            status.indexOf("non-compliant") >= 0 ||
+            status.indexOf("non compliant") >= 0 ||
+            status.indexOf("rejected") >= 0 ||
+            status.indexOf("problem") >= 0
+        ) {
+
+            return false;
+
+        }
+
+
+        /*
+         * High risk is considered not compliant.
+         */
+
+        if (
+            risk === "High"
+        ) {
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+
+    // =========================================================
+    // RESOLUTION
+    // =========================================================
+
+    function isResolvedStatus(
+        status
+    ) {
+
+        var value =
+            String(
+                status || ""
+            ).toLowerCase();
+
+
+        return (
+            value.indexOf("resolved") >= 0 ||
+            value.indexOf("approved") >= 0 ||
+            value.indexOf("closed") >= 0 ||
+            value.indexOf("complete") >= 0
+        );
+
+    }
+
+
+
+    // =========================================================
+    // SLA
+    // =========================================================
+
+    function isSlaGood(
+        record
+    ) {
+
+        var status =
+            String(
+                record.status || ""
+            ).toLowerCase();
+
+
+        /*
+         * Resolved/approved/closed cases
+         * are treated as completed within SLA
+         * unless the deadline has passed.
+         */
+
+        if (
+            isResolvedStatus(
+                record.status
+            )
+        ) {
+
+            return true;
+
+        }
+
+
+        /*
+         * Check deadline.
+         */
+
+        if (
+            record.deadline
+        ) {
+
+            try {
+
+                var deadline =
+                    new GlideDateTime(
+                        record.deadline
+                    );
+
+
+                var now =
+                    new GlideDateTime();
+
+
+                if (
+                    deadline.before(
+                        now
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+            catch (e) {
+
+                return true;
+
+            }
+
+        }
+
+
+        /*
+         * If no deadline exists,
+         * treat as on track.
+         */
+
+        return true;
+
+    }
+
+
+
+    // =========================================================
+    // MONTHLY VOLUME
+    // =========================================================
+
+    function buildMonthlyVolume(
+        cases
+    ) {
+
+        var months = [];
+
+        var now =
+            new GlideDateTime();
+
+
+        /*
+         * Six months
+         */
+
+        for (
+            var i = 5;
+            i >= 0;
+            i--
+        ) {
+
+            var d =
+                new GlideDateTime();
+
+            d.addMonthsUTC(
+                -i
+            );
+
+
+            var key =
+                d.getYearUTC() +
+                "-" +
+                pad(
+                    d.getMonthUTC()
+                );
+
+
+            months.push({
+
+                key: key,
+
+                month:
+                    monthName(
+                        d.getMonthUTC()
+                    ),
+
+                value: 0,
+
+                height: 0
+
+            });
+
+        }
+
+
+        /*
+         * Count cases.
+         */
+
+        for (
+            var j = 0;
+            j < cases.length;
+            j++
+        ) {
+
+            if (
+                !cases[j].createdRaw
+            ) {
+                continue;
+            }
+
+
+            var created =
+                new GlideDateTime(
+                    cases[j].createdRaw
+                );
+
+
+            var key =
+                created.getYearUTC() +
+                "-" +
+                pad(
+                    created.getMonthUTC()
+                );
+
+
+            for (
+                var k = 0;
+                k < months.length;
+                k++
+            ) {
+
+                if (
+                    months[k].key ===
+                    key
+                ) {
+
+                    months[k].value++;
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+
+        /*
+         * Calculate bar height.
+         */
+
+        var max = 1;
+
+
+        for (
+            var x = 0;
+            x < months.length;
+            x++
+        ) {
+
+            if (
+                months[x].value >
+                max
+            ) {
+
+                max =
+                    months[x].value;
+
+            }
+
+        }
+
+
+        for (
+            var y = 0;
+            y < months.length;
+            y++
+        ) {
+
+            months[y].height =
+                Math.round(
+                    (
+                        months[y].value /
+                        max
+                    ) * 100
+                );
+
+        }
+
+
+        return months;
+
+    }
+
+
+
+    // =========================================================
+    // COMPLIANCE TREND
+    // =========================================================
+
+    function buildComplianceTrend(
+        cases
+    ) {
+
+        var result = [];
+
+
+        for (
+            var i = 5;
+            i >= 0;
+            i--
+        ) {
+
+            var d =
+                new GlideDateTime();
+
+            d.addMonthsUTC(
+                -i
+            );
+
+
+            var year =
+                d.getYearUTC();
+
+
+            var month =
+                d.getMonthUTC();
+
+
+            var total = 0;
+
+            var compliant = 0;
+
+
+            for (
+                var j = 0;
+                j < cases.length;
+                j++
+            ) {
+
+                if (
+                    !cases[j].createdRaw
+                ) {
+                    continue;
+                }
+
+
+                var created =
+                    new GlideDateTime(
+                        cases[j].createdRaw
+                    );
+
+
+                if (
+                    created.getYearUTC() ===
+                    year &&
+                    created.getMonthUTC() ===
+                    month
+                ) {
+
+                    total++;
+
+
+                    if (
+                        isCompliantCase(
+                            cases[j]
+                        )
+                    ) {
+
+                        compliant++;
+
+                    }
+
+                }
+
+            }
+
+
+            var value = 0;
+
+
+            if (total > 0) {
+
+                value =
+                    percentage(
+                        compliant,
+                        total
+                    );
+
+            }
+
+
+            result.push({
+
+                month:
+                    monthName(
+                        month
+                    ),
+
+                value: value
+
+            });
+
+        }
+
+
+        return result;
+
+    }
+
+
+
+    // =========================================================
+    // RISK TREND
+    // =========================================================
+
+    function buildRiskTrend(
+        cases
+    ) {
+
+        var result = [];
+
+
+        for (
+            var i = 5;
+            i >= 0;
+            i--
+        ) {
+
+            var d =
+                new GlideDateTime();
+
+            d.addMonthsUTC(
+                -i
+            );
+
+
+            var year =
+                d.getYearUTC();
+
+
+            var month =
+                d.getMonthUTC();
+
+
+            var total = 0;
+
+            var high = 0;
+
+
+            for (
+                var j = 0;
+                j < cases.length;
+                j++
+            ) {
+
+                if (
+                    !cases[j].createdRaw
+                ) {
+                    continue;
+                }
+
+
+                var created =
+                    new GlideDateTime(
+                        cases[j].createdRaw
+                    );
+
+
+                if (
+                    created.getYearUTC() ===
+                    year &&
+                    created.getMonthUTC() ===
+                    month
+                ) {
+
+                    total++;
+
+
+                    if (
+                        normalizeRisk(
+                            cases[j].risk
+                        ) === "High"
+                    ) {
+
+                        high++;
+
+                    }
+
+                }
+
+            }
+
+
+            result.push({
+
+                month:
+                    monthName(
+                        month
+                    ),
+
+                value:
+                    percentage(
+                        high,
+                        total
+                    )
+
+            });
+
+        }
+
+
+        return result;
+
+    }
+
+
+
+    // =========================================================
+    // SLA TREND
+    // =========================================================
+
+    function buildSlaTrend(
+        cases
+    ) {
+
+        var result = [];
+
+
+        for (
+            var i = 5;
+            i >= 0;
+            i--
+        ) {
+
+            var d =
+                new GlideDateTime();
+
+            d.addMonthsUTC(
+                -i
+            );
+
+
+            var year =
+                d.getYearUTC();
+
+
+            var month =
+                d.getMonthUTC();
+
+
+            var total = 0;
+
+            var good = 0;
+
+
+            for (
+                var j = 0;
+                j < cases.length;
+                j++
+            ) {
+
+                if (
+                    !cases[j].createdRaw
+                ) {
+                    continue;
+                }
+
+
+                var created =
+                    new GlideDateTime(
+                        cases[j].createdRaw
+                    );
+
+
+                if (
+                    created.getYearUTC() ===
+                    year &&
+                    created.getMonthUTC() ===
+                    month
+                ) {
+
+                    total++;
+
+
+                    if (
+                        isSlaGood(
+                            cases[j]
+                        )
+                    ) {
+
+                        good++;
+
+                    }
+
+                }
+
+            }
+
+
+            result.push({
+
+                month:
+                    monthName(
+                        month
+                    ),
+
+                value:
+                    percentage(
+                        good,
+                        total
+                    )
+
+            });
+
+        }
+
+
+        return result;
+
+    }
+
+
+
+    // =========================================================
+    // COMPLIANCE ISSUES
+    // =========================================================
+
+    function buildComplianceIssues(
+        cases
+    ) {
+
+        var missingDocuments = 0;
+
+        var highRisk = 0;
+
+        var overdue = 0;
+
+        var pending = 0;
+
+
+        for (
+            var i = 0;
+            i < cases.length;
+            i++
+        ) {
+
+            var c =
+                cases[i];
+
+
+            /*
+             * Documents
+             */
+
+            var document =
+                String(
+                    c.document || ""
+                ).toLowerCase();
+
+
+            if (
+                document.indexOf("missing") >= 0 ||
+                document.indexOf("incomplete") >= 0 ||
+                document.indexOf("expired") >= 0
+            ) {
+
+                missingDocuments++;
+
+            }
+
+
+            /*
+             * Risk
+             */
+
+            if (
+                normalizeRisk(
+                    c.risk
+                ) === "High"
+            ) {
+
+                highRisk++;
+
+            }
+
+
+            /*
+             * Deadline
+             */
+
+            if (
+                c.deadline
+            ) {
+
+                try {
+
+                    var deadline =
+                        new GlideDateTime(
+                            c.deadline
+                        );
+
+
+                    var now =
+                        new GlideDateTime();
+
+
+                    if (
+                        deadline.before(
+                            now
+                        ) &&
+                        !isResolvedStatus(
+                            c.status
+                        )
+                    ) {
+
+                        overdue++;
+
+                    }
+
+                }
+                catch (e) {}
+
+            }
+
+
+            /*
+             * Pending
+             */
+
+            if (
+                isPendingStatus(
+                    c.status
+                )
+            ) {
+
+                pending++;
+
+            }
+
+        }
+
+
+        var total =
+            cases.length;
+
+
+        var issues = [];
+
+
+        if (
+            missingDocuments > 0
+        ) {
+
+            issues.push({
+
+                issue:
+                    "Document Compliance Gaps",
+
+                description:
+                    "Missing, incomplete or expired documentation",
+
+                count:
+                    missingDocuments,
+
+                percentage:
+                    percentage(
+                        missingDocuments,
+                        total
+                    ),
+
+                severity:
+                    "High",
+
+                status:
+                    "Open"
+
+            });
+
+        }
+
+
+        if (
+            highRisk > 0
+        ) {
+
+            issues.push({
+
+                issue:
+                    "High-Risk Cases",
+
+                description:
+                    "Cases requiring enhanced review",
+
+                count:
+                    highRisk,
+
+                percentage:
+                    percentage(
+                        highRisk,
+                        total
+                    ),
+
+                severity:
+                    "High",
+
+                status:
+                    "Monitor"
+
+            });
+
+        }
+
+
+        if (
+            overdue > 0
+        ) {
+
+            issues.push({
+
+                issue:
+                    "Overdue Cases",
+
+                description:
+                    "Cases with deadlines already passed",
+
+                count:
+                    overdue,
+
+                percentage:
+                    percentage(
+                        overdue,
+                        total
+                    ),
+
+                severity:
+                    "High",
+
+                status:
+                    "Open"
+
+            });
+
+        }
+
+
+        if (
+            pending > 0
+        ) {
+
+            issues.push({
+
+                issue:
+                    "Pending Cases",
+
+                description:
+                    "Cases awaiting processing or review",
+
+                count:
+                    pending,
+
+                percentage:
+                    percentage(
+                        pending,
+                        total
+                    ),
+
+                severity:
+                    "Medium",
+
+                status:
+                    "Monitor"
+
+            });
+
+        }
+
+
+        return issues;
+
+    }
+
+
+
+    // =========================================================
+    // AI INSIGHTS
+    // =========================================================
+
+    function buildAIInsights(
+        cases,
+        total,
+        highRisk,
+        resolved,
+        slaGood
+    ) {
+
+        var insights = [];
+
+
+        if (!total) {
+
+            insights.push({
+
+                title:
+                    "No case data",
+
+                text:
+                    "There are currently no Visa Case records available for analysis."
+
+            });
+
+            return insights;
+
+        }
+
+
+        /*
+         * Risk
+         */
+
+        if (
+            highRisk > 0
+        ) {
+
+            insights.push({
+
+                title:
+                    "High-risk workload",
+
+                text:
+                    highRisk +
+                    " of " +
+                    total +
+                    " cases are currently classified as high risk. These cases should receive priority review."
+
+            });
+
+        }
+        else {
+
+            insights.push({
+
+                title:
+                    "Risk profile",
+
+                text:
+                    "No high-risk cases were identified in the current Visa Case dataset."
+
+            });
+
+        }
+
+
+        /*
+         * Resolution
+         */
+
+        var resolution =
+            percentage(
+                resolved,
+                total
+            );
+
+
+        insights.push({
+
+            title:
+                "Case resolution",
+
+            text:
+                resolution +
+                "% of the current cases are in a resolved, approved, closed or completed state."
+
+        });
+
+
+        /*
+         * SLA
+         */
+
+        var sla =
+            percentage(
+                slaGood,
+                total
+            );
+
+
+        insights.push({
+
+            title:
+                "SLA performance",
+
+            text:
+                sla +
+                "% of current cases are currently within their expected deadline or have already been completed."
+
+        });
+
+
+        return insights;
+
+    }
+
+
+
+    // =========================================================
+    // HELPERS
+    // =========================================================
+
+    function findField(
+        gr,
+        possibleFields
+    ) {
+
+        for (
+            var i = 0;
+            i < possibleFields.length;
+            i++
+        ) {
+
+            if (
+                gr.isValidField(
+                    possibleFields[i]
+                )
+            ) {
+
+                return possibleFields[i];
+
+            }
+
+        }
+
+
+        return "";
+
+    }
+
+
+
+    function displayValue(
+        gr,
+        field
+    ) {
+
+        if (
+            !field ||
+            !gr.isValidField(field)
+        ) {
+
+            return "";
+
+        }
+
+
+        var value =
+            gr.getDisplayValue(
+                field
+            );
+
+
+        if (!value) {
+
+            value =
+                gr.getValue(
+                    field
+                );
+
+        }
+
+
+        return value || "";
+
+    }
+
+
+
+    function normalizeRisk(
+        value
+    ) {
+
+        var risk =
+            String(
+                value || ""
+            ).toLowerCase();
+
+
+        if (
+            risk.indexOf("high") >= 0 ||
+            risk.indexOf("critical") >= 0
+        ) {
+
+            return "High";
+
+        }
+
+
+        if (
+            risk.indexOf("medium") >= 0 ||
+            risk.indexOf("moderate") >= 0
+        ) {
+
+            return "Medium";
+
+        }
+
+
+        if (
+            risk.indexOf("low") >= 0 ||
+            risk.indexOf("normal") >= 0
+        ) {
+
+            return "Low";
+
+        }
+
+
+        return "";
+
+    }
+
+
+
+    function isPendingStatus(
+        status
+    ) {
+
+        var value =
+            String(
+                status || ""
+            ).toLowerCase();
+
+
+        return (
+            value.indexOf("pending") >= 0 ||
+            value.indexOf("open") >= 0 ||
+            value.indexOf("review") >= 0 ||
+            value.indexOf("progress") >= 0
+        );
+
+    }
+
+
+
+    function percentage(
+        part,
+        total
+    ) {
+
+        if (
+            !total ||
+            total <= 0
+        ) {
+
+            return 0;
+
+        }
+
+
+        return Math.round(
+            (
+                part /
+                total
+            ) * 100
+        );
+
+    }
+
+
+
+    function objectToArray(
+        object
+    ) {
+
+        var result = [];
+
+
+        for (
+            var key in object
+        ) {
+
+            if (
+                object.hasOwnProperty(
+                    key
+                )
+            ) {
+
+                result.push(
+                    key
+                );
+
+            }
+
+        }
+
+
+        result.sort();
+
+
+        return result;
+
+    }
+
+
+
+    function pad(
+        number
+    ) {
+
+        return number < 10
+            ? "0" + number
+            : String(number);
+
+    }
+
+
+
+    function monthName(
+        month
+    ) {
+
+        var months = [
+
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+
+        ];
+
+
+        /*
+         * ServiceNow getMonthUTC()
+         * is generally 1-12.
+         */
+
+        var index =
+            parseInt(
+                month,
+                10
+            ) - 1;
+
+
+        return months[index] || "";
+
+    }
+
+
+
+    // =========================================================
+    // EMPTY DATA
+    // =========================================================
+
+    function setEmptyData() {
+
+        data.kpis = {
+
+            compliance: 0,
+
+            highRisk: 0,
+
+            resolution: 0,
+
+            sla: 0
+
+        };
+
+
+        data.totalCases = 0;
+
+
+        data.caseDistribution = [
+
+            {
+                label: "High Risk",
+                count: 0,
+                percentage: 0,
+                color: "red"
+            },
+
+            {
+                label: "Medium Risk",
+                count: 0,
+                percentage: 0,
+                color: "orange"
+            },
+
+            {
+                label: "Low Risk",
+                count: 0,
+                percentage: 0,
+                color: "green"
+            }
+
+        ];
+
+
+        data.caseVolume = [];
+
+        data.complianceTrend = [];
+
+        data.riskTrend = [];
+
+        data.slaTrend = [];
+
+        data.complianceIssues = [];
+
+        data.aiInsights = [];
+
+        data.filterOptions = {
+
+            visaTypes: [],
+
+            statuses: [],
+
+            advisors: []
+
+        };
+
+    }
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:45:13</sys_created_on>
+        <sys_id>1348e557292603107f44d6fee5fae360</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>DSO Reports &amp;  Insights</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_1348e557292603107f44d6fee5fae360</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 08:03:38</sys_updated_on>
+        <template><![CDATA[<div class="vg-reports-container">
+
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
+
+  <div class="vg-hero-banner">
+
+    <div class="hero-content">
+
+      <h2>
+        <i class="fa fa-bar-chart"></i>
+        Reports & Insights
+      </h2>
+
+      <p>
+        VisaGuardian AI | Institutional compliance, risk,
+        case resolution and SLA performance
+      </p>
+
+    </div>
+
+    <div class="hero-actions">
+
+      <button
+        class="btn btn-hero-outline"
+        ng-click="c.refreshReports()"
+        ng-disabled="c.loading">
+
+        <i
+          class="fa fa-refresh"
+          ng-class="{'fa-spin': c.loading}">
+        </i>
+
+        Refresh Reports
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       KPI CARDS
+       ===================================================== -->
+
+  <div class="row metric-row">
+
+    <!-- Compliance -->
+
+    <div class="col-md-3 col-sm-6">
+
+      <div class="vg-metric-card">
+
+        <div class="metric-icon green-circle">
+          <i class="fa fa-shield"></i>
+        </div>
+
+        <div class="metric-data">
+
+          <span class="metric-number text-green">
+            {{c.data.kpis.compliance}}%
+          </span>
+
+          <span class="metric-label">
+            COMPLIANCE
+          </span>
+
+          <span class="metric-subtext text-green">
+            Current case health
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Risk -->
+
+    <div class="col-md-3 col-sm-6">
+
+      <div class="vg-metric-card">
+
+        <div class="metric-icon red-circle">
+          <i class="fa fa-warning"></i>
+        </div>
+
+        <div class="metric-data">
+
+          <span class="metric-number text-red">
+            {{c.data.kpis.highRisk}}
+          </span>
+
+          <span class="metric-label">
+            HIGH-RISK CASES
+          </span>
+
+          <span class="metric-subtext text-red">
+            Require attention
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Resolution -->
+
+    <div class="col-md-3 col-sm-6">
+
+      <div class="vg-metric-card">
+
+        <div class="metric-icon blue-circle">
+          <i class="fa fa-check-square-o"></i>
+        </div>
+
+        <div class="metric-data">
+
+          <span class="metric-number text-blue">
+            {{c.data.kpis.resolution}}%
+          </span>
+
+          <span class="metric-label">
+            CASE RESOLUTION
+          </span>
+
+          <span class="metric-subtext text-blue">
+            Cases resolved
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SLA -->
+
+    <div class="col-md-3 col-sm-6">
+
+      <div class="vg-metric-card">
+
+        <div class="metric-icon orange-circle">
+          <i class="fa fa-clock-o"></i>
+        </div>
+
+        <div class="metric-data">
+
+          <span class="metric-number text-orange">
+            {{c.data.kpis.sla}}%
+          </span>
+
+          <span class="metric-label">
+            SLA PERFORMANCE
+          </span>
+
+          <span class="metric-subtext text-orange">
+            Within SLA
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       FILTERS
+       ===================================================== -->
+
+  <div class="vg-card filter-card">
+
+    <div class="vg-card-header">
+
+      <div class="header-left">
+
+        <h4>
+          <i class="fa fa-filter"></i>
+          Report Filters
+        </h4>
+
+      </div>
+
+    </div>
+
+
+    <div class="filter-grid">
+
+      <!-- Date From -->
+
+      <div class="filter-field">
+
+        <label>
+          From Date
+        </label>
+
+        <input
+          type="date"
+          class="form-control"
+          ng-model="c.filters.fromDate">
+
+      </div>
+
+
+      <!-- Date To -->
+
+      <div class="filter-field">
+
+        <label>
+          To Date
+        </label>
+
+        <input
+          type="date"
+          class="form-control"
+          ng-model="c.filters.toDate">
+
+      </div>
+
+
+      <!-- Visa -->
+
+      <div class="filter-field">
+
+        <label>
+          Visa Type
+        </label>
+
+        <select
+          class="form-control"
+          ng-model="c.filters.visaType">
+
+          <option value="">
+            All Visa Types
+          </option>
+
+          <option
+            ng-repeat="visa in c.data.visaTypes"
+            value="{{visa}}">
+            {{visa}}
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Risk -->
+
+      <div class="filter-field">
+
+        <label>
+          Risk Level
+        </label>
+
+        <select
+          class="form-control"
+          ng-model="c.filters.risk">
+
+          <option value="">
+            All Risk Levels
+          </option>
+
+          <option value="High">
+            High
+          </option>
+
+          <option value="Medium">
+            Medium
+          </option>
+
+          <option value="Low">
+            Low
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Status -->
+
+      <div class="filter-field">
+
+        <label>
+          Case Status
+        </label>
+
+        <select
+          class="form-control"
+          ng-model="c.filters.status">
+
+          <option value="">
+            All Statuses
+          </option>
+
+          <option
+            ng-repeat="status in c.data.statuses"
+            value="{{status}}">
+            {{status}}
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- Apply -->
+
+      <div class="filter-action">
+
+        <button
+          class="btn btn-apply"
+          ng-click="c.applyFilters()">
+
+          <i class="fa fa-check"></i>
+          Apply Filters
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TREND ROW
+       ===================================================== -->
+
+  <div class="row">
+
+    <!-- Compliance Trend -->
+
+    <div class="col-md-6">
+
+      <div class="vg-card chart-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-line-chart"></i>
+            Compliance Trend
+          </h4>
+
+          <span class="chart-period">
+            {{c.data.periodLabel}}
+          </span>
+
+        </div>
+
+
+        <div class="trend-area">
+
+          <div class="trend-values">
+
+            <div
+              class="trend-column"
+              ng-repeat="item in c.data.complianceTrend">
+
+              <div class="trend-value">
+                {{item.value}}%
+              </div>
+
+              <div class="trend-track">
+
+                <div
+                  class="trend-fill compliance-fill"
+                  ng-style="{
+                    'height': item.value + '%'
+                  }">
+                </div>
+
+              </div>
+
+              <span class="trend-label">
+                {{item.label}}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Case Volume -->
+
+    <div class="col-md-6">
+
+      <div class="vg-card chart-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-area-chart"></i>
+            Case Volume
+          </h4>
+
+          <span class="chart-period">
+            Cases
+          </span>
+
+        </div>
+
+
+        <div class="trend-area">
+
+          <div class="trend-values">
+
+            <div
+              class="trend-column"
+              ng-repeat="item in c.data.caseVolume">
+
+              <div class="trend-value">
+                {{item.value}}
+              </div>
+
+              <div class="trend-track">
+
+                <div
+                  class="trend-fill volume-fill"
+                  ng-style="{
+                    'height': item.height + '%'
+                  }">
+                </div>
+
+              </div>
+
+              <span class="trend-label">
+                {{item.label}}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       RISK + SLA
+       ===================================================== -->
+
+  <div class="row">
+
+    <!-- Risk Trend -->
+
+    <div class="col-md-6">
+
+      <div class="vg-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-warning"></i>
+            Risk Distribution
+          </h4>
+
+        </div>
+
+
+        <div class="distribution-list">
+
+          <div
+            class="distribution-item"
+            ng-repeat="risk in c.data.riskDistribution">
+
+            <div class="distribution-header">
+
+              <span>
+
+                <i
+                  class="fa fa-circle"
+                  ng-class="risk.iconClass">
+                </i>
+
+                {{risk.label}}
+
+              </span>
+
+              <strong>
+                {{risk.count}}
+              </strong>
+
+            </div>
+
+
+            <div class="distribution-track">
+
+              <div
+                class="distribution-fill"
+                ng-class="risk.barClass"
+                ng-style="{
+                  'width': risk.percentage + '%'
+                }">
+              </div>
+
+            </div>
+
+
+            <div class="distribution-percent">
+
+              {{risk.percentage}}%
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SLA -->
+
+    <div class="col-md-6">
+
+      <div class="vg-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-clock-o"></i>
+            SLA Performance
+          </h4>
+
+        </div>
+
+
+        <div class="sla-summary">
+
+          <div class="sla-circle">
+
+            <span>
+              {{c.data.kpis.sla}}%
+            </span>
+
+            <small>
+              Within SLA
+            </small>
+
+          </div>
+
+
+          <div class="sla-details">
+
+            <div class="sla-detail-row">
+
+              <span>
+                <i class="fa fa-check-circle text-green"></i>
+                Within SLA
+              </span>
+
+              <strong class="text-green">
+                {{c.data.sla.within}}
+              </strong>
+
+            </div>
+
+
+            <div class="sla-detail-row">
+
+              <span>
+                <i class="fa fa-clock-o text-orange"></i>
+                At Risk
+              </span>
+
+              <strong class="text-orange">
+                {{c.data.sla.atRisk}}
+              </strong>
+
+            </div>
+
+
+            <div class="sla-detail-row">
+
+              <span>
+                <i class="fa fa-times-circle text-red"></i>
+                Breached
+              </span>
+
+              <strong class="text-red">
+                {{c.data.sla.breached}}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TOP COMPLIANCE ISSUES
+       ===================================================== -->
+
+  <div class="vg-card">
+
+    <div class="vg-card-header">
+
+      <div class="header-left">
+
+        <h4>
+          <i class="fa fa-exclamation-triangle"></i>
+          Top Compliance Issues
+        </h4>
+
+      </div>
+
+      <div class="header-right">
+
+        <div class="search-wrapper">
+
+          <i class="fa fa-search search-icon"></i>
+
+          <input
+            type="text"
+            class="form-control search-input"
+            placeholder="Search issues..."
+            ng-model="c.searchQuery">
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+      <table class="table vg-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Issue
+            </th>
+
+            <th>
+              Cases
+            </th>
+
+            <th>
+              Percentage
+            </th>
+
+            <th>
+              Risk
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            ng-repeat="issue in c.data.topIssues | filter:c.searchQuery">
+
+            <td>
+
+              <strong>
+                {{issue.issue}}
+              </strong>
+
+            </td>
+
+            <td>
+
+              {{issue.count}}
+
+            </td>
+
+            <td>
+
+              <div class="issue-progress">
+
+                <div
+                  class="issue-progress-fill"
+                  ng-style="{
+                    'width': issue.percentage + '%'
+                  }">
+                </div>
+
+              </div>
+
+              <span class="issue-percent">
+                {{issue.percentage}}%
+              </span>
+
+            </td>
+
+            <td>
+
+              <span
+                class="status-pill"
+                ng-class="{
+                  'pill-red': issue.risk === 'High',
+                  'pill-orange': issue.risk === 'Medium',
+                  'pill-green': issue.risk === 'Low'
+                }">
+
+                {{issue.risk}}
+
+              </span>
+
+            </td>
+
+          </tr>
+
+
+          <tr
+            ng-if="c.data.topIssues.length === 0">
+
+            <td
+              colspan="4"
+              class="empty-row">
+
+              No compliance issues found.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CASE DISTRIBUTION
+       ===================================================== -->
+
+  <div class="row">
+
+    <div class="col-md-6">
+
+      <div class="vg-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-pie-chart"></i>
+            Case Distribution
+          </h4>
+
+        </div>
+
+
+        <div class="case-distribution">
+
+          <div
+            class="case-distribution-item"
+            ng-repeat="item in c.data.caseDistribution">
+
+            <div class="case-icon">
+              <i class="fa fa-folder-open"></i>
+            </div>
+
+            <div class="case-info">
+
+              <span>
+                {{item.label}}
+              </span>
+
+              <strong>
+                {{item.count}}
+              </strong>
+
+            </div>
+
+            <span class="case-percent">
+              {{item.percentage}}%
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Reports -->
+
+    <div class="col-md-6">
+
+      <div class="vg-card">
+
+        <div class="vg-card-header">
+
+          <h4>
+            <i class="fa fa-file-text-o"></i>
+            Available Reports
+          </h4>
+
+        </div>
+
+
+        <div class="report-list">
+
+          <div class="report-item">
+
+            <div class="report-icon blue-bg">
+              <i class="fa fa-bar-chart"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Compliance Summary
+              </strong>
+
+              <span>
+                Current institutional compliance
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="report-item">
+
+            <div class="report-icon red-bg">
+              <i class="fa fa-warning"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Risk Report
+              </strong>
+
+              <span>
+                High and medium risk cases
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="report-item">
+
+            <div class="report-icon orange-bg">
+              <i class="fa fa-clock-o"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                SLA Report
+              </strong>
+
+              <span>
+                SLA performance and breaches
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="report-item">
+
+            <div class="report-icon green-bg">
+              <i class="fa fa-check"></i>
+            </div>
+
+            <div>
+
+              <strong>
+                Resolution Report
+              </strong>
+
+              <span>
+                Resolved versus active cases
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       AI INSIGHTS
+       ===================================================== -->
+
+  <div class="vg-card ai-report-card">
+
+    <div class="vg-card-header">
+
+      <h4>
+        <i class="fa fa-lightbulb-o"></i>
+        AI Report Insights
+      </h4>
+
+    </div>
+
+
+    <div class="ai-insight-content">
+
+      <div class="ai-icon">
+        <i class="fa fa-magic"></i>
+      </div>
+
+
+      <div class="ai-text">
+
+        <strong>
+          Compliance Analysis
+        </strong>
+
+        <p>
+          {{c.data.aiInsight}}
+        </p>
+
+
+        <div class="recommendation">
+
+          <i class="fa fa-check-circle"></i>
+
+          <span>
+            {{c.data.aiRecommendation}}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>1348e557292603107f44d6fee5fae360</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:45:13</sys_created_on>
+        <sys_id>5348e557292603107f44d6fee5fae363</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:45:13</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

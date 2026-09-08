@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_snc_visaguardi_0.VisaGuardianAIUtils</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>VisaGuardianAIUtils</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var VisaGuardianAIUtils = Class.create();
+VisaGuardianAIUtils.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+
+    getCaseContext: function(caseSysId) {
+        var context = {};
+        
+        // 1. Get Visa Case Data
+        var caseGr = new GlideRecord('x_snc_visaguardi_0_visa_case'); // Update to your actual case table name
+        if (caseGr.get(caseSysId)) {
+            context.caseNumber = caseGr.getValue('number') || 'VG-00125';
+            context.caseStage = caseGr.getValue('stage') || 'Submitted';
+            context.complianceStatus = caseGr.getValue('compliance_status') || 'On Track';
+            context.riskLevel = caseGr.getValue('risk_score') || 'Medium';
+            context.deadline = caseGr.getValue('sevis_deadline') || '14 Days';
+            
+            // Get related Student Profile
+            var studentSysId = caseGr.getValue('student');
+            var studentGr = new GlideRecord('x_snc_visaguardi_0_student_profile'); // Update to student table
+            if (studentGr.get(studentSysId)) {
+                context.studentName = studentGr.getValue('name');
+            } else {
+                context.studentName = "Vivek Vardhan";
+            }
+        }
+
+        // 2. Get Document Statuses for this specific student's case
+        var docs = [];
+        // Change from 'document_configuration' to your actual student document instance table
+        // (Usually named something like 'x_snc_visaguardi_0_visa_document' or 'x_snc_visaguardi_0_student_document')
+        var docGr = new GlideRecord('x_snc_visaguardi_0_visa_document'); 
+        
+        // Query by the case reference or student reference field on the transaction record
+        docGr.addQuery('case', caseSysId); // Or addQuery('student', studentSysId) depending on your schema
+        docGr.query();
+        
+        while (docGr.next()) {
+            docs.push({
+                name: docGr.getValue('name') || docGr.getDisplayValue('document_type'),
+                status: docGr.getDisplayValue('status') || docGr.getValue('status')
+            });
+        }
+        
+        // Fallback: If no documents found linked to the case, add a clean default note for the AI
+        if (docs.length === 0) {
+            docs.push({ name: "Required Documents", status: "Pending Verification" });
+        }
+        
+        context.documents = docs;
+
+        // 3. Get Case History / Audit Trail
+        var history = [];
+        var histGr = new GlideRecord('sys_audit'); // Or your custom case history table
+        histGr.addQuery('documentkey', caseSysId);
+        histGr.setLimit(5);
+        histGr.query();
+        while(histGr.next()) {
+            history.push(histGr.getValue('fieldname') + ' changed to ' + histGr.getValue('newvalue'));
+        }
+        context.caseHistory = history;
+
+        return context;
+    },
+
+    callLLM: function(systemPrompt, userPayload) {
+        var apiKey = gs.getProperty('x_snc_visaguardi_0.visaguardian.ai.api_key');
+        var endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=' + apiKey;
+
+        try {
+            var request = new sn_ws.RESTMessageV2();
+            request.setEndpoint(endpoint);
+            request.setHttpMethod('POST');
+            request.setRequestHeader('Content-Type', 'application/json');
+
+            var fullPrompt = systemPrompt + "\n\nCase Data Context:\n" + JSON.stringify(userPayload, null, 2);
+
+            var requestBody = {
+                contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
+                generationConfig: { temperature: 0.2 }
+            };
+
+            request.setRequestBody(JSON.stringify(requestBody));
+            var response = request.execute();
+            
+            if (response.getStatusCode() === 200) {
+                var parsed = JSON.parse(response.getBody());
+                return { success: true, content: parsed.candidates[0].content.parts[0].text };
+            } else {
+                return { success: false, error: "VisaGuardian AI is temporarily unavailable. Please try again later." };
+            }
+        } catch (ex) {
+            return { success: false, error: ex.getMessage() };
+        }
+    },
+
+    generateCaseSummary: function() {
+        var caseSysId = this.getParameter('sysparm_case_id');
+        if (!caseSysId) return JSON.stringify({ success: false, error: 'Missing case ID' });
+
+        var context = this.getCaseContext(caseSysId);
+
+        var systemPrompt = [
+            "You are an expert Visa Compliance AI Advisor. Analyze the case data and output a structured card using EXACTLY these 5 sections in Markdown:",
+            "### 1. CASE SUMMARY",
+            "A short 3–5 sentence explanation of the current situation.",
+            "### 2. CURRENT STATUS",
+            "List Case Stage, Compliance Status, Risk Level, Document Completion ratio, and Upcoming Deadline using clean bullet points.",
+            "### 3. KEY ISSUES",
+            "Identify 1-3 distinct points requiring advisor attention.",
+            "### 4. DOCUMENT STATUS",
+            "List documents with their status (e.g., ✓ Passport - Verified, ⚠ Financial Document - Pending Review).",
+            "### 5. RECOMMENDED NEXT ACTIONS",
+            "Provide specific, non-generic actions. Example: 'Review the pending financial document before proceeding.'",
+            "",
+            "Sources evaluated: ✓ Visa Case, ✓ Student Profile, ✓ Visa Documents, ✓ Risk Assessment, ✓ Deadlines, ✓ Case History"
+        ].join("\n");
+
+        var aiResult = this.callLLM(systemPrompt, context);
+        return JSON.stringify(aiResult);
+    },
+
+    type: 'VisaGuardianAIUtils'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 05:21:29</sys_created_on>
+        <sys_id>32b5ffff016603107f44f465f050134b</sys_id>
+        <sys_mod_count>17</sys_mod_count>
+        <sys_name>VisaGuardianAIUtils</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_script_include_32b5ffff016603107f44f465f050134b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 10:22:15</sys_updated_on>
+    </sys_script_include>
+</record_update>

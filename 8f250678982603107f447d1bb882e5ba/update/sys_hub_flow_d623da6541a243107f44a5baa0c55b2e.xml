@@ -1,0 +1,1278 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,timeFromCreateToActivate=891209000,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Sends notifications based on the advisor's decision after reviewing a visa case.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source/>
+        <internal_name>advior_decision_notification</internal_name>
+        <label_cache>[{"name":"Updated_1.current","label":"Trigger - Record Updated➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{"386547d8-710b-4541-b315-68adcb4e62c9":["record"],"aa02f149-6281-4e1b-8f53-d29b98d6e68a":["record"],"5481cb8d-6e6d-4366-b718-047b332b0a66":["record",null]},"attributes":{}},{"name":"Updated_1.current.decision","label":"Trigger - Record Updated➛Visa Cases Record➛Decision","reference":"","reference_display":"Decision","type":"choice","base_type":"choice","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"decision","choices":[{"label":"-- None --","sequence":-1.0,"used":false,"reference":false,"image":"","rawLabel":"-- None --","selected":false,"missing":false,"value":""},{"sequence":-1.0,"used":false,"label":"Additional Documents Required","reference":false,"image":"","rawLabel":"Additional Documents Required","selected":false,"missing":false,"value":"additional documents required","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Additional Documents Required"}}},{"sequence":-1.0,"used":false,"label":"Approved","reference":false,"image":"","rawLabel":"Approved","selected":false,"missing":false,"value":"approved","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Approved"}}},{"sequence":-1.0,"used":false,"label":"Pending","reference":false,"image":"","rawLabel":"Pending","selected":false,"missing":false,"value":"pending","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Pending"}}},{"sequence":-1.0,"used":false,"label":"Rejected","reference":false,"image":"","rawLabel":"Rejected","selected":false,"missing":false,"value":"rejected","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Rejected"}}}],"usedInstances":{"1b9baedd-ab13-40a4-95a1-819fcb8628e8":["condition"],"f949583d-84a7-4677-aee1-7e9430ca85e3":["condition"]}},{"name":"aa02f149-6281-4e1b-8f53-d29b98d6e68a.record","label":"1 - Update Record➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{},"attributes":{"element_mapping_provider":"com.glide.flow_design.action.data.FlowDesignVariableMapper"}},{"name":"Updated_1.current.student.email","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛Email","reference":"","reference_display":"Email","type":"email","base_type":"email","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"email","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":["ah_to"]}},{"name":"Updated_1.current.student.first_name","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛First name","reference":"","reference_display":"First name","type":"string","base_type":"string","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"first_name","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛Visa Cases Record➛Number","reference":"","reference_display":"Number","type":"string","base_type":"string","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"number","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}},{"name":"Updated_1.current.student.avatar","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛Avatar","reference":"","reference_display":"Avatar","type":"user_image","base_type":"user_image","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"avatar","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}}]</label_cache>
+        <master_snapshot>1446da8c017e43107f44f465f050131d</master_snapshot>
+        <master_snapshot_digest/>
+        <name>Advior Decision Notification</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>d3dadf3480f203107f44f1c738faf9b7</remote_trigger_id>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:06</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>d623da6541a243107f44a5baa0c55b2e</sys_id>
+        <sys_mod_count>38</sys_mod_count>
+        <sys_name>Advior Decision Notification</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_hub_flow_d623da6541a243107f44a5baa0c55b2e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:39</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record>d9da5f3480f203107f44f1c738faf9e3</version_record>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_variable_value action="delete_multiple" query="document_key=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_snc_visaguardi_0_visa_case">case_stage=submit_proper_documents<item display_value="Submit Proper Documents" endquery="false" field="case_stage" goto="false" newquery="false" operator="=" or="false" value="submit_proper_documents"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>false</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:38</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>d3dadf3480f203107f44f1c738faf9b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:38</sys_updated_on>
+        <table>x_snc_visaguardi_0_visa_case</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>d623da6541a243107f44a5baa0c55b2e</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:38</sys_created_on>
+        <sys_id>97dadf3480f203107f44f1c738faf9b8</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:38</sys_updated_on>
+        <trigger display_value="">d3dadf3480f203107f44f1c738faf9b7</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=d623da6541a243107f44a5baa0c55b2e^sys_idNOT IN97dadf3480f203107f44f1c738faf9b8"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=d623da6541a243107f44a5baa0c55b2e^sys_idNOT INd223da6541a243107f44a5baa0c55b2f"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>d623da6541a243107f44a5baa0c55b2e</id>
+        <name>Advior Decision Notification</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:06</sys_created_on>
+        <sys_id>d223da6541a243107f44a5baa0c55b2f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 22:23:06</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=d223da6541a243107f44a5baa0c55b2f"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=d623da6541a243107f44a5baa0c55b2e^sys_idNOT IN6833166941a243107f44a5baa0c55b74,e433166941a243107f44a5baa0c55bda,e833166941a243107f44a5baa0c55bcf"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name,uiTypeLabel=Table Name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</model>
+        <model_id>d623da6541a243107f44a5baa0c55b2e</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:15</sys_created_on>
+        <sys_id>6833166941a243107f44a5baa0c55b74</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:24</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=6833166941a243107f44a5baa0c55b74"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</model>
+        <model_id>d623da6541a243107f44a5baa0c55b2e</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:16</sys_created_on>
+        <sys_id>e433166941a243107f44a5baa0c55bda</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 22:23:16</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=e433166941a243107f44a5baa0c55bda"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id,uiTypeLabel=Document ID</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</model>
+        <model_id>d623da6541a243107f44a5baa0c55b2e</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:16</sys_created_on>
+        <sys_id>e833166941a243107f44a5baa0c55bcf</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:24</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=e833166941a243107f44a5baa0c55bcf"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=d623da6541a243107f44a5baa0c55b2e^sys_idNOT INe033166941a243107f44a5baa0c55b6e"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:15</sys_created_on>
+        <sys_id>e033166941a243107f44a5baa0c55b6e</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:35</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>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</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=d623da6541a243107f44a5baa0c55b2e^sys_idNOT IN6ddfcb38807203107f44f1c738faf9ff,6c6616ed41a243107f44a5baa0c55ba5"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="Send Email">98c181d20b100300d97d8bf637673ab5</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:08:27</sys_created_on>
+        <sys_id>6ddfcb38807203107f44f1c738faf9ff</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:35</sys_updated_on>
+        <ui_id>5481cb8d-6e6d-4366-b718-047b332b0a66</ui_id>
+        <updation_source/>
+        <values>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</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6ddfcb38807203107f44f1c738faf9ff"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent/>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:37:11</sys_created_on>
+        <sys_id>6c6616ed41a243107f44a5baa0c55ba5</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:35</sys_updated_on>
+        <ui_id>aa02f149-6281-4e1b-8f53-d29b98d6e68a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+2SUWvbMBSF/0rws2fsOAlt3sZCYA9rodvy0hUhS9eJQJY9SU6Thfz3XclykqVrCaVjDOY33Sude871d7+LBI+m0Qh4ml1nE5ZneT5M0+HVKCsmeZENeU4BsiiOFK0Ab2pgteZ4XlPZusJu97Xh1AInWcJarUHZ/R77XJhG0u0iXMMKWwnJsR9N7x/iqKEaFS3oaLo7a9ltA0TSAiQ+nNWsrVB08HGGGpe67V/f9XbP7bsZeOZBnQhXxJbzk6VxBBsLigOOK6k0EEcVVRiz1ttoanWLBQ2U3yq5PdxYCWW7pBXdGPED9Uepu1cCRmNhC4cjCRvql1MLBreNFbXqKpYWst9cLdtK3XQR3G6hpK20J7ttDepB4yw7E53D8vOqfrzr582F8umCW1kzKg8naq0WRWvBuN8BEvxSKto0Qi1Jo+u18I/RSpUsJR6SUtaPONOIpUooc74TXBBN5lif+fKCauFCfEIZfLz34cn31s3tYgTDxGf2gYn/UXjVMC0a+x6F1xBs7uOAazp8EQA4/m9PqTnB1Vhk9Vubpjl/N36K6Xn7dcx+gQpFLQw62fhi173AXIDk5jcxArY2DCDrMOBA7puhm01S//0H+A8AXIxfQoFdH//8ieYR4g0xipG1MHTZUs0FSf2BMGrgKdMLbA0+YMu8HmjnYnDTubg0wS+Pn0nU83xaCyyP3wzlq78EcXD0j1H8HLsPPwFxvlHLLQgAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6c6616ed41a243107f44a5baa0c55ba5"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=d623da6541a243107f44a5baa0c55b2e^sys_idNOT INc8a8573080f203107f44f1c738faf9b2,88a8573080f203107f44f1c738faf9b1,84a8573080f203107f44f1c738faf9b2,09da5f3480f203107f44f1c738faf9ce,4dda5f3480f203107f44f1c738faf9ce,85da5f3480f203107f44f1c738faf9cf,c9da5f3480f203107f44f1c738faf9cf,01da5f3480f203107f44f1c738faf9d0"/>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:46:51</sys_created_on>
+        <sys_id>c8a8573080f203107f44f1c738faf9b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:46:51</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>3d5b016a-041f-481f-b1d1-1c16612f15c8</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:46:51</sys_created_on>
+        <sys_id>88a8573080f203107f44f1c738faf9b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:46:51</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>6a1bf79f-cea5-4966-8cf7-d62b4e4eefc9</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.first_name}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:46:51</sys_created_on>
+        <sys_id>84a8573080f203107f44f1c738faf9b2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:46:51</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>d3d40b9b-98ea-4be8-b588-5c142d1e829d</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:29</sys_created_on>
+        <sys_id>09da5f3480f203107f44f1c738faf9ce</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:29</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>62a31a97-2b9c-4add-ae0c-a457b5b99096</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.first_name}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:29</sys_created_on>
+        <sys_id>4dda5f3480f203107f44f1c738faf9ce</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:29</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>12400b68-e446-488d-be5f-b52d0004ee1b</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.avatar}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:29</sys_created_on>
+        <sys_id>85da5f3480f203107f44f1c738faf9cf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:29</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>5f9f81fc-55eb-4d1b-869d-53da7ba7c345</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:29</sys_created_on>
+        <sys_id>c9da5f3480f203107f44f1c738faf9cf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:29</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>a9b1b5e1-d503-4703-bf25-4a0df4a9f9d3</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>d623da6541a243107f44a5baa0c55b2e</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:29</sys_created_on>
+        <sys_id>01da5f3480f203107f44f1c738faf9d0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:29</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>6180e84b-2910-4bde-a870-cdc4b40df62b</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_flow_variable action="delete_multiple" query="model=d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:16</sys_created_on>
+        <sys_id>2033166941a243107f44a5baa0c55bd6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 22:23:16</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:16</sys_created_on>
+        <sys_id>6433166941a243107f44a5baa0c55bcb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 22:23:16</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 22:23:16</sys_created_on>
+        <sys_id>b033166941a243107f44a5baa0c55be1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 22:23:16</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_d623da6541a243107f44a5baa0c55b2e"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Sends notifications based on the advisor's decision after reviewing a visa case.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>advior_decision_notification</internal_name>
+        <label_cache>[{"name":"Updated_1.current","label":"Trigger - Record Updated➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{"386547d8-710b-4541-b315-68adcb4e62c9":["record"],"aa02f149-6281-4e1b-8f53-d29b98d6e68a":["record"],"5481cb8d-6e6d-4366-b718-047b332b0a66":["record",null]},"attributes":{}},{"name":"Updated_1.current.decision","label":"Trigger - Record Updated➛Visa Cases Record➛Decision","reference":"","reference_display":"Decision","type":"choice","base_type":"choice","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"decision","choices":[{"label":"-- None --","sequence":-1.0,"used":false,"reference":false,"image":"","rawLabel":"-- None --","selected":false,"missing":false,"value":""},{"sequence":-1.0,"used":false,"label":"Additional Documents Required","reference":false,"image":"","rawLabel":"Additional Documents Required","selected":false,"missing":false,"value":"additional documents required","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Additional Documents Required"}}},{"sequence":-1.0,"used":false,"label":"Approved","reference":false,"image":"","rawLabel":"Approved","selected":false,"missing":false,"value":"approved","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Approved"}}},{"sequence":-1.0,"used":false,"label":"Pending","reference":false,"image":"","rawLabel":"Pending","selected":false,"missing":false,"value":"pending","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Pending"}}},{"sequence":-1.0,"used":false,"label":"Rejected","reference":false,"image":"","rawLabel":"Rejected","selected":false,"missing":false,"value":"rejected","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Rejected"}}}],"usedInstances":{"1b9baedd-ab13-40a4-95a1-819fcb8628e8":["condition"],"f949583d-84a7-4677-aee1-7e9430ca85e3":["condition"]}},{"name":"aa02f149-6281-4e1b-8f53-d29b98d6e68a.record","label":"1 - Update Record➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{},"attributes":{"element_mapping_provider":"com.glide.flow_design.action.data.FlowDesignVariableMapper"}},{"name":"Updated_1.current.student.email","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛Email","reference":"","reference_display":"Email","type":"email","base_type":"email","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"email","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":["ah_to"]}},{"name":"Updated_1.current.student.first_name","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛First name","reference":"","reference_display":"First name","type":"string","base_type":"string","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"first_name","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛Visa Cases Record➛Number","reference":"","reference_display":"Number","type":"string","base_type":"string","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"number","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}},{"name":"Updated_1.current.student.avatar","label":"Trigger - Record Updated➛Visa Cases Record➛Student➛Avatar","reference":"","reference_display":"Avatar","type":"user_image","base_type":"user_image","parent_table_name":"x_snc_visaguardi_0_student_profile","column_name":"avatar","usedInstances":{"5481cb8d-6e6d-4366-b718-047b332b0a66":[null]}}]</label_cache>
+        <master>true</master>
+        <name>Advior Decision Notification</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="Advior Decision Notification">d623da6541a243107f44a5baa0c55b2e</parent_flow>
+        <remote_trigger_id/>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:25</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1446da8c017e43107f44f465f050131d</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=1446da8c017e43107f44f465f050131d"/>
+    <sys_variable_value action="delete_multiple" query="document_key=1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=1446da8c017e43107f44f465f050131d"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=1446da8c017e43107f44f465f050131d^sys_idNOT IN9046da8c017e43107f44f465f050131e"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>1446da8c017e43107f44f465f050131d</id>
+        <name>Advior Decision Notification</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:25</sys_created_on>
+        <sys_id>9046da8c017e43107f44f465f050131e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:25</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=9046da8c017e43107f44f465f050131e"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=1446da8c017e43107f44f465f050131d^sys_idNOT IN1846da8c017e43107f44f465f050135e,5846da8c017e43107f44f465f050132b,d046da8c017e43107f44f465f050133c"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</model>
+        <model_id>1446da8c017e43107f44f465f050131d</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_id>1846da8c017e43107f44f465f050135e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:36</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=1846da8c017e43107f44f465f050135e"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</model>
+        <model_id>1446da8c017e43107f44f465f050131d</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:25</sys_created_on>
+        <sys_id>5846da8c017e43107f44f465f050132b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:36</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=5846da8c017e43107f44f465f050132b"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</model>
+        <model_id>1446da8c017e43107f44f465f050131d</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:25</sys_created_on>
+        <sys_id>d046da8c017e43107f44f465f050133c</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d046da8c017e43107f44f465f050133c"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=1446da8c017e43107f44f465f050131d^sys_idNOT IN1c46da8c017e43107f44f465f050136f"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_id>1c46da8c017e43107f44f465f050136f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:36</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/9VaXW/bNhT9K4KeNsAdJMuf2VPmJGuAtAEct3vIAoEiKZuYTLkipcQr8t93qQ9b1lfsWO7cp0QkTZ57ee45pOXH77qHHOrpF/oMOR7VOzrjkgYcebP1ikKzVM02R0vVt0ScIOkHa/1CBiHt6G7gL2d0ufKQhMEu8gQ0+gGhgX5hdvQIeSF9WItbAjPB5+Np0jn1tBueX2zBsR0xgeYhCgizjfjBxkioYYQJWGD9NR39Fbq0CXQJ6MML5pGAcv3i8amjr1AAK0i1+vdCF1MQTEKQ2aUGtkyr2zWM7qhnOgPLMbvEQhSNYMJiOgqQZUVWtvHSF0k5oWSTilLCAorIPffWuREvgv0Lc44M1etSQIxpkq7No52mIGnGC59her+SzOdJS4Iu6fS9cMk/J6hV8qiLQk9myYOWUMB8dKWAcrnB4T4s/OdptuAN43FMaafnY+RtnpCUAXNCCRsAaXaZBwm3k4wIPwxi9NPryf30yv7rcjb5eD21p9cPs+ntZHZ9pb/GcdnfQjVjgjDFYifhvG52/IZRT20bD5cOoOnoAgdsJS+xZFFGt9fOlsITnxMWZ6VEY5x1iV0aZ9E38dgwapmMcytmbFastYVEc/p3aBgWEaGzZNJeBf4K8kR8HC4h2MPJ6zhjRCiqIe9gmCNvPhEVSGVFTvLBNtE4banncc8w/icmp5L0XiJnUdtqn1S0QonN5d3k4+XnP68ffk//3kzvP2X/z+4BxTOC3bSlbyNC7FxOQSUAkKKbT6h3tcUJ7Ww+By4wvgqBCG9VRJKTclm8XRBByGEKe7Of5bKIN2CzE3dMAL5HKOoH+i1Mtu8D6JqbJT2NyL1LF5iGXPO5hsMAsi01oImWLabFsBW13NslFEMCGCb2KJY5brlfRP7pExOC8XkumDos8YAyGG+dR5Tp9jEYntpUjPKWRIV4CnZ3sE4MMDF7znBgDJVKmIbluKYxNPrIJZZhjK2cTpTB1KKUBcK0qBeHqYWICertsefFxKaQjXyF7EXgaJf9WeiKGKkoTdqBZrYEraugFcTVOkhdN2RMmq92OdkUWsvHC0QiBJ8gWYz7HB/2UEXX859Bf49XRNcP6DzwQ06KUqSW0Bj83RlxGi10EP6nGcV2hPZLuqm/npsubjclozXi6xYUsUcxGQ56AwOE0AINdPrjsYNR13WHgyE1SEERtzAqsZ2xEr6x2VEVW+pUsZK+URXrD9DDIwCWtPFggMerYkrHSk1M+n4O9XteUG4D1MD2lL6VRHDuMUKzvnZrvLR0tK3qY+vcckek3x8O8RBuR1Dnbo86yOx1+2g8HFh0UKjzEpQmmLIiMye8M4m1iJev0YAvSdd5fRNwSrIKKqWynqP9Ov44StbLWaXaFy1WFT/QVHa12+1A7YGC8cVX51P5ty8XJecGJH9A+w4SdQr87PMPFehOeNXicBfYJ3E1yM7tnFFgVLS7CUefNkbWuE9cq1qFht0qFdqCqYd5pueOPQkQ1VKp6gCybzlGlVVde2J4R0UVyJE/SjScddpKitl6UrqnS4p19Pkqq8DaS+d7wP5ELhcfOFqzOp9T23crxZq5WvolJCWas9bkgkJuPThRw8qagnFCN0lOyiWvg2YtPfKczMbUnhSTcuVr0KEFPyQtp/GyAm/avT1jd+yQsVVzqu7Xn6rrTa3QfabOdjAxoiqeNdrbYfMW56w0uFwZ7fJgT+tqNepq/zou6koHeyvq472p6e5fgeL8XUeBniXb0IbX4MK1AB/72qVByGlEgx0PuYHkx41auCJKRU+2dMgZtNt4gfg8ebu1gwHhhZYM0ZIhJ7RR7xmtxW7SocCguFT9pl/LQwNUMk909gcbV8MPQNIXoEIG8Mn5eqfacRsvwbA57nctMsKWObbKv/Qwc6a1Wwf1CGtd6o0fftS51ILFL4Nzy6cUlmxJY03cvEzWlkjiBRUdDTgWv3iJJZMFQsajf9NbvM5hWt6OKhOr5XtUVyq1ptDA2ajI9ioXqCj/qCAVeR9ovLg1hG+2En63jfCt94XfO9oGs/qs9ME0ey17X2pn7/K7p/8AQWRcC+ImAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=1446da8c017e43107f44f465f050131d^sys_idNOT IN7adadf3480f203107f44f1c738faf956,5446da8c017e43107f44f465f050136d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="Send Email">98c181d20b100300d97d8bf637673ab5</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>c1806bf4a70323008299b39f087901cb</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:36</sys_created_on>
+        <sys_id>7adadf3480f203107f44f1c738faf956</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:36</sys_updated_on>
+        <ui_id>5481cb8d-6e6d-4366-b718-047b332b0a66</ui_id>
+        <updation_source/>
+        <values>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</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=7adadf3480f203107f44f1c738faf956"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Advior Decision Notification">1446da8c017e43107f44f465f050131d</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_id>5446da8c017e43107f44f465f050136d</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <ui_id>aa02f149-6281-4e1b-8f53-d29b98d6e68a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1TTWvbQBD9K2bPqpD8ReJbsDEU0gSS1Jc0iNHuyF5YfXR35dg1/u8dSSvZddLgQA4NVLeZNzP7ZvTe445JwSZsiCIIL8MxH4SDQT8I+hfDMB4P4rAvBoAYMo9lkCJVauS5FhSvQZVVYrf7XgiwKKLQ56XWmNn9nnAhTaFgu3BllOErqQThbPL45LECNE20qNlkdwKdS0lBjIpK71pOpxzttqhikfMyJV6RbJPXrnPmkN7XGSHUVNEJA4/hxmImkIgkoAx6LIWMtsz1lk2sLimhEcRtprZdxUpmtlk0hY2Rv+jlYVDVJUibcXeELozcgZp0MgML9zSZ21J398olR9PcRGACpbLT41xTcFtYmWdNi4VYtd25KtPsprkI6wYc/Y/SEAksqj0r5s1ayf0qf75rSc5lVp/ErahyDqqLwFot49JWdHYMFdY3TqEoZLaMCp2vZd1MVFJ/qSjwE5U/05tGLjMfeMXbp6uCP6f8rE4vQMtqiW80hpr3HjNbM1VgzGEVumH0s6yYNIu5FaL6CvUJoloJVTPXsrBX9NQaHfG950Qf9N9UGB4EVWvdHIneWFL8jzIIBuLL6KXYT+H3Kf8MXq3y5xKVMK8Qdcq3mBIvi1FD/E/xPziwt3Bgp/8PM0A4Durvvw3+XRvEo7fkxi8P6jqaebDCJjIZj9bSwLIELWQU1EHEweBLZywI6k0JMu+2xRk8W1s81P//dd6tM05z18e9vZsGcI4YfZghLj6TFdwan94Lf3PA0293K9P6/wgAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=5446da8c017e43107f44f465f050136d"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=1446da8c017e43107f44f465f050131d^sys_idNOT IN4fdadf3480f203107f44f1c738faf98d,43dadf3480f203107f44f1c738faf98e,47dadf3480f203107f44f1c738faf98e,4bdadf3480f203107f44f1c738faf98e,4fdadf3480f203107f44f1c738faf98e,43dadf3480f203107f44f1c738faf98f,47dadf3480f203107f44f1c738faf98f,4bdadf3480f203107f44f1c738faf98f"/>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>4fdadf3480f203107f44f1c738faf98d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>62a31a97-2b9c-4add-ae0c-a457b5b99096</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.first_name}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>43dadf3480f203107f44f1c738faf98e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>12400b68-e446-488d-be5f-b52d0004ee1b</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>47dadf3480f203107f44f1c738faf98e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>6a1bf79f-cea5-4966-8cf7-d62b4e4eefc9</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.first_name}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>4bdadf3480f203107f44f1c738faf98e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>d3d40b9b-98ea-4be8-b588-5c142d1e829d</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.student.avatar}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>4fdadf3480f203107f44f1c738faf98e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>5f9f81fc-55eb-4d1b-869d-53da7ba7c345</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>43dadf3480f203107f44f1c738faf98f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>3d5b016a-041f-481f-b1d1-1c16612f15c8</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>47dadf3480f203107f44f1c738faf98f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>a9b1b5e1-d503-4703-bf25-4a0df4a9f9d3</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_pill_compound action="INSERT_OR_UPDATE">
+        <attached_to>1446da8c017e43107f44f465f050131d</attached_to>
+        <extra_info/>
+        <order>0</order>
+        <prescription>{{Updated_1.current.number}}</prescription>
+        <source_ui_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 05:56:37</sys_created_on>
+        <sys_id>4bdadf3480f203107f44f1c738faf98f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:37</sys_updated_on>
+        <transform_compositions>[]</transform_compositions>
+        <transform_definition_id/>
+        <ui_id>6180e84b-2910-4bde-a870-cdc4b40df62b</ui_id>
+    </sys_hub_pill_compound>
+    <sys_hub_flow_variable action="delete_multiple" query="model=1446da8c017e43107f44f465f050131d"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:25</sys_created_on>
+        <sys_id>5046da8c017e43107f44f465f0501338</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:25</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_id>5846da8c017e43107f44f465f0501341</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:26</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_id>9846da8c017e43107f44f465f0501363</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 17:01:26</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_1446da8c017e43107f44f465f050131d"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_1446da8c017e43107f44f465f050131d"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>d623da6541a243107f44a5baa0c55b2e</sys_id>
+        <latest_snapshot>1446da8c017e43107f44f465f050131d</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=d623da6541a243107f44a5baa0c55b2e^sys_idNOT INa446da8c017e43107f44f465f0501388"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan/>
+        <plan_id>d623da6541a243107f44a5baa0c55b2e</plan_id>
+        <snapshot>1446da8c017e43107f44f465f050131d</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 17:01:26</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a446da8c017e43107f44f465f0501388</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 05:56:38</sys_updated_on>
+        <trigger display_value="">d3dadf3480f203107f44f1c738faf9b7</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=d623da6541a243107f44a5baa0c55b2e"/>
+</record_update>

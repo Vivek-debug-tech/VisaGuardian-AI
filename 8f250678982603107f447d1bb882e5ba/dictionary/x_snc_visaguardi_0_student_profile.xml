@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="54894e30986603107f447d1bb882e5c7" extends="sys_user" label="Student Profiles" max_length="40" name="x_snc_visaguardi_0_student_profile" type="collection">
+        <element choice="3" label="Degree Level " mandatory="true" max_length="40" name="degree_level" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Exchange Program" value="Exchange Program"/>
+                <element inactive_on_update="false" label="Phd" value="Phd"/>
+                <element inactive_on_update="false" label="Bachelor's" value="bachelor's"/>
+                <element inactive_on_update="false" label="Master's" value="master's"/>
+            </choice>
+        </element>
+        <element label="Current Semester" mandatory="true" max_length="40" name="current_semester" type="integer"/>
+        <element choice="3" label="Visa Type" mandatory="true" max_length="40" name="visa_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="H-1B" value="H-1B"/>
+                <element inactive_on_update="false" label="B-1/B-2" value="B-1/B-2"/>
+                <element inactive_on_update="false" label="L-1" value="L-1"/>
+                <element inactive_on_update="false" label="Other" value="Other"/>
+                <element inactive_on_update="false" label="F-1" value="F-1"/>
+                <element inactive_on_update="false" label="M-1" value="M-1"/>
+                <element inactive_on_update="false" label="J-1" value="J-1"/>
+            </choice>
+        </element>
+        <element choice="3" label="Emergency Contact Relationship" mandatory="true" max_length="40" name="emergency_contact_relationship" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Sibling" sequence="4" value="sibling"/>
+                <element inactive_on_update="false" label="Mother" sequence="1" value="mother"/>
+                <element inactive_on_update="false" label="Relative" sequence="5" value="relative"/>
+                <element inactive_on_update="false" label="Spouse" sequence="3" value="spouse"/>
+                <element inactive_on_update="false" label="Friend" sequence="6" value="friend"/>
+                <element inactive_on_update="false" label="Father" sequence="0" value="father"/>
+                <element inactive_on_update="false" label="Guardian" sequence="2" value="guardian"/>
+                <element inactive_on_update="false" label="Other" sequence="7" value="other"/>
+            </choice>
+        </element>
+        <element label="SEVIS ID" max_length="20" name="sevis_id" type="string"/>
+        <element choice="3" label="Nationality" mandatory="true" max_length="0" name="nationality" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Other" value="Other"/>
+                <element inactive_on_update="false" label="Chinese" value="Chinese"/>
+                <element inactive_on_update="false" label="German" value="German"/>
+                <element inactive_on_update="false" label="Indian" value="indian"/>
+                <element inactive_on_update="false" label="Australia" value="Australia"/>
+                <element inactive_on_update="false" label="American" value="American"/>
+            </choice>
+        </element>
+        <element choice="3" label="Relationship" max_length="40" name="relationship" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Guardian" value="guardian"/>
+                <element inactive_on_update="false" label="Sibling" value="sibling"/>
+                <element inactive_on_update="false" label="Other" value="other"/>
+                <element inactive_on_update="false" label="Mother" value="mother"/>
+                <element inactive_on_update="false" label="Friend" value="friend"/>
+                <element inactive_on_update="false" label="Father" value="father"/>
+                <element inactive_on_update="false" label="Spouse" value="spouse"/>
+            </choice>
+        </element>
+        <element label="Visa Expiry Date" max_length="40" name="visa_expiry_date" type="glide_date"/>
+        <element label="Date of Birth" mandatory="true" max_length="40" name="date_of_birth" type="glide_date"/>
+        <element label="Passport Number" mandatory="true" max_length="20" name="passport_number" type="string"/>
+        <element choice="3" label="Semester" mandatory="true" max_length="40" name="semester" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Summer" value="Summer"/>
+                <element inactive_on_update="false" label="Spring" value="spring"/>
+                <element inactive_on_update="false" label="Fall" value="fall"/>
+                <element inactive_on_update="false" label="Winter" value="winter"/>
+            </choice>
+        </element>
+        <element label="Emergency Contact Name" max_length="100" name="emergency_contact_name" type="string"/>
+        <element label="University Name" mandatory="true" max_length="100" name="university_name" type="string"/>
+        <element label="Degree Program" mandatory="true" max_length="100" name="degree_program" type="string"/>
+        <element label="Emergency Contact Number" max_length="40" name="emergency_contact_number" type="phone_number_e164"/>
+        <element label="Passport Expiry Date" mandatory="true" max_length="40" name="passport_expiry_date" type="glide_date"/>
+        <element label="Intake Year" max_length="40" name="intake_year" type="integer"/>
+        <element label="Student ID" mandatory="true" max_length="30" name="student_id" type="string"/>
+        <element label="User" max_length="32" name="user" reference="sys_user" type="reference"/>
+        <element choice="3" label="Current Visa Status" mandatory="true" max_length="40" name="current_visa_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Expiring soon" value="expiring_soon"/>
+                <element inactive_on_update="false" label="Active" value="active"/>
+                <element inactive_on_update="false" label="Expired" value="expired"/>
+                <element inactive_on_update="false" label="Pending Verification" value="pending_verification"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="user"/>
+        </index>
+    </element>
+</database>

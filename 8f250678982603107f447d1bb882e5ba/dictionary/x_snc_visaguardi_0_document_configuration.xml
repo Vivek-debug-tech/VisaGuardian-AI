@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="4025a99f29e203107f44d6fee5fae3d5" label="Document Configuration" max_length="40" name="x_snc_visaguardi_0_document_configuration" type="collection">
+        <element label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Description" max_length="40" name="description" type="string"/>
+        <element choice="3" label="Visa Category" max_length="40" name="visa_category" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="New Visa Application" sequence="0" value="new_visa_application"/>
+                <element inactive_on_update="false" label="CPT Application" sequence="2" value="cpt_application"/>
+                <element inactive_on_update="false" label="Status Change" sequence="6" value="status_change"/>
+                <element inactive_on_update="false" label="Visa Renewal" sequence="3" value="visa_renewal"/>
+                <element inactive_on_update="false" label="General Immigration Support" sequence="7" value="general_immigration_support"/>
+                <element inactive_on_update="false" label="Visa Extension" sequence="4" value="visa_extension"/>
+                <element inactive_on_update="false" label="OPT Application" sequence="1" value="opt_application"/>
+                <element inactive_on_update="false" label="SEVIS Update" sequence="5" value="sevis_update"/>
+            </choice>
+        </element>
+        <element label="Priority" max_length="40" name="priority" type="integer"/>
+        <element label="Required" max_length="40" name="required" type="boolean"/>
+        <element choice="3" label="Document Type" max_length="40" name="document_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Visa Document" sequence="4" value="visa_document"/>
+                <element inactive_on_update="false" label="Passport Copy" sequence="0" value="passport_copy"/>
+                <element inactive_on_update="false" label="Current I-20" sequence="1" value="current_i_20"/>
+                <element inactive_on_update="false" label="Admission Letter" sequence="5" value="admission_letter"/>
+                <element inactive_on_update="false" label="Financial Document" sequence="2" value="financial_document"/>
+                <element inactive_on_update="false" label="SEVIS Document" sequence="6" value="sevis_document"/>
+                <element inactive_on_update="false" label="Supporting Document" sequence="3" value="supporting_document"/>
+                <element inactive_on_update="false" label="Travel Document" sequence="7" value="travel_document"/>
+            </choice>
+        </element>
+    </element>
+</database>

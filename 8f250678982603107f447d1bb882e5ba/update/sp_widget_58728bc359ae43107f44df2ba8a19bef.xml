@@ -1,0 +1,5091 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function ($scope, $window) {
+
+    var c = this;
+
+
+    // =====================================================
+    // INITIAL VALUES
+    // =====================================================
+
+    c.currentFilter = "ALL";
+
+    c.searchQuery = "";
+
+    c.selectedTask = null;
+
+    c.targetStatus = "";
+
+    c.advisorComments = "";
+
+    c.processing = false;
+
+    c.successMessage = "";
+
+
+    // =====================================================
+    // GET CASE STAGE
+    // =====================================================
+
+    c.getStage = function (task) {
+
+        if (!task) {
+            return "";
+        }
+
+        return String(
+            task.case_stage || ""
+        ).trim();
+
+    };
+
+
+    // =====================================================
+    // FINAL PROCESSED
+    // =====================================================
+
+    c.isFinalProcessed = function (task) {
+
+        var stage =
+            c.getStage(task).toLowerCase();
+
+        return (
+
+            stage === "approved" ||
+
+            stage === "rejected" ||
+
+            stage === "advisor approved" ||
+
+            stage === "advisor rejected" ||
+
+            stage === "dso approved" ||
+
+            stage === "dso rejected" ||
+
+            stage === "completed" ||
+
+            stage === "closed"
+
+        );
+
+    };
+
+
+    // =====================================================
+    // DOCUMENTS REQUESTED
+    // =====================================================
+
+    c.isDocumentsRequested = function (task) {
+
+        if (!task) {
+            return false;
+        }
+
+        var stage =
+            c.getStage(task).toLowerCase();
+
+        return (
+            stage ===
+            "submit proper documents"
+        );
+
+    };
+
+
+    // =====================================================
+    // PROCESSED
+    // =====================================================
+
+    c.isProcessed = function (task) {
+
+        return c.isFinalProcessed(task);
+
+    };
+
+
+    // =====================================================
+    // ACTIVE
+    // =====================================================
+
+    c.isActive = function (task) {
+
+        return !c.isFinalProcessed(task);
+
+    };
+
+
+    // =====================================================
+    // SET FILTER
+    // =====================================================
+
+    c.setFilter = function (filter) {
+
+        c.currentFilter =
+            filter;
+
+    };
+
+
+    // =====================================================
+    // FILTER TASKS
+    // =====================================================
+
+    c.filterTasks = function (task) {
+
+        if (!task) {
+            return false;
+        }
+
+
+        var stage =
+            c.getStage(task).toLowerCase();
+
+
+        var matchesFilter =
+            true;
+
+
+        // -------------------------------------------------
+        // PENDING
+        // -------------------------------------------------
+
+        if (
+            c.currentFilter ===
+            "Pending"
+        ) {
+
+            matchesFilter =
+                !c.isFinalProcessed(task);
+
+        }
+
+
+        // -------------------------------------------------
+        // HIGH PRIORITY
+        // -------------------------------------------------
+
+        else if (
+            c.currentFilter ===
+            "High"
+        ) {
+
+            matchesFilter =
+
+                String(
+                    task.priority || ""
+                ).toLowerCase() ===
+                "high"
+
+                &&
+
+                !c.isFinalProcessed(
+                    task
+                );
+
+        }
+
+
+        // -------------------------------------------------
+        // COMPLETED
+        // -------------------------------------------------
+
+        else if (
+            c.currentFilter ===
+            "Completed"
+        ) {
+
+            matchesFilter =
+                c.isFinalProcessed(
+                    task
+                );
+
+        }
+
+
+        if (!matchesFilter) {
+            return false;
+        }
+
+
+        // -------------------------------------------------
+        // SEARCH
+        // -------------------------------------------------
+
+        if (!c.searchQuery) {
+            return true;
+        }
+
+
+        var q =
+            String(
+                c.searchQuery
+            )
+            .toLowerCase()
+            .trim();
+
+
+        return (
+
+            (
+                task.student_name &&
+                String(
+                    task.student_name
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+            ||
+
+            (
+                task.student_id &&
+                String(
+                    task.student_id
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+            ||
+
+            (
+                task.title &&
+                String(
+                    task.title
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+            ||
+
+            (
+                task.type &&
+                String(
+                    task.type
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+            ||
+
+            (
+                task.priority &&
+                String(
+                    task.priority
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+            ||
+
+            (
+                task.case_stage &&
+                String(
+                    task.case_stage
+                )
+                .toLowerCase()
+                .indexOf(q) !== -1
+            )
+
+        );
+
+    };
+
+
+    // =====================================================
+    // PENDING COUNT
+    // =====================================================
+
+    c.getPendingCount = function () {
+
+        if (
+            !c.data ||
+            !c.data.tasks
+        ) {
+
+            return 0;
+
+        }
+
+
+        return c.data.tasks.filter(
+
+            function (task) {
+
+                return !c.isFinalProcessed(
+                    task
+                );
+
+            }
+
+        ).length;
+
+    };
+
+
+    // =====================================================
+    // HIGH PRIORITY COUNT
+    // =====================================================
+
+    c.getHighPriorityCount = function () {
+
+        if (
+            !c.data ||
+            !c.data.tasks
+        ) {
+
+            return 0;
+
+        }
+
+
+        return c.data.tasks.filter(
+
+            function (task) {
+
+                return (
+
+                    String(
+                        task.priority || ""
+                    ).toLowerCase() ===
+                    "high"
+
+                    &&
+
+                    !c.isFinalProcessed(
+                        task
+                    )
+
+                );
+
+            }
+
+        ).length;
+
+    };
+
+
+    // =====================================================
+    // COMPLETED COUNT
+    // =====================================================
+
+    c.getCompletedCount = function () {
+
+        if (
+            !c.data ||
+            !c.data.tasks
+        ) {
+
+            return 0;
+
+        }
+
+
+        return c.data.tasks.filter(
+
+            function (task) {
+
+                return c.isFinalProcessed(
+                    task
+                );
+
+            }
+
+        ).length;
+
+    };
+
+
+    // =====================================================
+    // STAGE CSS CLASS
+    // =====================================================
+
+    c.getStageClass = function (stage) {
+
+        stage =
+            String(
+                stage || ""
+            )
+            .toLowerCase()
+            .trim();
+
+
+        if (
+            stage === "approved" ||
+            stage === "advisor approved" ||
+            stage === "completed" ||
+            stage === "closed"
+        ) {
+
+            return "pill-green";
+
+        }
+
+
+        if (
+            stage === "rejected" ||
+            stage === "advisor rejected"
+        ) {
+
+            return "pill-red";
+
+        }
+
+
+        if (
+            stage === "pending" ||
+            stage === "submitted"
+        ) {
+
+            return "pill-orange";
+
+        }
+
+
+        if (
+            stage ===
+            "submit proper documents"
+        ) {
+
+            return "pill-blue";
+
+        }
+
+
+        return "pill-blue";
+
+    };
+
+
+    // =====================================================
+    // OPEN ACTION MODAL
+    // =====================================================
+
+    c.openActionModal = function (
+        task,
+        action
+    ) {
+
+        if (
+            !task ||
+            !task.sys_id
+        ) {
+
+            $window.alert(
+                "Unable to identify the selected visa case."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            c.isFinalProcessed(task)
+        ) {
+
+            $window.alert(
+                "This case has already been finally processed."
+            );
+
+            return;
+
+        }
+
+
+        c.selectedTask =
+            task;
+
+        c.targetStatus =
+            action;
+
+        c.advisorComments =
+            "";
+
+        c.processing =
+            false;
+
+
+        $("#taskActionModal").modal(
+            "show"
+        );
+
+    };
+
+
+    // =====================================================
+    // MODAL TITLE
+    // =====================================================
+
+    c.getModalTitle = function () {
+
+        if (
+            c.targetStatus ===
+            "Approved"
+        ) {
+
+            return "Confirm Approval";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Rejected"
+        ) {
+
+            return "Confirm Rejection";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Submit Proper Documents"
+        ) {
+
+            return "Request Proper Documents";
+
+        }
+
+
+        return "Confirm Action";
+
+    };
+
+
+    // =====================================================
+    // MODAL ICON
+    // =====================================================
+
+    c.getModalIcon = function () {
+
+        if (
+            c.targetStatus ===
+            "Approved"
+        ) {
+
+            return "fa-check-circle";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Rejected"
+        ) {
+
+            return "fa-times-circle";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Submit Proper Documents"
+        ) {
+
+            return "fa-file-text-o";
+
+        }
+
+
+        return "fa-info-circle";
+
+    };
+
+
+    // =====================================================
+    // MODAL HEADER CLASS
+    // =====================================================
+
+    c.getModalHeaderClass = function () {
+
+        if (
+            c.targetStatus ===
+            "Approved"
+        ) {
+
+            return "header-approve";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Rejected"
+        ) {
+
+            return "header-reject";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Submit Proper Documents"
+        ) {
+
+            return "header-documents";
+
+        }
+
+
+        return "";
+
+    };
+
+
+    // =====================================================
+    // CONFIRM BUTTON CLASS
+    // =====================================================
+
+    c.getConfirmButtonClass = function () {
+
+        if (
+            c.targetStatus ===
+            "Approved"
+        ) {
+
+            return "btn-confirm-approve";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Rejected"
+        ) {
+
+            return "btn-confirm-reject";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Submit Proper Documents"
+        ) {
+
+            return "btn-confirm-documents";
+
+        }
+
+
+        return "";
+
+    };
+
+
+    // =====================================================
+    // CONFIRM BUTTON TEXT
+    // =====================================================
+
+    c.getConfirmButtonText = function () {
+
+        if (
+            c.targetStatus ===
+            "Approved"
+        ) {
+
+            return "Approve Case";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Rejected"
+        ) {
+
+            return "Reject Case";
+
+        }
+
+
+        if (
+            c.targetStatus ===
+            "Submit Proper Documents"
+        ) {
+
+            return "Request Documents";
+
+        }
+
+
+        return "Submit";
+
+    };
+
+
+    // =====================================================
+    // CONFIRM ACTION
+    // =====================================================
+
+    c.confirmTaskAction = function () {
+
+        if (
+            !c.selectedTask ||
+            !c.selectedTask.sys_id
+        ) {
+
+            $window.alert(
+                "Unable to identify the selected visa case."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            c.targetStatus !==
+                "Approved"
+
+            &&
+
+            c.targetStatus !==
+                "Rejected"
+
+            &&
+
+            c.targetStatus !==
+                "Submit Proper Documents"
+        ) {
+
+            $window.alert(
+                "Invalid advisor action."
+            );
+
+            return;
+
+        }
+
+
+        if (c.processing) {
+            return;
+        }
+
+
+        c.processing =
+            true;
+
+
+        var selectedSysId =
+            c.selectedTask.sys_id;
+
+
+        var decision =
+            c.targetStatus;
+
+
+        var comments =
+            c.advisorComments ||
+            "";
+
+
+        // =================================================
+        // SEND TO SERVER
+        // =================================================
+
+        c.server.get({
+
+            action:
+                "process_task",
+
+            sys_id:
+                selectedSysId,
+
+            new_status:
+                decision,
+
+            advisor_comments:
+                comments
+
+        }).then(
+
+            function (response) {
+
+                c.processing =
+                    false;
+
+
+                if (
+                    response &&
+                    response.data &&
+                    response.data.success ===
+                        true
+                ) {
+
+                    // -------------------------------------
+                    // UPDATE UI
+                    // -------------------------------------
+
+                    c.selectedTask.case_stage =
+                        response.data.updated_case_stage ||
+                        decision;
+
+
+                    if (
+                        decision ===
+                        "Approved"
+                    ) {
+
+                        c.selectedTask.advisor_decision =
+                            "Approved";
+
+                    }
+
+
+                    if (
+                        decision ===
+                        "Rejected"
+                    ) {
+
+                        c.selectedTask.advisor_decision =
+                            "Rejected";
+
+                    }
+
+
+                    if (
+                        decision ===
+                        "Submit Proper Documents"
+                    ) {
+
+                        c.selectedTask.case_stage =
+                            "Submit Proper Documents";
+
+                    }
+
+
+                    $("#taskActionModal").modal(
+                        "hide"
+                    );
+
+
+                    if (
+                        decision ===
+                        "Submit Proper Documents"
+                    ) {
+
+                        c.successMessage =
+                            "Student status updated to Submit Proper Documents.";
+
+                    }
+
+                    else {
+
+                        c.successMessage =
+                            "Visa case successfully updated to " +
+                            decision +
+                            ".";
+
+                    }
+
+
+                    c.selectedTask =
+                        null;
+
+                    c.targetStatus =
+                        "";
+
+                    c.advisorComments =
+                        "";
+
+
+                    // Refresh server data
+
+                    c.server.update();
+
+                }
+
+                else {
+
+                    var errorMessage =
+                        "Unable to update the visa case.";
+
+
+                    if (
+                        response &&
+                        response.data &&
+                        response.data.error
+                    ) {
+
+                        errorMessage =
+                            response.data.error;
+
+                    }
+
+
+                    $window.alert(
+                        errorMessage
+                    );
+
+                }
+
+            },
+
+            function () {
+
+                c.processing =
+                    false;
+
+                $window.alert(
+                    "A server error occurred while updating the visa case."
+                );
+
+            }
+
+        );
+
+    };
+
+
+    // =====================================================
+    // EXPORT
+    // =====================================================
+
+    c.exportTasks = function () {
+
+        $window.alert(
+            "Exporting Tasks & Approvals report..."
+        );
+
+    };
+
+
+    // =====================================================
+    // CLEANUP
+    // =====================================================
+
+    $scope.$on(
+        "$destroy",
+        function () {
+
+            // Cleanup
+
+        }
+    );
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   TASKS &amp; APPROVALS
+   PREMIUM ADVISOR WORKSPACE
+   ========================================================= */
+
+
+/* =========================================================
+   GLOBAL RESET
+   ========================================================= */
+
+.vg-workspace-container,
+.vg-workspace-container * {
+    box-sizing: border-box;
+}
+
+.vg-workspace-container {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    background: #f5f8fc;
+
+    color: #183b63;
+
+    font-family:
+        "Segoe UI",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-hero-banner {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 124px;
+
+    padding: 24px 38px;
+
+    margin: 0 0 24px 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            #173d70 0%,
+            #20568f 58%,
+            #287db8 100%
+        );
+
+    color: #ffffff;
+
+    border-radius: 0 0 18px 18px;
+
+    box-shadow:
+        0 10px 28px
+        rgba(18, 56, 99, .17);
+}
+
+
+.vg-hero-banner::after {
+    content: "";
+
+    position: absolute;
+
+    width: 310px;
+    height: 310px;
+
+    right: -110px;
+    top: -180px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.07);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    min-width: 0;
+}
+
+
+.hero-icon {
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: rgba(255,255,255,.12);
+
+    border: 1px solid rgba(255,255,255,.23);
+
+    color: #ffffff;
+
+    font-size: 24px;
+}
+
+
+.hero-content h2 {
+    margin: 0 0 5px 0;
+
+    color: #ffffff;
+
+    font-size: 28px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+}
+
+
+.hero-content p {
+    margin: 0;
+
+    color: rgba(255,255,255,.84);
+
+    font-size: 13px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   HERO ACTION
+   ========================================================= */
+
+.hero-actions {
+    position: relative;
+
+    z-index: 3;
+
+    flex-shrink: 0;
+}
+
+
+.btn-hero-outline {
+    min-height: 44px;
+
+    padding: 9px 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid rgba(255,255,255,.34);
+
+    color: #ffffff;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    transition: all .2s ease;
+}
+
+
+.btn-hero-outline:hover {
+    background: #ffffff;
+
+    border-color: #ffffff;
+
+    color: #174678;
+
+    transform: translateY(-1px);
+}
+
+
+.btn-hero-outline i {
+    margin-right: 1px;
+}
+
+
+/* =========================================================
+   SUCCESS / ERROR
+   ========================================================= */
+
+.vg-error-message,
+.vg-success-message {
+    margin: 0 22px 18px;
+
+    padding: 13px 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.vg-error-message {
+    background: #fff3f3;
+
+    border: 1px solid #f1cccc;
+
+    border-left: 4px solid #dc3d3d;
+
+    color: #9f2727;
+}
+
+
+.vg-success-message {
+    background: #ecfdf5;
+
+    border: 1px solid #b9ead0;
+
+    border-left: 4px solid #15965a;
+
+    color: #087b4e;
+}
+
+
+.vg-error-message i,
+.vg-success-message i {
+    margin-right: 8px;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   METRICS
+   ========================================================= */
+
+.metric-row {
+    margin: 0 12px 10px;
+}
+
+
+.metric-row &gt; [class*="col-"] {
+    padding-left: 10px;
+
+    padding-right: 10px;
+
+    margin-bottom: 18px;
+}
+
+
+.vg-metric-card {
+    min-height: 128px;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #dfe7f0;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 6px 20px
+        rgba(27,62,99,.06);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.vg-metric-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 11px 25px
+        rgba(27,62,99,.10);
+}
+
+
+/* =========================================================
+   METRIC ICON
+   ========================================================= */
+
+.metric-icon {
+    width: 58px;
+    height: 58px;
+
+    min-width: 58px;
+
+    margin-right: 18px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    font-size: 22px;
+}
+
+
+.blue-circle {
+    background: #edf5ff;
+
+    color: #2563eb;
+
+    border: 1px solid #d6e7ff;
+}
+
+
+.orange-circle {
+    background: #fff7eb;
+
+    color: #ea580c;
+
+    border: 1px solid #fde5c4;
+}
+
+
+.green-circle {
+    background: #effcf5;
+
+    color: #14945b;
+
+    border: 1px solid #d0f1de;
+}
+
+
+/* =========================================================
+   METRIC DATA
+   ========================================================= */
+
+.metric-data {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.metric-number {
+    margin-bottom: 6px;
+
+    font-size: 29px;
+
+    line-height: 1;
+
+    font-weight: 700;
+}
+
+
+.metric-label {
+    font-size: 10px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    letter-spacing: .7px;
+
+    color: #71839a;
+}
+
+
+.metric-subtext {
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    line-height: 1.25;
+
+    font-weight: 650;
+}
+
+
+.text-blue {
+    color: #2563eb !important;
+}
+
+
+.text-orange {
+    color: #ea580c !important;
+}
+
+
+.text-green {
+    color: #15965a !important;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.vg-card {
+    width: calc(100% - 24px);
+
+    margin: 0 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #dce6f0;
+
+    border-radius: 17px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 7px 22px
+        rgba(27,62,99,.06);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-card-header {
+    min-height: 82px;
+
+    padding: 17px 24px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    border-bottom: 1px solid #e5edf4;
+
+    background: #ffffff;
+}
+
+
+.header-left {
+    min-width: 0;
+}
+
+
+.header-left h4 {
+    margin: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    color: #123f70;
+
+    font-size: 19px;
+
+    line-height: 1.3;
+
+    font-weight: 700;
+}
+
+
+.header-left h4 i {
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    margin-right: 9px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #edf5ff;
+
+    color: #2563eb;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.header-right {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   FILTER PILLS
+   ========================================================= */
+
+.filter-pills {
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    padding: 4px;
+
+    background: #f1f5f9;
+
+    border: 1px solid #e3eaf1;
+
+    border-radius: 10px;
+}
+
+
+.filter-pills .btn {
+    min-height: 38px;
+
+    padding: 7px 14px;
+
+    background: transparent;
+
+    border: 1px solid transparent;
+
+    border-radius: 7px;
+
+    color: #53677d;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+
+    transition: all .18s ease;
+}
+
+
+.filter-pills .btn:hover {
+    background: #ffffff;
+
+    color: #2563eb;
+}
+
+
+.filter-pills .btn.active {
+    background: #2563eb;
+
+    border-color: #2563eb;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 9px
+        rgba(37,99,235,.20);
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.search-wrapper {
+    position: relative;
+
+    width: 270px;
+
+    flex-shrink: 0;
+}
+
+
+.search-icon {
+    position: absolute;
+
+    left: 13px;
+
+    top: 50%;
+
+    z-index: 2;
+
+    transform: translateY(-50%);
+
+    color: #91a3b6;
+
+    font-size: 13px;
+
+    pointer-events: none;
+}
+
+
+.search-input {
+    width: 100%;
+
+    height: 42px;
+
+    padding: 9px 12px 9px 36px;
+
+    border: 1px solid #cfdbe7;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #183b63;
+
+    font-size: 12px;
+
+    outline: none;
+
+    box-shadow: none;
+
+    transition: border-color .18s ease,
+                box-shadow .18s ease;
+}
+
+
+.search-input::placeholder {
+    color: #93a2b3;
+}
+
+
+.search-input:focus {
+    border-color: #3b82f6;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.09);
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.table-responsive {
+    width: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-table {
+    width: 100%;
+
+    min-width: 1320px;
+
+    margin: 0;
+
+    table-layout: fixed;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.vg-table thead th {
+    height: 50px;
+
+    padding: 0 18px;
+
+    background: #f7fafd;
+
+    border-bottom: 1px solid #dce5ee;
+
+    color: #63778d;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    line-height: 1;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+
+.vg-table thead th:last-child {
+    text-align: center;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.vg-table tbody td {
+    min-height: 100px;
+
+    padding: 18px;
+
+    vertical-align: middle;
+
+    background: #ffffff;
+
+    color: #37516b;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid #e8eef4;
+
+    overflow: visible;
+}
+
+
+.vg-table tbody tr {
+    transition: background .15s ease;
+}
+
+
+.vg-table tbody tr:hover td {
+    background: #f9fbfe;
+}
+
+
+.vg-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+
+   Total = 100%
+
+   Student        15%
+   Subject        17%
+   Type           12%
+   Priority        9%
+   Due Date       13%
+   Case Stage     14%
+   Actions        20%
+   ========================================================= */
+
+.vg-table th:nth-child(1),
+.vg-table td:nth-child(1) {
+    width: 15%;
+}
+
+
+.vg-table th:nth-child(2),
+.vg-table td:nth-child(2) {
+    width: 17%;
+}
+
+
+.vg-table th:nth-child(3),
+.vg-table td:nth-child(3) {
+    width: 12%;
+}
+
+
+.vg-table th:nth-child(4),
+.vg-table td:nth-child(4) {
+    width: 9%;
+}
+
+
+.vg-table th:nth-child(5),
+.vg-table td:nth-child(5) {
+    width: 13%;
+}
+
+
+.vg-table th:nth-child(6),
+.vg-table td:nth-child(6) {
+    width: 14%;
+}
+
+
+.vg-table th:nth-child(7),
+.vg-table td:nth-child(7) {
+    width: 20%;
+}
+
+
+/* =========================================================
+   STUDENT
+   ========================================================= */
+
+.student-cell {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.student-name {
+    display: block;
+
+    color: #143d67;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+.student-id {
+    display: block;
+
+    color: #7b8ea2;
+
+    font-size: 11px;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TASK
+   ========================================================= */
+
+.task-title {
+    display: block;
+
+    margin: 0;
+
+    color: #193f67;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+.case-number {
+    margin-top: 5px;
+
+    color: #2563eb;
+
+    font-size: 10px;
+
+    line-height: 1.2;
+
+    font-family: monospace;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TYPE
+   ========================================================= */
+
+.type-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    max-width: 100%;
+
+    padding: 7px 10px;
+
+    background: #f4f6f8;
+
+    border: 1px solid #dfe6ec;
+
+    border-radius: 7px;
+
+    color: #38516a;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    line-height: 1.35;
+
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   STATUS PILL
+   ========================================================= */
+
+.status-pill {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 30px;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+
+    vertical-align: middle;
+}
+
+
+.status-pill::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    min-width: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+.pill-green {
+    background: #ecfdf4;
+
+    color: #087b4e;
+
+    border: 1px solid #b8efd2;
+}
+
+
+.pill-red {
+    background: #fff1f1;
+
+    color: #b42323;
+
+    border: 1px solid #f3c8c8;
+}
+
+
+.pill-orange {
+    background: #fff8e9;
+
+    color: #a86b09;
+
+    border: 1px solid #f4dda9;
+}
+
+
+.pill-blue {
+    background: #eef5ff;
+
+    color: #1d56c5;
+
+    border: 1px solid #bdd8ff;
+}
+
+
+.pill-purple {
+    background: #f5f0ff;
+
+    color: #7041c4;
+
+    border: 1px solid #ddd0f8;
+}
+
+
+/* =========================================================
+   DUE DATE
+   ========================================================= */
+
+.due-date {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #5e7891;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+}
+
+
+.due-date i {
+    color: #2563eb;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ACTION COLUMN
+   ========================================================= */
+
+/*
+   IMPORTANT FIX:
+   The previous CSS gave this column only 190px.
+   Three buttons cannot fit properly inside 190px.
+
+   We give it 20% of a 1320px table
+   = approximately 264px.
+*/
+
+.actions-cell {
+    width: 20% !important;
+
+    min-width: 260px !important;
+
+    max-width: 260px !important;
+
+    padding: 14px 14px !important;
+
+    text-align: center !important;
+
+    vertical-align: middle !important;
+
+    overflow: visible !important;
+
+    white-space: normal !important;
+}
+
+
+/* =========================================================
+   ACTION BUTTON CONTAINER
+   ========================================================= */
+
+.action-buttons {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin: 0 auto;
+
+    overflow: visible;
+}
+
+
+/* =========================================================
+   ACTION BUTTON BASE
+   ========================================================= */
+
+.action-buttons .btn {
+    min-height: 34px;
+
+    padding: 7px 10px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    flex: 0 0 auto;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.action-buttons .btn i {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   APPROVE
+   ========================================================= */
+
+.btn-approve {
+    background: #16a34a;
+
+    border: 1px solid #16a34a;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px
+        rgba(22,163,74,.14);
+}
+
+
+.btn-approve:hover,
+.btn-approve:focus {
+    background: #12813c;
+
+    border-color: #12813c;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    outline: none;
+}
+
+
+/* =========================================================
+   REJECT
+   ========================================================= */
+
+.btn-reject {
+    background: #dc2626;
+
+    border: 1px solid #dc2626;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 5px
+        rgba(220,38,38,.14);
+}
+
+
+.btn-reject:hover,
+.btn-reject:focus {
+    background: #b91c1c;
+
+    border-color: #b91c1c;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    outline: none;
+}
+
+
+/* =========================================================
+   DOCUMENT BUTTON
+   ========================================================= */
+
+.btn-documents {
+    background: #2563eb;
+
+    border: 1px solid #2563eb;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 2px 6px
+        rgba(37,99,235,.16);
+}
+
+
+.btn-documents:hover,
+.btn-documents:focus {
+    background: #1d4ed8;
+
+    border-color: #1d4ed8;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(37,99,235,.20);
+
+    outline: none;
+}
+
+
+.btn-documents:disabled {
+    background: #dbeafe;
+
+    border-color: #bfdbfe;
+
+    color: #2563eb;
+
+    cursor: not-allowed;
+
+    opacity: 1;
+
+    box-shadow: none;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   PROCESSED
+   ========================================================= */
+
+.processed-label {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 34px;
+
+    padding: 7px 13px;
+
+    margin: 0 auto;
+
+    background: #ecfdf4;
+
+    border: 1px solid #b8efd2;
+
+    border-radius: 20px;
+
+    color: #087b4e;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+.processed-label i {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.no-tasks-cell {
+    padding: 60px 20px !important;
+
+    text-align: center !important;
+
+    background: #ffffff !important;
+}
+
+
+.no-task-icon {
+    display: block;
+
+    margin-bottom: 13px;
+
+    color: #c5d0dc;
+
+    font-size: 36px;
+}
+
+
+.no-task-title {
+    color: #374151;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+
+.no-task-text {
+    margin-top: 6px;
+
+    color: #98a7b7;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MODAL BACKDROP
+   ========================================================= */
+
+.modal-backdrop {
+    background: #102c4d;
+}
+
+
+.modal-backdrop.in {
+    opacity: .48;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+#taskActionModal .modal-dialog {
+    width: 560px;
+
+    max-width: calc(100vw - 30px);
+
+    margin: 70px auto 30px;
+}
+
+
+#taskActionModal .modal-content {
+    overflow: hidden;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 24px 60px
+        rgba(15,40,70,.24);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+#taskActionModal .modal-header {
+    position: relative;
+
+    padding: 19px 22px;
+
+    border-bottom: 1px solid #e4ebf2;
+}
+
+
+#taskActionModal .header-approve {
+    background:
+        linear-gradient(
+            135deg,
+            #effcf5,
+            #e7f9ef
+        );
+
+    color: #087b4e;
+}
+
+
+#taskActionModal .header-reject {
+    background:
+        linear-gradient(
+            135deg,
+            #fff3f3,
+            #ffebeb
+        );
+
+    color: #b42323;
+}
+
+
+#taskActionModal .header-documents {
+    background:
+        linear-gradient(
+            135deg,
+            #eef5ff,
+            #e5efff
+        );
+
+    color: #1d56c5;
+}
+
+
+#taskActionModal .modal-title {
+    margin: 0;
+
+    padding-right: 35px;
+
+    font-size: 17px;
+
+    line-height: 1.3;
+
+    font-weight: 700;
+}
+
+
+#taskActionModal .modal-title i {
+    margin-right: 7px;
+}
+
+
+#taskActionModal .modal-close {
+    position: absolute;
+
+    top: 14px;
+
+    right: 17px;
+
+    margin: 0;
+
+    padding: 3px 7px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #6b7d90;
+
+    font-size: 25px;
+
+    line-height: 1;
+
+    opacity: .8;
+}
+
+
+#taskActionModal .modal-close:hover {
+    opacity: 1;
+
+    color: #1f3f60;
+}
+
+
+/* =========================================================
+   MODAL BODY
+   ========================================================= */
+
+#taskActionModal .modal-body {
+    padding: 22px;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   CONFIRMATION BOX
+   ========================================================= */
+
+.confirmation-box {
+    padding: 15px 17px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5ebf1;
+
+    border-radius: 10px;
+}
+
+
+.confirmation-row {
+    min-height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 8px 0;
+
+    font-size: 12px;
+}
+
+
+.confirmation-row + .confirmation-row {
+    border-top: 1px solid #edf1f5;
+}
+
+
+.confirmation-label {
+    color: #71839a;
+
+    font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+
+.confirmation-row strong {
+    max-width: 65%;
+
+    color: #193f67;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   DOCUMENT REQUEST INFO
+   ========================================================= */
+
+.document-request-info {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 13px;
+
+    margin-top: 17px;
+
+    padding: 14px;
+
+    background: #eef5ff;
+
+    border: 1px solid #cfe0ff;
+
+    border-radius: 10px;
+
+    color: #244e86;
+}
+
+
+.document-request-icon {
+    width: 39px;
+    height: 39px;
+
+    min-width: 39px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 16px;
+}
+
+
+.document-request-info strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #1d4ed8;
+
+    font-size: 13px;
+}
+
+
+.document-request-info p {
+    margin: 0;
+
+    color: #58708b;
+
+    font-size: 11px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   MODAL HR
+   ========================================================= */
+
+#taskActionModal hr {
+    margin: 20px 0;
+
+    border: 0;
+
+    border-top: 1px solid #e7edf3;
+}
+
+
+/* =========================================================
+   NOTES
+   ========================================================= */
+
+#taskActionModal .form-group {
+    margin-bottom: 0;
+}
+
+
+#taskActionModal .form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #314f6c;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.advisor-notes {
+    width: 100%;
+
+    min-height: 105px;
+
+    padding: 11px 12px;
+
+    border: 1px solid #cedae6;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #183b63;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    resize: vertical;
+
+    outline: none;
+}
+
+
+.advisor-notes::placeholder {
+    color: #9aa9b8;
+}
+
+
+.advisor-notes:focus {
+    border-color: #3b82f6;
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37,99,235,.08);
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+   ========================================================= */
+
+#taskActionModal .modal-footer {
+    padding: 14px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    background: #f8fafc;
+
+    border-top: 1px solid #e5ebf1;
+}
+
+
+.btn-cancel {
+    min-height: 38px;
+
+    padding: 8px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #d5dee8;
+
+    color: #53677d;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.btn-cancel:hover,
+.btn-cancel:focus {
+    background: #f1f5f9;
+
+    border-color: #c8d4df;
+
+    color: #374f68;
+
+    outline: none;
+}
+
+
+.action-confirm-btn {
+    min-height: 38px;
+
+    padding: 8px 19px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    transition:
+        filter .18s ease,
+        transform .18s ease;
+}
+
+
+.action-confirm-btn.btn-confirm-approve {
+    background: #16a34a;
+}
+
+
+.action-confirm-btn.btn-confirm-reject {
+    background: #dc2626;
+}
+
+
+.action-confirm-btn.btn-confirm-documents {
+    background: #2563eb;
+}
+
+
+.action-confirm-btn:hover {
+    filter: brightness(.94);
+
+    transform: translateY(-1px);
+}
+
+
+.action-confirm-btn:disabled {
+    opacity: .65;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================================================
+   BOOTSTRAP / SERVICENOW OVERRIDES
+   ========================================================= */
+
+.vg-workspace-container .btn {
+    font-family: inherit;
+}
+
+
+.vg-workspace-container button {
+    outline: none;
+}
+
+
+.vg-workspace-container input,
+.vg-workspace-container textarea {
+    font-family: inherit;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #eef2f6;
+}
+
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #b7c5d3;
+
+    border-radius: 10px;
+}
+
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #91a4b8;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+
+    .vg-table {
+        min-width: 1320px;
+    }
+
+    .actions-cell {
+        min-width: 270px !important;
+
+        max-width: 270px !important;
+    }
+
+    .action-buttons .btn {
+        padding-left: 11px;
+
+        padding-right: 11px;
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .vg-hero-banner {
+        padding-left: 28px;
+
+        padding-right: 28px;
+    }
+
+
+    .vg-card {
+        width: calc(100% - 20px);
+
+        margin-left: 10px;
+
+        margin-right: 10px;
+    }
+
+
+    .metric-row {
+        margin-left: 10px;
+
+        margin-right: 10px;
+    }
+
+
+    .header-right {
+        gap: 8px;
+    }
+
+
+    .search-wrapper {
+        width: 230px;
+    }
+
+
+    .vg-table {
+        min-width: 1280px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    .vg-hero-banner {
+        padding: 23px 24px;
+    }
+
+
+    .vg-card-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .header-right {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+
+    .search-wrapper {
+        width: 250px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-hero-banner {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 18px;
+
+        padding: 22px;
+    }
+
+
+    .hero-content {
+        width: 100%;
+    }
+
+
+    .hero-content h2 {
+        font-size: 23px;
+    }
+
+
+    .hero-content p {
+        font-size: 12px;
+    }
+
+
+    .hero-actions {
+        width: 100%;
+    }
+
+
+    .btn-hero-outline {
+        width: 100%;
+    }
+
+
+    .metric-row {
+        margin-left: 6px;
+
+        margin-right: 6px;
+    }
+
+
+    .metric-row &gt; [class*="col-"] {
+        padding-left: 7px;
+
+        padding-right: 7px;
+    }
+
+
+    .vg-card {
+        width: calc(100% - 12px);
+
+        margin-left: 6px;
+
+        margin-right: 6px;
+
+        border-radius: 13px;
+    }
+
+
+    .vg-card-header {
+        padding: 16px;
+    }
+
+
+    .header-right {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+    }
+
+
+    .filter-pills {
+        width: 100%;
+
+        overflow-x: auto;
+    }
+
+
+    .filter-pills .btn {
+        flex: 1 0 auto;
+    }
+
+
+    .search-wrapper {
+        width: 100%;
+    }
+
+
+    .vg-table {
+        min-width: 1250px;
+    }
+
+
+    .actions-cell {
+        min-width: 260px !important;
+
+        max-width: 260px !important;
+    }
+
+
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+
+
+    #taskActionModal .modal-dialog {
+        width: auto;
+
+        max-width: calc(100vw - 20px);
+
+        margin: 30px auto;
+    }
+
+
+    #taskActionModal .modal-body {
+        padding: 17px;
+    }
+
+
+    .confirmation-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .confirmation-row strong {
+        max-width: 100%;
+
+        text-align: left;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .hero-icon {
+        width: 50px;
+
+        height: 50px;
+
+        min-width: 50px;
+    }
+
+
+    .hero-content h2 {
+        font-size: 21px;
+    }
+
+
+    .metric-icon {
+        width: 50px;
+
+        height: 50px;
+
+        min-width: 50px;
+
+        margin-right: 13px;
+    }
+
+
+    .metric-number {
+        font-size: 25px;
+    }
+
+
+    .vg-table {
+        min-width: 1220px;
+    }
+
+
+    .actions-cell {
+        min-width: 250px !important;
+
+        max-width: 250px !important;
+    }
+
+
+    #taskActionModal .modal-footer {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+
+    #taskActionModal .modal-footer button {
+        width: 100%;
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>adv_tasks___approvals</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Adv Tasks &amp; Approvals</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function () {
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.tasks = [];
+
+    data.success = false;
+
+    data.error = "";
+
+    data.updated_sys_id = "";
+
+    data.updated_case_stage = "";
+
+    data.updated_advisor_decision = "";
+
+
+    // =====================================================
+    // CURRENT ADVISOR
+    // =====================================================
+
+    var userSysId =
+        gs.getUserID();
+
+
+    // =====================================================
+    // CUSTOM ADVISOR SESSION
+    // =====================================================
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData(
+            "vg_advisor_sys_id"
+        );
+
+
+    if (sessionAdvisorSysId) {
+
+        userSysId =
+            sessionAdvisorSysId;
+
+    }
+
+
+    // =====================================================
+    // VALIDATE ADVISOR
+    // =====================================================
+
+    if (!userSysId) {
+
+        data.error =
+            "Unable to identify the logged-in advisor.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // PROCESS ADVISOR ACTION
+    // =====================================================
+
+    if (
+        input &&
+        input.action ===
+        "process_task"
+    ) {
+
+
+        // =================================================
+        // CASE SYS ID
+        // =================================================
+
+        if (!input.sys_id) {
+
+            data.error =
+                "Visa case ID is missing.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // ACTION
+        // =================================================
+
+        if (!input.new_status) {
+
+            data.error =
+                "Advisor action is missing.";
+
+            return;
+
+        }
+
+
+        var decision =
+            String(
+                input.new_status
+            ).trim();
+
+
+        // =================================================
+        // ALLOWED ACTIONS
+        // =================================================
+
+        if (
+
+            decision !==
+                "Approved"
+
+            &&
+
+            decision !==
+                "Rejected"
+
+            &&
+
+            decision !==
+                "Submit Proper Documents"
+
+        ) {
+
+            data.error =
+                "Invalid advisor action.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // GET VISA CASE
+        // =================================================
+
+        var updateGR =
+            new GlideRecord(
+                "x_snc_visaguardi_0_visa_case"
+            );
+
+
+        if (
+            !updateGR.get(
+                input.sys_id
+            )
+        ) {
+
+            data.error =
+                "The selected visa case could not be found.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // SECURITY
+        // CASE MUST BELONG TO CURRENT ADVISOR
+        // =================================================
+
+        var assignedAdvisor =
+            updateGR.getValue(
+                "advisor"
+            );
+
+
+        if (
+            assignedAdvisor !==
+            userSysId
+        ) {
+
+            data.error =
+                "You are not authorized to update this visa case.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // CHECK CASE STAGE
+        // =================================================
+
+        if (
+            !updateGR.isValidField(
+                "case_stage"
+            )
+        ) {
+
+            data.error =
+                "The case_stage field does not exist on the Visa Case table.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // DSO FINAL DECISION - HARD STOP
+        // =================================================
+        // Once the DSO has approved or rejected the case,
+        // the advisor must NOT be allowed to perform any action.
+        // This check is server-side so it cannot be bypassed
+        // even if the client UI is manipulated.
+
+        var currentCaseStage = "";
+        var currentDsoDecision = "";
+
+        if (updateGR.isValidField("case_stage")) {
+            currentCaseStage = String(
+                updateGR.getDisplayValue("case_stage") ||
+                updateGR.getValue("case_stage") ||
+                ""
+            ).trim().toLowerCase();
+        }
+
+        if (updateGR.isValidField("dso_decision")) {
+            currentDsoDecision = String(
+                updateGR.getDisplayValue("dso_decision") ||
+                updateGR.getValue("dso_decision") ||
+                ""
+            ).trim().toLowerCase();
+        }
+
+        if (
+            currentCaseStage === "dso approved" ||
+            currentCaseStage === "dso rejected" ||
+            currentDsoDecision === "approved" ||
+            currentDsoDecision === "rejected"
+        ) {
+            data.success = false;
+            data.error =
+                "This case has already been processed by the DSO. Advisor actions are no longer allowed.";
+            return;
+        }
+
+
+        // =================================================
+        // ADVISOR DECISION FIELD
+        // =================================================
+
+        var hasAdvisorDecision =
+            updateGR.isValidField(
+                "advisor_decision"
+            );
+
+
+        // =================================================
+        // PREVENT FINAL DOUBLE PROCESSING
+        // =================================================
+
+        if (
+            decision === "Approved" ||
+            decision === "Rejected"
+        ) {
+
+            if (hasAdvisorDecision) {
+
+                var existingAdvisorDecision =
+                    updateGR.getValue(
+                        "advisor_decision"
+                    ) || "";
+
+
+                existingAdvisorDecision =
+                    String(
+                        existingAdvisorDecision
+                    ).trim();
+
+
+                if (
+                    existingAdvisorDecision ===
+                        "Approved"
+
+                    ||
+
+                    existingAdvisorDecision ===
+                        "Rejected"
+                ) {
+
+                    data.error =
+                        "This case has already been finally processed by the advisor.";
+
+                    return;
+
+                }
+
+            }
+
+        }
+
+
+        // =================================================
+        // SUBMIT PROPER DOCUMENTS
+        // =================================================
+
+        if (
+            decision ===
+            "Submit Proper Documents"
+        ) {
+
+
+            // ---------------------------------------------
+            // UPDATE CASE STAGE
+            // ---------------------------------------------
+
+            updateGR.setValue(
+                "case_stage",
+                "Submit Proper Documents"
+            );
+
+
+            // ---------------------------------------------
+            // DO NOT CHANGE ADVISOR DECISION
+            // ---------------------------------------------
+
+            /*
+             * Important:
+             *
+             * This is NOT an approval or rejection.
+             *
+             * advisor_decision remains Pending /
+             * its existing value.
+             */
+
+
+            // ---------------------------------------------
+            // SAVE COMMENTS
+            // ---------------------------------------------
+
+            if (
+                updateGR.isValidField(
+                    "advisor_comments"
+                )
+            ) {
+
+                if (
+                    input.advisor_comments
+                ) {
+
+                    updateGR.setValue(
+                        "advisor_comments",
+                        String(
+                            input.advisor_comments
+                        )
+                    );
+
+                }
+
+            }
+
+
+            // ---------------------------------------------
+            // DECISION DATE
+            // ---------------------------------------------
+
+            if (
+                updateGR.isValidField(
+                    "advisor_decision_date"
+                )
+            ) {
+
+                updateGR.setValue(
+                    "advisor_decision_date",
+                    gs.nowDateTime()
+                );
+
+            }
+
+
+            // ---------------------------------------------
+            // UPDATE VISA CASE
+            // ---------------------------------------------
+
+            var documentUpdate =
+                updateGR.update();
+
+
+            if (!documentUpdate) {
+
+                data.error =
+                    "Unable to update the visa case.";
+
+                return;
+
+            }
+
+
+            // =================================================
+            // UPDATE STUDENT PROFILE STATUS
+            // =================================================
+
+            var studentSysId =
+                updateGR.getValue(
+                    "student"
+                );
+
+
+            if (studentSysId) {
+
+                var studentGR =
+                    new GlideRecord(
+                        "x_snc_visaguardi_0_student_profile"
+                    );
+
+
+                if (
+                    studentGR.get(
+                        studentSysId
+                    )
+                ) {
+
+
+                    // -----------------------------------------
+                    // STATUS FIELD
+                    // -----------------------------------------
+
+                    if (
+                        studentGR.isValidField(
+                            "status"
+                        )
+                    ) {
+
+                        studentGR.setValue(
+                            "status",
+                            "Submit Proper Documents"
+                        );
+
+                        studentGR.update();
+
+                    }
+
+
+                    // -----------------------------------------
+                    // CASE STATUS FIELD
+                    // -----------------------------------------
+
+                    else if (
+                        studentGR.isValidField(
+                            "case_status"
+                        )
+                    ) {
+
+                        studentGR.setValue(
+                            "case_status",
+                            "Submit Proper Documents"
+                        );
+
+                        studentGR.update();
+
+                    }
+
+                }
+
+            }
+
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            data.success =
+                true;
+
+            data.updated_sys_id =
+                documentUpdate;
+
+            data.updated_case_stage =
+                "Submit Proper Documents";
+
+            data.updated_advisor_decision =
+                hasAdvisorDecision
+                    ?
+                    (
+                        updateGR.getValue(
+                            "advisor_decision"
+                        ) || "Pending"
+                    )
+                    :
+                    "Pending";
+
+
+            return;
+
+        }
+
+
+        // =================================================
+        // APPROVE / REJECT
+        // =================================================
+
+        var advisorStage =
+            "";
+
+
+        if (
+            decision ===
+            "Approved"
+        ) {
+
+            advisorStage =
+                "Advisor Approved";
+
+        }
+
+        else if (
+            decision ===
+            "Rejected"
+        ) {
+
+            advisorStage =
+                "Advisor Rejected";
+
+        }
+
+
+        // =================================================
+        // SAVE ADVISOR DECISION
+        // =================================================
+
+        if (
+            hasAdvisorDecision
+        ) {
+
+            updateGR.setValue(
+                "advisor_decision",
+                decision
+            );
+
+        }
+
+
+        // =================================================
+        // SAVE CASE STAGE
+        // =================================================
+
+        updateGR.setValue(
+            "case_stage",
+            advisorStage
+        );
+
+
+        // =================================================
+        // ADVISOR COMMENTS
+        // =================================================
+
+        if (
+            updateGR.isValidField(
+                "advisor_comments"
+            )
+        ) {
+
+            if (
+                input.advisor_comments
+            ) {
+
+                updateGR.setValue(
+                    "advisor_comments",
+                    String(
+                        input.advisor_comments
+                    )
+                );
+
+            }
+
+        }
+
+
+        // =================================================
+        // DECISION DATE
+        // =================================================
+
+        if (
+            updateGR.isValidField(
+                "advisor_decision_date"
+            )
+        ) {
+
+            updateGR.setValue(
+                "advisor_decision_date",
+                gs.nowDateTime()
+            );
+
+        }
+
+
+        // =================================================
+        // UPDATE CASE
+        // =================================================
+
+        var updatedId =
+            updateGR.update();
+
+
+        if (!updatedId) {
+
+            data.error =
+                "Unable to update the visa case.";
+
+            return;
+
+        }
+
+
+        // =================================================
+        // UPDATE STUDENT STATUS
+        // =================================================
+
+        var studentId =
+            updateGR.getValue(
+                "student"
+            );
+
+
+        if (studentId) {
+
+            var studentProfile =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+
+            if (
+                studentProfile.get(
+                    studentId
+                )
+            ) {
+
+                if (
+                    studentProfile.isValidField(
+                        "status"
+                    )
+                ) {
+
+                    if (
+                        decision ===
+                        "Approved"
+                    ) {
+
+                        studentProfile.setValue(
+                            "status",
+                            "Advisor Approved"
+                        );
+
+                    }
+
+                    else if (
+                        decision ===
+                        "Rejected"
+                    ) {
+
+                        studentProfile.setValue(
+                            "status",
+                            "Advisor Rejected"
+                        );
+
+                    }
+
+                    studentProfile.update();
+
+                }
+
+            }
+
+        }
+
+
+        // =================================================
+        // SUCCESS
+        // =================================================
+
+        data.success =
+            true;
+
+        data.updated_sys_id =
+            updatedId;
+
+        data.updated_case_stage =
+            advisorStage;
+
+        data.updated_advisor_decision =
+            decision;
+
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // LOAD CURRENT ADVISOR CASES
+    // =====================================================
+
+    var gr =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    gr.addQuery(
+        "advisor",
+        userSysId
+    );
+
+
+    gr.orderByDesc(
+        "sys_created_on"
+    );
+
+
+    gr.query();
+
+
+    // =====================================================
+    // BUILD TASK LIST
+    // =====================================================
+
+    while (
+        gr.next()
+    ) {
+
+
+        // =================================================
+        // STUDENT
+        // =================================================
+
+        var studentName =
+            "Unknown Student";
+
+        var studentId =
+            "N/A";
+
+        var studentSysId =
+            gr.getValue(
+                "student"
+            );
+
+
+        if (studentSysId) {
+
+            var studentGR =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+
+            if (
+                studentGR.get(
+                    studentSysId
+                )
+            ) {
+
+                studentName =
+                    studentGR.getValue(
+                        "name"
+                    ) || "";
+
+
+                if (!studentName) {
+
+                    var firstName =
+                        studentGR.getValue(
+                            "first_name"
+                        ) || "";
+
+
+                    var lastName =
+                        studentGR.getValue(
+                            "last_name"
+                        ) || "";
+
+
+                    studentName =
+                        (
+                            firstName +
+                            " " +
+                            lastName
+                        ).trim();
+
+                }
+
+
+                if (!studentName) {
+
+                    studentName =
+                        "Unknown Student";
+
+                }
+
+
+                studentId =
+                    studentGR.getValue(
+                        "student_id"
+                    ) || "N/A";
+
+            }
+
+        }
+
+
+        // =================================================
+        // CASE TYPE
+        // =================================================
+
+        var caseType =
+            "Visa Request";
+
+
+        if (
+            gr.isValidField(
+                "case_type"
+            )
+        ) {
+
+            var caseTypeDisplay =
+                gr.getDisplayValue(
+                    "case_type"
+                );
+
+
+            if (caseTypeDisplay) {
+
+                caseType =
+                    caseTypeDisplay;
+
+            }
+
+        }
+
+
+        // =================================================
+        // PRIORITY
+        // =================================================
+
+        var priority =
+            "Normal";
+
+
+        if (
+            gr.isValidField(
+                "priority"
+            )
+        ) {
+
+            var priorityDisplay =
+                gr.getDisplayValue(
+                    "priority"
+                );
+
+
+            if (priorityDisplay) {
+
+                priority =
+                    priorityDisplay;
+
+            }
+
+        }
+
+
+        // =================================================
+        // DUE DATE
+        // =================================================
+
+        var dueDate =
+            "";
+
+
+        if (
+            gr.isValidField(
+                "due_date"
+            )
+        ) {
+
+            var dueElement =
+                gr.getElement(
+                    "due_date"
+                );
+
+
+            if (
+                dueElement &&
+                !dueElement.nil()
+            ) {
+
+                dueDate =
+                    gr.getDisplayValue(
+                        "due_date"
+                    );
+
+            }
+
+        }
+
+
+        // =================================================
+        // CASE STAGE
+        // =================================================
+
+        var caseStage =
+            "Pending";
+
+
+        if (
+            gr.isValidField(
+                "case_stage"
+            )
+        ) {
+
+            var stageDisplay =
+                gr.getDisplayValue(
+                    "case_stage"
+                );
+
+
+            if (stageDisplay) {
+
+                caseStage =
+                    stageDisplay;
+
+            }
+
+        }
+
+
+        // =================================================
+        // ADVISOR DECISION
+        // =================================================
+
+        var advisorDecision =
+            "Pending";
+
+
+        if (
+            gr.isValidField(
+                "advisor_decision"
+            )
+        ) {
+
+            advisorDecision =
+                gr.getDisplayValue(
+                    "advisor_decision"
+                ) ||
+                "Pending";
+
+        }
+
+
+        // =================================================
+        // DSO DECISION
+        // =================================================
+
+        var dsoDecision =
+            "Pending";
+
+
+        if (
+            gr.isValidField(
+                "dso_decision"
+            )
+        ) {
+
+            dsoDecision =
+                gr.getDisplayValue(
+                    "dso_decision"
+                ) ||
+                "Pending";
+
+        }
+
+
+        // =================================================
+        // ADVISOR
+        // =================================================
+
+        var advisorName =
+            "";
+
+
+        if (
+            gr.isValidField(
+                "advisor"
+            )
+        ) {
+
+            advisorName =
+                gr.getDisplayValue(
+                    "advisor"
+                );
+
+        }
+
+
+        // =================================================
+        // CASE NUMBER
+        // =================================================
+
+        var caseNumber =
+            "";
+
+
+        if (
+            gr.isValidField(
+                "number"
+            )
+        ) {
+
+            caseNumber =
+                gr.getValue(
+                    "number"
+                ) || "";
+
+        }
+
+
+        // =================================================
+        // ADD TASK
+        // =================================================
+
+        data.tasks.push({
+
+            sys_id:
+                gr.getUniqueValue(),
+
+            case_number:
+                caseNumber,
+
+            student_name:
+                studentName,
+
+            student_id:
+                studentId,
+
+            title:
+                caseType +
+                " Request",
+
+            type:
+                caseType,
+
+            priority:
+                priority,
+
+            due_date:
+                dueDate,
+
+            case_stage:
+                caseStage,
+
+            advisor_decision:
+                advisorDecision,
+
+            dso_decision:
+                dsoDecision,
+
+            advisor:
+                advisorName
+
+        });
+
+    }
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:40:35</sys_created_on>
+        <sys_id>58728bc359ae43107f44df2ba8a19bef</sys_id>
+        <sys_mod_count>38</sys_mod_count>
+        <sys_name>Adv Tasks &amp; Approvals</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_58728bc359ae43107f44df2ba8a19bef</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 20:34:06</sys_updated_on>
+        <template><![CDATA[<div class="vg-workspace-container">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <div class="vg-hero-banner">
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                <i class="fa fa-tasks"></i>
+            </div>
+
+            <div>
+                <h2>Tasks & Approvals</h2>
+
+                <p>
+                    Visa Advisor | Review, approve, reject, and request proper documents
+                </p>
+            </div>
+
+        </div>
+
+        <div class="hero-actions">
+
+            <button
+                type="button"
+                class="btn btn-hero-outline"
+                ng-click="c.exportTasks()">
+
+                <i class="fa fa-download"></i>
+                Export Report
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+         ===================================================== -->
+
+    <div
+        ng-if="c.data.error"
+        class="vg-error-message">
+
+        <i class="fa fa-exclamation-circle"></i>
+
+        {{c.data.error}}
+
+    </div>
+
+
+    <!-- =====================================================
+         SUCCESS
+         ===================================================== -->
+
+    <div
+        ng-if="c.successMessage"
+        class="vg-success-message">
+
+        <i class="fa fa-check-circle"></i>
+
+        {{c.successMessage}}
+
+    </div>
+
+
+    <!-- =====================================================
+         METRICS
+         ===================================================== -->
+
+    <div class="row metric-row">
+
+        <!-- PENDING -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon blue-circle">
+
+                    <i class="fa fa-clock-o"></i>
+
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-blue">
+                        {{c.getPendingCount()}}
+                    </span>
+
+                    <span class="metric-label">
+                        PENDING APPROVALS
+                    </span>
+
+                    <span class="metric-subtext text-blue">
+                        Requires advisor attention
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HIGH PRIORITY -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon orange-circle">
+
+                    <i class="fa fa-exclamation-triangle"></i>
+
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-orange">
+                        {{c.getHighPriorityCount()}}
+                    </span>
+
+                    <span class="metric-label">
+                        HIGH PRIORITY
+                    </span>
+
+                    <span class="metric-subtext text-orange">
+                        Requires attention
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="col-md-4 col-sm-4">
+
+            <div class="vg-metric-card">
+
+                <div class="metric-icon green-circle">
+
+                    <i class="fa fa-check"></i>
+
+                </div>
+
+                <div class="metric-data">
+
+                    <span class="metric-number text-green">
+                        {{c.getCompletedCount()}}
+                    </span>
+
+                    <span class="metric-label">
+                        PROCESSED CASES
+                    </span>
+
+                    <span class="metric-subtext text-green">
+                        Approved or rejected
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CARD
+         ===================================================== -->
+
+    <div class="vg-card">
+
+        <!-- HEADER -->
+
+        <div class="vg-card-header">
+
+            <div class="header-left">
+
+                <h4>
+
+                    <i class="fa fa-check-square-o"></i>
+
+                    Action Items & SEVIS Requests
+
+                </h4>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <!-- FILTERS -->
+
+                <div class="btn-group filter-pills">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                                c.currentFilter === 'ALL'
+                        }"
+                        ng-click="c.setFilter('ALL')">
+
+                        All
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                                c.currentFilter === 'Pending'
+                        }"
+                        ng-click="c.setFilter('Pending')">
+
+                        Pending
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                                c.currentFilter === 'High'
+                        }"
+                        ng-click="c.setFilter('High')">
+
+                        High Priority
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-sm"
+                        ng-class="{
+                            'active':
+                                c.currentFilter === 'Completed'
+                        }"
+                        ng-click="c.setFilter('Completed')">
+
+                        Completed
+
+                    </button>
+
+                </div>
+
+
+                <!-- SEARCH -->
+
+                <div class="search-wrapper">
+
+                    <i class="fa fa-search search-icon"></i>
+
+                    <input
+                        type="text"
+                        class="form-control search-input"
+                        placeholder="Search student, ID or task..."
+                        ng-model="c.searchQuery">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TABLE
+             ===================================================== -->
+
+        <div class="table-responsive">
+
+            <table class="table vg-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Student</th>
+
+                        <th>Task Subject</th>
+
+                        <th>Type</th>
+
+                        <th>Priority</th>
+
+                        <th>Due Date</th>
+
+                        <th>Case Stage</th>
+
+                        <th class="text-right">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        ng-repeat="
+                            task in c.data.tasks
+                            | filter:c.filterTasks
+                            track by task.sys_id
+                        ">
+
+
+                        <!-- STUDENT -->
+
+                        <td>
+
+                            <div class="student-cell">
+
+                                <span class="student-name">
+                                    {{task.student_name}}
+                                </span>
+
+                                <span class="student-id">
+                                    {{task.student_id}}
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- SUBJECT -->
+
+                        <td>
+
+                            <strong class="task-title">
+                                {{task.title}}
+                            </strong>
+
+                            <div
+                                ng-if="task.case_number"
+                                class="case-number">
+
+                                {{task.case_number}}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- TYPE -->
+
+                        <td>
+
+                            <span class="type-badge">
+                                {{task.type}}
+                            </span>
+
+                        </td>
+
+
+                        <!-- PRIORITY -->
+
+                        <td>
+
+                            <span
+                                class="status-pill"
+                                ng-class="{
+
+                                    'pill-red':
+                                        task.priority === 'High',
+
+                                    'pill-orange':
+                                        task.priority === 'Medium',
+
+                                    'pill-blue':
+                                        task.priority === 'Low' ||
+                                        task.priority === 'Normal'
+
+                                }">
+
+                                {{task.priority}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- DUE DATE -->
+
+                        <td>
+
+                            <span class="due-date">
+
+                                <i class="fa fa-calendar-o"></i>
+
+                                {{task.due_date || 'N/A'}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- CASE STAGE -->
+
+                        <td>
+
+                            <span
+                                class="status-pill"
+                                ng-class="c.getStageClass(task.case_stage)">
+
+                                {{task.case_stage || 'Pending'}}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- =================================================
+                             ACTIONS
+                             ================================================= -->
+
+                        <td class="actions-cell">
+
+                            <div
+                                class="action-buttons"
+                                ng-if="!c.isFinalProcessed(task)">
+
+                                <!-- APPROVE -->
+
+                                <button
+                                    type="button"
+                                    class="btn btn-xs btn-approve"
+                                    ng-click="
+                                        c.openActionModal(
+                                            task,
+                                            'Approved'
+                                        )
+                                    ">
+
+                                    <i class="fa fa-check"></i>
+
+                                    Approve
+
+                                </button>
+
+
+                                <!-- REJECT -->
+
+                                <button
+                                    type="button"
+                                    class="btn btn-xs btn-reject"
+                                    ng-click="
+                                        c.openActionModal(
+                                            task,
+                                            'Rejected'
+                                        )
+                                    ">
+
+                                    <i class="fa fa-times"></i>
+
+                                    Reject
+
+                                </button>
+
+
+                                <!-- SUBMIT PROPER DOCUMENTS -->
+
+                                <button
+                                    type="button"
+                                    class="btn btn-xs btn-documents"
+                                    ng-click="
+                                        c.openActionModal(
+                                            task,
+                                            'Submit Proper Documents'
+                                        )
+                                    "
+                                    ng-disabled="
+                                        c.isDocumentsRequested(task)
+                                    ">
+
+                                    <i class="fa fa-file-text-o"></i>
+
+                                    <span
+                                        ng-if="
+                                            !c.isDocumentsRequested(task)
+                                        ">
+                                        Submit Proper Documents
+                                    </span>
+
+                                    <span
+                                        ng-if="
+                                            c.isDocumentsRequested(task)
+                                        ">
+                                        Documents Requested
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+
+                            <!-- FINAL PROCESSED -->
+
+                            <span
+                                ng-if="c.isFinalProcessed(task)"
+                                class="processed-label">
+
+                                <i class="fa fa-check-circle"></i>
+
+                                Processed
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                    <!-- NO CASES -->
+
+                    <tr
+                        ng-if="
+                            (c.data.tasks | filter:c.filterTasks).length === 0
+                        ">
+
+                        <td
+                            colspan="7"
+                            class="text-center no-tasks-cell">
+
+                            <i class="fa fa-inbox no-task-icon"></i>
+
+                            <div class="no-task-title">
+                                No advisor tasks found
+                            </div>
+
+                            <div class="no-task-text">
+                                No visa cases assigned to this advisor
+                                match the selected filter.
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     ACTION MODAL
+     ========================================================= -->
+
+<div
+    class="modal fade"
+    id="taskActionModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+
+    <div
+        class="modal-dialog modal-dialog-centered"
+        role="document"
+        ng-if="c.selectedTask">
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+
+            <div
+                class="modal-header"
+                ng-class="c.getModalHeaderClass()">
+
+                <button
+                    type="button"
+                    class="close modal-close"
+                    data-dismiss="modal">
+
+                    &times;
+
+                </button>
+
+
+                <h4 class="modal-title">
+
+                    <i
+                        class="fa"
+                        ng-class="c.getModalIcon()">
+                    </i>
+
+                    {{c.getModalTitle()}}
+
+                </h4>
+
+            </div>
+
+
+            <!-- BODY -->
+
+            <div class="modal-body">
+
+
+                <div class="confirmation-box">
+
+
+                    <div class="confirmation-row">
+
+                        <span class="confirmation-label">
+                            Student
+                        </span>
+
+                        <strong>
+                            {{c.selectedTask.student_name}}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="confirmation-row">
+
+                        <span class="confirmation-label">
+                            Student ID
+                        </span>
+
+                        <strong>
+                            {{c.selectedTask.student_id}}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="confirmation-row">
+
+                        <span class="confirmation-label">
+                            Request
+                        </span>
+
+                        <strong>
+                            {{c.selectedTask.title}}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="confirmation-row">
+
+                        <span class="confirmation-label">
+                            Current Stage
+                        </span>
+
+                        <span
+                            class="status-pill"
+                            ng-class="
+                                c.getStageClass(
+                                    c.selectedTask.case_stage
+                                )
+                            ">
+
+                            {{c.selectedTask.case_stage}}
+
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="confirmation-row"
+                        ng-if="
+                            c.targetStatus ===
+                            'Submit Proper Documents'
+                        ">
+
+                        <span class="confirmation-label">
+                            New Student Status
+                        </span>
+
+                        <span class="status-pill pill-blue">
+                            Submit Proper Documents
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    ng-if="
+                        c.targetStatus ===
+                        'Submit Proper Documents'
+                    "
+                    class="document-request-info">
+
+                    <div class="document-request-icon">
+
+                        <i class="fa fa-file-text-o"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Request proper documents
+                        </strong>
+
+                        <p>
+                            The student will be notified that
+                            proper or corrected documents are required
+                            before the visa case can proceed.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+
+                <!-- COMMENTS -->
+
+                <div class="form-group">
+
+                    <label>
+                        Advisor Notes / Justification
+                    </label>
+
+                    <textarea
+                        class="form-control advisor-notes"
+                        rows="4"
+                        ng-model="c.advisorComments"
+                        placeholder="Enter comments, document requirements, or audit details...">
+                    </textarea>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-cancel"
+                    data-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn action-confirm-btn"
+                    ng-class="c.getConfirmButtonClass()"
+                    ng-click="c.confirmTaskAction()"
+                    ng-disabled="c.processing">
+
+                    <span ng-if="!c.processing">
+
+                        <i
+                            class="fa"
+                            ng-class="c.getModalIcon()">
+                        </i>
+
+                        {{c.getConfirmButtonText()}}
+
+                    </span>
+
+
+                    <span ng-if="c.processing">
+
+                        <i class="fa fa-spinner fa-spin"></i>
+
+                        Updating...
+
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>58728bc359ae43107f44df2ba8a19bef</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:40:35</sys_created_on>
+        <sys_id>dc72c30759ae43107f44df2ba8a19bd6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 17:40:35</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

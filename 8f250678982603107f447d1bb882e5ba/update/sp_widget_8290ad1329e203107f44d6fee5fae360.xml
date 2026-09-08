@@ -1,0 +1,1524 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $location, $timeout) {
+
+    var c = this;
+
+    var STORAGE_KEY = "vg_advisor_sidebar_scroll";
+
+
+    /* =====================================================
+       GET CURRENT PAGE
+       ===================================================== */
+
+    function getCurrentPage() {
+
+        var pageId = $location.search().id;
+
+        if (!pageId) {
+            return "advisor_workspace";
+        }
+
+        return String(pageId);
+    }
+
+
+    /* =====================================================
+       ACTIVE PAGE
+       ===================================================== */
+
+    c.activePage = getCurrentPage();
+
+
+    /* =====================================================
+       CHECK ACTIVE PAGE
+       ===================================================== */
+
+    c.isActive = function(pageId) {
+
+        return c.activePage === String(pageId);
+
+    };
+
+
+    /* =====================================================
+       GET SIDEBAR
+       ===================================================== */
+
+    function getSidebar() {
+
+        return document.getElementById("vgSidebarNav");
+
+    }
+
+
+    /* =====================================================
+       SAVE SCROLL POSITION
+       ===================================================== */
+
+    function saveScrollPosition() {
+
+        var sidebar = getSidebar();
+
+        if (!sidebar) {
+            return;
+        }
+
+        try {
+
+            sessionStorage.setItem(
+                STORAGE_KEY,
+                String(sidebar.scrollTop)
+            );
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to save sidebar scroll position",
+                e
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       RESTORE SCROLL POSITION
+       ===================================================== */
+
+    function restoreScrollPosition() {
+
+        var savedPosition = null;
+
+        try {
+
+            savedPosition =
+                sessionStorage.getItem(STORAGE_KEY);
+
+        } catch (e) {
+
+            return;
+
+        }
+
+
+        if (
+            savedPosition === null ||
+            savedPosition === ""
+        ) {
+
+            return;
+
+        }
+
+
+        var position =
+            parseInt(savedPosition, 10);
+
+
+        if (isNaN(position)) {
+            return;
+        }
+
+
+        /*
+         * ServiceNow may need a little time to
+         * rebuild the widget after navigation.
+         */
+
+        $timeout(function() {
+
+            var sidebar =
+                getSidebar();
+
+
+            if (!sidebar) {
+                return;
+            }
+
+
+            sidebar.scrollTop =
+                position;
+
+
+            /*
+             * Second restore makes it reliable
+             * when ServiceNow finishes rendering
+             * the page slightly later.
+             */
+
+            $timeout(function() {
+
+                var sidebarAgain =
+                    getSidebar();
+
+                if (sidebarAgain) {
+
+                    sidebarAgain.scrollTop =
+                        position;
+
+                }
+
+            }, 150);
+
+        }, 50);
+
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+       ===================================================== */
+
+    c.navigate = function(pageId, event) {
+
+        if (!pageId) {
+            return;
+        }
+
+
+        /*
+         * Stop normal button behaviour.
+         */
+
+        if (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+        }
+
+
+        /*
+         * Save current sidebar position
+         * before ServiceNow changes page.
+         */
+
+        saveScrollPosition();
+
+
+        /*
+         * Set active item immediately.
+         */
+
+        c.activePage =
+            String(pageId);
+
+
+        /*
+         * Remove keyboard focus from button.
+         */
+
+        if (
+            event &&
+            event.currentTarget
+        ) {
+
+            try {
+
+                event.currentTarget.blur();
+
+            } catch (e) {}
+
+        }
+
+
+        /*
+         * Navigate using Angular.
+         */
+
+        $location.search(
+            "id",
+            pageId
+        );
+
+    };
+
+
+    /* =====================================================
+       LOGOUT
+       ===================================================== */
+
+    c.logout = function(event) {
+
+        /*
+         * Stop button's default behaviour.
+         */
+
+        if (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+        }
+
+
+        /*
+         * Remove keyboard focus.
+         */
+
+        if (
+            event &&
+            event.currentTarget
+        ) {
+
+            try {
+
+                event.currentTarget.blur();
+
+            } catch (e) {}
+
+        }
+
+
+        /*
+         * Clear saved sidebar position.
+         */
+
+        try {
+
+            sessionStorage.removeItem(
+                STORAGE_KEY
+            );
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to clear sidebar scroll position",
+                e
+            );
+
+        }
+
+
+        /*
+         * Clear stored authentication tokens.
+         */
+
+        try {
+
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("studentToken");
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to clear authentication data",
+                e
+            );
+
+        }
+
+
+        /*
+         * Clear session storage.
+         */
+
+        try {
+
+            sessionStorage.clear();
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to clear session storage",
+                e
+            );
+
+        }
+
+
+        /*
+         * Set active page to login.
+         */
+
+        c.activePage = "advisor_login";
+
+
+        /*
+         * Navigate to:
+         *
+         * student?id=advisor_login
+         */
+
+        $location.path("/student");
+
+        $location.search(
+            "id",
+            "advisor_login"
+        );
+
+    };
+
+
+    /* =====================================================
+       RESTORE AFTER INITIAL LOAD
+       ===================================================== */
+
+    restoreScrollPosition();
+
+
+    /* =====================================================
+       WATCH PAGE CHANGES
+       ===================================================== */
+
+    var locationChangeOff =
+        $scope.$on(
+            "$locationChangeSuccess",
+            function() {
+
+                c.activePage =
+                    getCurrentPage();
+
+
+                /*
+                 * Do not restore sidebar position
+                 * after going to the login page.
+                 */
+
+                if (
+                    c.activePage !== "advisor_login"
+                ) {
+
+                    restoreScrollPosition();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       CLEANUP
+       ===================================================== */
+
+    $scope.$on(
+        "$destroy",
+        function() {
+
+            if (locationChangeOff) {
+
+                locationChangeOff();
+
+            }
+
+        }
+    );
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   PREMIUM ADVISOR SIDEBAR
+   DARK NAVY / ELECTRIC BLUE THEME
+   ========================================================= */
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.vg-sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: 350px;
+
+    height: 100vh;
+
+    color: #ffffff;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(0, 115, 255, .10),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            180deg,
+            #061a38 0%,
+            #04152e 48%,
+            #030f23 100%
+        );
+
+    border-right:
+        1px solid
+        rgba(48, 129, 220, .14);
+
+    box-shadow:
+        12px 0 40px
+        rgba(0, 0, 0, .18);
+}
+
+
+/* =========================================================
+   SIDEBAR AMBIENT GLOW
+   ========================================================= */
+
+.vg-sidebar::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+    left: -120px;
+
+    width: 380px;
+    height: 380px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 125, 255, .12),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BRAND / LOGO AREA
+   ========================================================= */
+
+.vg-sidebar-logo {
+    height: 110px;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(
+        135deg,
+        rgba(8, 38, 78, .95),
+        rgba(4, 22, 48, .96)
+    );
+    border-bottom: 1px solid rgba(70, 140, 220, .14);
+}
+
+
+/* =========================================================
+   BRAND ICON (ENLARGED SHIELD)
+   ========================================================= */
+
+.vg-logo-icon {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    font-size: 38px; /* Increases the emoji shield size */
+    line-height: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 145, 255, 0.75));
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.vg-sidebar-logo:hover .vg-logo-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 14px rgba(0, 180, 255, 0.95));
+}
+
+
+/* =========================================================
+   LOGO TEXT
+   ========================================================= */
+
+.vg-logo-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.vg-logo-title {
+    font-size: 20px;
+    font-weight: 750;
+    line-height: 24px;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.vg-logo-title span {
+    color: #1598ff;
+}
+
+.vg-logo-subtitle {
+    margin-top: 3px;
+    font-size: 12px;
+    color: #829ab8;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.vg-sidebar-nav {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding:
+        12px 0;
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    scrollbar-width:
+        thin;
+
+    scrollbar-color:
+        rgba(80, 150, 230, .25)
+        transparent;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.vg-sidebar-nav::-webkit-scrollbar {
+
+    width:
+        5px;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-track {
+
+    background:
+        transparent;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(80, 150, 230, .25);
+
+    border-radius:
+        10px;
+}
+
+
+/* =========================================================
+   NAVIGATION ITEM
+   ========================================================= */
+
+.vg-nav-item {
+
+    position:
+        relative;
+
+    width:
+        calc(100% - 18px);
+
+    margin:
+        3px 9px;
+
+    min-height:
+        56px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        0 17px;
+
+    box-sizing:
+        border-box;
+
+    border-radius:
+        10px;
+
+    color:
+        #c7d6e9 !important;
+
+    background:
+        transparent;
+
+    text-decoration:
+        none !important;
+
+    font-size:
+        14px;
+
+    font-weight:
+        500;
+
+    transition:
+        background .22s ease,
+        color .22s ease,
+        transform .22s ease,
+        border-color .22s ease;
+
+    border:
+        1px solid
+        transparent;
+}
+
+
+/* =========================================================
+   NORMAL ITEM
+   ========================================================= */
+
+.vg-nav-item:not(.active) {
+
+    background:
+        transparent;
+
+    color:
+        #c7d6e9 !important;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.vg-nav-item:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 110, 255, .12),
+            rgba(0, 95, 200, .04)
+        );
+
+    border-color:
+        rgba(30, 140, 255, .10);
+
+    color:
+        #ffffff !important;
+
+    text-decoration:
+        none !important;
+
+    transform:
+        translateX(3px);
+}
+
+
+/* =========================================================
+   ACTIVE PAGE
+   ========================================================= */
+
+.vg-nav-item.active {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            rgba(17, 107, 235, .95),
+            rgba(34, 75, 205, .82)
+        );
+
+    color:
+        #ffffff !important;
+
+    font-weight:
+        650;
+
+    border:
+        1px solid
+        rgba(76, 163, 255, .28);
+
+    box-shadow:
+
+        0 8px 24px
+        rgba(0, 83, 210, .20),
+
+        inset 0 1px 0
+        rgba(255,255,255,.10);
+}
+
+
+/* Active left indicator */
+
+.vg-nav-item.active::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    top:
+        12px;
+
+    bottom:
+        12px;
+
+    width:
+        3px;
+
+    border-radius:
+        0 4px 4px 0;
+
+    background:
+        #63c2ff;
+
+    box-shadow:
+        0 0 10px
+        rgba(80, 190, 255, .75);
+}
+
+
+/* =========================================================
+   ACTIVE HOVER
+   ========================================================= */
+
+.vg-nav-item.active:hover {
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #1477ee,
+            #3157d8
+        );
+
+    transform:
+        translateX(2px);
+}
+
+
+/* =========================================================
+   NAVIGATION ICON
+   ========================================================= */
+
+.vg-nav-icon {
+
+    width:
+        42px;
+
+    min-width:
+        42px;
+
+    height:
+        34px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-start;
+
+    color:
+        #7fb7ed;
+
+    font-size:
+        17px;
+
+    transition:
+        color .22s ease,
+        transform .22s ease;
+}
+
+
+/* =========================================================
+   ICON HOVER
+   ========================================================= */
+
+.vg-nav-item:hover .vg-nav-icon {
+
+    color:
+        #43adff;
+
+    transform:
+        scale(1.06);
+}
+
+
+/* =========================================================
+   ACTIVE ICON
+   ========================================================= */
+
+.vg-nav-item.active .vg-nav-icon {
+
+    color:
+        #ffffff;
+
+    text-shadow:
+        0 0 9px
+        rgba(100, 205, 255, .35);
+}
+
+
+/* =========================================================
+   NAVIGATION TEXT
+   ========================================================= */
+
+.vg-nav-text {
+
+    display:
+        block;
+
+    line-height:
+        20px;
+
+    white-space:
+        nowrap;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+}
+
+
+/* =========================================================
+   AI INDICATOR
+   ========================================================= */
+
+.vg-ai-indicator {
+
+    margin-left:
+        auto;
+
+    padding:
+        3px 7px;
+
+    border-radius:
+        10px;
+
+    border:
+        1px solid
+        rgba(150, 70, 255, .35);
+
+    background:
+        rgba(120, 40, 255, .10);
+
+    color:
+        #b36cff;
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .7px;
+}
+
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+.vg-notification-badge {
+
+    margin-left:
+        auto;
+
+    width:
+        22px;
+
+    height:
+        22px;
+
+    min-width:
+        22px;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff5360,
+            #d92742
+        );
+
+    color:
+        #ffffff;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    box-shadow:
+        0 0 10px
+        rgba(255, 60, 75, .25);
+}
+
+
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
+
+.vg-sidebar-footer {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    padding:
+        8px 0;
+
+    background:
+        rgba(2, 12, 28, .72);
+
+    border-top:
+        1px solid
+        rgba(80, 135, 205, .13);
+}
+
+
+/* =========================================================
+   LOGOUT / LOGOUT ITEM
+   ========================================================= */
+
+.vg-nav-item.logout-item,
+.vg-logout-item {
+
+    color:
+        #91a7c2 !important;
+}
+
+
+.vg-nav-item.logout-item .vg-nav-icon,
+.vg-logout-item .vg-nav-icon {
+
+    color:
+        #e88c75;
+}
+
+
+/* =========================================================
+   LOGOUT HOVER
+   ========================================================= */
+
+.vg-nav-item.logout-item:hover,
+.vg-logout-item:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(205, 55, 65, .12),
+            rgba(140, 30, 40, .04)
+        );
+
+    border-color:
+        rgba(255, 80, 90, .10);
+
+    color:
+        #ffb0b5 !important;
+
+    transform:
+        translateX(3px);
+}
+
+
+.vg-nav-item.logout-item:hover .vg-nav-icon,
+.vg-logout-item:hover .vg-nav-icon {
+
+    color:
+        #ff777f;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   SIDEBAR WIDTH = 350PX
+   ========================================================= */
+
+.vg-main-content {
+
+    margin-left:
+        350px;
+
+    min-height:
+        100vh;
+
+    width:
+        calc(100% - 350px);
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =========================================================
+   PREVENT SIDEBAR FROM AFFECTING OTHER WIDGETS
+   ========================================================= */
+
+.vg-sidebar * {
+
+    box-sizing:
+        border-box;
+}
+
+
+/* =========================================================
+   MOBILE / TABLET BREAKPOINTS
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .vg-sidebar {
+
+        width:
+            280px;
+    }
+
+    .vg-main-content {
+
+        margin-left:
+            280px;
+
+        width:
+            calc(100% - 280px);
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .vg-sidebar {
+
+        width:
+            250px;
+    }
+
+
+    .vg-sidebar-logo {
+
+        height:
+            100px;
+
+        min-height:
+            100px;
+
+        padding:
+            10px 15px;
+    }
+
+
+    .vg-sidebar-brand-icon {
+
+        width:
+            46px;
+
+        min-width:
+            46px;
+
+        height:
+            52px;
+
+        margin-right:
+            9px;
+    }
+
+
+    .vg-sidebar-logo-image {
+
+        width:
+            45px;
+
+        height:
+            50px;
+    }
+
+
+    .vg-logo-title {
+
+        font-size:
+            17px;
+
+        line-height:
+            20px;
+    }
+
+
+    .vg-logo-subtitle {
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-nav-item {
+
+        width:
+            calc(100% - 12px);
+
+        margin:
+            3px 6px;
+
+        min-height:
+            51px;
+
+        padding:
+            0 13px;
+
+        font-size:
+            13px;
+    }
+
+
+    .vg-nav-icon {
+
+        width:
+            36px;
+
+        min-width:
+            36px;
+
+        font-size:
+            16px;
+    }
+
+
+    .vg-main-content {
+
+        margin-left:
+            250px;
+
+        width:
+            calc(100% - 250px);
+    }
+
+
+    .vg-ai-indicator {
+
+        display:
+            none;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_left_side_bar</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>advisor left side bar</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:11:33</sys_created_on>
+        <sys_id>8290ad1329e203107f44d6fee5fae360</sys_id>
+        <sys_mod_count>44</sys_mod_count>
+        <sys_name>advisor left side bar</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_8290ad1329e203107f44d6fee5fae360</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 05:18:20</sys_updated_on>
+        <template><![CDATA[<aside class="vg-sidebar">
+
+    <!-- ========================================= -->
+    <!-- BRAND -->
+    <!-- ========================================= -->
+
+    <div class="vg-sidebar-logo">
+
+        <div class="vg-logo-icon">
+            ]]>🛡<![CDATA[️
+        </div>
+
+        <div class="vg-logo-text">
+
+            <div class="vg-logo-title">
+                VisaGuardian <span>AI</span>
+            </div>
+
+            <div class="vg-logo-subtitle">
+                Advisor Workspace
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- NAVIGATION -->
+    <!-- ========================================= -->
+
+    <nav
+        class="vg-sidebar-nav"
+        id="vgSidebarNav"
+    >
+
+        <!-- OVERVIEW -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('advisor_workspace')}"
+            ng-click="c.navigate('advisor_workspace', $event)"
+        >
+
+            <span class="vg-nav-icon">▦</span>
+
+            <span class="vg-nav-text">
+                Dashboard
+            </span>
+
+        </button>
+
+
+        <!-- MY STUDENTS -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_adv_my_students')}"
+            ng-click="c.navigate('vg_adv_my_students', $event)"
+        >
+
+            <span class="vg-nav-icon">♟</span>
+
+            <span class="vg-nav-text">
+                My Students
+            </span>
+
+        </button>
+
+
+        <!-- MY CASES -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_advisor_my_cases')}"
+            ng-click="c.navigate('vg_advisor_my_cases', $event)"
+        >
+
+            <span class="vg-nav-icon">▣</span>
+
+            <span class="vg-nav-text">
+                Case Management
+            </span>
+
+        </button>
+
+
+        <!-- DOCUMENT REVIEW -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_adv_document_review')}"
+            ng-click="c.navigate('vg_adv_document_review', $event)"
+        >
+
+            <span class="vg-nav-icon">▤</span>
+
+            <span class="vg-nav-text">
+                Case Review
+            </span>
+
+        </button>
+
+
+        <!-- TASKS & APPROVALS -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_adv_tasks_approvals')}"
+            ng-click="c.navigate('vg_adv_tasks_approvals', $event)"
+        >
+
+            <span class="vg-nav-icon">▥</span>
+
+            <span class="vg-nav-text">
+                Tasks &amp; Approvals
+            </span>
+
+        </button>
+
+
+        <!-- RISK & COMPLIANCE -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_adv_risk_compliance')}"
+            ng-click="c.navigate('vg_adv_risk_compliance', $event)"
+        >
+
+            <span class="vg-nav-icon">♢</span>
+
+            <span class="vg-nav-text">
+                Risk &amp; Compliance
+            </span>
+
+        </button>
+
+
+
+
+        <!-- NOTIFICATIONS -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_advisor_notifications')}"
+            ng-click="c.navigate('vg_advisor_notifications', $event)"
+        >
+
+            <span class="vg-nav-icon">♧</span>
+
+            <span class="vg-nav-text">
+                Notifications
+            </span>
+
+            <span
+                class="vg-notification-badge"
+                ng-if="data.notification_count > 0"
+            >
+                {{data.notification_count}}
+            </span>
+
+        </button>
+
+
+        <!-- PROFILE -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_adv_profile')}"
+            ng-click="c.navigate('vg_adv_profile', $event)"
+        >
+
+            <span class="vg-nav-icon">♙</span>
+
+            <span class="vg-nav-text">
+                Profile
+            </span>
+
+        </button>
+
+
+        <!-- HELP & SUPPORT -->
+
+        <button
+            type="button"
+            class="vg-nav-item"
+            ng-class="{'active': c.isActive('vg_help_support')}"
+            ng-click="c.navigate('vg_help_support', $event)"
+        >
+
+            <span class="vg-nav-icon">?</span>
+
+            <span class="vg-nav-text">
+                Help &amp; Support
+            </span>
+
+        </button>
+
+
+        <!-- LOGOUT -->
+
+        <button
+            type="button"
+            class="vg-nav-item vg-logout-item"
+            ng-click="c.logout($event)"
+        >
+
+            <span class="vg-nav-icon">
+                ↪
+            </span>
+
+            <span class="vg-nav-text">
+                Logout
+            </span>
+
+        </button>
+
+    </nav>
+
+</aside>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>8290ad1329e203107f44d6fee5fae360</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:11:33</sys_created_on>
+        <sys_id>1290ad1329e203107f44d6fee5fae364</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:11:33</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

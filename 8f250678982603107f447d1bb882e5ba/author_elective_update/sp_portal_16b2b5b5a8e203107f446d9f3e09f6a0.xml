@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_portal">
+    <sp_portal action="DELETE">
+        <alternate_portal/>
+        <communication_channels/>
+        <css_variables/>
+        <dark_theme/>
+        <default>false</default>
+        <embeddable_macroponents/>
+        <enable_ais>true</enable_ais>
+        <enable_certificate_based_authentication>false</enable_certificate_based_authentication>
+        <enable_embeddables>false</enable_embeddables>
+        <enable_favorites>false</enable_favorites>
+        <hide_portal_name>false</hide_portal_name>
+        <homepage display_value="vg_student_home">00e3b179a8e203107f446d9f3e09f610</homepage>
+        <icon/>
+        <inactive>false</inactive>
+        <kb_knowledge_base/>
+        <kb_knowledge_page/>
+        <login_page/>
+        <logo/>
+        <logo_alt_text>VisaGuardian AI - Student Services Portal</logo_alt_text>
+        <notfound_page/>
+        <quick_start_config/>
+        <rtl_enabled>false</rtl_enabled>
+        <sc_catalog/>
+        <sc_catalog_page/>
+        <sc_category_page/>
+        <search_application display_value="VisaGuardian AI Search Application">bb36c90e1ce203107f44ac714309645e</search_application>
+        <search_results_configuration display_value="Service Portal Search">80eb579d53671010968addeeff7b1215</search_results_configuration>
+        <sp_chat_queue/>
+        <sp_rectangle_menu display_value="VisaGuardian Student Menu">8557ce75a8a603107f446d9f3e09f6ad</sp_rectangle_menu>
+        <sys_class_name>sp_portal</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:42:17</sys_created_on>
+        <sys_id>16b2b5b5a8e203107f446d9f3e09f6a0</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>VisaGuardian AI - Student Services Portal</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_portal_16b2b5b5a8e203107f446d9f3e09f6a0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 08:55:33</sys_updated_on>
+        <theme display_value="Stock">79315153cb33310000f8d856634c9c4b</theme>
+        <title>VisaGuardian AI - Student Services Portal</title>
+        <ts_index_group/>
+        <url_suffix>visaguardian</url_suffix>
+    </sp_portal>
+    <sys_translated_text action="DELETE" query="documentkey=16b2b5b5a8e203107f446d9f3e09f6a0"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sp_portal_16b2b5b5a8e203107f446d9f3e09f6a0</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_portal"><sp_portal action="INSERT_OR_UPDATE"><alternate_portal/><communication_channels/><css_variables/><dark_theme/><default>false</default><embeddable_macroponents/><enable_ais>true</enable_ais><enable_certificate_based_authentication>false</enable_certificate_based_authentication><enable_embeddables>false</enable_embeddables><enable_favorites>false</enable_favorites><hide_portal_name>false</hide_portal_name><homepage display_value="vg_student_home">00e3b179a8e203107f446d9f3e09f610</homepage><icon/><inactive>false</inactive><kb_knowledge_base/><kb_knowledge_page/><login_page/><logo/><logo_alt_text>VisaGuardian AI - Student Services Portal</logo_alt_text><notfound_page/><quick_start_config/><rtl_enabled>false</rtl_enabled><sc_catalog/><sc_catalog_page/><sc_category_page/><search_application display_value="VisaGuardian AI Search Application">bb36c90e1ce203107f44ac714309645e</search_application><search_results_configuration display_value="Service Portal Search">80eb579d53671010968addeeff7b1215</search_results_configuration><sp_chat_queue/><sp_rectangle_menu display_value="VisaGuardian Student Menu">8557ce75a8a603107f446d9f3e09f6ad</sp_rectangle_menu><sys_class_name>sp_portal</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-07 14:42:17</sys_created_on><sys_id>16b2b5b5a8e203107f446d9f3e09f6a0</sys_id><sys_mod_count>6</sys_mod_count><sys_name>VisaGuardian AI - Student Services Portal</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sp_portal_16b2b5b5a8e203107f446d9f3e09f6a0</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-08 08:55:33</sys_updated_on><theme display_value="Stock">79315153cb33310000f8d856634c9c4b</theme><title>VisaGuardian AI - Student Services Portal</title><ts_index_group/><url_suffix>visaguardian</url_suffix></sp_portal><sys_translated_text action="delete_multiple" query="documentkey=16b2b5b5a8e203107f446d9f3e09f6a0"/></record_update>]]></payload>
+        <payload_hash>-2095943758</payload_hash>
+        <record_name>VisaGuardian AI - Student Services Portal</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 08:55:33</sys_created_on>
+        <sys_id>e08de50a1c6a03107f44ac7143096452</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fe095ae750000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 08:55:33</sys_updated_on>
+        <type>Service Portal</type>
+        <update_guid>e48de50aea6a03109edb084f16637751</update_guid>
+        <update_guid_history>e48de50aea6a03109edb084f16637751:-2095943758,762d2dc6cf6a0310434915d10e90947d:84849055,147ccdcacf260310e627059ae94a355f:-2095943758,61bc0a75a3e6031017e35567aace3ecc:-1119621127,ec798e7d2aa6031003fdf91d36de3243:-1956543475,f1e70639b9a60310daf61e890cb772c8:994490830,0643f5f5fce203108546970b5b92537e:1183476699</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="VisaGuardian AI - Student Services Portal">ed15ce4a1c6e03107f44ac714309647d</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 10:38:35</sys_created_on>
+        <sys_db_object display_value="" name="sp_portal">sp_portal</sys_db_object>
+        <sys_id>2dee95bc6edf4c7b956d8c92ee530c49</sys_id>
+        <sys_metadata>16b2b5b5a8e203107f446d9f3e09f6a0</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>VisaGuardian AI - Student Services Portal</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sp_portal_16b2b5b5a8e203107f446d9f3e09f6a0</sys_update_name>
+        <sys_update_version display_value="sp_portal_16b2b5b5a8e203107f446d9f3e09f6a0">e08de50a1c6a03107f44ac7143096452</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 10:38:35</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

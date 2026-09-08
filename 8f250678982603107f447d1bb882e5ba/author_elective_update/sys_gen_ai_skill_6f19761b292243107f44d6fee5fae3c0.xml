@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_gen_ai_skill">
+    <sys_gen_ai_skill action="DELETE">
+        <skill_description/>
+        <skill_document>ef19761b292243107f44d6fee5fae3bb</skill_document>
+        <skill_name/>
+        <skill_table>sn_conv_fa_metadata</skill_table>
+        <sys_class_name>sys_gen_ai_skill</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 11:38:20</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6f19761b292243107f44d6fee5fae3c0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_gen_ai_skill_6f19761b292243107f44d6fee5fae3c0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 11:38:20</sys_updated_on>
+    </sys_gen_ai_skill>
+    <sys_translated_text action="DELETE" query="documentkey=6f19761b292243107f44d6fee5fae3c0"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_gen_ai_skill_6f19761b292243107f44d6fee5fae3c0</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_gen_ai_skill"><sys_gen_ai_skill action="INSERT_OR_UPDATE"><skill_description/><skill_document>ef19761b292243107f44d6fee5fae3bb</skill_document><skill_name/><skill_table>sn_conv_fa_metadata</skill_table><sys_class_name>sys_gen_ai_skill</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-12 11:38:20</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>6f19761b292243107f44d6fee5fae3c0</sys_id><sys_mod_count>0</sys_mod_count><sys_name/><sys_overrides/><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sys_gen_ai_skill_6f19761b292243107f44d6fee5fae3c0</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-12 11:38:20</sys_updated_on></sys_gen_ai_skill><sys_translated_text action="delete_multiple" query="documentkey=6f19761b292243107f44d6fee5fae3c0"/></record_update>]]></payload>
+        <payload_hash>-444934399</payload_hash>
+        <record_name/>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 11:38:21</sys_created_on>
+        <sys_id>0c29b29b292243107f44d6fee5fae33a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19ff5c428530000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 11:38:21</sys_updated_on>
+        <type>Generative AI Skill</type>
+        <update_guid>8c29b29b3c224310b63f609a2caaa439</update_guid>
+        <update_guid_history>8c29b29b3c224310b63f609a2caaa439:-444934399</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 12:14:26</sys_created_on>
+        <sys_db_object display_value="" name="sys_gen_ai_skill">sys_gen_ai_skill</sys_db_object>
+        <sys_id>176b933ce3524ffe9336cbdf3a661744</sys_id>
+        <sys_metadata>6f19761b292243107f44d6fee5fae3c0</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_gen_ai_skill_6f19761b292243107f44d6fee5fae3c0</sys_update_name>
+        <sys_update_version display_value="sys_gen_ai_skill_6f19761b292243107f44d6fee5fae3c0">0c29b29b292243107f44d6fee5fae33a</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 12:14:26</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

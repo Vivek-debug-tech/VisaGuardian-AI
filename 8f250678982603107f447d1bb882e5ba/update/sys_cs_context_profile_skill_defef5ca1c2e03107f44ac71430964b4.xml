@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_cs_context_profile_skill">
+    <sys_cs_context_profile_skill action="INSERT_OR_UPDATE">
+        <context_profile display_value="AI Agent A2A">95dda1fc3bc8431051a1da6eb5e45a7b</context_profile>
+        <skill_id display_value="VisaGuardian AI Assistant">48fe3d0a1c2e03107f44ac71430964ca</skill_id>
+        <sys_class_name>sys_cs_context_profile_skill</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 10:11:52</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>defef5ca1c2e03107f44ac71430964b4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_cs_context_profile_skill_defef5ca1c2e03107f44ac71430964b4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 10:11:52</sys_updated_on>
+    </sys_cs_context_profile_skill>
+</record_update>

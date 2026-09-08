@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="109032b498aa03107f447d1bb882e558" extends="task" label="Visa Cases" max_length="40" name="x_snc_visaguardi_0_visa_case" type="collection">
+        <element label="DSO" max_length="32" name="dso" reference="sys_user" type="reference"/>
+        <element label="Submission Date" max_length="40" name="submission_date" type="glide_date_time"/>
+        <element label="DSO Comments" max_length="40" name="dso_comments" type="journal_input"/>
+        <element label="Advisor Reviewed" max_length="110" name="advisor_reviewed" type="string"/>
+        <element choice="1" default="Not Submitted" label="Government Status" max_length="40" name="government_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Under Review" value="under_review"/>
+                <element inactive_on_update="false" label="Submitted" value="submitted"/>
+                <element inactive_on_update="false" label="Rejected" value="Rejected"/>
+                <element inactive_on_update="false" label="Not Submitted" value="not_submitted"/>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
+            </choice>
+        </element>
+        <element label="Documents Upload Date" max_length="40" name="documents_upload_date" type="glide_date_time"/>
+        <element label="Advisor Review Date" max_length="40" name="advisor_review_date" type="glide_date_time"/>
+        <element label="Student" mandatory="true" max_length="32" name="student" reference="x_snc_visaguardi_0_student_profile" type="reference"/>
+        <element label="Awaiting student Response" max_length="120" name="awaiting_student_response" type="string"/>
+        <element choice="1" default="Pending" label="Decision" max_length="40" name="decision" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Additional Documents Required" value="additional documents required"/>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
+            </choice>
+        </element>
+        <element choice="3" label="Case Type" mandatory="true" max_length="40" name="case_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="CPT Application" sequence="2" value="cpt_application"/>
+                <element inactive_on_update="false" label="Visa Renewal" sequence="3" value="visa_renewal"/>
+                <element inactive_on_update="false" label="General Immigration Support" sequence="7" value="general_immigration_support"/>
+                <element inactive_on_update="false" label="New Visa Application" sequence="0" value="new_visa_application"/>
+                <element inactive_on_update="false" label="status Change" sequence="6" value="status_change"/>
+                <element inactive_on_update="false" label="SEVIS UPDATE" sequence="5" value="sevis_update"/>
+                <element inactive_on_update="false" label="OPT Application" sequence="1" value="opt_application"/>
+                <element inactive_on_update="false" label="Visa Extension" sequence="4" value="visa_extension"/>
+            </choice>
+        </element>
+        <element choice="3" label="DSO Decision" max_length="40" name="dso_decision" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Approved" sequence="0" value="approved"/>
+                <element inactive_on_update="false" label="Additional Documents Required" sequence="3" value="additional_documents_required"/>
+                <element inactive_on_update="false" label="Pending" sequence="2" value="pending"/>
+                <element inactive_on_update="false" label="Rejected" sequence="1" value="rejected"/>
+            </choice>
+        </element>
+        <element label="Advisor" max_length="32" name="advisor" reference="sys_user" type="reference"/>
+        <element label="Compliance Score" max_length="40" name="compliance_score" type="integer"/>
+        <element label="Final Decision Date" max_length="40" name="final_decision_date" type="glide_date"/>
+        <element choice="3" default="Low" label="Risk Level" mandatory="true" max_length="40" name="risk_level" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Critical" value="critical"/>
+                <element inactive_on_update="false" label="High" value="high"/>
+                <element inactive_on_update="false" label="Medium" value="medium"/>
+                <element inactive_on_update="false" label="Low" value="low"/>
+            </choice>
+        </element>
+        <element choice="3" default="Submitted" label="Case Stage" mandatory="true" max_length="40" name="case_stage" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Pending" sequence="2" value="pending"/>
+                <element inactive_on_update="false" label="DSO Review" sequence="4" value="dso_review"/>
+                <element inactive_on_update="false" label="Submit Proper Documents" sequence="5" value="submit_proper_documents"/>
+                <element inactive_on_update="false" label="Advisor Review" sequence="3" value="advisor_review"/>
+                <element inactive_on_update="false" label="Rejected" sequence="1" value="rejected"/>
+                <element inactive_on_update="false" label="Approved" sequence="0" value="approved"/>
+            </choice>
+        </element>
+        <element label="Expected Completion" max_length="40" name="expected_completion" type="glide_date"/>
+        <element default="False" label="Documents Submitted" max_length="255" name="documents_submitted" type="boolean"/>
+        <element label="Missing Documents Count" max_length="40" name="missing_documents_count" type="integer"/>
+        <element choice="3" label="Visa Category" mandatory="true" max_length="40" name="visa_category" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="H-1B" value="H-1B"/>
+                <element inactive_on_update="false" label="B-1/B-2" value="B-1/B-2"/>
+                <element inactive_on_update="false" label="M-1" value="M-1"/>
+                <element inactive_on_update="false" label="L-1" value="L-1"/>
+                <element inactive_on_update="false" label="J-1" value="J-1"/>
+                <element inactive_on_update="false" label="F-1" value="F-1"/>
+                <element inactive_on_update="false" label="Other" value="Other"/>
+            </choice>
+        </element>
+    </element>
+</database>

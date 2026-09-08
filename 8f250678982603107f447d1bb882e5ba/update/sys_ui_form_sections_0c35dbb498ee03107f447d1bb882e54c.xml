@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="0c35dbb498ee03107f447d1bb882e54c" sys_domain="global" table="x_snc_visaguardi_0_student_profile" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:16:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c435dbb498ee03107f447d1bb882e55d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_snc_visaguardi_0_student_profile" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">0c35dbb498ee03107f447d1bb882e54c</sys_ui_form>
+            <sys_ui_section caption="Personal Details" display_value="Personal Details" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">4035dbb498ee03107f447d1bb882e542</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:16:08</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:16:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>8435dbb498ee03107f447d1bb882e55e</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_snc_visaguardi_0_student_profile" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">0c35dbb498ee03107f447d1bb882e54c</sys_ui_form>
+            <sys_ui_section caption="Academic Details" display_value="Academic Details" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">0835dbb498ee03107f447d1bb882e543</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:16:08</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:16:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0835dbb498ee03107f447d1bb882e562</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_snc_visaguardi_0_student_profile" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">0c35dbb498ee03107f447d1bb882e54c</sys_ui_form>
+            <sys_ui_section caption="Immigration Details" display_value="Immigration Details" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">cc35dbb498ee03107f447d1bb882e544</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:16:08</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:16:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0c35dbb498ee03107f447d1bb882e566</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_snc_visaguardi_0_student_profile" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">0c35dbb498ee03107f447d1bb882e54c</sys_ui_form>
+            <sys_ui_section caption="Emergency Contact" display_value="Emergency Contact" name="x_snc_visaguardi_0_student_profile" sys_domain="global" view="Default view">f09e5efc98e603107f447d1bb882e5e5</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:16:08</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_snc_visaguardi_0_student_profile</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 19:16:08</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0c35dbb498ee03107f447d1bb882e54c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_snc_visaguardi_0_student_profile</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+            <sys_update_name>sys_ui_form_sections_0c35dbb498ee03107f447d1bb882e54c</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 19:16:08</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>

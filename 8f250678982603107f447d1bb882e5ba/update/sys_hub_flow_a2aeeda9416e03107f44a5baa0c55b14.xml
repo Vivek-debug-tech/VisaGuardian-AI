@@ -1,0 +1,892 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,timeFromCreateToActivate=732041000,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>This flow automates the Visa Case lifecycle. When a student creates a new Visa Case, the flow is triggered automatically. It assigns the case to an Advisor, sets the initial state to Open, sends a notification to the assigned Advisor, and prepares the case for the Advisor review process. This automation ensures every visa application follows a standardized workflow from submission through advisor review and subsequent processing.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source/>
+        <internal_name>student_visa_case_workflow</internal_name>
+        <label_cache>[{"name":"Created_1.current.case_type","label":"Trigger - Record Created➛Visa Cases Record➛Case Type","reference":"","reference_display":"Case Type","type":"choice","base_type":"choice","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"case_type","choices":[{"sequence":0.0,"reference":false,"label":"New Visa Application","used":false,"image":"","rawLabel":"New Visa Application","selected":false,"missing":false,"value":"new_visa_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"New Visa Application"}}},{"sequence":1.0,"reference":false,"label":"OPT Application","used":false,"image":"","rawLabel":"OPT Application","selected":false,"missing":false,"value":"opt_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"OPT Application"}}},{"sequence":2.0,"reference":false,"label":"CPT Application","used":false,"image":"","rawLabel":"CPT Application","selected":false,"missing":false,"value":"cpt_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"CPT Application"}}},{"sequence":3.0,"reference":false,"label":"Visa Renewal","used":false,"image":"","rawLabel":"Visa Renewal","selected":false,"missing":false,"value":"visa_renewal","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Visa Renewal"}}},{"sequence":4.0,"reference":false,"label":"Visa Extension","used":false,"image":"","rawLabel":"Visa Extension","selected":false,"missing":false,"value":"visa_extension","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Visa Extension"}}},{"sequence":5.0,"reference":false,"label":"SEVIS UPDATE","used":false,"image":"","rawLabel":"SEVIS UPDATE","selected":false,"missing":false,"value":"sevis_update","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"SEVIS UPDATE"}}},{"sequence":6.0,"reference":false,"label":"status Change","used":false,"image":"","rawLabel":"status Change","selected":false,"missing":false,"value":"status_change","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"status Change"}}},{"sequence":7.0,"reference":false,"label":"General Immigration Support","used":false,"image":"","rawLabel":"General Immigration Support","selected":false,"missing":false,"value":"general_immigration_support","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"General Immigration Support"}}}],"usedInstances":{"a890eadb-f75d-4cb4-9cd7-22ee255008ba":[null],"325cc9bd-700a-4afb-8bbb-0281afb6fbe0":[null]},"attributes":null},{"name":"c1413097-8e88-440f-8c7c-cd7a3cf4a897.item","label":"2 - For Each➛Advisor Profiles Record","reference":"x_snc_visaguardi_0_advisor_profiles","reference_display":"Advisor Profiles","type":"reference","base_type":"reference","parent_table_name":null,"column_name":null,"choices":null,"usedInstances":{"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["advisor"],"25ba0db3-5074-497a-a91f-234738916285":["advisor"]},"attributes":{"pills_draggable_inside_block":"true","pills_draggable_outside_block":"false"}},{"name":"Created_1.current.advisor","label":"Trigger - Record Created➛Visa Cases Record➛Advisor","reference":"sys_user","reference_display":"User","type":"reference","base_type":"reference","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"advisor","choices":null,"usedInstances":{"425a413c-e460-426a-9d73-46722123c7f7":["advisor"],"b7730540-7389-4977-93d2-4986f6787406":["advisor"]},"attributes":null},{"name":"325cc9bd-700a-4afb-8bbb-0281afb6fbe0.Records","label":"1 - Look Up Records➛Advisor Profiles Records","reference":"x_snc_visaguardi_0_advisor_profiles","reference_display":"Advisor Profiles","type":"records","base_type":"records","parent_table_name":null,"column_name":null,"choices":null,"usedInstances":{"c1413097-8e88-440f-8c7c-cd7a3cf4a897":["items"]},"attributes":{"element_mapping_provider":"com.glide.flow_design.action.data.FlowDesignVariableMapper"}},{"name":"c1413097-8e88-440f-8c7c-cd7a3cf4a897.item.user","label":"2 - For Each➛Advisor Profiles Record➛User","reference":"sys_user","reference_display":"User","type":"reference","base_type":"reference","parent_table_name":"x_snc_visaguardi_0_advisor_profiles","column_name":"user","choices":null,"usedInstances":{"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["advisor"],"25ba0db3-5074-497a-a91f-234738916285":["advisor"]},"attributes":null},{"name":"Created_1.current","label":"Trigger - Record Created➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","parent_table_name":null,"column_name":null,"choices":null,"usedInstances":{"425a413c-e460-426a-9d73-46722123c7f7":["advisor","record"],"d1dd715b-2ee9-48b0-800e-6afc9785c5f4":["record"],"a3293776-6196-4bdf-9a51-61dae96d2697":["record"],"9c23faf6-1d69-412f-832d-40eb8141e559":["record"],"2d715217-f655-4006-9aca-ed5d31d8466a":["record"],"07746337-9850-4bf9-bc17-12e873b2c0bf":["record"],"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["record"],"b7730540-7389-4977-93d2-4986f6787406":["record"],"25ba0db3-5074-497a-a91f-234738916285":["advisor","record"]},"attributes":{}}]</label_cache>
+        <master_snapshot>d7fdbe2f29e2c3107f44d6fee5fae34b</master_snapshot>
+        <master_snapshot_digest/>
+        <name>Student Visa Case Workflow</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>4844bd0950a603107f4497bc8688d847</remote_trigger_id>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:43:38</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a2aeeda9416e03107f44a5baa0c55b14</sys_id>
+        <sys_mod_count>83</sys_mod_count>
+        <sys_name>Student Visa Case Workflow</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_hub_flow_a2aeeda9416e03107f44a5baa0c55b14</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:10:38</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record>a5985d18bc7603107f44871762fe8d0a</version_record>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_variable_value action="delete_multiple" query="document_key=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_snc_visaguardi_0_visa_case">^EQ<item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>false</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-05 06:51:06</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4844bd0950a603107f4497bc8688d847</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-05 06:51:06</sys_updated_on>
+        <table>x_snc_visaguardi_0_visa_case</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>a2aeeda9416e03107f44a5baa0c55b14</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-15 07:04:29</sys_created_on>
+        <sys_id>65379d14bc7603107f44871762fe8dc8</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:29</sys_updated_on>
+        <trigger display_value="">4844bd0950a603107f4497bc8688d847</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT IN65379d14bc7603107f44871762fe8dc8"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT IN22aeeda9416e03107f44a5baa0c55b17"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>a2aeeda9416e03107f44a5baa0c55b14</id>
+        <name>Student Visa Case Workflow</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:43:38</sys_created_on>
+        <sys_id>22aeeda9416e03107f44a5baa0c55b17</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 19:43:38</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=22aeeda9416e03107f44a5baa0c55b17"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT IN20ce69e9416e03107f44a5baa0c55b3a,58ce29e9416e03107f44a5baa0c55bd6"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name,uiTypeLabel=Table Name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</model>
+        <model_id>a2aeeda9416e03107f44a5baa0c55b14</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_a2aeeda9416e03107f44a5baa0c55b14</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:44:03</sys_created_on>
+        <sys_id>20ce69e9416e03107f44a5baa0c55b3a</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 05:56:30</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=20ce69e9416e03107f44a5baa0c55b3a"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id,uiTypeLabel=Document ID</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</model>
+        <model_id>a2aeeda9416e03107f44a5baa0c55b14</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_a2aeeda9416e03107f44a5baa0c55b14</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:44:02</sys_created_on>
+        <sys_id>58ce29e9416e03107f44a5baa0c55bd6</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 05:56:30</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=58ce29e9416e03107f44a5baa0c55bd6"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT IN80cee5e9416e03107f44a5baa0c55b72"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:44:01</sys_created_on>
+        <sys_id>80cee5e9416e03107f44a5baa0c55b72</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 06:37:29</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/9VYXW/iOBT9K1GediVGygeU0rdZ2tFWmp1qKTP7UHUjJ7bBWmMziZOWHfW/73U+IOSDQgmz9KmKr7HPPT73XLsPP0yOfMLNK3OKfE7MnsmEIqFAfLpaEhhWetgTaKFjCyQwUjJcmVcqjEnPpKFcTMliyZGCyRTxCAZliEloXtk9M0E8Jver6BbDSvD7dJl8TTMPw/ezF4nAS1iEZjEKMfOs9MMLUKSnYRbBBqtv+exvEDLGEIogFswZxyER5tXDY89cohB2UHr3H5UQ0xACGqCRQ6zAtV3HsSznsm/7F65vO9hFxLJgwSodFciqgZVNvuRZEYEJXlNRIywkCN8JvlrPmAPfGTkL9Byxf2H1S0vPowSwBySLrT+9nIxsOJhLFpC7pWJSZCMZziwoebwQXzL8mkZCUcxVQSOMxBGsR5YasgaRI6L3c/k0KTb8xESaXR7kMkB8/YWUCpkfKzgKIJwyDtR7GTeRjMMU/eRmfDe59v76OB3/fjPxJjf308nteHpzbb6keXnfY71ihjDH4mXpvKzP/hMjXB+giBc+oOmZURCypfoYKJYUwnvpbcQ8lgKzlJWaoIMiFG0Lush+l6Itq1XTQWnHQtd/3/xZl282eJhuLy4QwgS16NanJd2WM2+AphpIKGe3S8H5yD4S7lvW/yTi3JfequEnJFTkKekhjL0SS1DysLBOUWLCrzf7wTibzUD2TCxjFb0q6iy3l1cVHMYCfuCtz6Ou45S2NX+fWQRoHqAK78n3OCP9A1gSLajK8dPP+QaTWBhSGEEcAkfKgGM2is2MFKSWBr1doFlONCzMSaBK2qBfo/LXHyyKmJiVkmnDkk6og+GrMqLCco/B8NhlidePJKnkUyn1g+vctin1CXWsoa5y23J9altDa4Aodi0rcEp1XgfTilJVBHOSej+s2qNUqnyP069SnIO3yrWyl5ST7TooSNASyU1l3A00uyNojoZWMUf3IHdcyzIbvt5W567UOr4ZIJwg+AUuctyn8+/hj5TLJ/Dd472RypDMQhkLXDUlvYXB4O/WjNO4oo+Cf3aj2MwwfskP9ddzc8jNoRSyRmLVgTe61PZHpE8ssEQX3NAfjEZ+gBxKhxdD4tgVb9zAaMT2LjzxlWNPmnTT5o+NQk6a9H+AMx4BsOaSBwM83h9zYTa6YxZ7Hz74NCfCA6ihx7XT1exwxhkmRazbaq9tnWzq+9iKp5ejYGAPh8EQXjxQ8bRPfGT3nQEaDS/cy0Gl4mtQdsFUDcz8lHdQtIpSIC1u8DULndfD/pSyjYhSuh0d3cPTn6Nsv1L71CdkpP4iQ0Oza9xuJhr3BJph+jA+VU+Xal7r5oDkNxjfQqJvhl+k+NCA7oQPMQEvhX2Ia0F2bnePiqKS7UM4+nVG+peDEXWb/YiOmvxoA6Yd5tnfRfaUQtIqqqZLyb6FmTTWd+st4g21VZFJ+Xqx4/7TFSl256Q4pyPFPfrOVdRi65P0LWDfUb9LLyGdNT0piCdpo20zauT/miTY8FeGmhPglsMtG3Y2NIwT9pXs9lzrejBs5JefkzU0fSZVUq6lAQEj/Cm0nKarVXTT7dua4CEaDNyWm/ao+rZuAvQK3rPvcQdLJGlS3M5Gd9i61TUbW12poLYVsWcT6zTr5k52XNaNvey1rI/vUrv+M9CA4kz7z+N/XdWPzN8fAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT INa274fe6729a2c3107f44d6fee5fae353,8164832f2926c3107f44d6fee5fae3a5,f9b48b6f2926c3107f44d6fee5fae3af"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 05:56:31</sys_created_on>
+        <sys_id>a274fe6729a2c3107f44d6fee5fae353</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:05:53</sys_updated_on>
+        <ui_id>325cc9bd-700a-4afb-8bbb-0281afb6fbe0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VX32/aMBD+V1CeEUpKy7q+TVSVJrXrtE572VrrYjtgzSSZ7UAp4n/f+UdCBGkHEp067dF3Z993d98XO99XkWDRRXSencYxJGfn7+J4OIzj0WhIIUnT4YimcXqaRv0ohxnHSAOp5Licg6zs+pHonJK50DCpQDFBYgIMl4UipSoyIbnGaCZ0KWH5LWz64CN6nzcRdCokUzyPLr7f96MSFKYzXEUXqy3XvnglpFxi6NcAeAu/WZbNkjift123t/U+eUehmIUS9yP+aHjOOGLIQGrej2aQMzCFWjYWxYHd5nJjmIrc4ImRDX7U4gnznsc2LuNYFeXe1yxJaJY3Z5dg4M6oippKhVA6LQTFrrl+MJ5BJc24bfMBt6URRe63+LL97kJWs/yTb0fUHFDPBi2VRhC8tIVa5KGM7G5aLL7UKK9E7noSnLKgIJsVGKNEWhmLZxVxyWd4EJlBWYp8YnkxF24zYpkNJhIXg0wWC0yqxSQfALXAB9hXGFyh/dKZv4EStoobPAY3IyAhkSHEj1AXlXKtnBMqK+0cCnLtz4rW/Ugv9ViC1pvKseXkV2Vx+z6Eiolvmt1ClSjNBzxizkNx6/5ekjmLN5SjRc6ERaFbuoE5CKSokMIsf1R4BAsWyR/AJfRWnDx/0CWnAqR4AnuMd6xWY2Sa4YwkA1opHIoZUMDJWRav17ui+wsZjyli18FaxON2C7vaGuS8Y7vuOiDIOTmanLGOf0nQdsJvTs+HK9S34A8ype9eJNnZhk94IRnie9nSaSA6cUSXBbBdYXWFHKaEPUDWSri13O2ly+dwByFkgkvWda9dWcfWvXbyf95rb1IGCIgRPz2RS5G7RwoCfS19xC9/hN9v8czRa6MOZwNNO26bnil6TwcrYQ84tRLuMHfvq8fTAbG+ERxltm+D2hgEMDyaAIYnxxHAqimzaWRHz+t3qZ1mHf9k42E7HinY2pCsuwR2UM7k0Jwn610BDw9ScJts3nP5DOeO/IB9RpH91/wETHFryEe8fslCsAk3m+x1FCvMAuTPLn9gHKkH5cp7hcfw6YuyHSUbiaJSiOIah9d+DSfx7hfE2Q77euwBo+7EDTz2vjQ4OsGFLwiKnE/cWNqfkI+NNfD79IivyTd7iSb40H1Wfknfe/+J38fjaeD+N8N6G21FEQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a274fe6729a2c3107f44d6fee5fae353"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 07:06:03</sys_created_on>
+        <sys_id>8164832f2926c3107f44d6fee5fae3a5</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:10:28</sys_updated_on>
+        <ui_id>25ba0db3-5074-497a-a91f-234738916285</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXWviQBT9KzLPGhKTavRtUYSFbgtt8aXbhuvMjQ5MPnZmYusG//vefKnYbmmhD1tYn7yfOffkHHJfMinYlLlD4XoTb8R9z/eHrjsMA2818lfeUPiAiKzPUkiQOregCjQU138oAWIrTaZ/Fq7ri7LkXuD57mQ8CDEMB0HgxoOQj/mAizH4PA4gnIwdaTHZ7x+NBYvNoEcbhTS5gt3y0xfzjVRCY8qm9w99loOmUyxqNi3PSu/lQsEKFbUuJCphXiHH7vIqJjR0kcWoIavJX7bDd22xt2yLmRYVKM91+wyfLaYCCU8MymCfJZAKsJnesanVBSU0grhO1e7QsZGppbWs6n028jcB8EZu/au6Y6QzOTYdhzBqSW/S8Rws3NJ+bgvdtvJNJjkdVRMkMIZC2dlprmm4zq3M0mbEwkp105kqkvSqoYcdFnTvmDKFIRCYV9dW+Jvj4ttN9nTTgVzItGamPVRlHNQhAmu1XBW2glMyVJjQniiBPJfpOsp1tpX1MEFJnLWiwIlV9kTPNHKdOsAr3A5xC86C8vM6vQQtqyN+0Boa3veZ2ZmZAmOOpxCH0a+iQtIc1p4Q1SzUFES1LKphrmVuv9GjttgC3/db6wX4pty8o7o0cpLIifXKckYqsCgiz+GFJq7sfv/SSB92wDsgdQ646TCdY2wdIDJe1C9EijP5z9tK7/v8VPufJf3gv+j/YdGvLt5SGJ8cBXWy8yj858ikPKLPA6wL0EJGbh1EHAy+1P+SSr0ZlcyHnfAOnJ0T7ur3/zru7nNwnrs8ne1dNYXWChefZoXwK1mhPePLe+FvDnj4A4p0Ap5zCQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8164832f2926c3107f44d6fee5fae3a5"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Notification">0d8dd9f10f11101051218e8ebc767e27</action_type>
+        <action_type_parent display_value="Send Notification">7eda5d710f11101051218e8ebc767ec1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>0d8dd9f10f11101051218e8ebc767e27</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 07:07:28</sys_created_on>
+        <sys_id>f9b48b6f2926c3107f44d6fee5fae3af</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:05:53</sys_updated_on>
+        <ui_id>a3293776-6196-4bdf-9a51-61dae96d2697</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9WW207cMBCGXwXlerPKaTdZ7hAIqVJLJaDcVCga22Ow5BzqOFvoinfvOMmetxRoqdRLz3jsmX/mc/J14SnhHXuJyISYyTCQYRgGYTAJozDDDBlPpylGmTfySiiQdhrklRG0noNunWGxODUIFkUejnlrDJb26Yn8QjW1hsebYRtZ+L3Sgvze8dfbkVeDoRMtGu94seN6aUoaGGraernMaTdH+1i7tah4W1BeuVoaPw6RZ4Pn6MMZeSjIpROOPHywWAqkPCToBkdeAaUAW5nHlYWKFp9LvTbcq9L2hRbw0KgfdHMcuX0SqTI+iLBa5oNAvVmegYUra1puW7PSq1Icm14TgRJabU83bf2Gz7VVVdmHWGB6GV3ptigvekW81QEb/WgbSgJrV6jLnC6nKuTVffX9cpnkuSo7SYYSdcVBr1ZgrVGstS6dhdeq60Nq9+bDeqPGbmMBda3Ku7w21Vx191H2xfhO02IsdfWd0mzUXTkG7kodUydgfE72s858A0a5uj/RMRTs7vxSqm8tfnBzJMIgjWcB99NoEvtJwMFnmWA+sEhOkmSaTVnoPY285rE51dA0a8WoVfm31hXc6zcolXdid0rn3cC5YG5UbU8ovTkO+jyNBray8LlBjqP13G6cuebrIW9Kns9VA3ctGKHyoFvkHBrcx+yGXEen5GpeDdwL8lwCd92N2eG8B+b2bB83Y48uesdAXPRK4vpRPQBcFvxHwA1l/TlxW1pvA7el9j/hjTPGJMOZHzLO/STFzM8iSH2cBDyWURwEqXwDb7+jLHl+eje+YGVllVQcuiauOYvCNJFiOktCwCCmR0MmCUwYQMAnE8ayfdZOBIFYmaOTxqnSPWsX22e/8ov3+xKWAO7cc7iygcQ1D9sgXm7YBw7j5znssXvLh4+ajXPXSyxA6byfq1/AuVPbXwb1V5ls0QtSIne/NFKhFjSAeRfzLl9ReYVg+P25u8n1sEd1m/StxhLvdMce6ZvtfD/Qr/dnqkGbD7Lk7oBcVqYANxFdhbvvQzILMY2jzJ9NI3ofMJ74TMSxH9J7gQgoI/E+3+PbnzN9Vs/tCgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=f9b48b6f2926c3107f44d6fee5fae3af"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT INbe48fe2329e2c3107f44d6fee5fae3cc"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">72dd3a2f29e2c3107f44d6fee5fae32b</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="For Each">098e1dc5c3e232002841b63b12d3ae33</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:13:11</sys_created_on>
+        <sys_id>be48fe2329e2c3107f44d6fee5fae3cc</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:10:28</sys_updated_on>
+        <ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/51Ty27bMBD8F55lQY/UjX0LEgQI0DaAE+RSBMKSXNlEKVIlKTuqoH/v0pKVIMecpB3uzs6MqIHZLrRd8M/2xnu1N2z7+zVhykSM3gdmoEG2ZSpg41nCjqC7WA9DWXwTYsPl6nuWweoKar665pyvsuI6p2Jdc8zSHQrrpB9HGpXKtxr6l68ziIPS0uEssgVH2gI6th0+HSlJC/KNrDd5thFlsS6LjFivcr4ueV7IElCuiVADR02tD7O7T2ZD38bSTRJm4Mc8s1tQekQRRZYwfAtoJNL6GrTHhDVgJATrerYNriPAIchHo/ul46BMIDoWe9+8+kcb8yyLjTWSIYHT4VJWc44TXN9BgCeiFqFzc6s4WCXQT1FIrKHT4fYjNjU8tkFZM40E4PoybXXXmF9TEmwhuHw2QjpPIrCNRqP02Uf9dLCn3UXlvTLnUOZDbQXopYIQnOJdiHoGhhobIqoaaFtl9lXr7FGdh0lLk+41FWmt7YmWxiuagojCU8oV0nvC787wCzgVXfwkGhoeE+Z7f6vB+3cvFGL1t4tKJmezh2qKIY4Ip9pwQwuOOMsdX+Otn7iXTIXyJOE5Yg+XfyUe9HSDlPgInaz7E8W/Y+N/bt8BznUDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_a2aeeda9416e03107f44a5baa0c55b14</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:44:04</sys_created_on>
+        <sys_id>a4ce69e9416e03107f44a5baa0c55b40</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 19:44:04</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_a2aeeda9416e03107f44a5baa0c55b14</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-06 19:44:03</sys_created_on>
+        <sys_id>e8ce69e9416e03107f44a5baa0c55b34</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-06 19:44:03</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_a2aeeda9416e03107f44a5baa0c55b14"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>browserActivatedIn=chrome,integrationActivatedIn=standalone,labelCacheCleanUpExecuted=true,viewActivatedIn=naturalLanguage</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>This flow automates the Visa Case lifecycle. When a student creates a new Visa Case, the flow is triggered automatically. It assigns the case to an Advisor, sets the initial state to Open, sends a notification to the assigned Advisor, and prepares the case for the Advisor review process. This automation ensures every visa application follows a standardized workflow from submission through advisor review and subsequent processing.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>student_visa_case_workflow</internal_name>
+        <label_cache>[{"name":"Created_1.current.case_type","label":"Trigger - Record Created➛Visa Cases Record➛Case Type","reference":"","reference_display":"Case Type","type":"choice","base_type":"choice","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"case_type","choices":[{"sequence":0.0,"reference":false,"label":"New Visa Application","used":false,"image":"","rawLabel":"New Visa Application","selected":false,"missing":false,"value":"new_visa_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"New Visa Application"}}},{"sequence":1.0,"reference":false,"label":"OPT Application","used":false,"image":"","rawLabel":"OPT Application","selected":false,"missing":false,"value":"opt_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"OPT Application"}}},{"sequence":2.0,"reference":false,"label":"CPT Application","used":false,"image":"","rawLabel":"CPT Application","selected":false,"missing":false,"value":"cpt_application","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"CPT Application"}}},{"sequence":3.0,"reference":false,"label":"Visa Renewal","used":false,"image":"","rawLabel":"Visa Renewal","selected":false,"missing":false,"value":"visa_renewal","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Visa Renewal"}}},{"sequence":4.0,"reference":false,"label":"Visa Extension","used":false,"image":"","rawLabel":"Visa Extension","selected":false,"missing":false,"value":"visa_extension","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"Visa Extension"}}},{"sequence":5.0,"reference":false,"label":"SEVIS UPDATE","used":false,"image":"","rawLabel":"SEVIS UPDATE","selected":false,"missing":false,"value":"sevis_update","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"SEVIS UPDATE"}}},{"sequence":6.0,"reference":false,"label":"status Change","used":false,"image":"","rawLabel":"status Change","selected":false,"missing":false,"value":"status_change","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"status Change"}}},{"sequence":7.0,"reference":false,"label":"General Immigration Support","used":false,"image":"","rawLabel":"General Immigration Support","selected":false,"missing":false,"value":"general_immigration_support","parameters":{"name":"x_snc_visaguardi_0_visa_case","dependent_values":[""],"dependent_values_map":{"":"General Immigration Support"}}}],"usedInstances":{"a890eadb-f75d-4cb4-9cd7-22ee255008ba":[null],"325cc9bd-700a-4afb-8bbb-0281afb6fbe0":[null]}},{"name":"Created_1.current.advisor","label":"Trigger - Record Created➛Visa Cases Record➛Advisor","reference":"sys_user","reference_display":"User","type":"reference","base_type":"reference","parent_table_name":"x_snc_visaguardi_0_visa_case","column_name":"advisor","usedInstances":{"425a413c-e460-426a-9d73-46722123c7f7":["advisor"],"b7730540-7389-4977-93d2-4986f6787406":["advisor"]}},{"name":"Created_1.current","label":"Trigger - Record Created➛Visa Cases Record","reference":"x_snc_visaguardi_0_visa_case","reference_display":"Visa Cases","type":"reference","base_type":"reference","usedInstances":{"425a413c-e460-426a-9d73-46722123c7f7":["advisor","record"],"d1dd715b-2ee9-48b0-800e-6afc9785c5f4":["record"],"b7730540-7389-4977-93d2-4986f6787406":["record"],"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["record"],"2d715217-f655-4006-9aca-ed5d31d8466a":["record"],"07746337-9850-4bf9-bc17-12e873b2c0bf":["record"],"9c23faf6-1d69-412f-832d-40eb8141e559":["record"],"25ba0db3-5074-497a-a91f-234738916285":["record"],"a3293776-6196-4bdf-9a51-61dae96d2697":["record"]},"attributes":{}},{"name":"325cc9bd-700a-4afb-8bbb-0281afb6fbe0.Records","label":"1 - Look Up Records➛Advisor Profiles Records","reference":"x_snc_visaguardi_0_advisor_profiles","reference_display":"Advisor Profiles","type":"records","base_type":"records","usedInstances":{"c1413097-8e88-440f-8c7c-cd7a3cf4a897":["items"]},"attributes":{"element_mapping_provider":"com.glide.flow_design.action.data.FlowDesignVariableMapper"}},{"name":"c1413097-8e88-440f-8c7c-cd7a3cf4a897.item","label":"2 - For Each➛Advisor Profiles Record","reference":"x_snc_visaguardi_0_advisor_profiles","reference_display":"Advisor Profiles","type":"reference","base_type":"reference","usedInstances":{"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["advisor"],"25ba0db3-5074-497a-a91f-234738916285":["advisor"]},"attributes":{"pills_draggable_inside_block":"true","pills_draggable_outside_block":"false"}},{"name":"c1413097-8e88-440f-8c7c-cd7a3cf4a897.item.user","label":"2 - For Each➛Advisor Profiles Record➛User","reference":"sys_user","reference_display":"User","type":"reference","base_type":"reference","parent_table_name":"x_snc_visaguardi_0_advisor_profiles","column_name":"user","usedInstances":{"78af0a70-fd65-4e7f-8ba1-4493a2e1103f":["advisor"],"25ba0db3-5074-497a-a91f-234738916285":["advisor"]}}]</label_cache>
+        <master>true</master>
+        <name>Student Visa Case Workflow</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="Student Visa Case Workflow">a2aeeda9416e03107f44a5baa0c55b14</parent_flow>
+        <remote_trigger_id/>
+        <run_as>user</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>d7fdbe2f29e2c3107f44d6fee5fae34b</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:24</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_variable_value action="delete_multiple" query="document_key=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=d7fdbe2f29e2c3107f44d6fee5fae34b^sys_idNOT IN57fdbe2f29e2c3107f44d6fee5fae34c"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>d7fdbe2f29e2c3107f44d6fee5fae34b</id>
+        <name>Student Visa Case Workflow</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>57fdbe2f29e2c3107f44d6fee5fae34c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 06:38:04</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=57fdbe2f29e2c3107f44d6fee5fae34c"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=d7fdbe2f29e2c3107f44d6fee5fae34b^sys_idNOT IN1ffdbe2f29e2c3107f44d6fee5fae34d,1ffdbe2f29e2c3107f44d6fee5fae387"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</model>
+        <model_id>d7fdbe2f29e2c3107f44d6fee5fae34b</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_d7fdbe2f29e2c3107f44d6fee5fae34b</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>1ffdbe2f29e2c3107f44d6fee5fae34d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:22</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=1ffdbe2f29e2c3107f44d6fee5fae34d"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</model>
+        <model_id>d7fdbe2f29e2c3107f44d6fee5fae34b</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_d7fdbe2f29e2c3107f44d6fee5fae34b</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>1ffdbe2f29e2c3107f44d6fee5fae387</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:23</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=1ffdbe2f29e2c3107f44d6fee5fae387"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=d7fdbe2f29e2c3107f44d6fee5fae34b^sys_idNOT IN53fdbe2f29e2c3107f44d6fee5fae39d"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>53fdbe2f29e2c3107f44d6fee5fae39d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 06:38:04</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/9VYXW/iOBT9K1GediVGygeU0rdZ2tFWmp1qKTP7UHUjJ7bBWmMziZOWHfW/73U+IOSDQgmz9KmKr7HPPT73XLsPP0yOfMLNK3OKfE7MnsmEIqFAfLpaEhhWetgTaKFjCyQwUjJcmVcqjEnPpKFcTMliyZGCyRTxCAZliEloXtk9M0E8Jver6BbDSvD7dJl8TTMPw/ezF4nAS1iEZjEKMfOs9MMLUKSnYRbBBqtv+exvEDLGEIogFswZxyER5tXDY89cohB2UHr3H5UQ0xACGqCRQ6zAtV3HsSznsm/7F65vO9hFxLJgwSodFciqgZVNvuRZEYEJXlNRIywkCN8JvlrPmAPfGTkL9Byxf2H1S0vPowSwBySLrT+9nIxsOJhLFpC7pWJSZCMZziwoebwQXzL8mkZCUcxVQSOMxBGsR5YasgaRI6L3c/k0KTb8xESaXR7kMkB8/YWUCpkfKzgKIJwyDtR7GTeRjMMU/eRmfDe59v76OB3/fjPxJjf308nteHpzbb6keXnfY71ihjDH4mXpvKzP/hMjXB+giBc+oOmZURCypfoYKJYUwnvpbcQ8lgKzlJWaoIMiFG0Lush+l6Itq1XTQWnHQtd/3/xZl282eJhuLy4QwgS16NanJd2WM2+AphpIKGe3S8H5yD4S7lvW/yTi3JfequEnJFTkKekhjL0SS1DysLBOUWLCrzf7wTibzUD2TCxjFb0q6iy3l1cVHMYCfuCtz6Ou45S2NX+fWQRoHqAK78n3OCP9A1gSLajK8dPP+QaTWBhSGEEcAkfKgGM2is2MFKSWBr1doFlONCzMSaBK2qBfo/LXHyyKmJiVkmnDkk6og+GrMqLCco/B8NhlidePJKnkUyn1g+vctin1CXWsoa5y23J9altDa4Aodi0rcEp1XgfTilJVBHOSej+s2qNUqnyP069SnIO3yrWyl5ST7TooSNASyU1l3A00uyNojoZWMUf3IHdcyzIbvt5W567UOr4ZIJwg+AUuctyn8+/hj5TLJ/Dd472RypDMQhkLXDUlvYXB4O/WjNO4oo+Cf3aj2MwwfskP9ddzc8jNoRSyRmLVgTe61PZHpE8ssEQX3NAfjEZ+gBxKhxdD4tgVb9zAaMT2LjzxlWNPmnTT5o+NQk6a9H+AMx4BsOaSBwM83h9zYTa6YxZ7Hz74NCfCA6ihx7XT1exwxhkmRazbaq9tnWzq+9iKp5ejYGAPh8EQXjxQ8bRPfGT3nQEaDS/cy0Gl4mtQdsFUDcz8lHdQtIpSIC1u8DULndfD/pSyjYhSuh0d3cPTn6Nsv1L71CdkpP4iQ0Oza9xuJhr3BJph+jA+VU+Xal7r5oDkNxjfQqJvhl+k+NCA7oQPMQEvhX2Ia0F2bnePiqKS7UM4+nVG+peDEXWb/YiOmvxoA6Yd5tnfRfaUQtIqqqZLyb6FmTTWd+st4g21VZFJ+Xqx4/7TFSl256Q4pyPFPfrOVdRi65P0LWDfUb9LLyGdNT0piCdpo20zauT/miTY8FeGmhPglsMtG3Y2NIwT9pXs9lzrejBs5JefkzU0fSZVUq6lAQEj/Cm0nKarVXTT7dua4CEaDNyWm/ao+rZuAvQK3rPvcQdLJGlS3M5Gd9i61TUbW12poLYVsWcT6zTr5k52XNaNvey1rI/vUrv+M9CA4kz7z+N/XdWPzN8fAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=d7fdbe2f29e2c3107f44d6fee5fae34b^sys_idNOT INcfce536b292ac3107f44d6fee5fae34d,03ce536b292ac3107f44d6fee5fae34f,d3fdbe2f29e2c3107f44d6fee5fae39a"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 09:01:25</sys_created_on>
+        <sys_id>cfce536b292ac3107f44d6fee5fae34d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 09:01:25</sys_updated_on>
+        <ui_id>25ba0db3-5074-497a-a91f-234738916285</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VVTU/jMBD9K5XPbZQ0gaa9rVohrcSCBKteWIim9qRYcj7WdgrdqP99J4lTKkAsSL1U29t82e+9zKvvaiYFm7EIhR9Mg3MeBmE49v1xHAWr83AVjEUIiAEbshwypE6NvNCC4g2oqknU9VwjWBRJ4PFKa8ztbkd1IU2pYLt0bZThj1IJqrPZ3f2QlaDpRIuazepXpc9CUrBCRa03PabXGO22bGJR8CojXInsk5ducuEqg+8LqtBQAyfwhwyfLeYCCUgKyuCQZZALsIXespnVFSWItLjO1Xbf8Shz2xHN4NnIP3Rz5Dd9KRIz7kTYh4kTqEunC7BwSydzW+m9XoXkaDpNBKZQKTs/zHUN16WVRd6NWFipfrpQVZZfdYqw/QEH36MyBALLhmeDvKOV3j4WTzc9yAuZt5I4iqrgoPYRWKvlqrINnJqhwlbjDMpS5uuk1MVGtsMEJfPWigIvVcUT3WnkOveAN7g9UhW8C8ov2vQStGxI/KBjaHg3ZGZr5gqMeaFCGia/qwZJR8xRSFoVWgmSdhOaYa5lab/RVRt0wHdDt/Srs482jE9fFurgzJfFf05MzpONNLCuQAuZ+G2QcDD4dv+XVBrMqWS+7IRP4Oyd8LP9/u/jdmZ4k7s8nB1cdQVnhbOjWSE+JSs4GifvhX85wB9/+B97sEnt0puD7QdBy17oX5Xvh6KueRAFoT+djGKM41EU+eko5hM+4mICIU8jiKcTT1rMPJJa73YPxtKb0U0Hb91y5NO/5rdPqNL77UKiEuYdmXqzYUa0LCadbK8M54qDpSvu35+juS4499vfCXnvv3mG7v8Cr0MccX0JAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=cfce536b292ac3107f44d6fee5fae34d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Notification">0d8dd9f10f11101051218e8ebc767e27</action_type>
+        <action_type_parent display_value="Send Notification">7eda5d710f11101051218e8ebc767ec1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>0d8dd9f10f11101051218e8ebc767e27</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 09:01:25</sys_created_on>
+        <sys_id>03ce536b292ac3107f44d6fee5fae34f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 09:01:25</sys_updated_on>
+        <ui_id>a3293776-6196-4bdf-9a51-61dae96d2697</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9WW207cMBCGXwXlerPKaTdZ7hAIqVJLJaDcVCga22Ow5BzqOFvoinfvOMmetxRoqdRLz3jsmX/mc/J14SnhHXuJyISYyTCQYRgGYTAJozDDDBlPpylGmTfySiiQdhrklRG0noNunWGxODUIFkUejnlrDJb26Yn8QjW1hsebYRtZ+L3Sgvze8dfbkVeDoRMtGu94seN6aUoaGGraernMaTdH+1i7tah4W1BeuVoaPw6RZ4Pn6MMZeSjIpROOPHywWAqkPCToBkdeAaUAW5nHlYWKFp9LvTbcq9L2hRbw0KgfdHMcuX0SqTI+iLBa5oNAvVmegYUra1puW7PSq1Icm14TgRJabU83bf2Gz7VVVdmHWGB6GV3ptigvekW81QEb/WgbSgJrV6jLnC6nKuTVffX9cpnkuSo7SYYSdcVBr1ZgrVGstS6dhdeq60Nq9+bDeqPGbmMBda3Ku7w21Vx191H2xfhO02IsdfWd0mzUXTkG7kodUydgfE72s858A0a5uj/RMRTs7vxSqm8tfnBzJMIgjWcB99NoEvtJwMFnmWA+sEhOkmSaTVnoPY285rE51dA0a8WoVfm31hXc6zcolXdid0rn3cC5YG5UbU8ovTkO+jyNBray8LlBjqP13G6cuebrIW9Kns9VA3ctGKHyoFvkHBrcx+yGXEen5GpeDdwL8lwCd92N2eG8B+b2bB83Y48uesdAXPRK4vpRPQBcFvxHwA1l/TlxW1pvA7el9j/hjTPGJMOZHzLO/STFzM8iSH2cBDyWURwEqXwDb7+jLHl+eje+YGVllVQcuiauOYvCNJFiOktCwCCmR0MmCUwYQMAnE8ayfdZOBIFYmaOTxqnSPWsX22e/8ov3+xKWAO7cc7iygcQ1D9sgXm7YBw7j5znssXvLh4+ajXPXSyxA6byfq1/AuVPbXwb1V5ls0QtSIne/NFKhFjSAeRfzLl9ReYVg+P25u8n1sEd1m/StxhLvdMce6ZvtfD/Qr/dnqkGbD7Lk7oBcVqYANxFdhbvvQzILMY2jzJ9NI3ofMJ74TMSxH9J7gQgoI/E+3+PbnzN9Vs/tCgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=03ce536b292ac3107f44d6fee5fae34f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>d3fdbe2f29e2c3107f44d6fee5fae39a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:24</sys_updated_on>
+        <ui_id>325cc9bd-700a-4afb-8bbb-0281afb6fbe0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VX32/aMBD+V1CeEUpKy7q+TVSVJrXrtE572VrrYjtgzSSZ7UAp4n/f+UdCBGkHEp067dF3Z993d98XO99XkWDRRXSencYxJGfn7+J4OIzj0WhIIUnT4YimcXqaRv0ohxnHSAOp5Licg6zs+pHonJK50DCpQDFBYgIMl4UipSoyIbnGaCZ0KWH5LWz64CN6nzcRdCokUzyPLr7f96MSFKYzXEUXqy3XvnglpFxi6NcAeAu/WZbNkjift123t/U+eUehmIUS9yP+aHjOOGLIQGrej2aQMzCFWjYWxYHd5nJjmIrc4ImRDX7U4gnznsc2LuNYFeXe1yxJaJY3Z5dg4M6oippKhVA6LQTFrrl+MJ5BJc24bfMBt6URRe63+LL97kJWs/yTb0fUHFDPBi2VRhC8tIVa5KGM7G5aLL7UKK9E7noSnLKgIJsVGKNEWhmLZxVxyWd4EJlBWYp8YnkxF24zYpkNJhIXg0wWC0yqxSQfALXAB9hXGFyh/dKZv4EStoobPAY3IyAhkSHEj1AXlXKtnBMqK+0cCnLtz4rW/Ugv9ViC1pvKseXkV2Vx+z6Eiolvmt1ClSjNBzxizkNx6/5ekjmLN5SjRc6ERaFbuoE5CKSokMIsf1R4BAsWyR/AJfRWnDx/0CWnAqR4AnuMd6xWY2Sa4YwkA1opHIoZUMDJWRav17ui+wsZjyli18FaxON2C7vaGuS8Y7vuOiDIOTmanLGOf0nQdsJvTs+HK9S34A8ype9eJNnZhk94IRnie9nSaSA6cUSXBbBdYXWFHKaEPUDWSri13O2ly+dwByFkgkvWda9dWcfWvXbyf95rb1IGCIgRPz2RS5G7RwoCfS19xC9/hN9v8czRa6MOZwNNO26bnil6TwcrYQ84tRLuMHfvq8fTAbG+ERxltm+D2hgEMDyaAIYnxxHAqimzaWRHz+t3qZ1mHf9k42E7HinY2pCsuwR2UM7k0Jwn610BDw9ScJts3nP5DOeO/IB9RpH91/wETHFryEe8fslCsAk3m+x1FCvMAuTPLn9gHKkH5cp7hcfw6YuyHSUbiaJSiOIah9d+DSfx7hfE2Q77euwBo+7EDTz2vjQ4OsGFLwiKnE/cWNqfkI+NNfD79IivyTd7iSb40H1Wfknfe/+J38fjaeD+N8N6G21FEQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d3fdbe2f29e2c3107f44d6fee5fae39a"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=d7fdbe2f29e2c3107f44d6fee5fae34b^sys_idNOT IN1bfdbe2f29e2c3107f44d6fee5fae398"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">72dd3a2f29e2c3107f44d6fee5fae32b</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="Student Visa Case Workflow">d7fdbe2f29e2c3107f44d6fee5fae34b</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="For Each">098e1dc5c3e232002841b63b12d3ae33</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>1bfdbe2f29e2c3107f44d6fee5fae398</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:24</sys_updated_on>
+        <ui_id>c1413097-8e88-440f-8c7c-cd7a3cf4a897</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/51Ty27bMBD8F55lQY/UjX0LEgQI0DaAE+RSBMKSXNlEKVIlKTuqoH/v0pKVIMecpB3uzs6MqIHZLrRd8M/2xnu1N2z7+zVhykSM3gdmoEG2ZSpg41nCjqC7WA9DWXwTYsPl6nuWweoKar665pyvsuI6p2Jdc8zSHQrrpB9HGpXKtxr6l68ziIPS0uEssgVH2gI6th0+HSlJC/KNrDd5thFlsS6LjFivcr4ueV7IElCuiVADR02tD7O7T2ZD38bSTRJm4Mc8s1tQekQRRZYwfAtoJNL6GrTHhDVgJATrerYNriPAIchHo/ul46BMIDoWe9+8+kcb8yyLjTWSIYHT4VJWc44TXN9BgCeiFqFzc6s4WCXQT1FIrKHT4fYjNjU8tkFZM40E4PoybXXXmF9TEmwhuHw2QjpPIrCNRqP02Uf9dLCn3UXlvTLnUOZDbQXopYIQnOJdiHoGhhobIqoaaFtl9lXr7FGdh0lLk+41FWmt7YmWxiuagojCU8oV0nvC787wCzgVXfwkGhoeE+Z7f6vB+3cvFGL1t4tKJmezh2qKIY4Ip9pwQwuOOMsdX+Otn7iXTIXyJOE5Yg+XfyUe9HSDlPgInaz7E8W/Y+N/bt8BznUDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d7fdbe2f29e2c3107f44d6fee5fae34b</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>57fdbe2f29e2c3107f44d6fee5fae383</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 06:38:04</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d7fdbe2f29e2c3107f44d6fee5fae34b</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:04</sys_created_on>
+        <sys_id>93fdbe2f29e2c3107f44d6fee5fae38e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 06:38:04</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_d7fdbe2f29e2c3107f44d6fee5fae34b"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>a2aeeda9416e03107f44a5baa0c55b14</sys_id>
+        <latest_snapshot>d7fdbe2f29e2c3107f44d6fee5fae34b</latest_snapshot>
+        <compiler_build>glide-australia-02-11-2026__patch2-04-17-2026_04-29-2026_2044.zip</compiler_build>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=a2aeeda9416e03107f44a5baa0c55b14^sys_idNOT IN9bfdbe2f29e2c3107f44d6fee5fae3ae"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan>{"@class":"com.snc.process_flow.engine.serialization.plan_data.ChunkingPlanData","chunk_data":{"table":"sys_flow_trigger_plan","id":"9bfdbe2f29e2c3107f44d6fee5fae3ae","name":"plan","plan_signature":null},"plan_data":"CHUNKING_PLAN"}</plan>
+        <plan_id>a2aeeda9416e03107f44a5baa0c55b14</plan_id>
+        <snapshot>ca875994bc7603107f44871762fe8d4f</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 06:38:05</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>9bfdbe2f29e2c3107f44d6fee5fae3ae</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 07:04:29</sys_updated_on>
+        <trigger display_value="">4844bd0950a603107f4497bc8688d847</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=a2aeeda9416e03107f44a5baa0c55b14"/>
+</record_update>

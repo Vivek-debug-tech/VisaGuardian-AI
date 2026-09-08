@@ -1,0 +1,2015 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function ($scope, $timeout) {
+
+    var c = this;
+
+
+    // =====================================================
+    // EDIT STATE
+    // =====================================================
+
+    c.editOpen = false;
+
+
+    // =====================================================
+    // FORM
+    // =====================================================
+
+    c.form = {
+
+        first_name: "",
+        last_name: "",
+        mobile_number: "",
+        department: ""
+
+    };
+
+
+    // =====================================================
+    // STATE
+    // =====================================================
+
+    c.loading = false;
+    c.message = "";
+    c.error = "";
+    c.showSuccessPopup = false;
+
+
+    // =====================================================
+    // SYNC FORM FROM SERVER
+    // =====================================================
+
+    c.syncFromServer = function () {
+
+        if (
+            !c.data ||
+            !c.data.advisor
+        ) {
+            return;
+        }
+
+
+        c.form.first_name =
+            c.data.advisor.first_name || "";
+
+
+        c.form.last_name =
+            c.data.advisor.last_name || "";
+
+
+        c.form.mobile_number =
+            c.data.advisor.mobile_phone || "";
+
+
+        c.form.department =
+            c.data.advisor.department || "";
+
+    };
+
+
+    // =====================================================
+    // OPEN / CLOSE EDIT PROFILE
+    // =====================================================
+
+    c.toggleEditProfile = function () {
+
+        c.message = "";
+        c.error = "";
+        c.showSuccessPopup = false;
+
+        c.editOpen = !c.editOpen;
+
+
+        if (c.editOpen) {
+
+            c.syncFromServer();
+
+        }
+
+    };
+
+
+    // =====================================================
+    // CLOSE EDIT PROFILE
+    // =====================================================
+
+    c.closeEditProfile = function () {
+
+        c.editOpen = false;
+
+        c.message = "";
+        c.error = "";
+
+        c.syncFromServer();
+
+    };
+
+
+    // =====================================================
+    // SAVE PROFILE
+    // =====================================================
+
+    c.saveProfile = function () {
+
+        if (c.loading) {
+            return;
+        }
+
+
+        c.loading = true;
+
+        c.message = "";
+        c.error = "";
+        c.showSuccessPopup = false;
+
+
+        // =================================================
+        // PREPARE DATA
+        // =================================================
+
+        var saveData = {
+
+            action: "update_profile",
+
+            first_name:
+                c.form.first_name || "",
+
+            last_name:
+                c.form.last_name || "",
+
+            mobile_number:
+                c.form.mobile_number || "",
+
+            department:
+                c.form.department || ""
+
+        };
+
+
+        console.log(
+            "VisaGuardian: Sending advisor profile update",
+            saveData
+        );
+
+
+        // =================================================
+        // SEND REQUEST
+        // =================================================
+
+        c.server.get(saveData).then(
+
+            function (response) {
+
+                console.log(
+                    "VisaGuardian: Server response",
+                    response
+                );
+
+
+                c.loading = false;
+
+
+                // =================================================
+                // GET RESPONSE DATA
+                // =================================================
+
+                var result = null;
+
+
+                if (
+                    response &&
+                    response.data
+                ) {
+
+                    result =
+                        response.data;
+
+                }
+
+
+                // =================================================
+                // NO RESPONSE
+                // =================================================
+
+                if (!result) {
+
+                    c.error =
+                        "The server did not return a valid response.";
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // SERVER ERROR
+                // =================================================
+
+                if (result.error) {
+
+                    c.error =
+                        result.error;
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // UPDATE ADVISOR DATA
+                // =================================================
+
+                if (result.advisor) {
+
+                    c.data.advisor =
+                        result.advisor;
+
+                }
+
+
+                // =================================================
+                // SUCCESS
+                // =================================================
+
+                if (
+                    result.save_success === true
+                ) {
+
+                    c.message =
+                        "Changes saved successfully.";
+
+
+                    // Sync form
+                    c.syncFromServer();
+
+
+                    // Close edit form
+                    c.editOpen = false;
+
+
+                    // Show popup
+                    c.showSuccessPopup = true;
+
+
+                    // Hide popup after 3 seconds
+                    $timeout(function () {
+
+                        c.showSuccessPopup = false;
+
+                    }, 3000);
+
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // FALLBACK SUCCESS
+                // =================================================
+
+                if (result.success) {
+
+                    c.message =
+                        result.success;
+
+                    c.syncFromServer();
+
+                    c.editOpen = false;
+
+                    c.showSuccessPopup = true;
+
+
+                    $timeout(function () {
+
+                        c.showSuccessPopup = false;
+
+                    }, 3000);
+
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // UNKNOWN RESPONSE
+                // =================================================
+
+                c.error =
+                    "Profile was not saved. Please try again.";
+
+            },
+
+
+            // =====================================================
+            // REQUEST ERROR
+            // =====================================================
+
+            function (error) {
+
+                c.loading = false;
+
+                console.error(
+                    "VisaGuardian: Advisor profile update failed",
+                    error
+                );
+
+                c.error =
+                    "Unable to save profile. Please try again.";
+
+            }
+
+        );
+
+    };
+
+
+    // =====================================================
+    // INITIAL LOAD
+    // =====================================================
+
+    c.syncFromServer();
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   ADVISOR PROFILE PAGE
+   ========================================================= */
+
+.advisor-profile-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+    background: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   ADVISOR HERO
+   ========================================================= */
+
+.advisor-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 214px;
+    padding: 30px 42px;
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        120deg,
+        #1d416f 0%,
+        #285e9f 100%
+    );
+
+    border-radius: 24px;
+    color: #ffffff;
+
+    box-shadow:
+        0 12px 30px rgba(25, 61, 105, 0.16);
+
+    overflow: visible;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.advisor-avatar {
+    width: 132px;
+    height: 132px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid rgba(255, 255, 255, 0.38);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.advisor-avatar span {
+    font-size: 44px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   HERO TEXT
+   ========================================================= */
+
+.advisor-hero-text {
+    margin-left: 34px;
+}
+
+.advisor-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 10px 20px;
+
+    border-radius: 22px;
+
+    background: rgba(125, 174, 231, 0.30);
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.advisor-hero-text h1 {
+    margin: 20px 0 10px;
+
+    color: #ffffff;
+
+    font-size: 29px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.advisor-hero-text p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 15px;
+}
+
+.advisor-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-top: 22px;
+
+    color: #16e58a;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 11px;
+    height: 11px;
+
+    border-radius: 50%;
+
+    background: #18e88c;
+
+    box-shadow:
+        0 0 0 4px rgba(24, 232, 140, 0.12);
+}
+
+
+/* =========================================================
+   EDIT PROFILE CONTROL
+   ========================================================= */
+
+.edit-profile-control {
+    position: absolute;
+    top: 26px;
+    right: 28px;
+
+    z-index: 100;
+}
+
+
+/* =========================================================
+   EDIT BUTTON
+   ========================================================= */
+
+.edit-profile-button {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 13px;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.edit-profile-button:hover {
+    background: rgba(255, 255, 255, 0.20);
+
+    border-color: rgba(255, 255, 255, 0.55);
+
+    transform: translateY(-1px);
+}
+
+.edit-profile-button i {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   EDIT PROFILE FORM
+   ========================================================= */
+
+.advisor-form-card {
+    position: absolute;
+
+    top: 60px;
+    right: 0;
+
+    width: 680px;
+    max-width: calc(100vw - 40px);
+
+    padding: 30px 34px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e0e7f0;
+    border-radius: 18px;
+
+    box-shadow:
+        0 22px 55px rgba(20, 48, 82, 0.22);
+
+    color: #173d6b;
+}
+
+
+/* =========================================================
+   EDIT FORM TITLE
+   ========================================================= */
+
+.advisor-form-card .card-title {
+    margin-bottom: 26px;
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #e1e7ef;
+
+    color: #123f73;
+
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 22px 24px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.form-group {
+    min-width: 0;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #55749a;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   FORM INPUT
+   ========================================================= */
+
+.form-group .form-control {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d4dfec;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #173d6b;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-group .form-control:hover {
+    border-color: #b8cbe0;
+}
+
+.form-group .form-control:focus {
+    border-color: #2c6bb0;
+
+    box-shadow:
+        0 0 0 3px rgba(44, 107, 176, 0.12);
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 28px;
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.btn-save {
+    min-width: 164px;
+    height: 48px;
+
+    padding: 0 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #2868b5;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.btn-save:hover:not(:disabled) {
+    background: #1f599e;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 16px rgba(40, 104, 181, 0.22);
+}
+
+.btn-save:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.btn-cancel {
+    height: 48px;
+
+    padding: 0 22px;
+
+    border: 1px solid #cbd6e3;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #47627e;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.btn-cancel:hover {
+    background: #f5f8fb;
+
+    border-color: #aebed0;
+}
+
+
+/* =========================================================
+   FORM MESSAGES
+   ========================================================= */
+
+.form-message {
+    margin-top: 16px;
+
+    padding: 11px 14px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-message.success {
+    background: #ecfbf3;
+    border: 1px solid #c7efd9;
+    color: #13864d;
+}
+
+.form-message.error {
+    background: #fff2f2;
+    border: 1px solid #f1cccc;
+    color: #c13d3d;
+}
+
+
+/* =========================================================
+   PROFILE GRID
+   ========================================================= */
+
+.advisor-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 25px;
+
+    margin-top: 27px;
+}
+
+
+/* =========================================================
+   PROFILE CARD
+   ========================================================= */
+
+.advisor-grid &gt; .advisor-card {
+    min-height: 390px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e0e8f1;
+    border-radius: 22px;
+
+    box-shadow:
+        0 10px 25px rgba(20, 55, 95, 0.06);
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.advisor-grid &gt; .advisor-card .card-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #e2e8ef;
+
+    color: #123f73;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.card-title-icon {
+    color: #2468c5;
+
+    font-size: 19px;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.field {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 20px;
+
+    padding: 26px 0;
+
+    border-bottom: 1px dashed #dce4ec;
+}
+
+.field:last-child {
+    border-bottom: none;
+}
+
+.field label {
+    flex: 0 0 45%;
+
+    color: #6783a2;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+.field .value {
+    flex: 1;
+
+    color: #123f73;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    text-align: right;
+
+    word-break: break-word;
+}
+
+.role-value {
+    color: #2168c5 !important;
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS
+   ========================================================= */
+
+.account-status {
+    display: flex;
+
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #12a95d !important;
+}
+
+.status-check {
+    color: #12a95d;
+}
+
+.status-check i {
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .advisor-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .advisor-form-card {
+        width: 600px;
+    }
+
+}
+
+
+@media (max-width: 760px) {
+
+    .advisor-profile-page {
+        padding: 10px 15px 30px;
+    }
+
+    .advisor-hero {
+        padding: 28px 24px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .advisor-avatar {
+        width: 105px;
+        height: 105px;
+    }
+
+    .advisor-hero-text {
+        margin-left: 0;
+        margin-top: 22px;
+    }
+
+    .advisor-hero-text h1 {
+        font-size: 24px;
+    }
+
+    .advisor-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .advisor-form-card {
+        position: fixed;
+
+        top: 50%;
+        left: 50%;
+        right: auto;
+
+        width: calc(100vw - 30px);
+        max-width: 680px;
+
+        transform: translate(-50%, -50%);
+
+        max-height: calc(100vh - 30px);
+
+        overflow-y: auto;
+
+        z-index: 9999;
+    }
+
+    .edit-profile-control {
+        top: 20px;
+        right: 20px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .advisor-hero {
+        min-height: 260px;
+    }
+
+    .advisor-form-card {
+        padding: 24px 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   SAVE SUCCESS POPUP
+   ========================================================= */
+
+.save-success-popup {
+    position: fixed;
+
+    top: 28px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+
+    min-width: 360px;
+    max-width: calc(100vw - 40px);
+
+    padding: 16px 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #cfe8da;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 35px rgba(20, 60, 40, 0.18);
+
+    animation:
+        savePopupIn 0.3s ease-out;
+}
+
+
+/* =========================================================
+   SUCCESS ICON
+   ========================================================= */
+
+.save-success-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 13px;
+
+    border-radius: 50%;
+
+    background: #16a765;
+
+    color: #ffffff;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   SUCCESS CONTENT
+   ========================================================= */
+
+.save-success-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.save-success-title {
+    color: #176b43;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.save-success-text {
+    color: #6b7f73;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+@keyframes savePopupIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(-15px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .save-success-popup {
+
+        top: 18px;
+
+        min-width: 0;
+
+        width: calc(100vw - 30px);
+
+    }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>adv_profile</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Adv_profile</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.advisor = null;
+    data.error = "";
+    data.success = "";
+    data.save_success = false;
+    data.edit_mode = false;
+
+
+    // =====================================================
+    // FIND LOGGED-IN ADVISOR
+    // =====================================================
+
+    var advisor =
+        new GlideRecord(
+            "x_snc_visaguardi_0_advisor_profiles"
+        );
+
+    var profileFound = false;
+
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData(
+            "vg_advisor_sys_id"
+        );
+
+
+    var sessionAdvisorUserName =
+        gs.getSession().getClientData(
+            "vg_advisor_user_name"
+        );
+
+
+    // =====================================================
+    // 1. SESSION ADVISOR SYS ID
+    // =====================================================
+
+    if (sessionAdvisorSysId) {
+
+        if (advisor.get(sessionAdvisorSysId)) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 2. SESSION USERNAME
+    // =====================================================
+
+    if (
+        !profileFound &&
+        sessionAdvisorUserName
+    ) {
+
+        advisor =
+            new GlideRecord(
+                "x_snc_visaguardi_0_advisor_profiles"
+            );
+
+        advisor.addQuery(
+            "user.user_name",
+            sessionAdvisorUserName
+        );
+
+        advisor.setLimit(1);
+        advisor.query();
+
+
+        if (advisor.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 3. SERVICENOW LOGGED-IN USER
+    // =====================================================
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+
+        if (userSysId) {
+
+            advisor =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_advisor_profiles"
+                );
+
+            advisor.addQuery(
+                "user",
+                userSysId
+            );
+
+            advisor.setLimit(1);
+            advisor.query();
+
+
+            if (advisor.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 4. USERNAME FALLBACK
+    // =====================================================
+
+    if (!profileFound) {
+
+        advisor =
+            new GlideRecord(
+                "x_snc_visaguardi_0_advisor_profiles"
+            );
+
+        advisor.addQuery(
+            "user.user_name",
+            gs.getUserName()
+        );
+
+        advisor.setLimit(1);
+        advisor.query();
+
+
+        if (advisor.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PROFILE NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        data.error =
+            "Advisor profile was not found for the logged-in user.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // UPDATE PROFILE
+    // =====================================================
+
+    if (
+        input &&
+        input.action === "update_profile"
+    ) {
+
+        try {
+
+            // =============================================
+            // FIRST NAME
+            // =============================================
+
+            if (
+                input.first_name !== undefined
+            ) {
+
+                advisor.setValue(
+                    "first_name",
+                    String(
+                        input.first_name
+                    ).trim()
+                );
+
+            }
+
+
+            // =============================================
+            // LAST NAME
+            // =============================================
+
+            if (
+                input.last_name !== undefined
+            ) {
+
+                advisor.setValue(
+                    "last_name",
+                    String(
+                        input.last_name
+                    ).trim()
+                );
+
+            }
+
+
+            // =============================================
+            // MOBILE NUMBER
+            // =============================================
+
+            if (
+                input.mobile_number !== undefined
+            ) {
+
+                advisor.setValue(
+                    "mobile_number",
+                    String(
+                        input.mobile_number
+                    ).trim()
+                );
+
+            }
+
+
+            // =============================================
+            // DEPARTMENT
+            // =============================================
+
+            if (
+                input.department !== undefined
+            ) {
+
+                advisor.setValue(
+                    "department",
+                    String(
+                        input.department
+                    ).trim()
+                );
+
+            }
+
+
+            // =============================================
+            // SAVE
+            // =============================================
+
+            var updatedSysId =
+                advisor.update();
+
+
+            if (!updatedSysId) {
+
+                data.error =
+                    "Unable to update advisor profile.";
+
+                data.save_success = false;
+
+                return;
+
+            }
+
+
+            // =============================================
+            // RELOAD UPDATED RECORD
+            // =============================================
+
+            advisor =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_advisor_profiles"
+                );
+
+
+            if (
+                !advisor.get(
+                    updatedSysId
+                )
+            ) {
+
+                data.error =
+                    "Profile was updated, but could not be reloaded.";
+
+                data.save_success = false;
+
+                return;
+
+            }
+
+
+            // =============================================
+            // SUCCESS
+            // =============================================
+
+            data.success =
+                "Changes saved successfully.";
+
+            data.save_success = true;
+
+        }
+
+        catch (e) {
+
+            data.error =
+                "Unable to update profile: " +
+                e.message;
+
+            data.save_success = false;
+
+
+            gs.error(
+                "VisaGuardian Advisor Profile Update Error: " +
+                e.message
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // RETURN ADVISOR DATA
+    // =====================================================
+
+    data.advisor = {
+
+        sys_id:
+            advisor.getUniqueValue(),
+
+
+        name:
+            advisor.getDisplayValue(
+                "name"
+            ),
+
+
+        first_name:
+            advisor.getValue(
+                "first_name"
+            ),
+
+
+        last_name:
+            advisor.getValue(
+                "last_name"
+            ),
+
+
+        email:
+            advisor.getValue(
+                "email"
+            ),
+
+
+        advisor_id:
+            advisor.getValue(
+                "advisor_id"
+            ),
+
+
+        department:
+            advisor.getValue(
+                "department"
+            ),
+
+
+        mobile_phone:
+            advisor.getValue(
+                "mobile_number"
+            ),
+
+
+        user_name:
+            advisor.getDisplayValue(
+                "user"
+            ),
+
+
+        created_on:
+            advisor.getValue(
+                "sys_created_on"
+            )
+                ? new GlideDateTime(
+                    advisor.getValue(
+                        "sys_created_on"
+                    )
+                )
+                    .getDate()
+                    .getByFormat(
+                        "MMM dd, yyyy"
+                    )
+                : ""
+
+    };
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 18:25:59</sys_created_on>
+        <sys_id>e5dc834f59ee43107f44df2ba8a19b62</sys_id>
+        <sys_mod_count>96</sys_mod_count>
+        <sys_name>Adv_profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_e5dc834f59ee43107f44df2ba8a19b62</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 18:46:18</sys_updated_on>
+        <template><![CDATA[<div class="advisor-profile-page">
+
+    <!-- ===================================================== -->
+    <!-- ADVISOR HERO -->
+    <!-- ===================================================== -->
+
+    <div class="advisor-hero">
+
+        <!-- EDIT PROFILE CONTROL -->
+        <div
+            class="edit-profile-control"
+            ng-class="{'edit-open': c.editOpen}">
+
+            <!-- EDIT PROFILE BUTTON -->
+            <button
+                type="button"
+                class="edit-profile-button"
+                title="Edit Profile"
+                aria-label="Edit Profile"
+                ng-click="c.toggleEditProfile()">
+
+                <i class="fa fa-pencil"></i>
+
+            </button>
+
+
+            <!-- ================================================= -->
+            <!-- EDIT PROFILE FORM -->
+            <!-- ================================================= -->
+
+            <div
+                class="advisor-card advisor-form-card"
+                ng-if="c.editOpen">
+
+                <div class="card-title">
+                    Edit Profile
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- FIRST NAME -->
+                    <div class="form-group">
+
+                        <label>
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            ng-model="c.form.first_name"
+                        />
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+                    <div class="form-group">
+
+                        <label>
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            ng-model="c.form.last_name"
+                        />
+
+                    </div>
+
+
+                    <!-- MOBILE NUMBER -->
+                    <div class="form-group">
+
+                        <label>
+                            Mobile Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            class="form-control"
+                            ng-model="c.form.mobile_number"
+                            placeholder="Enter mobile number"
+                            autocomplete="tel"
+                        />
+
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            ng-model="c.form.department"
+                        />
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- ACTIONS -->
+                <!-- ================================================= -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        class="btn-save"
+                        ng-click="c.saveProfile()"
+                        ng-disabled="c.loading">
+
+                        {{c.loading ? 'Saving...' : 'Save Changes'}}
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn-cancel"
+                        ng-click="c.closeEditProfile()"
+                        ng-disabled="c.loading">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+
+                <!-- SUCCESS -->
+                <div
+                    class="form-message success"
+                    ng-if="c.message">
+
+                    {{c.message}}
+
+                </div>
+
+
+                <!-- ERROR -->
+                <div
+                    class="form-message error"
+                    ng-if="c.error">
+
+                    {{c.error}}
+
+                </div>
+
+
+                <!-- SERVER ERROR -->
+                <div
+                    class="form-message error"
+                    ng-if="c.data.error">
+
+                    {{c.data.error}}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================== -->
+        <!-- AVATAR -->
+        <!-- =================================================== -->
+
+        <div class="advisor-avatar">
+
+            <span>
+                {{(c.data.advisor.name || 'A') | limitTo:1 | uppercase}}
+            </span>
+
+        </div>
+
+
+        <!-- =================================================== -->
+        <!-- HERO INFORMATION -->
+        <!-- =================================================== -->
+
+        <div class="advisor-hero-text">
+
+            <div class="advisor-badge">
+                ADVISOR
+            </div>
+
+
+            <h1>
+                {{c.data.advisor.name}}
+            </h1>
+
+
+            <p>
+
+                {{c.data.advisor.user_name}}
+
+                ·
+
+                {{c.data.advisor.email}}
+
+            </p>
+
+
+            <div class="advisor-status">
+
+                <span class="status-dot"></span>
+
+                Active Advisor Account
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PROFILE CARDS -->
+    <!-- ===================================================== -->
+
+    <div class="advisor-grid">
+
+
+        <!-- =================================================== -->
+        <!-- PERSONAL INFORMATION -->
+        <!-- =================================================== -->
+
+        <div class="advisor-card">
+
+            <div class="card-title">
+
+                <i class="fa fa-user card-title-icon"></i>
+
+                Personal Information
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    User ID
+                </label>
+
+                <div class="value">
+                    {{c.data.advisor.user_name}}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Created On
+                </label>
+
+                <div class="value">
+                    {{c.data.advisor.created_on}}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================== -->
+        <!-- CONTACT DETAILS -->
+        <!-- =================================================== -->
+
+        <div class="advisor-card">
+
+            <div class="card-title">
+
+                <i class="fa fa-address-card card-title-icon"></i>
+
+                Contact Details
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Email Address
+                </label>
+
+                <div class="value">
+                    {{c.data.advisor.email}}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Mobile Phone
+                </label>
+
+                <div class="value">
+
+                    {{c.data.advisor.mobile_phone || 'N/A'}}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================== -->
+        <!-- SYSTEM & ACCESS PROFILE -->
+        <!-- =================================================== -->
+
+        <div class="advisor-card">
+
+            <div class="card-title">
+
+                <i class="fa fa-shield card-title-icon"></i>
+
+                System &amp; Access Profile
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Primary Role
+                </label>
+
+                <div class="value role-value">
+
+                    {{c.data.advisor.primary_role || 'Advisor'}}
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Department
+                </label>
+
+                <div class="value">
+
+                    {{c.data.advisor.department || 'N/A'}}
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Profile Created
+                </label>
+
+                <div class="value">
+
+                    {{c.data.advisor.created_on || 'N/A'}}
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Account Status
+                </label>
+
+                <div class="value account-status">
+
+                    <span class="status-check">
+
+                        <i class="fa fa-check-circle"></i>
+
+                    </span>
+
+                    Active &amp; Verified
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- SUCCESS POPUP -->
+<!-- ===================================================== -->
+
+<div
+    class="save-success-popup"
+    ng-if="c.showSuccessPopup">
+
+    <div class="save-success-icon">
+        <i class="fa fa-check"></i>
+    </div>
+
+    <div class="save-success-content">
+
+        <div class="save-success-title">
+            Changes Saved Successfully
+        </div>
+
+        <div class="save-success-text">
+            Your advisor profile has been updated.
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>e5dc834f59ee43107f44df2ba8a19b62</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 18:25:59</sys_created_on>
+        <sys_id>e9dc834f59ee43107f44df2ba8a19b65</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 18:25:59</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

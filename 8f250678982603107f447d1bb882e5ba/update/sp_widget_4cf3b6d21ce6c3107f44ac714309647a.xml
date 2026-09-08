@@ -1,0 +1,2223 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window) {
+
+    var c = this;
+
+    c.loading = false;
+    c.error = "";
+
+
+    /* =====================================================
+       LOGIN
+       ===================================================== */
+
+    c.login = function() {
+
+        c.error = "";
+
+        if (!c.data.username || !c.data.password) {
+
+            c.error =
+                "Please enter both User ID/Email and Password.";
+
+            return;
+        }
+
+        c.loading = true;
+
+        c.server.update().then(function(response) {
+
+            c.loading = false;
+
+            if (c.data.login_success) {
+
+                $window.location.href =
+                    "/student?id=vg_profile";
+
+            } else {
+
+                c.error =
+                    c.data.login_error ||
+                    "Invalid User ID or Password.";
+
+            }
+
+        }).catch(function(error) {
+
+            c.loading = false;
+
+            c.error =
+                "An error occurred during sign-in. Please try again.";
+
+            console.warn(
+                "VisaGuardian Login Error:",
+                error
+            );
+
+        });
+
+    };
+
+
+    /* =====================================================
+       BACK TO HOME
+       ===================================================== */
+
+    c.goBack = function() {
+
+        $window.location.href =
+            "/student?id=visa_home_page";
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   STUDENT LOGIN PAGE
+   PREMIUM DARK BLUE ENTERPRISE UI
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.visaguardian-login-page-container {
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 40px 25px;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 15%,
+            rgba(0, 108, 255, .16),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 82% 25%,
+            rgba(32, 71, 255, .13),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(105, 0, 230, .10),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817 0%,
+            #03132d 48%,
+            #020918 100%
+        );
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+.guardian-bg-glow {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    filter: blur(60px);
+}
+
+
+.guardian-glow-one {
+
+    width: 420px;
+    height: 420px;
+
+    top: -200px;
+    left: -150px;
+
+    background:
+        rgba(0, 120, 255, .12);
+}
+
+
+.guardian-glow-two {
+
+    width: 500px;
+    height: 500px;
+
+    right: -220px;
+    bottom: -250px;
+
+    background:
+        rgba(93, 0, 255, .10);
+}
+
+
+/* =========================================================
+   BACKGROUND LINES
+   ========================================================= */
+
+.guardian-bg-lines {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .45;
+
+    background-image:
+
+        linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(45, 145, 255, .09) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            35deg,
+            transparent 0%,
+            rgba(0, 194, 255, .06) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(35, 125, 230, .035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            0deg,
+            rgba(35, 125, 230, .025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 100%,
+        100% 100%,
+        80px 80px,
+        80px 80px;
+}
+
+
+/* =========================================================
+   PARTICLES
+   ========================================================= */
+
+.guardian-particle {
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #35aaff;
+
+    box-shadow:
+        0 0 12px
+        rgba(0, 150, 255, .85);
+
+    opacity: .8;
+}
+
+
+.particle-one {
+
+    top: 18%;
+
+    left: 15%;
+}
+
+
+.particle-two {
+
+    top: 28%;
+
+    right: 16%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-three {
+
+    bottom: 20%;
+
+    left: 9%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-four {
+
+    bottom: 14%;
+
+    right: 20%;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+   ========================================================= */
+
+.visaguardian-login-card {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    border:
+        1px solid
+        rgba(91, 163, 255, .25);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(9, 31, 62, .97),
+            rgba(3, 15, 34, .98)
+        );
+
+    backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+
+        0 30px 90px
+        rgba(0, 0, 0, .48),
+
+        0 0 45px
+        rgba(0, 110, 255, .10),
+
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+
+    animation:
+        vgCardEnter .55s ease both;
+}
+
+
+/* =========================================================
+   CARD TOP GLOW
+   ========================================================= */
+
+.visaguardian-login-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 420px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0, 125, 255, .16),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CARD BOTTOM LINE
+   ========================================================= */
+
+.visaguardian-login-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 12%;
+
+    width: 76%;
+
+    height: 1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(25, 145, 255, .45),
+            rgba(120, 45, 255, .45),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   CARD ANIMATION
+   ========================================================= */
+
+@keyframes vgCardEnter {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(.98);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   BACK BUTTON CONTAINER
+   ========================================================= */
+
+.visaguardian-back-container {
+
+    position: relative;
+
+    z-index: 3;
+
+    padding:
+        20px 22px 0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.visaguardian-back-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 8px;
+
+    background:
+        transparent;
+
+    color:
+        #8db4dc;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .22s ease;
+}
+
+
+.visaguardian-back-button:hover {
+
+    color: #42aaff;
+
+    background:
+        rgba(0, 110, 255, .08);
+
+    border-color:
+        rgba(40, 145, 255, .16);
+
+    transform:
+        translateX(-2px);
+}
+
+
+.visaguardian-back-button:active {
+
+    transform:
+        translateX(-4px);
+}
+
+
+.visaguardian-back-button:focus {
+
+    outline:
+        none;
+}
+
+
+.back-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 25px;
+    height: 25px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0, 110, 255, .10);
+
+    color: #38aaff;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.visaguardian-card-header {
+
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+
+    padding:
+        22px 38px 22px;
+}
+
+
+/* =========================================================
+   LOGO IMAGE
+   ========================================================= */
+
+.visaguardian-logo-container {
+
+    width: 76px;
+    height: 76px;
+
+    margin:
+        0 auto 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+.visaguardian-logo-image {
+
+    width: 72px;
+    height: 72px;
+
+    display: block;
+
+    object-fit: contain;
+
+    filter:
+
+        drop-shadow(
+            0 0 7px
+            rgba(0, 150, 255, .70)
+        )
+
+        drop-shadow(
+            0 0 18px
+            rgba(0, 105, 255, .30)
+        );
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
+}
+
+
+.visaguardian-logo-container:hover
+.visaguardian-logo-image {
+
+    transform:
+        scale(1.05);
+
+    filter:
+
+        drop-shadow(
+            0 0 9px
+            rgba(0, 170, 255, .85)
+        )
+
+        drop-shadow(
+            0 0 22px
+            rgba(0, 110, 255, .40)
+        );
+}
+
+
+/* =========================================================
+   BRAND NAME
+   ========================================================= */
+
+.visaguardian-brand-name {
+
+    font-size:
+        27px;
+
+    line-height:
+        1;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.8px;
+
+    color:
+        #ffffff;
+}
+
+
+.visaguardian-brand-name span {
+
+    color:
+        #1598ff;
+}
+
+
+.visaguardian-brand-name strong {
+
+    color:
+        #963cff;
+}
+
+
+/* =========================================================
+   PORTAL TITLE
+   ========================================================= */
+
+.visaguardian-portal-title {
+
+    margin:
+        17px auto 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 13px;
+}
+
+
+.visaguardian-portal-title h2 {
+
+    margin:
+        0;
+
+    color:
+        #f4f8ff;
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -.4px;
+}
+
+
+.portal-line {
+
+    width: 35px;
+
+    height: 1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(40, 145, 255, .55)
+        );
+}
+
+
+.portal-line:last-child {
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(40, 145, 255, .55),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.visaguardian-card-subtitle {
+
+    margin:
+        7px 0 12px;
+
+    color:
+        #8298b4;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   SECURITY STATUS
+   ========================================================= */
+
+.visaguardian-security-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        6px 11px;
+
+    border:
+        1px solid
+        rgba(38, 203, 119, .20);
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(20, 190, 105, .055);
+
+    color:
+        #77b99a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        .2px;
+}
+
+
+.security-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        #26d878;
+
+    box-shadow:
+        0 0 9px
+        rgba(38, 216, 120, .75);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.visaguardian-alert {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    margin:
+        0 32px 18px;
+
+    padding:
+        11px 13px;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        10px;
+
+    border-radius:
+        9px;
+
+    font-size:
+        12px;
+
+    line-height:
+        18px;
+}
+
+
+.visaguardian-alert-danger {
+
+    background:
+        rgba(220, 40, 60, .08);
+
+    border:
+        1px solid
+        rgba(255, 90, 105, .25);
+
+    color:
+        #ff9da7;
+}
+
+
+.alert-icon {
+
+    color:
+        #ff6675;
+
+    margin-top:
+        1px;
+}
+
+
+/* =========================================================
+   LOGIN FORM
+   ========================================================= */
+
+.visaguardian-login-form {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    padding:
+        0 32px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.visaguardian-form-group {
+
+    margin-bottom:
+        19px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.visaguardian-form-group label {
+
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        #d6e2f0;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    letter-spacing:
+        .15px;
+}
+
+
+/* =========================================================
+   REQUIRED
+   ========================================================= */
+
+.required-asterisk {
+
+    color:
+        #ff6372;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.visaguardian-input-wrapper {
+
+    position:
+        relative;
+}
+
+
+/* =========================================================
+   INPUT ICON
+   ========================================================= */
+
+.visaguardian-input-icon {
+
+    position:
+        absolute;
+
+    left:
+        15px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        6px;
+
+    color:
+        #52a9ee;
+
+    background:
+        rgba(0, 120, 255, .08);
+
+    font-size:
+        12px;
+
+    pointer-events:
+        none;
+
+    z-index:
+        2;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.visaguardian-form-control {
+
+    width:
+        100%;
+
+    height:
+        50px;
+
+    padding:
+        10px 14px 10px 50px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(91, 137, 184, .25);
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(5, 25, 52, .72);
+
+    color:
+        #eaf4ff;
+
+    font-size:
+        13px;
+
+    outline:
+        none;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.025);
+
+    transition:
+        border-color .22s ease,
+        box-shadow .22s ease,
+        background .22s ease;
+}
+
+
+.visaguardian-form-control::placeholder {
+
+    color:
+        #647d9a;
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+.visaguardian-form-control:focus {
+
+    background:
+        rgba(7, 34, 68, .88);
+
+    border-color:
+        rgba(30, 148, 255, .85);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(20, 130, 255, .09),
+
+        0 0 18px
+        rgba(0, 120, 255, .07);
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.visaguardian-btn-primary {
+
+    width:
+        100%;
+
+    height:
+        51px;
+
+    border:
+        none;
+
+    border-radius:
+        9px;
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #0876df,
+            #1455d0,
+            #6332df
+        );
+
+    background-size:
+        180% 100%;
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        .15px;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+
+        0 9px 25px
+        rgba(0, 105, 230, .22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.12);
+
+    transition:
+        all .28s ease;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+}
+
+
+/* Button shine */
+
+.visaguardian-btn-primary::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        -100%;
+
+    width:
+        65%;
+
+    height:
+        100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.16),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left .55s ease;
+}
+
+
+.visaguardian-btn-primary:hover::before {
+
+    left:
+        140%;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
+.visaguardian-btn-primary:hover {
+
+    background-position:
+        100% 0;
+
+    box-shadow:
+
+        0 12px 30px
+        rgba(0, 110, 255, .30),
+
+        0 0 20px
+        rgba(80, 50, 255, .10);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   BUTTON ACTIVE
+   ========================================================= */
+
+.visaguardian-btn-primary:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   BUTTON DISABLED
+   ========================================================= */
+
+.visaguardian-btn-primary:disabled {
+
+    opacity:
+        .60;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   BUTTON CONTENT
+   ========================================================= */
+
+.button-content {
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+.button-arrow {
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.10);
+
+    transition:
+        transform .25s ease;
+}
+
+
+.visaguardian-btn-primary:hover
+.button-arrow {
+
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading-content {
+
+    opacity:
+        .95;
+}
+
+
+/* =========================================================
+   FORM SECURITY NOTE
+   ========================================================= */
+
+.visaguardian-form-security {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    margin:
+        13px 0 21px;
+
+    color:
+        #607995;
+
+    font-size:
+        10px;
+}
+
+
+.visaguardian-form-security i {
+
+    color:
+        #35aaff;
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.visaguardian-login-footer {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    margin-top:
+        3px;
+
+    padding:
+        18px 32px 22px;
+
+    text-align:
+        center;
+
+    background:
+        rgba(3, 17, 38, .72);
+
+    border-top:
+        1px solid
+        rgba(91, 137, 184, .12);
+}
+
+
+/* =========================================================
+   FOOTER TEXT
+   ========================================================= */
+
+.visaguardian-login-footer p {
+
+    margin:
+        0 0 6px;
+
+    color:
+        #687f9b;
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   REGISTER LINK
+   ========================================================= */
+
+.visaguardian-link-secondary {
+
+    color:
+        #35a6ff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    text-decoration:
+        none;
+
+    transition:
+        color .2s ease;
+}
+
+
+.visaguardian-link-secondary i {
+
+    margin-left:
+        5px;
+
+    font-size:
+        10px;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.visaguardian-link-secondary:hover {
+
+    color:
+        #72c4ff;
+
+    text-decoration:
+        none;
+}
+
+
+.visaguardian-link-secondary:hover i {
+
+    transform:
+        translateX(3px);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .visaguardian-login-page-container {
+
+        padding:
+            20px 14px;
+    }
+
+
+    .visaguardian-login-card {
+
+        max-width:
+            100%;
+
+        border-radius:
+            18px;
+    }
+
+
+    .visaguardian-back-container {
+
+        padding:
+            15px 17px 0;
+    }
+
+
+    .visaguardian-card-header {
+
+        padding:
+            18px 20px 20px;
+    }
+
+
+    .visaguardian-logo-container {
+
+        width:
+            65px;
+
+        height:
+            65px;
+    }
+
+
+    .visaguardian-logo-image {
+
+        width:
+            62px;
+
+        height:
+            62px;
+    }
+
+
+    .visaguardian-brand-name {
+
+        font-size:
+            23px;
+    }
+
+
+    .visaguardian-portal-title h2 {
+
+        font-size:
+            21px;
+    }
+
+
+    .portal-line {
+
+        width:
+            25px;
+    }
+
+
+    .visaguardian-login-form {
+
+        padding:
+            0 20px;
+    }
+
+
+    .visaguardian-alert {
+
+        margin-left:
+            20px;
+
+        margin-right:
+            20px;
+    }
+
+
+    .visaguardian-login-footer {
+
+        padding:
+            17px 20px 21px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>login page</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() { 
+ 
+    // ===================================================== 
+    // INITIAL DATA 
+    // ===================================================== 
+ 
+    data.userExists = false; 
+    data.login_success = false; 
+    data.login_error = ""; 
+    data.redirect_url = ""; 
+ 
+ 
+    // ===================================================== 
+    // CHECK CURRENT LOGIN 
+    // ===================================================== 
+ 
+    if (gs.isLoggedIn() && gs.getUserName() != "guest") { 
+ 
+        var currentUserId = gs.getUserID(); 
+ 
+        var studentProfile = 
+            new GlideRecord("x_snc_visaguardi_0_student_profile"); 
+ 
+        studentProfile.addQuery("user", currentUserId); 
+        studentProfile.setLimit(1); 
+        studentProfile.query(); 
+ 
+        if (studentProfile.next()) { 
+ 
+            data.userExists = true; 
+ 
+        } else { 
+ 
+            // Fallback: search by User ID 
+            var currentUser = 
+                new GlideRecord("sys_user"); 
+ 
+            if (currentUser.get(currentUserId)) { 
+ 
+                var profileByUsername = 
+                    new GlideRecord( 
+                        "x_snc_visaguardi_0_student_profile" 
+                    ); 
+ 
+                profileByUsername.addQuery( 
+                    "user_name", 
+                    currentUser.getValue("user_name") 
+                ); 
+ 
+                profileByUsername.setLimit(1); 
+                profileByUsername.query(); 
+ 
+                if (profileByUsername.next()) { 
+                    data.userExists = true; 
+                } 
+            } 
+        } 
+    } 
+ 
+ 
+    // ===================================================== 
+    // LOGIN SUBMISSION 
+    // ===================================================== 
+ 
+    if ( 
+        input && 
+        input.username && 
+        input.password 
+    ) { 
+ 
+        var username = 
+            String(input.username).trim(); 
+ 
+        var password = 
+            String(input.password); 
+ 
+ 
+        // ================================================= 
+        // FIND USER BY USERNAME OR EMAIL 
+        // ================================================= 
+ 
+        var userGr = 
+            new GlideRecord("sys_user"); 
+ 
+ 
+        // IMPORTANT: 
+        // Use GlideQueryCondition for OR 
+        var condition = 
+            userGr.addQuery( 
+                "user_name", 
+                username 
+            ); 
+ 
+        condition.addOrCondition( 
+            "email", 
+            username 
+        ); 
+ 
+ 
+        // Only active users 
+        userGr.addQuery( 
+            "active", 
+            true 
+        ); 
+ 
+        userGr.setLimit(1); 
+ 
+        userGr.query(); 
+ 
+ 
+        // ================================================= 
+        // USER NOT FOUND 
+        // ================================================= 
+ 
+        if (!userGr.next()) { 
+ 
+            data.login_success = false; 
+ 
+            data.login_error = 
+                "User ID or Email not found."; 
+ 
+            return; 
+        } 
+ 
+ 
+        // ================================================= 
+        // USER INFORMATION 
+        // ================================================= 
+ 
+        var actualUsername = 
+            userGr.getValue("user_name"); 
+ 
+        var userSysId = 
+            userGr.getUniqueValue(); 
+ 
+ 
+        // ================================================= 
+        // CHECK STUDENT PROFILE 
+        // ================================================= 
+ 
+        var profile = 
+            new GlideRecord( 
+                "x_snc_visaguardi_0_student_profile" 
+            ); 
+ 
+        var profileFound = false; 
+ 
+ 
+        // ------------------------------------------------- 
+        // OPTION 1: USER REFERENCE 
+        // ------------------------------------------------- 
+ 
+        profile.addQuery("user", userSysId); 
+        profile.setLimit(1); 
+        profile.query(); 
+ 
+        if (profile.next()) { 
+ 
+            profileFound = true; 
+        } 
+ 
+ 
+        // ------------------------------------------------- 
+        // OPTION 2: USER NAME 
+        // ------------------------------------------------- 
+ 
+        if (!profileFound) { 
+ 
+            profile = 
+                new GlideRecord( 
+                    "x_snc_visaguardi_0_student_profile" 
+                ); 
+ 
+            profile.addQuery( 
+                "user_name", 
+                actualUsername 
+            ); 
+ 
+            profile.setLimit(1); 
+ 
+            profile.query(); 
+ 
+            if (profile.next()) { 
+ 
+                profileFound = true; 
+            } 
+        } 
+ 
+ 
+        // ================================================= 
+        // PROFILE DOES NOT EXIST 
+        // ================================================= 
+ 
+        if (!profileFound) { 
+ 
+            data.login_success = false; 
+ 
+            data.login_error = 
+                "Student profile was not found for this account."; 
+ 
+            return; 
+        } 
+ 
+// ================================================= 
+// PASSWORD AUTHENTICATION 
+// ================================================= 
+ 
+try { 
+ 
+    if (typeof global.ScopedLoginHelper !== "function") { 
+ 
+        data.login_success = false; 
+ 
+        data.login_error = 
+            "Login helper is not available. Please check ScopedLoginHelper Script Include."; 
+ 
+        gs.error( 
+            "VisaGuardian Login Error: ScopedLoginHelper Script Include is not available." 
+        ); 
+ 
+        return; 
+ 
+    } 
+ 
+    var authHelper = 
+        new global.ScopedLoginHelper(); 
+ 
+    if (typeof authHelper.login !== "function") { 
+ 
+        data.login_success = false; 
+ 
+        data.login_error = 
+            "Login method is not available in ScopedLoginHelper."; 
+ 
+        gs.error( 
+            "VisaGuardian Login Error: login() method is missing in ScopedLoginHelper." 
+        ); 
+ 
+        return; 
+ 
+    } 
+ 
+    var authenticated = 
+        authHelper.login( 
+            actualUsername, 
+            password 
+        ); 
+ 
+ 
+    // ================================================= 
+    // SUCCESS 
+    // ================================================= 
+ 
+    if (authenticated === true) { 
+ 
+        gs.getSession().putClientData( 
+            "vg_student_sys_id", 
+            profile.getUniqueValue() 
+        ); 
+ 
+        gs.getSession().putClientData( 
+            "vg_student_user_name", 
+            profile.getValue("user_name") 
+        ); 
+ 
+        data.login_success = true; 
+ 
+        data.login_error = ""; 
+ 
+        data.redirect_url = 
+            "?id=student_dashboard"; 
+ 
+    } 
+ 
+    // ================================================= 
+    // WRONG PASSWORD 
+    // ================================================= 
+ 
+    else { 
+ 
+        data.login_success = false; 
+ 
+        data.login_error = 
+            "Invalid password. Please try again."; 
+    } 
+ 
+ 
+} catch (ex) { 
+ 
+    data.login_success = false; 
+ 
+    data.login_error = 
+        "Unable to authenticate the account: " + ex.message; 
+ 
+    gs.error( 
+        "VisaGuardian Login Error: " + 
+        ex.message 
+    ); 
+ 
+} 
+         
+    } 
+ 
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 08:43:02</sys_created_on>
+        <sys_id>4cf3b6d21ce6c3107f44ac714309647a</sys_id>
+        <sys_mod_count>27</sys_mod_count>
+        <sys_name>login page</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_4cf3b6d21ce6c3107f44ac714309647a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 06:45:59</sys_updated_on>
+        <template><![CDATA[<div class="visaguardian-login-page-container">
+
+    <!-- ============================================
+         BACKGROUND
+         ============================================ -->
+
+    <div class="guardian-bg-lines"></div>
+
+    <div class="guardian-bg-glow guardian-glow-one"></div>
+    <div class="guardian-bg-glow guardian-glow-two"></div>
+
+    <!-- Decorative particles -->
+    <span class="guardian-particle particle-one"></span>
+    <span class="guardian-particle particle-two"></span>
+    <span class="guardian-particle particle-three"></span>
+    <span class="guardian-particle particle-four"></span>
+
+
+    <!-- ============================================
+         LOGIN CARD
+         ============================================ -->
+
+    <div class="visaguardian-login-card">
+
+
+        <!-- ============================================
+             BACK BUTTON
+             ============================================ -->
+
+        <div class="visaguardian-back-container">
+
+            <button
+                type="button"
+                class="visaguardian-back-button"
+                ng-click="c.goBack()">
+
+                <span class="back-icon">
+                    <i
+                        class="fa fa-arrow-left"
+                        aria-hidden="true">
+                    </i>
+                </span>
+
+                <span>
+                    Back to Home
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ============================================
+             CARD HEADER
+             ============================================ -->
+
+        <div class="visaguardian-card-header">
+
+
+            <!-- LOGO -->
+            <div class="visaguardian-logo-container">
+
+                <img
+                    src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+                    alt="VisaGuardian AI"
+                    class="visaguardian-logo-image">
+
+            </div>
+
+
+            <!-- BRAND -->
+            <div class="visaguardian-brand-name">
+
+                Visa<span>Guardian</span> <strong>AI</strong>
+
+            </div>
+
+
+            <!-- PORTAL -->
+            <div class="visaguardian-portal-title">
+
+                <span class="portal-line"></span>
+
+                <h2>
+                    Student Portal
+                </h2>
+
+                <span class="portal-line"></span>
+
+            </div>
+
+
+            <!-- SUBTITLE -->
+            <p class="visaguardian-card-subtitle">
+
+                Secure login powered by VisaGuardian AI
+
+            </p>
+
+
+            <!-- SECURITY STATUS -->
+            <div class="visaguardian-security-status">
+
+                <span class="security-dot"></span>
+
+                <span>
+                    Secure Authentication
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================================
+             ERROR
+             ============================================ -->
+
+        <div
+            ng-if="c.error"
+            class="visaguardian-alert visaguardian-alert-danger">
+
+            <span class="alert-icon">
+
+                <i
+                    class="fa fa-exclamation-triangle"
+                    aria-hidden="true">
+                </i>
+
+            </span>
+
+            <span>
+                {{c.error}}
+            </span>
+
+        </div>
+
+
+        <!-- ============================================
+             LOGIN FORM
+             ============================================ -->
+
+        <form
+            ng-submit="c.login()"
+            class="visaguardian-login-form">
+
+
+            <!-- ========================================
+                 USERNAME
+                 ======================================== -->
+
+            <div class="visaguardian-form-group">
+
+                <label for="username">
+
+                    User ID or Email
+
+                    <span class="required-asterisk">
+                        *
+                    </span>
+
+                </label>
+
+
+                <div class="visaguardian-input-wrapper">
+
+                    <span class="visaguardian-input-icon">
+
+                        <i
+                            class="fa fa-user"
+                            aria-hidden="true">
+                        </i>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        id="username"
+                        class="visaguardian-form-control"
+                        ng-model="c.data.username"
+                        required
+                        placeholder="Enter your ID or Email"
+                        autocomplete="username">
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================
+                 PASSWORD
+                 ======================================== -->
+
+            <div class="visaguardian-form-group">
+
+                <label for="password">
+
+                    Password
+
+                    <span class="required-asterisk">
+                        *
+                    </span>
+
+                </label>
+
+
+                <div class="visaguardian-input-wrapper">
+
+                    <span class="visaguardian-input-icon">
+
+                        <i
+                            class="fa fa-lock"
+                            aria-hidden="true">
+                        </i>
+
+                    </span>
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        class="visaguardian-form-control"
+                        ng-model="c.data.password"
+                        required
+                        placeholder="Enter your Password"
+                        autocomplete="current-password">
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================
+                 SIGN IN BUTTON
+                 ======================================== -->
+
+            <button
+                type="submit"
+                class="visaguardian-btn visaguardian-btn-primary visaguardian-btn-block"
+                ng-disabled="c.loading">
+
+
+                <!-- NORMAL -->
+                <span
+                    ng-if="!c.loading"
+                    class="button-content">
+
+                    <span>
+                        Sign In Securely
+                    </span>
+
+                    <span class="button-arrow">
+
+                        <i
+                            class="fa fa-arrow-right"
+                            aria-hidden="true">
+                        </i>
+
+                    </span>
+
+                </span>
+
+
+                <!-- LOADING -->
+                <span
+                    ng-if="c.loading"
+                    class="button-content loading-content">
+
+                    <i
+                        class="fa fa-spinner fa-spin"
+                        aria-hidden="true">
+                    </i>
+
+                    <span>
+                        Authorizing...
+                    </span>
+
+                </span>
+
+            </button>
+
+
+            <!-- SECURITY NOTE -->
+
+            <div class="visaguardian-form-security">
+
+                <i
+                    class="fa fa-shield"
+                    aria-hidden="true">
+                </i>
+
+                <span>
+                    Your credentials are securely protected
+                </span>
+
+            </div>
+
+        </form>
+
+
+        <!-- ============================================
+             FOOTER
+             ============================================ -->
+
+        <div class="visaguardian-login-footer">
+
+            <p>
+                Don't have an account?
+            </p>
+
+            <a
+                href="?id=registration_page"
+                class="visaguardian-link-secondary">
+
+                Register here for new user access
+
+                <i
+                    class="fa fa-arrow-right"
+                    aria-hidden="true">
+                </i>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

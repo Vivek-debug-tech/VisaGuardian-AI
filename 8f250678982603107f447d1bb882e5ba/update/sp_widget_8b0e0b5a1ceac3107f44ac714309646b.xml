@@ -1,0 +1,2622 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window, $timeout) {
+
+    var c = this;
+
+    c.loading = false;
+    c.error = "";
+    c.success = "";
+
+
+    c.data.form = c.data.form || {
+
+        first_name: "",
+        last_name: "",
+        email: "",
+        mobile_phone: "",
+        user_name: "",
+        employee_number: "",
+        department: "",
+        experience: "",
+        password: "",
+        confirm_password: ""
+
+    };
+
+
+    c.register = function() {
+
+        c.error = "";
+        c.success = "";
+
+
+        var f = c.data.form;
+
+
+        if (!f.first_name) {
+            c.error = "Please enter your first name.";
+            return;
+        }
+
+        if (!f.last_name) {
+            c.error = "Please enter your last name.";
+            return;
+        }
+
+        if (!f.email) {
+            c.error = "Please enter your email address.";
+            return;
+        }
+
+        if (!f.mobile_phone) {
+            c.error = "Please enter your mobile number.";
+            return;
+        }
+
+        if (!f.user_name) {
+            c.error = "Please enter a username.";
+            return;
+        }
+
+        if (!f.employee_number) {
+            c.error = "Please enter your Advisor ID.";
+            return;
+        }
+
+        if (!f.password) {
+            c.error = "Please enter a password.";
+            return;
+        }
+
+        if (f.password.length < 8) {
+            c.error =
+                "Password must contain at least 8 characters.";
+            return;
+        }
+
+        if (f.password !== f.confirm_password) {
+            c.error = "Passwords do not match.";
+            return;
+        }
+
+
+        c.loading = true;
+
+
+        c.server.update().then(function() {
+
+            c.loading = false;
+
+
+            if (c.data.registration_success) {
+
+                c.success =
+                    c.data.registration_message;
+
+                $timeout(function() {
+
+                    $window.location.href =
+                        "?id=advisor_login";
+
+                }, 1500);
+
+            } else {
+
+                c.error =
+                    c.data.registration_error ||
+                    "Unable to create Advisor account.";
+
+            }
+
+        }).catch(function(error) {
+
+            c.loading = false;
+
+            c.error =
+                "Unable to complete registration.";
+
+            console.error(
+                "Registration error:",
+                error
+            );
+
+        });
+
+    };
+
+
+    c.goBack = function() {
+
+        $window.location.href =
+            "?id=visa_home_page";
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   ADVISOR REGISTRATION
+   PREMIUM STUDENT-PORTAL THEME
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.vg-advisor-register-page {
+
+    min-height: 100vh;
+    width: 100%;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 34px 20px;
+
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background:
+        radial-gradient(
+            circle at 12% 10%,
+            rgba(0, 119, 255, .18),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 88% 88%,
+            rgba(75, 57, 210, .18),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #020b1d 0%,
+            #03162e 48%,
+            #02091b 100%
+        );
+}
+
+
+/* =========================================================
+   GRID BACKGROUND
+   ========================================================= */
+
+.vg-register-grid {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .22;
+
+    background-image:
+
+        linear-gradient(
+            rgba(71, 145, 207, .055) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(71, 145, 207, .055) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        70px 70px;
+
+    z-index: 0;
+}
+
+
+/* =========================================================
+   BACKGROUND ORBS
+   ========================================================= */
+
+.vg-register-orb {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+.vg-register-orb-one {
+
+    width: 520px;
+    height: 520px;
+
+    left: -280px;
+    top: -300px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 123, 255, .22),
+            rgba(0, 123, 255, .08) 48%,
+            transparent 70%
+        );
+}
+
+
+.vg-register-orb-two {
+
+    width: 570px;
+    height: 570px;
+
+    right: -350px;
+    bottom: -370px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(82, 55, 215, .19),
+            rgba(82, 55, 215, .05) 52%,
+            transparent 70%
+        );
+}
+
+
+.vg-register-orb-three {
+
+    width: 250px;
+    height: 250px;
+
+    right: 15%;
+    top: -180px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0, 145, 255, .07),
+            transparent 70%
+        );
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.vg-register-card {
+
+    width: 100%;
+
+    max-width: 610px;
+
+    position: relative;
+
+    z-index: 5;
+
+    box-sizing: border-box;
+
+    padding:
+        31px
+        34px
+        25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8, 31, 57, .97),
+            rgba(3, 17, 36, .98)
+        );
+
+    border:
+        1px solid
+        rgba(78, 151, 215, .32);
+
+    border-radius: 20px;
+
+    box-shadow:
+
+        0 35px 90px
+        rgba(0, 0, 0, .50),
+
+        0 0 60px
+        rgba(0, 105, 220, .08),
+
+        inset 0 1px 0
+        rgba(255,255,255,.055);
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    animation:
+        vg-card-enter
+        .55s
+        ease
+        both;
+}
+
+
+@keyframes vg-card-enter {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px)
+            scale(.985);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   CARD TOP ACCENT
+   ========================================================= */
+
+.vg-register-card-accent {
+
+    position: absolute;
+
+    left: 12%;
+    right: 12%;
+
+    top: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #218ee8,
+            transparent
+        );
+
+    opacity: .8;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.vg-register-back {
+
+    margin-bottom: 23px;
+}
+
+
+.vg-register-back button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 8px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #73b8ed;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        color .2s ease,
+        background .2s ease,
+        transform .2s ease;
+}
+
+
+.vg-register-back button:hover {
+
+    color: #ffffff;
+
+    background:
+        rgba(29, 137, 226, .10);
+
+    transform:
+        translateX(-2px);
+}
+
+
+.vg-back-icon {
+
+    color: #2498ee;
+
+    font-size: 15px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.vg-register-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 23px;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.vg-register-logo {
+
+    width: 56px;
+    height: 56px;
+
+    min-width: 56px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8, 103, 194, .35),
+            rgba(7, 51, 99, .45)
+        );
+
+    border:
+        1px solid
+        rgba(62, 158, 237, .34);
+
+    box-shadow:
+
+        0 10px 28px
+        rgba(0, 100, 210, .22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.08);
+}
+
+
+.vg-register-logo img {
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+
+    padding: 5px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BRAND TEXT
+   ========================================================= */
+
+.vg-register-brand-name {
+
+    color: #f5f9ff;
+
+    font-size: 21px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: -.45px;
+}
+
+
+.vg-register-brand-name span {
+
+    color: #269af4;
+}
+
+
+.vg-register-brand-subtitle {
+
+    margin-top: 4px;
+
+    color: #728ba6;
+
+    font-size: 10px;
+
+    letter-spacing: .15px;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.vg-register-heading {
+
+    margin-bottom: 22px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        1px solid
+        rgba(92, 142, 184, .13);
+}
+
+
+.vg-register-heading-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 5px 10px;
+
+    margin-bottom: 11px;
+
+    border-radius: 20px;
+
+    color: #71d5a3;
+
+    background:
+        rgba(42, 194, 116, .075);
+
+    border:
+        1px solid
+        rgba(42, 194, 116, .20);
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    letter-spacing: .2px;
+}
+
+
+.vg-status-dot {
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #22c77a;
+
+    box-shadow:
+        0 0 9px
+        rgba(34,199,122,.75);
+}
+
+
+.vg-register-heading h1 {
+
+    margin: 0;
+
+    color: #f3f8ff;
+
+    font-size: 25px;
+
+    line-height: 1.25;
+
+    font-weight: 780;
+
+    letter-spacing: -.45px;
+}
+
+
+.vg-register-heading p {
+
+    margin: 7px 0 0;
+
+    color: #718ca7;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+.vg-register-heading p strong {
+
+    color: #92aac1;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FORM SECTION
+   ========================================================= */
+
+.vg-form-section {
+
+    margin-bottom: 20px;
+
+    padding: 17px 17px 2px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(7, 28, 51, .38);
+
+    border:
+        1px solid
+        rgba(76, 132, 177, .12);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.018);
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.vg-section-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid
+        rgba(89, 137, 177, .11);
+}
+
+
+.vg-section-icon {
+
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background:
+        rgba(35, 131, 219, .10);
+
+    border:
+        1px solid
+        rgba(58, 149, 225, .16);
+
+    font-size: 14px;
+}
+
+
+.vg-security-icon {
+
+    background:
+        rgba(36, 195, 119, .08);
+
+    border-color:
+        rgba(36, 195, 119, .15);
+}
+
+
+.vg-section-title {
+
+    color: #d9e9f8;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.vg-section-description {
+
+    margin-top: 3px;
+
+    color: #607b96;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   NAME ROW
+   ========================================================= */
+
+.vg-register-row {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 13px;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.vg-register-field {
+
+    margin-bottom: 14px;
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.vg-register-field label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #b9cde1;
+
+    font-size: 10px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+}
+
+
+.vg-register-field label span {
+
+    color: #ff6972;
+
+    margin-left: 2px;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.vg-register-input {
+
+    width: 100%;
+
+    height: 41px;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        rgba(91, 142, 184, .30);
+
+    border-radius: 8px;
+
+    background:
+        #edf4fd;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+
+/* =========================================================
+   INPUT ICON
+   ========================================================= */
+
+.vg-input-icon {
+
+    width: 39px;
+
+    min-width: 39px;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    color: #57438d;
+
+    background:
+        rgba(216, 230, 248, .75);
+
+    border-right:
+        1px solid
+        rgba(181, 205, 232, .72);
+
+    font-size: 11px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   INPUT / SELECT
+   ========================================================= */
+
+.vg-register-input input,
+.vg-register-input select {
+
+    width: 100%;
+
+    min-width: 0;
+
+    height: 100%;
+
+    padding:
+        0 11px;
+
+    box-sizing: border-box;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #172f49;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+   ========================================================= */
+
+.vg-register-input input::placeholder {
+
+    color: #8b9db0;
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.vg-register-input select {
+
+    color: #526a81;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.vg-register-input:focus-within {
+
+    border-color: #2297ef;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(34,151,239,.10),
+
+        0 7px 20px
+        rgba(0,90,180,.08);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   AUTOFILL
+   ========================================================= */
+
+.vg-register-input input:-webkit-autofill {
+
+    -webkit-text-fill-color: #172f49;
+
+    -webkit-box-shadow:
+        0 0 0 1000px #edf4fd inset;
+
+    transition:
+        background-color 9999s ease-in-out 0s;
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.vg-register-alert {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    padding: 11px 13px;
+
+    margin-bottom: 18px;
+
+    border-radius: 9px;
+
+    box-sizing: border-box;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+.vg-alert-icon {
+
+    width: 24px;
+    height: 24px;
+
+    min-width: 24px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.vg-alert-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.vg-alert-content strong {
+
+    font-size: 10px;
+}
+
+
+.vg-alert-content span {
+
+    font-size: 9px;
+
+    opacity: .9;
+}
+
+
+/* =========================================================
+   SUCCESS
+   ========================================================= */
+
+.vg-register-success {
+
+    color: #6bdda7;
+
+    background:
+        rgba(36,194,115,.07);
+
+    border:
+        1px solid
+        rgba(36,194,115,.20);
+}
+
+
+.vg-register-success .vg-alert-icon {
+
+    color: #45d78e;
+
+    background:
+        rgba(36,194,115,.12);
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-register-error {
+
+    color: #ff9299;
+
+    background:
+        rgba(231,67,80,.07);
+
+    border:
+        1px solid
+        rgba(231,67,80,.20);
+}
+
+
+.vg-register-error .vg-alert-icon {
+
+    color: #ff747d;
+
+    background:
+        rgba(231,67,80,.12);
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.vg-register-button {
+
+    width: 100%;
+
+    height: 46px;
+
+    margin-top: 2px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #078bea 0%,
+            #156ee2 52%,
+            #254ed3 100%
+        );
+
+    color: #ffffff;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow:
+
+        0 10px 28px
+        rgba(7,123,235,.24),
+
+        inset 0 1px 0
+        rgba(255,255,255,.14);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+
+.vg-register-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.06);
+
+    box-shadow:
+
+        0 14px 34px
+        rgba(7,123,235,.32),
+
+        inset 0 1px 0
+        rgba(255,255,255,.15);
+}
+
+
+.vg-register-button:active {
+
+    transform:
+        translateY(0);
+
+    box-shadow:
+        0 7px 18px
+        rgba(7,123,235,.20);
+}
+
+
+.vg-register-button:disabled {
+
+    opacity: .58;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    filter: none;
+}
+
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.vg-register-arrow {
+
+    margin-left: 8px;
+
+    font-size: 14px;
+
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.vg-register-login {
+
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: #7189a2;
+
+    font-size: 10px;
+}
+
+
+.vg-register-login a {
+
+    margin-left: 4px;
+
+    color: #2a9cf5;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        color .2s ease;
+}
+
+
+.vg-register-login a:hover {
+
+    color: #7bc8ff;
+
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   SECURITY FOOTER
+   ========================================================= */
+
+.vg-register-security {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 16px;
+
+    padding-top: 13px;
+
+    border-top:
+        1px solid
+        rgba(95,143,184,.12);
+
+    color: #5f7a94;
+
+    font-size: 9px;
+
+    text-align: center;
+}
+
+
+.vg-security-lock {
+
+    font-size: 10px;
+}
+
+
+.vg-security-dot {
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #3276a9;
+}
+
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.vg-register-card:hover {
+
+    border-color:
+        rgba(81,151,214,.38);
+
+    box-shadow:
+
+        0 40px 95px
+        rgba(0,0,0,.52),
+
+        0 0 65px
+        rgba(0,104,220,.09),
+
+        inset 0 1px 0
+        rgba(255,255,255,.06);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+    .vg-advisor-register-page {
+
+        padding:
+            20px 14px;
+
+        align-items:
+            flex-start;
+    }
+
+
+    .vg-register-card {
+
+        max-width: 590px;
+
+        margin:
+            10px 0;
+
+        padding:
+            28px 25px 24px;
+    }
+
+
+    .vg-register-heading h1 {
+
+        font-size: 23px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .vg-advisor-register-page {
+
+        padding: 10px;
+
+        min-height: 100vh;
+    }
+
+
+    .vg-register-card {
+
+        padding:
+            23px 16px 20px;
+
+        border-radius: 16px;
+    }
+
+
+    .vg-register-back {
+
+        margin-bottom: 19px;
+    }
+
+
+    .vg-register-brand {
+
+        gap: 11px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .vg-register-logo {
+
+        width: 50px;
+        height: 50px;
+
+        min-width: 50px;
+
+        border-radius: 13px;
+    }
+
+
+    .vg-register-brand-name {
+
+        font-size: 18px;
+    }
+
+
+    .vg-register-brand-subtitle {
+
+        font-size: 9px;
+    }
+
+
+    .vg-register-heading {
+
+        margin-bottom: 18px;
+
+        padding-bottom: 14px;
+    }
+
+
+    .vg-register-heading h1 {
+
+        font-size: 21px;
+    }
+
+
+    .vg-register-heading p {
+
+        font-size: 10px;
+    }
+
+
+    .vg-form-section {
+
+        padding:
+            14px 12px 1px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .vg-register-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    .vg-section-header {
+
+        margin-bottom: 13px;
+    }
+
+
+    .vg-register-field {
+
+        margin-bottom: 13px;
+    }
+
+
+    .vg-register-input {
+
+        height: 43px;
+    }
+
+
+    .vg-register-button {
+
+        height: 45px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .vg-register-card {
+
+        padding-left: 13px;
+
+        padding-right: 13px;
+    }
+
+
+    .vg-register-brand-name {
+
+        font-size: 17px;
+    }
+
+
+    .vg-register-heading h1 {
+
+        font-size: 19px;
+    }
+
+
+    .vg-form-section {
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .vg-register-card {
+
+        animation: none;
+    }
+
+
+    .vg-register-button,
+    .vg-register-input,
+    .vg-register-back button {
+
+        transition: none;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_registration</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Advisor Registration</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.registration_success = false;
+    data.registration_error = "";
+    data.registration_message = "";
+
+    if (!input) {
+        return;
+    }
+
+    var form = input.form || {};
+
+    var username = String(form.user_name || "").trim();
+    var password = String(form.password || "");
+
+    var firstName = String(form.first_name || "").trim();
+    var lastName = String(form.last_name || "").trim();
+
+    var email = String(form.email || "").trim();
+    var phone = String(form.phone || "").trim();
+    var mobilePhone = String(form.mobile_phone || "").trim();
+
+    var specialization = String(form.specialization || "").trim();
+
+
+    // =====================================================
+    // VALIDATION
+    // =====================================================
+
+    if (!username) {
+        data.registration_error = "Please enter a username.";
+        return;
+    }
+
+    if (!password) {
+        data.registration_error = "Please enter a password.";
+        return;
+    }
+
+    if (!firstName) {
+        data.registration_error = "Please enter your first name.";
+        return;
+    }
+
+    if (!lastName) {
+        data.registration_error = "Please enter your last name.";
+        return;
+    }
+
+    if (!email) {
+        data.registration_error = "Please enter your email.";
+        return;
+    }
+
+
+    // =====================================================
+    // CHECK USERNAME
+    // =====================================================
+
+    var existingUser = new GlideRecord("sys_user");
+
+    existingUser.addQuery("user_name", username);
+    existingUser.setLimit(1);
+    existingUser.query();
+
+    if (existingUser.next()) {
+        data.registration_error = "Username already exists.";
+        return;
+    }
+
+
+    // =====================================================
+    // CHECK EMAIL
+    // =====================================================
+
+    var existingEmail = new GlideRecord("sys_user");
+
+    existingEmail.addQuery("email", email);
+    existingEmail.setLimit(1);
+    existingEmail.query();
+
+    if (existingEmail.next()) {
+        data.registration_error =
+            "An account with this email already exists.";
+        return;
+    }
+
+
+    if (!specialization) {
+    data.registration_error =
+        "Please select your specialization.";
+    return;
+}
+
+
+    // =====================================================
+    // CREATE SYS_USER
+    // =====================================================
+
+    var userGR = new GlideRecord("sys_user");
+
+    userGR.initialize();
+
+    userGR.setValue("user_name", username);
+    userGR.setValue("first_name", firstName);
+    userGR.setValue("last_name", lastName);
+    userGR.setValue("email", email);
+
+    if (phone) {
+        userGR.setValue("phone", phone);
+    }
+
+    if (mobilePhone) {
+        userGR.setValue("mobile_phone", mobilePhone);
+    }
+
+    userGR.setValue("active", true);
+
+    userGR.setValue("user_password", password);
+
+
+    var userSysId = userGR.insert();
+
+
+    if (!userSysId) {
+        data.registration_error =
+            "Unable to create the Advisor user.";
+        return;
+    }
+
+
+    // =====================================================
+    // FIND ADVISOR ROLE
+    // =====================================================
+
+    var roleGR = new GlideRecord("sys_user_role");
+
+    roleGR.addQuery(
+        "name",
+        "x_snc_visaguardi_0.advisor"
+    );
+
+    roleGR.setLimit(1);
+    roleGR.query();
+
+
+    if (!roleGR.next()) {
+
+        var deleteUser = new GlideRecord("sys_user");
+
+        if (deleteUser.get(userSysId)) {
+            deleteUser.deleteRecord();
+        }
+
+        data.registration_error =
+            "Advisor role was not found.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // ASSIGN ADVISOR ROLE
+    // =====================================================
+
+    var userRole = new GlideRecord("sys_user_has_role");
+
+    userRole.initialize();
+
+    userRole.setValue("user", userSysId);
+    userRole.setValue("role", roleGR.getUniqueValue());
+
+    userRole.insert();
+
+
+    // =====================================================
+    // CREATE ADVISOR PROFILE
+    // =====================================================
+
+    var profileGR = new GlideRecord(
+        "x_snc_visaguardi_0_advisor_profiles"
+    );
+
+    profileGR.initialize();
+
+
+    // IMPORTANT:
+    // Reference to sys_user
+
+    profileGR.setValue(
+        "user",
+        userSysId
+    );
+
+
+    // =====================================================
+    // ADVISOR ID
+    // =====================================================
+
+    var advisorId =
+        "ADV-" +
+        userSysId.substring(0, 8).toUpperCase();
+
+    profileGR.setValue(
+        "advisor_id",
+        advisorId
+    );
+
+
+    // =====================================================
+    // PERSONAL INFORMATION
+    // =====================================================
+
+    profileGR.setValue(
+        "first_name",
+        firstName
+    );
+
+    profileGR.setValue(
+        "last_name",
+        lastName
+    );
+
+
+    // =====================================================
+    // CONTACT
+    // =====================================================
+
+    profileGR.setValue(
+        "email",
+        email
+    );
+
+    profileGR.setValue(
+        "mobile_number",
+        mobilePhone
+    );
+
+
+   
+ // =====================================================
+// SPECIALIZATION
+// =====================================================
+
+profileGR.setValue(
+    "specialization",
+    specialization
+);
+
+
+    // =====================================================
+    // EXPERIENCE
+    // =====================================================
+
+    profileGR.setValue(
+        "experience_years",
+        0
+    );
+
+
+    // =====================================================
+    // ACTIVE
+    // =====================================================
+
+    profileGR.setValue(
+        "active",
+        true
+    );
+
+
+    // =====================================================
+    // INSERT PROFILE
+    // =====================================================
+
+    var profileSysId =
+        profileGR.insert();
+
+
+    if (!profileSysId) {
+
+        data.registration_error =
+            "User was created, but Advisor Profile could not be created.";
+
+        return;
+    }
+
+
+    // =====================================================
+    // SUCCESS
+    // =====================================================
+
+    data.registration_success = true;
+
+    data.registration_message =
+        "Advisor account created successfully.";
+
+    data.user_sys_id =
+        userSysId;
+
+    data.profile_sys_id =
+        profileSysId;
+
+    data.advisor_id =
+        advisorId;
+
+    data.advisor_name =
+        firstName + " " + lastName;
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:35:49</sys_created_on>
+        <sys_id>8b0e0b5a1ceac3107f44ac714309646b</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>Advisor Registration</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_8b0e0b5a1ceac3107f44ac714309646b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 13:49:38</sys_updated_on>
+        <template><![CDATA[<div class="vg-advisor-register-page">
+
+    <!-- =====================================================
+         BACKGROUND DECORATION
+         ===================================================== -->
+
+    <div class="vg-register-orb vg-register-orb-one"></div>
+    <div class="vg-register-orb vg-register-orb-two"></div>
+    <div class="vg-register-orb vg-register-orb-three"></div>
+
+    <div class="vg-register-grid"></div>
+
+
+    <!-- =====================================================
+         MAIN REGISTRATION CARD
+         ===================================================== -->
+
+    <div class="vg-register-card">
+
+
+        <!-- =================================================
+             TOP ACCENT
+             ================================================= -->
+
+        <div class="vg-register-card-accent"></div>
+
+
+        <!-- =================================================
+             BACK TO HOME
+             FUNCTIONALITY UNCHANGED
+             ================================================= -->
+
+        <div class="vg-register-back">
+
+            <button
+                type="button"
+                ng-click="c.goBack()">
+
+                <span class="vg-back-icon">←</span>
+
+                <span>Back to Home</span>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             BRAND
+             ================================================= -->
+
+        <div class="vg-register-brand">
+
+
+            <!-- LOGO -->
+
+            <div class="vg-register-logo">
+
+                <img
+                    src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+                    alt="VisaGuardian AI Logo">
+
+            </div>
+
+
+            <!-- BRAND TEXT -->
+
+            <div class="vg-register-brand-content">
+
+                <div class="vg-register-brand-name">
+
+                    Visa<span>Guardian</span> AI
+
+                </div>
+
+                <div class="vg-register-brand-subtitle">
+
+                    Advisor Workspace
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             PAGE HEADING
+             ================================================= -->
+
+        <div class="vg-register-heading">
+
+            <div class="vg-register-heading-badge">
+
+                <span class="vg-status-dot"></span>
+
+                Secure Registration
+
+            </div>
+
+
+            <h1>
+                Create Advisor Account
+            </h1>
+
+
+            <p>
+                Register for secure access to the
+                <strong>VisaGuardian AI Advisor Workspace</strong>
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             SUCCESS MESSAGE
+             FUNCTIONALITY UNCHANGED
+             ================================================= -->
+
+        <div
+            class="vg-register-alert vg-register-success"
+            ng-if="c.success">
+
+            <div class="vg-alert-icon">
+                ✓
+            </div>
+
+            <div class="vg-alert-content">
+
+                <strong>
+                    Registration Successful
+                </strong>
+
+                <span>
+                    {{c.success}}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ERROR MESSAGE
+             FUNCTIONALITY UNCHANGED
+             ================================================= -->
+
+        <div
+            class="vg-register-alert vg-register-error"
+            ng-if="c.error">
+
+            <div class="vg-alert-icon">
+                !
+            </div>
+
+            <div class="vg-alert-content">
+
+                <strong>
+                    Registration Error
+                </strong>
+
+                <span>
+                    {{c.error}}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORM
+             FUNCTIONALITY UNCHANGED
+             ================================================= -->
+
+        <form
+            ng-submit="c.register()">
+
+
+            <!-- =================================================
+                 PERSONAL INFORMATION
+                 ================================================= -->
+
+            <div class="vg-form-section">
+
+
+                <div class="vg-section-header">
+
+                    <div class="vg-section-icon">
+                        ]]>👤
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <div class="vg-section-title">
+                            Personal Information
+                        </div>
+
+                        <div class="vg-section-description">
+                            Enter your basic advisor details
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NAME ROW -->
+
+                <div class="vg-register-row">
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="vg-register-field">
+
+                        <label>
+
+                            First Name
+
+                            <span>*</span>
+
+                        </label>
+
+
+                        <div class="vg-register-input">
+
+                            <span class="vg-input-icon">
+                                ]]>👤
+<![CDATA[                            </span>
+
+
+                            <input
+                                type="text"
+                                ng-model="c.data.form.first_name"
+                                placeholder="Enter first name"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="vg-register-field">
+
+                        <label>
+
+                            Last Name
+
+                            <span>*</span>
+
+                        </label>
+
+
+                        <div class="vg-register-input">
+
+                            <span class="vg-input-icon">
+                                ]]>👤
+<![CDATA[                            </span>
+
+
+                            <input
+                                type="text"
+                                ng-model="c.data.form.last_name"
+                                placeholder="Enter last name"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Email Address
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ✉
+                        </span>
+
+
+                        <input
+                            type="email"
+                            ng-model="c.data.form.email"
+                            placeholder="advisor@example.com"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Mobile Number
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>📱
+<![CDATA[                        </span>
+
+
+                        <input
+                            type="text"
+                            ng-model="c.data.form.mobile_phone"
+                            placeholder="Enter mobile number"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 ADVISOR INFORMATION
+                 ================================================= -->
+
+            <div class="vg-form-section">
+
+
+                <div class="vg-section-header">
+
+                    <div class="vg-section-icon">
+                        ]]>🎓
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <div class="vg-section-title">
+                            Advisor Information
+                        </div>
+
+                        <div class="vg-section-description">
+                            Define your professional advisor profile
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Username
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>🔑
+<![CDATA[                        </span>
+
+
+                        <input
+                            type="text"
+                            ng-model="c.data.form.user_name"
+                            placeholder="Create username"
+                            autocomplete="username"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADVISOR ID -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Advisor ID / Employee ID
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>🪪
+<![CDATA[                        </span>
+
+
+                        <input
+                            type="text"
+                            ng-model="c.data.form.employee_number"
+                            placeholder="Enter Advisor ID"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SPECIALIZATION -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Specialization
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>🎓
+<![CDATA[                        </span>
+
+
+                        <select
+                            ng-model="c.data.form.specialization"
+                            required>
+
+                            <option value="">
+                                Select specialization
+                            </option>
+
+                            <option value="new_visa_application">
+                                New Visa Application
+                            </option>
+
+                            <option value="cpt_application">
+                                CPT Application
+                            </option>
+
+                            <option value="opt_application">
+                                OPT Application
+                            </option>
+
+                            <option value="visa_renewal">
+                                Visa Renewal
+                            </option>
+
+                            <option value="visa_extension">
+                                Visa Extension
+                            </option>
+
+                            <option value="sevis_update">
+                                SEVIS Update
+                            </option>
+
+                            <option value="status_change">
+                                Status Change
+                            </option>
+
+                            <option value="general_immigration_support">
+                                General immigration support
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="vg-register-field">
+
+                    <label>
+                        Experience
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>📊
+<![CDATA[                        </span>
+
+
+                        <select
+                            ng-model="c.data.form.experience">
+
+                            <option value="">
+                                Select experience
+                            </option>
+
+                            <option value="0-1 Years">
+                                0-1 Years
+                            </option>
+
+                            <option value="1-3 Years">
+                                1-3 Years
+                            </option>
+
+                            <option value="3-5 Years">
+                                3-5 Years
+                            </option>
+
+                            <option value="5+ Years">
+                                5+ Years
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 SECURITY INFORMATION
+                 ================================================= -->
+
+            <div class="vg-form-section vg-security-section">
+
+
+                <div class="vg-section-header">
+
+                    <div class="vg-section-icon vg-security-icon">
+                        ]]>🔐
+<![CDATA[                    </div>
+
+                    <div>
+
+                        <div class="vg-section-title">
+                            Account Security
+                        </div>
+
+                        <div class="vg-section-description">
+                            Create credentials for secure advisor access
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Password
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>🔒
+<![CDATA[                        </span>
+
+
+                        <input
+                            type="password"
+                            ng-model="c.data.form.password"
+                            placeholder="Create password"
+                            autocomplete="new-password"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="vg-register-field">
+
+                    <label>
+
+                        Confirm Password
+
+                        <span>*</span>
+
+                    </label>
+
+
+                    <div class="vg-register-input">
+
+                        <span class="vg-input-icon">
+                            ]]>🔒
+<![CDATA[                        </span>
+
+
+                        <input
+                            type="password"
+                            ng-model="c.data.form.confirm_password"
+                            placeholder="Confirm password"
+                            autocomplete="new-password"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT
+                 FUNCTIONALITY UNCHANGED
+                 ================================================= -->
+
+            <button
+                type="submit"
+                class="vg-register-button"
+                ng-disabled="c.loading">
+
+
+                <span ng-if="!c.loading">
+
+                    <span>
+                        Create Advisor Account
+                    </span>
+
+                    <span class="vg-register-arrow">
+                        →
+                    </span>
+
+                </span>
+
+
+                <span ng-if="c.loading">
+
+                    Creating Account...
+
+                </span>
+
+
+            </button>
+
+
+        </form>
+
+
+        <!-- =================================================
+             LOGIN
+             FUNCTIONALITY UNCHANGED
+             ================================================= -->
+
+        <div class="vg-register-login">
+
+            <span>
+                Already have an account?
+            </span>
+
+            <a href="?id=advisor_login">
+                Sign in here
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             SECURITY FOOTER
+             ================================================= -->
+
+        <div class="vg-register-security">
+
+            <span class="vg-security-lock">
+                ]]>🔐
+<![CDATA[            </span>
+
+            <span>
+                Secure Advisor Registration
+            </span>
+
+            <span class="vg-security-dot"></span>
+
+            <span>
+                VisaGuardian AI
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>8b0e0b5a1ceac3107f44ac714309646b</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:35:49</sys_created_on>
+        <sys_id>070e0b5a1ceac3107f44ac714309646f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 10:35:49</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

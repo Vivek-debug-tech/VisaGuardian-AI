@@ -1,0 +1,2229 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window) {
+  var c = this;
+  c.faqSearch = '';
+  c.selectedCategory = 'ALL';
+
+  c.ticket = {
+    category: '',
+    priority: 'Medium',
+    subject: '',
+    description: ''
+  };
+
+  c.setFaqFilter = function(cat) {
+    c.selectedCategory = cat;
+    c.faqSearch = (cat === 'ALL') ? '' : cat;
+  };
+
+  c.filterFaqs = function(item) {
+    if (!c.faqSearch) return true;
+    var q = c.faqSearch.toLowerCase();
+    return (
+      (item.question && item.question.toLowerCase().indexOf(q) !== -1) ||
+      (item.answer && item.answer.toLowerCase().indexOf(q) !== -1) ||
+      (item.category && item.category.toLowerCase().indexOf(q) !== -1)
+    );
+  };
+
+  c.scrollToSection = function(id) {
+    var element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  c.submitTicket = function() {
+    c.server.get({
+      action: 'submit_dso_ticket',
+      ticket: c.ticket
+    }).then(function(r) {
+      $window.alert('DSO Support Request submitted! Reference ID: DSO-TKT-' + Math.floor(Math.random() * 9000 + 1000));
+      c.ticket = {
+        category: '',
+        priority: 'Medium',
+        subject: '',
+        description: ''
+      };
+    });
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   DSO HELP &amp; SUPPORT DESK
+   PREMIUM ENTERPRISE THEME
+   ========================================================= */
+
+.vg-help-container {
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  color: #173f6d;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #f2f6fb 100%
+    );
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   BOX SIZING
+   ========================================================= */
+
+.vg-help-container *,
+.vg-help-container *::before,
+.vg-help-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-help-container .vg-help-hero {
+
+  position: relative;
+
+  min-height: 124px;
+
+  padding: 27px 38px;
+
+  margin-bottom: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #081e3a 0%,
+      #123f77 55%,
+      #236abd 100%
+    );
+
+  box-shadow:
+    0 12px 30px
+    rgba(9,35,65,.16);
+
+  color: #ffffff;
+}
+
+
+/* Decorative circles */
+
+.vg-help-container .vg-help-hero::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  right: -110px;
+  top: -170px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,.055);
+}
+
+
+.vg-help-container .vg-help-hero::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 190px;
+  height: 190px;
+
+  right: 22%;
+  bottom: -150px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(74,153,255,.08);
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.vg-help-container .help-hero-content {
+
+  position: relative;
+
+  z-index: 2;
+}
+
+
+.vg-help-container .help-eyebrow {
+
+  margin-bottom: 7px;
+
+  color:
+    rgba(255,255,255,.75);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+}
+
+
+.vg-help-container .help-eyebrow i {
+
+  margin-right: 6px;
+
+  color: #8fc1ff;
+}
+
+
+.vg-help-container .help-hero-content h2 {
+
+  margin: 0 0 6px;
+
+  color: #ffffff;
+
+  font-size: 27px;
+
+  line-height: 1.2;
+
+  font-weight: 750;
+
+  letter-spacing: -.4px;
+}
+
+
+.vg-help-container .help-hero-content p {
+
+  margin: 0;
+
+  max-width: 900px;
+
+  color:
+    rgba(255,255,255,.78);
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   HERO BUTTON
+   ========================================================= */
+
+.vg-help-container .vg-help-hero-btn {
+
+  position: relative;
+
+  z-index: 5;
+
+  padding: 10px 18px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.4);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  transition: all .2s ease;
+}
+
+
+.vg-help-container .vg-help-hero-btn:hover {
+
+  background: #ffffff;
+
+  color: #123f77;
+
+  border-color: #ffffff;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 6px 15px
+    rgba(0,0,0,.15);
+}
+
+
+/* =========================================================
+   CATEGORY CARDS
+   ========================================================= */
+
+.vg-help-container .vg-support-categories {
+
+  margin-bottom: 28px;
+}
+
+
+.vg-help-container .support-category-card {
+
+  min-height: 118px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 17px;
+
+  padding: 20px 22px;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e1e8f1;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 7px 22px
+    rgba(31,62,98,.05);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+
+.vg-help-container .support-category-card:hover {
+
+  transform: translateY(-2px);
+
+  border-color: #d5e1ef;
+
+  box-shadow:
+    0 11px 28px
+    rgba(31,62,98,.09);
+}
+
+
+/* =========================================================
+   CATEGORY ICON
+   ========================================================= */
+
+.vg-help-container .category-icon {
+
+  width: 64px;
+
+  height: 64px;
+
+  min-width: 64px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 22px;
+}
+
+
+.vg-help-container .category-blue {
+
+  background: #eaf2ff;
+
+  color: #2563eb;
+}
+
+
+.vg-help-container .category-orange {
+
+  background: #fff3dc;
+
+  color: #ef982d;
+}
+
+
+.vg-help-container .category-green {
+
+  background: #e7f7ed;
+
+  color: #08a66c;
+}
+
+
+/* =========================================================
+   CATEGORY CONTENT
+   ========================================================= */
+
+.vg-help-container .category-content h3 {
+
+  margin: 0 0 4px;
+
+  font-size: 18px;
+
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+
+.vg-help-container .category-content .category-label {
+
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8b9bb0;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: .65px;
+}
+
+
+.vg-help-container .category-content p {
+
+  margin: 0;
+
+  font-size: 11px;
+
+  font-weight: 650;
+}
+
+
+.vg-help-container .col-md-4:nth-child(1) h3,
+.vg-help-container .col-md-4:nth-child(1) p {
+
+  color: #2563eb;
+}
+
+
+.vg-help-container .col-md-4:nth-child(2) h3,
+.vg-help-container .col-md-4:nth-child(2) p {
+
+  color: #ef8f2b;
+}
+
+
+.vg-help-container .col-md-4:nth-child(3) h3,
+.vg-help-container .col-md-4:nth-child(3) p {
+
+  color: #08a66c;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.vg-help-container .help-main-layout {
+
+  margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.vg-help-container .vg-help-card {
+
+  height: 100%;
+
+  background: #ffffff;
+
+  border:
+    1px solid
+    #e1e8f1;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 7px 22px
+    rgba(31,62,98,.05);
+
+  padding: 24px 28px;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-help-container .help-card-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+
+.vg-help-container .help-title-group {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+
+.vg-help-container .help-section-icon {
+
+  width: 38px;
+
+  height: 38px;
+
+  min-width: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+}
+
+
+.vg-help-container .blue-section-icon {
+
+  background: #eaf2ff;
+
+  color: #2563eb;
+}
+
+
+.vg-help-container .help-card-header h3,
+.vg-help-container .ticket-header h3 {
+
+  margin: 0;
+
+  color: #173f6d;
+
+  font-size: 16px;
+
+  font-weight: 750;
+}
+
+
+.vg-help-container .help-card-header p,
+.vg-help-container .ticket-header p {
+
+  margin: 4px 0 0;
+
+  color: #8b9aae;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.vg-help-container .knowledge-search {
+
+  position: relative;
+
+  width: 275px;
+
+  flex-shrink: 0;
+}
+
+
+.vg-help-container .knowledge-search i {
+
+  position: absolute;
+
+  left: 12px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #8295ac;
+
+  font-size: 12px;
+}
+
+
+.vg-help-container .knowledge-search input {
+
+  width: 100%;
+
+  height: 38px;
+
+  padding: 0 12px 0 34px;
+
+  border:
+    1px solid
+    #dbe4ee;
+
+  border-radius: 9px;
+
+  background: #f7f9fc;
+
+  color: #294a6d;
+
+  font-size: 11px;
+
+  outline: none;
+
+  transition: all .18s ease;
+}
+
+
+.vg-help-container .knowledge-search input:focus {
+
+  background: #ffffff;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37,99,235,.07);
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.vg-help-container .help-divider {
+
+  height: 1px;
+
+  margin: 17px 0 20px;
+
+  background: #e7edf4;
+}
+
+
+/* =========================================================
+   KNOWLEDGE ITEMS
+   ========================================================= */
+
+.vg-help-container .knowledge-item {
+
+  margin-bottom: 10px;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    #e5ebf2;
+
+  border-radius: 10px;
+
+  background: #f8fafd;
+
+  transition: all .18s ease;
+}
+
+
+.vg-help-container .knowledge-item:hover {
+
+  border-color: #cddbeb;
+
+  background: #fbfdff;
+}
+
+
+.vg-help-container .knowledge-item.active {
+
+  border-color: #2563eb;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 12px
+    rgba(37,99,235,.06);
+}
+
+
+/* =========================================================
+   QUESTION
+   ========================================================= */
+
+.vg-help-container .knowledge-question {
+
+  min-height: 54px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 15px;
+
+  cursor: pointer;
+}
+
+
+.vg-help-container .knowledge-tag {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 25px;
+
+  padding: 0 9px;
+
+  border-radius: 6px;
+
+  background: #e8f1ff;
+
+  color: #2563eb;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+
+.vg-help-container .technical-tag {
+
+  background: #eaf2ff;
+
+  color: #2563eb;
+}
+
+
+.vg-help-container .legal-tag {
+
+  background: #eaf8ef;
+
+  color: #08a66c;
+}
+
+
+.vg-help-container .knowledge-question-text {
+
+  flex: 1;
+
+  color: #173f6d;
+
+  font-size: 12px;
+
+  font-weight: 650;
+
+  line-height: 1.4;
+}
+
+
+.vg-help-container .knowledge-arrow {
+
+  color: #8aa0b9;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   ANSWER
+   ========================================================= */
+
+.vg-help-container .knowledge-answer {
+
+  padding: 0 18px 17px 20px;
+
+  border-top:
+    1px solid
+    #edf1f5;
+}
+
+
+.vg-help-container .knowledge-answer p {
+
+  margin: 18px 0 0;
+
+  color: #506985;
+
+  font-size: 11px;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   KNOWLEDGE FOOTER
+   ========================================================= */
+
+.vg-help-container .knowledge-footer {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 18px;
+
+  padding-top: 15px;
+
+  border-top:
+    1px solid
+    #edf1f5;
+
+  color: #8a9aae;
+
+  font-size: 10px;
+}
+
+
+.vg-help-container .knowledge-footer i {
+
+  margin-right: 5px;
+
+  color: #2563eb;
+}
+
+
+.vg-help-container .view-guides-btn {
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #2563eb;
+
+  font-size: 10px;
+
+  font-weight: 750;
+}
+
+
+.vg-help-container .view-guides-btn i {
+
+  margin-left: 4px;
+
+  margin-right: 0;
+
+  transition: transform .2s ease;
+}
+
+
+.vg-help-container .view-guides-btn:hover i {
+
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   TICKET CARD
+   ========================================================= */
+
+.vg-help-container .ticket-card {
+
+  padding-bottom: 20px;
+}
+
+
+.vg-help-container .ticket-header {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+/* =========================================================
+   TICKET FIELD
+   ========================================================= */
+
+.vg-help-container .ticket-field {
+
+  margin-bottom: 17px;
+}
+
+
+.vg-help-container .ticket-field label {
+
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #173f6d;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.vg-help-container .ticket-field label span {
+
+  color: #ef5350;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.vg-help-container .vg-help-input {
+
+  width: 100%;
+
+  height: 42px;
+
+  padding: 0 13px;
+
+  border:
+    1px solid
+    #dbe4ee;
+
+  border-radius: 9px;
+
+  background: #f7f9fc;
+
+  color: #294a6d;
+
+  font-size: 11px;
+
+  outline: none;
+
+  transition: all .18s ease;
+}
+
+
+.vg-help-container .vg-help-input:hover {
+
+  border-color: #cbd8e6;
+}
+
+
+.vg-help-container .vg-help-input:focus {
+
+  background: #ffffff;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37,99,235,.07);
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.vg-help-container .vg-help-textarea {
+
+  width: 100%;
+
+  min-height: 108px;
+
+  resize: vertical;
+
+  padding: 12px 13px;
+
+  border:
+    1px solid
+    #dbe4ee;
+
+  border-radius: 9px;
+
+  background: #f7f9fc;
+
+  color: #294a6d;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+
+  outline: none;
+
+  transition: all .18s ease;
+}
+
+
+.vg-help-container .vg-help-textarea:focus {
+
+  background: #ffffff;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37,99,235,.07);
+}
+
+
+/* =========================================================
+   SEVERITY SELECTOR
+   ========================================================= */
+
+.vg-help-container .severity-selector {
+
+  display: flex;
+
+  width: 100%;
+
+  height: 38px;
+}
+
+
+.vg-help-container .severity-selector button {
+
+  flex: 1;
+
+  border:
+    1px solid
+    #dbe4ee;
+
+  background:
+    #f7f9fc;
+
+  color:
+    #8093ac;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  transition:
+    all .18s ease;
+}
+
+
+.vg-help-container .severity-selector button:first-child {
+
+  border-radius:
+    8px 0 0 8px;
+}
+
+
+.vg-help-container .severity-selector button:last-child {
+
+  border-radius:
+    0 8px 8px 0;
+}
+
+
+/* Default medium */
+
+.vg-help-container .severity-selector button.selected-low {
+
+  background:
+    #eaf8ef;
+
+  border-color:
+    #08a66c;
+
+  color:
+    #08a66c;
+}
+
+
+.vg-help-container .severity-selector button.selected-medium {
+
+  background:
+    #fff3dc;
+
+  border-color:
+    #ef982d;
+
+  color:
+    #ef982d;
+}
+
+
+.vg-help-container .severity-selector button.selected-urgent {
+
+  background:
+    #feecee;
+
+  border-color:
+    #df414e;
+
+  color:
+    #df414e;
+}
+
+
+/* =========================================================
+   TICKET INFORMATION
+   ========================================================= */
+
+.vg-help-container .ticket-info {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 4px 0 15px;
+
+  padding: 11px 12px;
+
+  border:
+    1px solid
+    #e3eaf3;
+
+  border-radius: 9px;
+
+  background:
+    #f8fafd;
+}
+
+
+.vg-help-container .ticket-info-icon {
+
+  width: 30px;
+
+  height: 30px;
+
+  min-width: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #fff3dc;
+
+  color: #ef982d;
+}
+
+
+.vg-help-container .ticket-info strong {
+
+  display: block;
+
+  color: #173f6d;
+
+  font-size: 10px;
+
+  font-weight: 750;
+}
+
+
+.vg-help-container .ticket-info span {
+
+  display: block;
+
+  margin-top: 2px;
+
+  color: #8a9aae;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.vg-help-container .submit-ticket-btn {
+
+  width: 100%;
+
+  height: 44px;
+
+  border:
+    1px solid
+    #2563eb;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1767ef,
+      #0755d9
+    );
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 750;
+
+  box-shadow:
+    0 5px 13px
+    rgba(37,99,235,.16);
+
+  transition:
+    all .2s ease;
+}
+
+
+.vg-help-container .submit-ticket-btn:hover {
+
+  background:
+    linear-gradient(
+      135deg,
+      #0755d9,
+      #0649bb
+    );
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 7px 18px
+    rgba(37,99,235,.22);
+}
+
+
+.vg-help-container .submit-ticket-btn:active {
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   TICKET SECURITY
+   ========================================================= */
+
+.vg-help-container .ticket-security {
+
+  margin-top: 11px;
+
+  text-align: center;
+
+  color: #91a0b2;
+
+  font-size: 9px;
+}
+
+
+.vg-help-container .ticket-security i {
+
+  margin-right: 4px;
+
+  color: #08a66c;
+}
+
+
+/* =========================================================
+   SUPPORT FOOTER
+   ========================================================= */
+
+.vg-help-container .support-footer {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 15px;
+
+  padding: 16px 20px;
+
+  border:
+    1px solid
+    #e1e8f1;
+
+  border-radius: 13px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0 5px 18px
+    rgba(31,62,98,.04);
+}
+
+
+.vg-help-container .support-footer-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 5px 10px;
+
+  border-right:
+    1px solid
+    #e7edf4;
+}
+
+
+.vg-help-container .support-footer-item:last-child {
+
+  border-right: none;
+}
+
+
+.vg-help-container .support-footer-item &gt; i {
+
+  width: 34px;
+
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #eaf2ff;
+
+  color: #2563eb;
+
+  font-size: 13px;
+}
+
+
+.vg-help-container .support-footer-item strong {
+
+  display: block;
+
+  color: #173f6d;
+
+  font-size: 10px;
+
+  font-weight: 750;
+}
+
+
+.vg-help-container .support-footer-item span {
+
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8b9aae;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .vg-help-container .help-card-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .vg-help-container .knowledge-search {
+
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .vg-help-container {
+
+    padding:
+      16px;
+  }
+
+  .vg-help-container .vg-help-hero {
+
+    padding:
+      25px 28px;
+  }
+
+  .vg-help-container .support-category-card {
+
+    margin-bottom:
+      15px;
+  }
+
+  .vg-help-container .support-footer {
+
+    grid-template-columns:
+      1fr;
+  }
+
+  .vg-help-container .support-footer-item {
+
+    border-right:
+      none;
+
+    border-bottom:
+      1px solid
+      #e7edf4;
+
+    padding-bottom:
+      12px;
+  }
+
+  .vg-help-container .support-footer-item:last-child {
+
+    border-bottom:
+      none;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .vg-help-container {
+
+    padding:
+      12px;
+  }
+
+  .vg-help-container .vg-help-hero {
+
+    min-height:
+      150px;
+
+    padding:
+      22px;
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    gap:
+      18px;
+
+    border-radius:
+      14px;
+  }
+
+  .vg-help-container .help-hero-content h2 {
+
+    font-size:
+      22px;
+  }
+
+  .vg-help-container .help-hero-content p {
+
+    font-size:
+      11px;
+  }
+
+  .vg-help-container .vg-help-card {
+
+    padding:
+      20px;
+  }
+
+  .vg-help-container .help-card-header,
+  .vg-help-container .ticket-header {
+
+    align-items:
+      flex-start;
+  }
+
+  .vg-help-container .knowledge-question {
+
+    align-items:
+      flex-start;
+
+    padding:
+      12px;
+  }
+
+  .vg-help-container .knowledge-question-text {
+
+    font-size:
+      11px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .vg-help-container .category-icon {
+
+    width:
+      52px;
+
+    height:
+      52px;
+
+    min-width:
+      52px;
+
+    font-size:
+      18px;
+  }
+
+  .vg-help-container .category-content h3 {
+
+    font-size:
+      15px;
+  }
+
+  .vg-help-container .knowledge-question {
+
+    flex-wrap:
+      wrap;
+  }
+
+  .vg-help-container .knowledge-question-text {
+
+    width:
+      100%;
+
+    flex-basis:
+      calc(100% - 20px);
+  }
+
+  .vg-help-container .severity-selector {
+
+    height:
+      40px;
+  }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>vd_dso_help__support</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>vd_DSO_Help &amp;Support</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  data.faqs = [
+    {
+      question: "How do I process a Form I-20 program extension in SEVIS?",
+      category: "SEVP Policy",
+      answer: "Verify academic advisor recommendation and updated financial support documentation. Update the program end date in the student record and transmit to SEVIS before the current end date.",
+      linkLabel: "View Program Extension SOP",
+      isOpen: true
+    },
+    {
+      question: "What is the procedure for reporting STEM OPT 24-month extensions?",
+      category: "SEVP Policy",
+      answer: "Obtain completed Form I-983, verify employer E-Verify registration and EIN, generate the updated Form I-20 with STEM recommendation, and upload to the student record within 60 days of application.",
+      linkLabel: "STEM OPT Regulatory Checklist",
+      isOpen: false
+    },
+    {
+      question: "How to troubleshoot SEVIS batch transmission timeouts?",
+      category: "Technical",
+      answer: "Check network firewall rules on port 443 and verify SEVP API certificates. If error 504 persists, re-run batch sync in increments of 50 student records.",
+      linkLabel: "SEVIS API Troubleshooting Guide",
+      isOpen: false
+    },
+    {
+      question: "When must a student record be terminated for failure to enroll?",
+      category: "Legal & Compliance",
+      answer: "Federal regulations require SEVIS registration or termination within 30 days after the official start of each academic session for non-enrolled students lacking an approved Reduced Course Load (RCL).",
+      linkLabel: "Termination & Reinstatement Protocol",
+      isOpen: false
+    }
+  ];
+
+  if (input && input.action === 'submit_dso_ticket') {
+    // ServiceNow server record creation logic
+  }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:55:22</sys_created_on>
+        <sys_id>00aa219b292603107f44d6fee5fae312</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>vd_DSO_Help &amp;Support</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_00aa219b292603107f44d6fee5fae312</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 08:04:33</sys_updated_on>
+        <template><![CDATA[<div class="vg-help-container">
+
+  <!-- =====================================================
+       HERO HEADER
+       ===================================================== -->
+
+  <div class="vg-help-hero">
+
+    <div class="help-hero-content">
+
+      <div class="help-eyebrow">
+        <i class="fa fa-headphones"></i>
+        VISA GUARDIAN AI
+      </div>
+
+      <h2>
+        DSO Compliance Help & Support Desk
+      </h2>
+
+      <p>
+        SEVIS operational guidance, regulatory policy knowledge base,
+        technical assistance, and priority DSO support.
+      </p>
+
+    </div>
+
+
+    <div class="help-hero-action">
+
+      <button
+        type="button"
+        class="vg-help-hero-btn"
+        ng-click="c.openDSOTicket()">
+
+        <i class="fa fa-ticket"></i>
+        Open DSO Ticket
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       SUPPORT CATEGORY CARDS
+       ===================================================== -->
+
+  <div class="row vg-support-categories">
+
+    <!-- SEVP -->
+    <div class="col-md-4">
+
+      <div class="support-category-card">
+
+        <div class="category-icon category-blue">
+          <i class="fa fa-university"></i>
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            SEVP Guidelines
+          </h3>
+
+          <span class="category-label">
+            REGULATORY HANDBOOK
+          </span>
+
+          <p>
+            15 updated SOPs
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- SEVIS -->
+    <div class="col-md-4">
+
+      <div class="support-category-card">
+
+        <div class="category-icon category-orange">
+          <i class="fa fa-cogs"></i>
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            SEVIS API & System
+          </h3>
+
+          <span class="category-label">
+            INTEGRATION SUPPORT
+          </span>
+
+          <p>
+            Batch sync troubleshooting
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Legal -->
+    <div class="col-md-4">
+
+      <div class="support-category-card">
+
+        <div class="category-icon category-green">
+          <i class="fa fa-balance-scale"></i>
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Legal Counsel
+          </h3>
+
+          <span class="category-label">
+            IMMIGRATION ESCALATION
+          </span>
+
+          <p>
+            Designated legal advisory
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN CONTENT
+       ===================================================== -->
+
+  <div class="row help-main-layout">
+
+
+    <!-- ===================================================
+         LEFT : KNOWLEDGE BASE
+         =================================================== -->
+
+    <div class="col-md-7">
+
+      <div class="vg-help-card knowledge-card">
+
+
+        <!-- Header -->
+
+        <div class="help-card-header">
+
+          <div class="help-title-group">
+
+            <div class="help-section-icon blue-section-icon">
+              <i class="fa fa-question-circle"></i>
+            </div>
+
+            <div>
+
+              <h3>
+                DSO Knowledge Base & Regulatory SOPs
+              </h3>
+
+              <p>
+                Search SEVP policies, SEVIS procedures, and compliance guidance.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- Search -->
+
+          <div class="knowledge-search">
+
+            <i class="fa fa-search"></i>
+
+            <input
+              type="text"
+              placeholder="Search guides, regulations..."
+              ng-model="c.searchText">
+
+          </div>
+
+        </div>
+
+
+        <div class="help-divider"></div>
+
+
+        <!-- =================================================
+             FAQ 1
+             ================================================= -->
+
+        <div class="knowledge-item active">
+
+          <div
+            class="knowledge-question"
+            ng-click="c.toggleKnowledge(0)">
+
+            <span class="knowledge-tag">
+              SEVP Policy
+            </span>
+
+            <span class="knowledge-question-text">
+              How do I process a Form I-20 program extension in SEVIS?
+            </span>
+
+            <i class="fa fa-chevron-up knowledge-arrow"></i>
+
+          </div>
+
+
+          <div class="knowledge-answer">
+
+            <p>
+              Verify academic advisor recommendation and updated financial
+              support documentation. Update the program end date in the
+              student record and transmit to SEVIS before the current end date.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FAQ 2
+             ================================================= -->
+
+        <div class="knowledge-item">
+
+          <div
+            class="knowledge-question"
+            ng-click="c.toggleKnowledge(1)">
+
+            <span class="knowledge-tag">
+              SEVP Policy
+            </span>
+
+            <span class="knowledge-question-text">
+              What is the procedure for reporting STEM OPT 24-month extensions?
+            </span>
+
+            <i class="fa fa-chevron-down knowledge-arrow"></i>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FAQ 3
+             ================================================= -->
+
+        <div class="knowledge-item">
+
+          <div
+            class="knowledge-question"
+            ng-click="c.toggleKnowledge(2)">
+
+            <span class="knowledge-tag technical-tag">
+              Technical
+            </span>
+
+            <span class="knowledge-question-text">
+              How to troubleshoot SEVIS batch transmission timeouts?
+            </span>
+
+            <i class="fa fa-chevron-down knowledge-arrow"></i>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FAQ 4
+             ================================================= -->
+
+        <div class="knowledge-item">
+
+          <div
+            class="knowledge-question"
+            ng-click="c.toggleKnowledge(3)">
+
+            <span class="knowledge-tag legal-tag">
+              Legal & Compliance
+            </span>
+
+            <span class="knowledge-question-text">
+              When must a student record be terminated for failure to enroll?
+            </span>
+
+            <i class="fa fa-chevron-down knowledge-arrow"></i>
+
+          </div>
+
+        </div>
+
+
+        <!-- Knowledge Base Footer -->
+
+        <div class="knowledge-footer">
+
+          <span>
+            <i class="fa fa-database"></i>
+            VisaGuardian Regulatory Knowledge Base
+          </span>
+
+          <button
+            type="button"
+            class="view-guides-btn"
+            ng-click="c.viewAllGuides()">
+
+            View All Guides
+            <i class="fa fa-arrow-right"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         RIGHT : CREATE SUPPORT TICKET
+         =================================================== -->
+
+    <div class="col-md-5">
+
+      <div class="vg-help-card ticket-card">
+
+
+        <!-- Header -->
+
+        <div class="ticket-header">
+
+          <div class="help-section-icon blue-section-icon">
+            <i class="fa fa-paper-plane"></i>
+          </div>
+
+          <div>
+
+            <h3>
+              Create DSO Support Ticket
+            </h3>
+
+            <p>
+              Submit a request to the VisaGuardian support desk.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="help-divider"></div>
+
+
+        <!-- =================================================
+             CATEGORY
+             ================================================= -->
+
+        <div class="ticket-field">
+
+          <label>
+            Support Category
+            <span>*</span>
+          </label>
+
+          <select
+            class="vg-help-input"
+            ng-model="c.ticket.category">
+
+            <option value="">
+              -- Select Category --
+            </option>
+
+            <option value="sevp">
+              SEVP Guidelines
+            </option>
+
+            <option value="sevis">
+              SEVIS API & System
+            </option>
+
+            <option value="compliance">
+              Legal & Compliance
+            </option>
+
+            <option value="technical">
+              Technical Support
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- =================================================
+             SEVERITY
+             ================================================= -->
+
+        <div class="ticket-field">
+
+          <label>
+            Severity Level
+          </label>
+
+
+          <div class="severity-selector">
+
+            <button
+              type="button"
+              ng-class="{'selected-low': c.ticket.severity == 'low'}"
+              ng-click="c.ticket.severity = 'low'">
+
+              Low
+
+            </button>
+
+
+            <button
+              type="button"
+              ng-class="{'selected-medium': c.ticket.severity == 'medium'}"
+              ng-click="c.ticket.severity = 'medium'">
+
+              Medium
+
+            </button>
+
+
+            <button
+              type="button"
+              ng-class="{'selected-urgent': c.ticket.severity == 'urgent'}"
+              ng-click="c.ticket.severity = 'urgent'">
+
+              Urgent
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SUMMARY
+             ================================================= -->
+
+        <div class="ticket-field">
+
+          <label>
+            Ticket Summary
+            <span>*</span>
+          </label>
+
+          <input
+            type="text"
+            class="vg-help-input"
+            ng-model="c.ticket.summary"
+            placeholder="e.g. SEVIS batch sync returned error code 503">
+
+        </div>
+
+
+        <!-- =================================================
+             DETAILS
+             ================================================= -->
+
+        <div class="ticket-field">
+
+          <label>
+            Details & Affected Student / Case IDs
+            <span>*</span>
+          </label>
+
+          <textarea
+            class="vg-help-textarea"
+            ng-model="c.ticket.details"
+            placeholder="Provide complete logs, error text, and student SEVIS IDs affected...">
+          </textarea>
+
+        </div>
+
+
+        <!-- =================================================
+             SUPPORT INFO
+             ================================================= -->
+
+        <div class="ticket-info">
+
+          <div class="ticket-info-icon">
+            <i class="fa fa-clock-o"></i>
+          </div>
+
+          <div>
+
+            <strong>
+              Priority support
+            </strong>
+
+            <span>
+              Urgent compliance issues are escalated immediately.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SUBMIT
+             ================================================= -->
+
+        <button
+          type="button"
+          class="submit-ticket-btn"
+          ng-click="c.submitDSOTicket()">
+
+          <i class="fa fa-paper-plane"></i>
+          Submit DSO Ticket
+
+        </button>
+
+
+        <div class="ticket-security">
+
+          <i class="fa fa-shield"></i>
+
+          Your support request is securely processed by VisaGuardian AI.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       SUPPORT FOOTER
+       ===================================================== -->
+
+  <div class="support-footer">
+
+    <div class="support-footer-item">
+
+      <i class="fa fa-book"></i>
+
+      <div>
+        <strong>Regulatory Knowledge</strong>
+        <span>SEVP & SEVIS operational guidance</span>
+      </div>
+
+    </div>
+
+
+    <div class="support-footer-item">
+
+      <i class="fa fa-cogs"></i>
+
+      <div>
+        <strong>Technical Assistance</strong>
+        <span>SEVIS integration & system support</span>
+      </div>
+
+    </div>
+
+
+    <div class="support-footer-item">
+
+      <i class="fa fa-balance-scale"></i>
+
+      <div>
+        <strong>Compliance Escalation</strong>
+        <span>Priority legal and immigration support</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>00aa219b292603107f44d6fee5fae312</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:55:22</sys_created_on>
+        <sys_id>40aa219b292603107f44d6fee5fae315</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:55:22</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

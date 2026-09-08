@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_snc_visaguardi_0_visa_case</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Create VisaGuardian Notification</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+
+    var NOTIFICATION_TABLE =
+        'x_snc_visaguardi_0_student_notification';
+
+
+    /* =====================================================
+       HELPER
+    ===================================================== */
+
+    function createNotification(
+        userID,
+        title,
+        message,
+        type
+    ) {
+
+        if (!userID) {
+
+            return;
+
+        }
+
+
+        var notification =
+            new GlideRecord(
+                NOTIFICATION_TABLE
+            );
+
+        notification.initialize();
+
+
+        notification.setValue(
+            'user',
+            userID
+        );
+
+
+        notification.setValue(
+            'title',
+            title
+        );
+
+
+        notification.setValue(
+            'message',
+            message
+        );
+
+
+        notification.setValue(
+            'notification_type',
+            type
+        );
+
+
+        notification.setValue(
+            'case',
+            current.getUniqueValue()
+        );
+
+
+        notification.setValue(
+            'is_read',
+            false
+        );
+
+
+        notification.setValue(
+            'created',
+            gs.nowDateTime()
+        );
+
+
+        notification.insert();
+
+    }
+
+
+    /* =====================================================
+       STUDENT
+    ===================================================== */
+
+    var studentID = '';
+
+
+    /*
+     * Change this field if your Visa Cases table
+     * uses another student field.
+     */
+
+    if (
+        current.student &&
+        !current.student.nil()
+    ) {
+
+        studentID =
+            current.student.toString();
+
+    }
+
+    else if (
+        current.applicant &&
+        !current.applicant.nil()
+    ) {
+
+        studentID =
+            current.applicant.toString();
+
+    }
+
+
+    /* =====================================================
+       1. ADDITIONAL DOCUMENTS
+    ===================================================== */
+
+    if (
+        current.decision &&
+        current.decision.toString()
+            == 'Additional Documents Required'
+    ) {
+
+        createNotification(
+
+            studentID,
+
+            'Document Re-upload Required',
+
+            'Additional documents are required for Visa Case ' +
+            current.getDisplayValue('number') +
+            '. Please review your case and upload the requested documents.',
+
+            'warning'
+
+        );
+
+    }
+
+
+    /* =====================================================
+       2. ADVISOR ASSIGNED
+    ===================================================== */
+
+    if (
+        current.advisor.changes() &&
+        !current.advisor.nil()
+    ) {
+
+        createNotification(
+
+            studentID,
+
+            'Advisor Assigned',
+
+            'An advisor has been assigned to your Visa Case ' +
+            current.getDisplayValue('number') +
+            '.',
+
+            'info'
+
+        );
+
+
+        /*
+         * Notify advisor
+         */
+
+        createNotification(
+
+            current.advisor.toString(),
+
+            'Visa Case Assigned',
+
+            'Visa Case ' +
+            current.getDisplayValue('number') +
+            ' has been assigned to you. Please review the case.',
+
+            'info'
+
+        );
+
+    }
+
+
+    /* =====================================================
+       3. DSO DECISION
+    ===================================================== */
+
+    if (
+        current.dso_decision.changes()
+    ) {
+
+        var decision =
+            current.dso_decision.toString();
+
+
+        if (
+            decision == 'Approved'
+        ) {
+
+            createNotification(
+
+                studentID,
+
+                'Visa Application Approved',
+
+                'Your Visa Application ' +
+                current.getDisplayValue('number') +
+                ' has been approved by the DSO.',
+
+                'success'
+
+            );
+
+        }
+
+
+        if (
+            decision == 'Rejected'
+        ) {
+
+            createNotification(
+
+                studentID,
+
+                'Visa Application Decision',
+
+                'Your Visa Application ' +
+                current.getDisplayValue('number') +
+                ' has been rejected. Please review the case details.',
+
+                'danger'
+
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       4. ADVISOR DOCUMENTS
+    ===================================================== */
+
+    if (
+        current.advisor_document_status &&
+        current.advisor_document_status.changes() &&
+        current.advisor_document_status.toString()
+            == 'Uploaded'
+    ) {
+
+        createNotification(
+
+            studentID,
+
+            'Advisor Documents Uploaded',
+
+            'Your advisor has uploaded new documents to Visa Case ' +
+            current.getDisplayValue('number') +
+            '.',
+
+            'success'
+
+        );
+
+    }
+
+
+    /* =====================================================
+       5. ADVISOR SLA
+    ===================================================== */
+
+    if (
+        current.advisor_sla_status &&
+        current.advisor_sla_status.changes() &&
+        current.advisor_sla_status.toString()
+            == 'Breached'
+    ) {
+
+        createNotification(
+
+            studentID,
+
+            'Advisor SLA Breached',
+
+            'The advisor SLA for Visa Case ' +
+            current.getDisplayValue('number') +
+            ' has been breached.',
+
+            'warning'
+
+        );
+
+    }
+
+
+    /* =====================================================
+       6. DSO SLA
+    ===================================================== */
+
+    if (
+        current.dso_sla_status &&
+        current.dso_sla_status.changes() &&
+        current.dso_sla_status.toString()
+            == 'Breached'
+    ) {
+
+        createNotification(
+
+            studentID,
+
+            'DSO SLA Breached',
+
+            'The DSO SLA for Visa Case ' +
+            current.getDisplayValue('number') +
+            ' has been breached.',
+
+            'warning'
+
+        );
+
+    }
+
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-10 10:09:46</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>bd311c32086a03107f44e71c3e403f06</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Create VisaGuardian Notification</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_script_bd311c32086a03107f44e71c3e403f06</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-10 10:09:46</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=bd311c32086a03107f44e71c3e403f06"/>
+</record_update>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="ais_dictionary">
+    <ais_dictionary action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <auto_refresh>24</auto_refresh>
+        <blocked_field/>
+        <case_sensitive>false</case_sensitive>
+        <data_source>kb_knowledge</data_source>
+        <derived>true</derived>
+        <field/>
+        <label>VisaGuardian AI Search Profile Default Spell Check Dictionary</label>
+        <last_derived>2026-09-08 03:55:23</last_derived>
+        <locale>en</locale>
+        <name>x_snc_visaguardi_0_visaguardian_ai_search_profile_default_spell_check_dictionary</name>
+        <publish_id>86ee298d-95e7-4562-a289-16bf4aeb1b96</publish_id>
+        <punctuation_sensitive>false</punctuation_sensitive>
+        <state>PUBLISHED</state>
+        <sys_class_name>ais_dictionary</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 13:08:12</sys_created_on>
+        <sys_id>e5576ec61ca243107f44ac7143096471</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0_visaguardian_ai_search_profile_default_spell_check_dictionary</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>ais_dictionary_e5576ec61ca243107f44ac7143096471</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 13:08:12</sys_updated_on>
+        <type>SPELLCHECK</type>
+    </ais_dictionary>
+</record_update>

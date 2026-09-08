@@ -1,0 +1,6732 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window) {
+
+    var c = this;
+
+
+    // =====================================================
+    // INITIAL SELECTED CASE
+    // =====================================================
+
+    c.selectedCaseSysId = "";
+
+
+    // =====================================================
+    // AUTOMATICALLY SELECT FIRST CASE
+    // =====================================================
+
+    function selectFirstCase() {
+
+        if (
+            c.data &&
+            c.data.all_cases &&
+            c.data.all_cases.length > 0
+        ) {
+
+            // Prefer the case actually loaded by server
+            if (
+                c.data.case &&
+                c.data.case.sys_id
+            ) {
+
+                c.selectedCaseSysId =
+                    c.data.case.sys_id;
+
+            }
+            else {
+
+                c.selectedCaseSysId =
+                    c.data.all_cases[0].sys_id;
+
+            }
+
+        }
+        else {
+
+            c.selectedCaseSysId = "";
+
+        }
+
+    }
+
+
+    // Run after controller initializes
+    selectFirstCase();
+
+
+    // =====================================================
+    // SWITCH CASE
+    // =====================================================
+
+    c.switchCase = function(sysId) {
+
+        if (!sysId) {
+            return;
+        }
+
+
+        // Navigate using selected case
+        $window.location.href =
+            "?id=vg_advisor_my_cases&sys_id=" +
+            encodeURIComponent(sysId);
+
+    };
+
+
+    // =====================================================
+    // OPEN CASE
+    // =====================================================
+
+    c.openCase = function(sysId) {
+
+        if (!sysId) {
+            return;
+        }
+
+
+        $window.location.href =
+            "?id=vg_advisor_my_cases&sys_id=" +
+            encodeURIComponent(sysId);
+
+    };
+
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>
+Sunday 11:51 AM
+i want thi spath to add in navigation
+
+here we should naviagte to student 
+
+21e4d755-e749-498b-ae81-1b9ebdc776f7.png
+5ecfaa19-e968-4001-81b7-7d087a92e62a.png
+
+css changed
+
+
+Pasted text(20260809-064045).txt
+Document
+change and give complete css 
+
+
+
+481aaa1d-6d07-4550-b677-bed811e0117c.png
+bea184ca-9271-4332-bf2f-8e5d87f3df94.png
+0491559b-ad5c-441a-b9cd-872d27dbb22b.png
+61bf50a1-88e1-40ee-a863-cb74410a062a.png
+2e7178ae-4568-453b-8f84-8c97dba60f5a.png
+0d94bb62-dbd4-4867-91dc-218bfd29843f.png
+3d7a87e6-e2fa-4098-ae29-73a536c4e059.png
+82958c2c-da9d-4bf4-ae67-e41b054ae4bb.png
+4dc42a1c-5dc1-40e3-803a-e5d0b673d90d.png
+da20cc55-f8e6-4b36-b5b3-3a995e9b57ea.png
+
+
+
+
+
+
+&lt;div class="vg-register-header"&gt;
+
+    &lt;div class="vg-logo"&gt;
+        &lt;div class="vg-logo-shield"&gt;
+            &lt;span&gt;◎&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div&gt;
+            &lt;div class="vg-logo-title"&gt;
+                Visa&lt;span&gt;Guardian&lt;/span&gt; &lt;strong&gt;AI&lt;/strong&gt;
+            &lt;/div&gt;
+
+            &lt;div class="vg-logo-subtitle"&gt;
+                Secure. Smart. Seamless.
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt; i want logo exactly as given
+
+
+Pasted text(20260809-083005).txt
+Document
+give complete code 
+
+
+Sunday 3:37 PM
+ADVISOR WORKSPACE
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+     Overview          My Students        My Cases
+        │                  │                  │
+        ▼                  ▼                  ▼
+ ┌─────────────┐     ┌─────────────┐    ┌─────────────┐
+ │Case Summary │     │Student List │    │Visa Cases   │
+ │Pending      │     │Student      │    │Pending      │
+ │In Review    │     │Profiles     │    │In Review    │
+ │Completed    │     │Risk Status  │    │Approved     │
+ └─────────────┘     └─────────────┘    └─────────────┘
+        │                  │                  │
+        └──────────────────┼──────────────────┘
+                           ▼
+                    CASE WORKSPACE
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+           Details      Documents     Risk
+              │            │            │
+              ▼            ▼            ▼
+          Student       Verify /      Assessment
+          information   Reject        / AI score
+                           │
+                           ▼
+                    AI ASSISTANCE
+                           │
+                  ┌────────┴────────┐
+                  ▼                 ▼
+             AI Guidance       AI Document
+                               Analysis   according to this create simple image for advisor like above 
+
+Edit
+
+
+Edit
+
+
+give prompt for creating this 
+
+create a advisor regration with role advisor
+
+ i should get the response according to the knowledge bases give clint and serverver script
+
+2edc27e2-5520-4b92-b264-62dbfafb3100.png
+df0daecf-a161-4910-8f28-57188d4bf2a5.png
+
+give html and css nicly when i scroll up sidebar should not go up
+
+Edit
+
+
+Edit
+
+
+Sunday 8:56 PM
+after student login it profile it  should show the original informatioon not default as shown in above
+
+
+
+
+
+user creared and and logined and it is coming like that
+
+
+Screenshot 2026-08-09 214947.png
+Screenshot 2026-08-09 215005.png
+Screenshot 2026-08-09 215024.png
+Screenshot 2026-08-09 215036.png
+Screenshot 2026-08-09 215044.png
+Screenshot 2026-08-09 215107.png
+Screenshot 2026-08-09 215130.png
+c32c15fe-8f88-4e04-b820-1b8f1e5c9300.png
+4644bb8b-96d7-448b-935d-ca446c8b88e6.png
+lets create visa request html css server script and clint script
+
+now to see my requests html css and scripts
+
+for upload documents html ,css and scripts
+
+82f5293a-05ae-40a2-b3c3-dd889617a498.png
+a1af7a80-6173-440f-8b46-c7003a8c552c.png
+i have case but coming like this
+
+
+for this deadlines give html css and sceipts
+
+left side bar html css should not move on scrolling
+
+create image
+
+Edit
+
+
+lets create html css and scrits for the dashboard
+
+create accordingly to this
+
+in profile we should get regestred user details
+
+Monday 1:06 PM
+i am getting lot of space between left bar page and the dashboard 
+
+
+Pasted text(20260810-074247).txt
+Document
+
+fb4beaf1-64ac-43a0-b0ba-02cdb875f494.png
+b95ca207-ae37-4f51-aaba-5af29ea3810c.png
+de89c0c8-6a93-4a52-98e2-cf2fc4bec971.png
+96478eb8-09b5-4c1f-96fc-47911798c0a7.png
+60924b59-a044-40b8-aff5-2039c1a39917.png
+9008e1c0-7b44-4ae5-ae80-42d4af1dd622.png
+08226c3b-8ad4-4618-b3ce-d43f9c3f7076.png
+85231164-be14-42fc-8033-0f06f3e35b5f.png
+based on the knowledge bases and articles it should give the response and give html and css,scripts
+
+Screenshot 2026-08-10 134808(1).png
+Screenshot 2026-08-10 134827(1).png
+Screenshot 2026-08-10 134925(1).png
+Screenshot 2026-08-10 135001.png
+Screenshot 2026-08-10 135151.png
+Screenshot 2026-08-10 135204.png
+Screenshot 2026-08-10 135215.png
+Screenshot 2026-08-10 135227.png
+it should give response like this
+
+data should get points wise
+
+6542db73-3ad8-49bc-8b4a-050c380cdda6.png
+8a15cadb-7881-48e8-9503-25bb8a3635e4.png
+reponse not giving 
+
+
+Pasted text(20260810-091627).txt
+Document
+
+Pasted text (2).txt
+Document
+my present html ,css
+
+/* =========================================================
+VISA GUARDIAN AI
+NOW ASSIST STYLE
+========================================================= */
+
+.vg-ai {
+
+width: 100%;
+
+background: #ffffff;
+
+color: #243746;
+
+font-family:
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+border: 1px solid #d7e0e7;
+
+border-radius: 10px;
+
+overflow: hidden;
+}
+
+/* =========================================================
+HEADER
+========================================================= */
+
+.vg-header {
+
+height: 72px;
+
+padding: 0 24px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+background:
+    linear-gradient(
+        135deg,
+        #073d70,
+        #0c4d86
+    );
+
+color: white;
+}
+
+.vg-header-left {
+
+display: flex;
+
+align-items: center;
+
+gap: 13px;
+}
+
+.vg-bot-icon {
+
+width: 44px;
+
+height: 44px;
+
+border-radius: 50%;
+
+background: rgba(255,255,255,.15);
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 22px;
+}
+
+.vg-title {
+
+font-size: 19px;
+
+font-weight: 600;
+}
+
+.vg-subtitle {
+
+margin-top: 3px;
+
+font-size: 11px;
+
+opacity: .8;
+}
+
+.vg-status {
+
+display: flex;
+
+align-items: center;
+
+gap: 7px;
+
+font-size: 12px;
+}
+
+.vg-status-dot {
+
+width: 8px;
+
+height: 8px;
+
+border-radius: 50%;
+
+background: #35d06f;
+}
+
+/* =========================================================
+CHAT
+========================================================= */
+
+.vg-chat {
+
+min-height: 560px;
+
+max-height: 650px;
+
+overflow-y: auto;
+
+padding: 30px 46px 35px;
+
+background: #ffffff;
+}
+
+/* =========================================================
+BOT ROW
+========================================================= */
+
+.vg-bot-row {
+
+display: flex;
+
+align-items: flex-start;
+
+gap: 12px;
+
+margin-bottom: 12px;
+}
+
+.vg-small-avatar {
+
+width: 31px;
+
+height: 31px;
+
+min-width: 31px;
+
+border-radius: 50%;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+background: #263f43;
+
+color: white;
+
+font-size: 13px;
+}
+
+.vg-welcome {
+
+max-width: 850px;
+
+font-size: 17px;
+
+line-height: 1.65;
+}
+
+.vg-welcome p {
+
+margin: 0;
+}
+
+/* =========================================================
+USER MESSAGE
+========================================================= */
+
+.vg-user-row {
+
+display: flex;
+
+justify-content: flex-end;
+
+margin: 25px 0 28px;
+}
+
+.vg-user-message {
+
+background: #ccebf4;
+
+color: #243746;
+
+padding: 10px 18px;
+
+border-radius: 24px 24px 3px 24px;
+
+font-size: 15px;
+
+max-width: 65%;
+}
+
+/* =========================================================
+SEARCHING
+========================================================= */
+
+.vg-search-row {
+
+margin-top: 15px;
+
+margin-bottom: 20px;
+}
+
+.vg-search-text {
+
+padding-top: 5px;
+
+font-size: 16px;
+}
+
+/* =========================================================
+AI LABEL
+========================================================= */
+
+.vg-ai-label {
+
+font-size: 16px;
+
+font-weight: 500;
+
+padding-top: 5px;
+}
+
+/* =========================================================
+AI STEPS
+========================================================= */
+
+.vg-ai-steps {
+
+margin-left: 43px;
+
+margin-bottom: 14px;
+
+max-width: 850px;
+}
+
+.vg-steps-button {
+
+width: 100%;
+
+border: none;
+
+background: transparent;
+
+padding: 7px 0;
+
+display: flex;
+
+align-items: center;
+
+gap: 9px;
+
+text-align: left;
+
+color: #334954;
+
+font-size: 15px;
+
+cursor: pointer;
+}
+
+.vg-chevron {
+
+margin-left: auto;
+
+font-size: 20px;
+}
+
+.vg-steps-content {
+
+margin-top: 7px;
+
+padding: 13px 16px;
+
+background: #f6f9fb;
+
+border-left: 3px solid #4b9bc1;
+
+border-radius: 4px;
+}
+
+.vg-step {
+
+display: flex;
+
+align-items: center;
+
+gap: 10px;
+
+padding: 7px 0;
+
+font-size: 12px;
+
+color: #637582;
+}
+
+.vg-step-number {
+
+width: 20px;
+
+height: 20px;
+
+min-width: 20px;
+
+border-radius: 50%;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+background: #dcecf4;
+
+color: #34789a;
+
+font-size: 10px;
+
+font-weight: 700;
+}
+
+/* =========================================================
+ANSWER
+========================================================= */
+
+.vg-answer-card {
+
+margin-left: 43px;
+
+max-width: 850px;
+}
+
+.vg-answer-card h2 {
+
+margin: 12px 0 38px;
+
+font-size: 23px;
+
+line-height: 1.3;
+
+color: #263943;
+
+font-weight: 700;
+}
+
+.vg-introduction {
+
+font-size: 16px;
+
+line-height: 1.7;
+
+margin-bottom: 30px;
+}
+
+/* =========================================================
+SECTIONS
+========================================================= */
+
+.vg-section {
+
+margin-bottom: 27px;
+}
+
+.vg-section h3 {
+
+margin: 0 0 15px;
+
+color: #243943;
+
+font-size: 18px;
+
+font-weight: 700;
+}
+
+.vg-section p {
+
+font-size: 16px;
+
+line-height: 1.75;
+
+margin: 0 0 12px;
+}
+
+.vg-section ul,
+.vg-section ol {
+
+padding-left: 27px;
+
+margin-top: 8px;
+}
+
+.vg-section li {
+
+font-size: 16px;
+
+line-height: 1.75;
+
+padding-left: 4px;
+
+margin-bottom: 5px;
+}
+
+/* =========================================================
+SUMMARY
+========================================================= */
+
+.vg-summary {
+
+margin-top: 38px;
+
+padding-top: 25px;
+
+border-top: 1px solid #e0e5e8;
+}
+
+.vg-summary h3 {
+
+margin: 0 0 16px;
+
+font-size: 18px;
+}
+
+.vg-summary p {
+
+font-size: 16px;
+
+line-height: 1.75;
+}
+
+/* =========================================================
+SOURCES
+========================================================= */
+
+.vg-sources {
+
+margin-top: 30px;
+}
+
+.vg-source-button {
+
+border: none;
+
+background: transparent;
+
+color: #2b5368;
+
+cursor: pointer;
+
+display: flex;
+
+align-items: center;
+
+gap: 7px;
+
+font-size: 13px;
+
+padding: 5px 0;
+}
+
+.vg-source-list {
+
+margin-top: 10px;
+
+border-top: 1px solid #e2e7eb;
+}
+
+.vg-source-item {
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+padding: 12px;
+
+border-bottom: 1px solid #e7ecef;
+}
+
+.vg-source-icon {
+
+font-size: 18px;
+}
+
+.vg-source-details {
+
+display: flex;
+
+flex-direction: column;
+
+gap: 3px;
+}
+
+.vg-source-details strong {
+
+color: #567282;
+
+font-size: 11px;
+}
+
+.vg-source-details span {
+
+color: #254b60;
+
+font-size: 13px;
+
+font-weight: 600;
+}
+
+.vg-source-details small {
+
+color: #8798a2;
+
+font-size: 10px;
+}
+
+/* =========================================================
+FEEDBACK
+========================================================= */
+
+.vg-feedback {
+
+display: flex;
+
+gap: 17px;
+
+margin-top: 20px;
+
+padding-bottom: 15px;
+}
+
+.vg-feedback button {
+
+border: none;
+
+background: transparent;
+
+color: #5c727d;
+
+font-size: 17px;
+
+cursor: pointer;
+
+padding: 3px;
+}
+
+.vg-feedback button:hover {
+
+color: #1264a3;
+}
+
+/* =========================================================
+ERROR
+========================================================= */
+
+.vg-error {
+
+margin: 15px 40px;
+
+padding: 13px;
+
+border: 1px solid #efb4b4;
+
+background: #fff3f3;
+
+color: #b83232;
+
+border-radius: 5px;
+}
+
+/* =========================================================
+INPUT
+========================================================= */
+
+.vg-input-area {
+
+border-top: 1px solid #dce3e8;
+
+padding: 18px 35px 20px;
+
+background: #ffffff;
+}
+
+.vg-input-box {
+
+height: 58px;
+
+display: flex;
+
+border: 1px solid #ccd9e0;
+
+border-radius: 12px;
+
+overflow: hidden;
+
+background: white;
+}
+
+.vg-input-box input {
+
+flex: 1;
+
+border: none;
+
+outline: none;
+
+padding: 0 18px;
+
+font-size: 15px;
+}
+
+.vg-input-box button {
+
+width: 65px;
+
+border: none;
+
+background: #1672a4;
+
+color: white;
+
+font-size: 20px;
+
+cursor: pointer;
+}
+
+.vg-input-box button:hover {
+
+background: #0e5b86;
+}
+
+.vg-input-box button:disabled {
+
+opacity: .6;
+}
+
+.vg-disclaimer {
+
+text-align: center;
+
+margin-top: 8px;
+
+color: #8a9aa3;
+
+font-size: 10px;
+}
+
+/* =========================================================
+SCROLLBAR
+========================================================= */
+
+.vg-chat::-webkit-scrollbar {
+
+width: 7px;
+}
+
+.vg-chat::-webkit-scrollbar-track {
+
+background: #f3f5f6;
+}
+
+.vg-chat::-webkit-scrollbar-thumb {
+
+background: #c0ccd2;
+
+border-radius: 10px;
+} and clint
+
+function() {
+
+var c = this;
+
+c.question = '';
+
+c.loading = false;
+
+
+if (!c.data.messages) {
+
+    c.data.messages = [];
+
+}
+
+
+// =====================================================
+// SEND QUESTION
+// =====================================================
+
+c.sendQuestion = function() {
+
+    if (c.loading) {
+        return;
+    }
+
+
+    var question =
+        (c.question || '').trim();
+
+
+    if (!question) {
+        return;
+    }
+
+
+    // -----------------------------------------------
+    // USER MESSAGE
+    // -----------------------------------------------
+
+    c.data.messages.push({
+
+        type: 'user',
+
+        text: question
+
+    });
+
+
+    // -----------------------------------------------
+    // SEARCH MESSAGE
+    // -----------------------------------------------
+
+    c.data.messages.push({
+
+        type: 'searching',
+
+        text:
+            'Let me look up information related to ' +
+            question +
+            ' for you.'
+
+    });
+
+
+    c.loading = true;
+
+    var submittedQuestion =
+        question;
+
+    c.question = '';
+
+
+    // -----------------------------------------------
+    // SERVER CALL
+    // -----------------------------------------------
+
+    c.server.get({
+
+        action: 'ask',
+
+        question:
+            submittedQuestion
+
+    }).then(function(response) {
+
+
+        // -------------------------------------------
+        // REMOVE SEARCH MESSAGE
+        // -------------------------------------------
+
+        for (
+            var i = c.data.messages.length - 1;
+            i &gt;= 0;
+            i--
+        ) {
+
+            if (
+                c.data.messages[i].type ==
+                'searching'
+            ) {
+
+                c.data.messages.splice(
+                    i,
+                    1
+                );
+
+                break;
+
+            }
+
+        }
+
+
+        // -------------------------------------------
+        // RESPONSE
+        // -------------------------------------------
+
+        if (
+            response.data &amp;&amp;
+            response.data.success
+        ) {
+
+            c.data.messages.push({
+
+                type: 'answer',
+
+                title:
+                    response.data.title,
+
+                introduction:
+                    response.data.introduction,
+
+                sections:
+                    response.data.sections || [],
+
+                summary:
+                    response.data.summary,
+
+                articles:
+                    response.data.articles || [],
+
+                showSteps: false,
+
+                showSources: false
+
+            });
+
+        } else {
+
+            c.data.messages.push({
+
+                type: 'error',
+
+                text:
+                    response.data.error ||
+                    'No relevant information was found in the VisaGuardian Knowledge Base.'
+
+            });
+
+        }
+
+
+        c.loading = false;
+
+
+        // -------------------------------------------
+        // SCROLL
+        // -------------------------------------------
+
+        setTimeout(function() {
+
+            var chat =
+                document.getElementById(
+                    'vg-chat'
+                );
+
+
+            if (chat) {
+
+                chat.scrollTop =
+                    chat.scrollHeight;
+
+            }
+
+        }, 100);
+
+    });
+
+};
+
+
+// =====================================================
+// SUGGESTION
+// =====================================================
+
+c.askSuggestion = function(question) {
+
+    c.question =
+        question;
+
+    c.sendQuestion();
+
+};
+
+
+// =====================================================
+// ENTER
+// =====================================================
+
+c.handleKeyPress = function(event) {
+
+    if (
+        event.which === 13 ||
+        event.keyCode === 13
+    ) {
+
+        event.preventDefault();
+
+        c.sendQuestion();
+
+    }
+
+};
+
+
+// =====================================================
+// COPY ANSWER
+// =====================================================
+
+c.copyAnswer = function(message) {
+
+    var text =
+        message.title +
+        '\n\n' +
+        (message.introduction || '') +
+        '\n\n';
+
+
+    if (message.sections) {
+
+        message.sections.forEach(
+            function(section) {
+
+                text +=
+                    section.title +
+                    '\n';
+
+
+                if (section.text) {
+
+                    text +=
+                        section.text +
+                        '\n';
+
+                }
+
+
+                if (
+                    section.bullets
+                ) {
+
+                    section.bullets.forEach(
+                        function(item) {
+
+                            text +=
+                                '• ' +
+                                item +
+                                '\n';
+
+                        }
+                    );
+
+                }
+
+
+                if (
+                    section.steps
+                ) {
+
+                    section.steps.forEach(
+                        function(item, index) {
+
+                            text +=
+                                (index + 1) +
+                                '. ' +
+                                item +
+                                '\n';
+
+                        }
+                    );
+
+                }
+
+
+                text += '\n';
+
+            }
+        );
+
+    }
+
+
+    text +=
+        'Summary:\n' +
+        (message.summary || '');
+
+
+    if (
+        navigator.clipboard
+    ) {
+
+        navigator.clipboard.writeText(
+            text
+        );
+
+    }
+
+};
+
+
+// =====================================================
+// FEEDBACK
+// =====================================================
+
+c.feedback = function(
+    message,
+    type
+) {
+
+    console.log(
+        'VisaGuardian AI feedback:',
+        type
+    );
+
+};
+} and server it want same but should show history
+
+
+lets do scripts for notification
+
+2ea3b5fe-3dbb-43e5-a157-8bf3abe4dcbf.png
+349a04b0-4cb3-4e2c-918b-85964c76cef9.png
+66e97529-2b21-4877-9c64-59c3ca9088a6.png
+ac2cb7cf-088e-4c1a-9866-87eb934066ba.png
+0696f9bf-bff9-45a7-8383-74a959d1cc51.png
+06ac03ca-32e2-4ac1-ad7d-95b6419e5ebf.png
+like this for notifications
+
+Monday 6:04 PM
+in left side bar when i like on other tab it should become and other one normal but here blue color is constant for profile change it html present one
+
+&lt;!-- LOGO --&gt;
+&lt;div class="vg-sidebar-logo"&gt;
+    &lt;div class="vg-logo-icon"&gt;🎓&lt;/div&gt;
+
+    &lt;div class="vg-logo-text"&gt;
+        &lt;div class="vg-logo-title"&gt;
+            VisaGuardian AI
+        &lt;/div&gt;
+
+        &lt;div class="vg-logo-subtitle"&gt;
+            International Student Services
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;!-- NAVIGATION --&gt;
+&lt;nav class="vg-sidebar-nav"&gt;
+  	  &lt;a href="student?id=vg_profile" class="vg-nav-item active"&gt;
+        &lt;span class="vg-nav-icon"&gt;♙&lt;/span&gt;
+        &lt;span&gt;Profile&lt;/span&gt;
+    &lt;/a&gt;
+
+
+    &lt;a href="student?id=vg_student_home" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;⌂&lt;/span&gt;
+        &lt;span&gt;Dashboard&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_my_requests" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;▤&lt;/span&gt;
+        &lt;span&gt;My Requests&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_create_case" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;⊞&lt;/span&gt;
+        &lt;span&gt;Start New Request&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_doc_upload" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;▧&lt;/span&gt;
+        &lt;span&gt;Documents&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_deadlines" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;▦&lt;/span&gt;
+        &lt;span&gt;My Deadlines&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_ai_chat" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;☏&lt;/span&gt;
+        &lt;span&gt;Ask VisaGuardian AI&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="?id=vg_digital_twin" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;▱&lt;/span&gt;
+        &lt;span&gt;Student Compliance Digital Twin&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;a href="student?id=vg_notifications" class="vg-nav-item"&gt;
+        &lt;span class="vg-nav-icon"&gt;♧&lt;/span&gt;
+        &lt;span&gt;Notifications&lt;/span&gt;
+
+
+    &lt;/a&gt;
+
+ 
+
+&lt;/nav&gt;
+ and css /* =====================================================
+   VISA GUARDIAN FIXED SIDEBAR
+   ===================================================== */
+
+.vg-sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: 360px;
+
+    height: 100vh;
+
+    background: #102f5f;
+
+    color: #ffffff;
+
+    z-index: 9999;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   LOGO
+   ===================================================== */
+
+.vg-sidebar-logo {
+
+    height: 70px;
+
+    min-height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 8px 14px;
+
+    background: #0d2b58;
+
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+
+    box-sizing: border-box;
+}
+
+
+.vg-logo-icon {
+
+    width: 38px;
+
+    font-size: 24px;
+
+    text-align: center;
+
+    margin-right: 6px;
+}
+
+
+.vg-logo-title {
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    line-height: 20px;
+}
+
+
+.vg-logo-subtitle {
+
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: #b8c9df;
+}
+
+
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+.vg-sidebar-nav {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-top: 5px;
+
+    scrollbar-width: thin;
+
+    scrollbar-color: rgba(255,255,255,0.25) transparent;
+}
+
+
+/* Chrome scrollbar */
+
+.vg-sidebar-nav::-webkit-scrollbar {
+
+    width: 5px;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.vg-sidebar-nav::-webkit-scrollbar-thumb {
+
+    background: rgba(255,255,255,0.25);
+
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+   NAV ITEM
+   ===================================================== */
+
+.vg-nav-item {
+
+    height: 54px;
+
+    min-height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 20px;
+
+    color: #ffffff !important;
+
+    text-decoration: none !important;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+
+.vg-nav-item:hover {
+
+    background: #1d4d91;
+
+    color: #ffffff !important;
+
+    text-decoration: none !important;
+}
+
+
+.vg-nav-item.active {
+
+    background: #2864e8;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   ICON
+   ===================================================== */
+
+.vg-nav-icon {
+
+    width: 35px;
+
+    min-width: 35px;
+
+    font-size: 19px;
+
+    text-align: left;
+
+    color: #dceaff;
+}
+
+
+/* =====================================================
+   NOTIFICATION
+   ===================================================== */
+
+.vg-notification-badge {
+
+    margin-left: auto;
+
+    width: 22px;
+
+    height: 22px;
+
+    border-radius: 50%;
+
+    background: #ff3d45;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   USER SECTION
+   ===================================================== */
+
+.vg-sidebar-user {
+
+    height: 88px;
+
+    min-height: 88px;
+
+    background: #0a2550;
+
+    border-top: 1px solid rgba(255,255,255,0.12);
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 10px 14px;
+
+    box-sizing: border-box;
+}
+
+
+.vg-user-avatar {
+
+    width: 48px;
+
+    height: 48px;
+
+    min-width: 48px;
+
+    border-radius: 50%;
+
+    background: #dce8ff;
+
+    border: 2px solid #3680ff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 25px;
+
+    margin-right: 10px;
+}
+
+
+.vg-user-info {
+
+    overflow: hidden;
+}
+
+
+.vg-user-name {
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.vg-user-type {
+
+    font-size: 12px;
+
+    color: #c1d0e5;
+
+    margin-top: 3px;
+}
+
+
+.vg-user-id {
+
+    font-size: 11px;
+
+    color: #9fb4d0;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+   IMPORTANT
+   ===================================================== */
+
+.vg-main-content {
+
+    margin-left: 270px;
+
+    min-height: 100vh;
+
+    width: calc(100% - 270px);
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .vg-sidebar {
+
+        width: 230px;
+
+    }
+
+    .vg-main-content {
+
+        margin-left: 230px;
+
+        width: calc(100% - 230px);
+
+    }
+
+}
+
+#i212p { list-style-position:inside;    why it is coming in response
+
+for the dashboard when we click on the fields it should navigate to that tabs and when we click on questions it should go ai and answer those questions
+
+
+Pasted text(20260810-125800).txt
+Document
+ css
+
+api.controller = function($scope) {
+
+var c = this;
+
+c.ai_question = "";
+
+
+// =====================================================
+// PAGE NAVIGATION
+// =====================================================
+
+c.openPage = function(pageId) {
+
+    if (!pageId) {
+        return;
+    }
+
+    window.location.href = "?id=" + pageId;
+
+};
+
+
+// =====================================================
+// OPEN CASE
+// =====================================================
+
+c.openCase = function(sysId) {
+
+    if (!sysId) {
+        return;
+    }
+
+    window.location.href =
+        "?id=case_details&amp;sys_id=" +
+        sysId;
+
+};
+
+
+// =====================================================
+// AI ASSISTANT
+// =====================================================
+
+c.askAI = function(question) {
+
+    if (!question) {
+        return;
+    }
+
+    question =
+        String(question).trim();
+
+    if (!question) {
+        return;
+    }
+
+
+    /*
+     * Save the question so the AI page can receive it.
+     */
+
+    sessionStorage.setItem(
+        "vg_ai_question",
+        question
+    );
+
+
+    /*
+     * Open your AI chat page.
+     */
+
+    window.location.href =
+        "student?id=vg_ai_chat";
+
+};
+
+
+// =====================================================
+// ENTER KEY FOR AI
+// =====================================================
+
+c.checkAIEnter = function(event) {
+
+    if (event.which === 13) {
+
+        c.askAI(
+            c.ai_question
+        );
+
+    }
+
+};
+};
+
+
+
+Pasted text(20260810-125920).txt
+Document
+
+Pasted text (2)(1).txt
+Document
+and server check all and give all codes
+
+lets do compaliance table , dont add right corner profile 
+
+e7982f49-f008-41e8-abc6-5ede99538e26.png
+076f69ba-0c24-4d79-ac8d-bdc4754cbe4d.png
+i want every thing accept 2nd image things 
+
+dffa2502-431e-4e39-9460-86fc3ec1f1a1.png
+49160288-5f5e-43e1-be6b-9607151ebc7e.png
+d5606812-bad2-47b6-aa14-55b127ea4c93.png
+04473851-0bca-46d3-8d58-f55bf36e5407.png
+7c9d6619-744e-4407-a63c-3fb0f61b7e5b.png
+8c2e1acc-a31b-4c10-ad28-8711e2cd22a7.png
+these are for visa cases if you want i will student table 
+
+e4c363f1-22c9-4c6c-a39a-6ae6f2dd5441.png
+0b18e297-71b0-4eda-90da-81e2636b647f.png
+38adb160-bc11-47d4-a88c-f427b9915414.png
+f3af0284-489d-446b-8b30-dfb018237d4a.png
+cbe34599-d0dc-4b38-9737-e0593d1614e6.png
+5349996a-49b2-4b77-930e-0235b88a665d.png
+
+html and css is not nice when left side bar available
+
+
+Monday 9:21 PM
+
+Pasted text(20260810-155019).txt
+Document
+can we add the api so if any questions from out of it should give from chatgpt api
+
+
+Pasted text(20260810-192204).txt
+Document
+check once
+
+i got 200 response
+
+
+Pasted text(20260810-195659).txt
+Document
+and this present clint script update and give 
+
+Tuesday 11:48 AM
+
+Pasted text(20260811-061754).txt
+Document
+this is my login student clint and server scripts
+
+api.controller = function($scope, $window, $location) {
+var c = this;
+
+c.loading = false;
+c.error = "";
+
+c.login = function() {
+    c.error = "";
+
+    if (!c.data.username || !c.data.password) {
+        c.error = "Please enter both User ID/Email and Password.";
+        return;
+    }
+
+    c.loading = true;
+
+    c.server.update().then(function(response) {
+        c.loading = false;
+
+        if (c.data.login_success) {
+            
+            // UPDATE THIS LINE to your new navigation path
+            $window.location.href = "/student?id=vg_profile"; 
+            
+        } else {
+            c.error = c.data.login_error || "Invalid User ID or Password.";
+        }
+    }).catch(function(err) {
+        c.loading = false;
+        c.error = "An error occurred during sign-in. Please try again.";
+        console.error(err);
+    });
+};
+}; and
+
+(function() {
+
+// =====================================================
+// INITIAL DATA
+// =====================================================
+
+data.userExists = false;
+data.login_success = false;
+data.login_error = "";
+data.redirect_url = "";
+
+
+// =====================================================
+// CHECK CURRENT LOGIN
+// =====================================================
+
+if (gs.isLoggedIn() &amp;&amp; gs.getUserName() != "guest") {
+
+    var currentUserId = gs.getUserID();
+
+    var studentProfile =
+        new GlideRecord("x_snc_visaguardi_0_student_profile");
+
+    studentProfile.addQuery("user", currentUserId);
+    studentProfile.setLimit(1);
+    studentProfile.query();
+
+    if (studentProfile.next()) {
+
+        data.userExists = true;
+
+    } else {
+
+        // Fallback: search by User ID
+        var currentUser =
+            new GlideRecord("sys_user");
+
+        if (currentUser.get(currentUserId)) {
+
+            var profileByUsername =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+            profileByUsername.addQuery(
+                "user_name",
+                currentUser.getValue("user_name")
+            );
+
+            profileByUsername.setLimit(1);
+            profileByUsername.query();
+
+            if (profileByUsername.next()) {
+                data.userExists = true;
+            }
+        }
+    }
+}
+
+
+// =====================================================
+// LOGIN SUBMISSION
+// =====================================================
+
+if (
+    input &amp;&amp;
+    input.username &amp;&amp;
+    input.password
+) {
+
+    var username =
+        String(input.username).trim();
+
+    var password =
+        String(input.password);
+
+
+    // =================================================
+    // FIND USER BY USERNAME OR EMAIL
+    // =================================================
+
+    var userGr =
+        new GlideRecord("sys_user");
+
+
+    // IMPORTANT:
+    // Use GlideQueryCondition for OR
+    var condition =
+        userGr.addQuery(
+            "user_name",
+            username
+        );
+
+    condition.addOrCondition(
+        "email",
+        username
+    );
+
+
+    // Only active users
+    userGr.addQuery(
+        "active",
+        true
+    );
+
+    userGr.setLimit(1);
+
+    userGr.query();
+
+
+    // =================================================
+    // USER NOT FOUND
+    // =================================================
+
+    if (!userGr.next()) {
+
+        data.login_success = false;
+
+        data.login_error =
+            "User ID or Email not found.";
+
+        return;
+    }
+
+
+    // =================================================
+    // USER INFORMATION
+    // =================================================
+
+    var actualUsername =
+        userGr.getValue("user_name");
+
+    var userSysId =
+        userGr.getUniqueValue();
+
+
+    // =================================================
+    // CHECK STUDENT PROFILE
+    // =================================================
+
+    var profile =
+        new GlideRecord(
+            "x_snc_visaguardi_0_student_profile"
+        );
+
+    var profileFound = false;
+
+
+    // -------------------------------------------------
+    // OPTION 1: USER REFERENCE
+    // -------------------------------------------------
+
+    profile.addQuery("user", userSysId);
+    profile.setLimit(1);
+    profile.query();
+
+    if (profile.next()) {
+
+        profileFound = true;
+    }
+
+
+    // -------------------------------------------------
+    // OPTION 2: USER NAME
+    // -------------------------------------------------
+
+    if (!profileFound) {
+
+        profile =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        profile.addQuery(
+            "user_name",
+            actualUsername
+        );
+
+        profile.setLimit(1);
+
+        profile.query();
+
+        if (profile.next()) {
+
+            profileFound = true;
+        }
+    }
+
+
+    // =================================================
+    // PROFILE DOES NOT EXIST
+    // =================================================
+
+    if (!profileFound) {
+
+        data.login_success = false;
+
+        data.login_error =
+            "Student profile was not found for this account.";
+
+        return;
+    }
+// =================================================
+// PASSWORD AUTHENTICATION
+// =================================================
+
+try {
+
+if (typeof global.ScopedLoginHelper !== "function") {
+
+    data.login_success = false;
+
+    data.login_error =
+        "Login helper is not available. Please check ScopedLoginHelper Script Include.";
+
+    gs.error(
+        "VisaGuardian Login Error: ScopedLoginHelper Script Include is not available."
+    );
+
+    return;
+}
+
+var authHelper =
+    new global.ScopedLoginHelper();
+
+if (typeof authHelper.login !== "function") {
+
+    data.login_success = false;
+
+    data.login_error =
+        "Login method is not available in ScopedLoginHelper.";
+
+    gs.error(
+        "VisaGuardian Login Error: login() method is missing in ScopedLoginHelper."
+    );
+
+    return;
+}
+
+var authenticated =
+    authHelper.login(
+        actualUsername,
+        password
+    );
+
+
+// =================================================
+// SUCCESS
+// =================================================
+
+if (authenticated === true) {
+
+    gs.getSession().putClientData(
+"vg_student_sys_id",
+profile.getUniqueValue()
+);
+
+gs.getSession().putClientData(
+"vg_student_user_name",
+profile.getValue("user_name")
+);
+data.login_success = true;
+
+    data.login_error = "";
+
+    data.redirect_url =
+        "?id=student_dashboard";
+
+}
+
+// =================================================
+// WRONG PASSWORD
+// =================================================
+
+else {
+
+    data.login_success = false;
+
+    data.login_error =
+        "Invalid password. Please try again.";
+}
+} catch (ex) {
+
+data.login_success = false;
+
+data.login_error =
+    "Unable to authenticate the account: " + ex.message;
+
+gs.error(
+    "VisaGuardian Login Error: " +
+    ex.message
+);
+}
+
+}
+})(); and sfter login this scripts for create form
+
+api.controller = function() {
+
+var c = this;
+
+c.loading = false;
+c.error = "";
+c.success = "";
+c.submitted = false;
+
+
+/* ==========================================
+   INITIAL FORM
+   ========================================== */
+
+if (!c.data.form) {
+
+    c.data.form = {
+        request_category: "",
+        academic_major: "",
+        description: ""
+    };
+
+}
+
+
+if (!c.data.documents) {
+
+    c.data.documents = {};
+
+}
+
+
+/* ==========================================
+   CATEGORY CHANGED
+   ========================================== */
+
+c.categoryChanged = function() {
+
+    c.error = "";
+    c.success = "";
+
+    // Reset checklist
+    c.data.documents = {};
+
+};
+
+
+/* ==========================================
+   SUBMIT REQUEST
+   ========================================== */
+
+c.submitRequest = function() {
+
+    c.error = "";
+    c.success = "";
+
+    var f = c.data.form;
+
+
+    /* REQUIRED CATEGORY */
+
+    if (!f.request_category) {
+
+        c.error =
+            "Please select a request category.";
+
+        return;
+
+    }
+
+
+    /* ACADEMIC MAJOR */
+
+    if (!f.academic_major) {
+
+        c.error =
+            "Please enter your academic major.";
+
+        return;
+
+    }
+
+
+    c.loading = true;
+
+
+    /*
+     * Tell server what operation to perform.
+     */
+
+    c.data.action = "submit_request";
+
+
+    c.server.update().then(function() {
+
+        c.loading = false;
+
+        // Check c.data directly instead of response.data
+        if (c.data.request_success) {
+
+            c.submitted = true;
+            c.success =
+                c.data.request_message ||
+                "Your visa request has been submitted successfully.";
+
+        } else {
+
+            c.error =
+                c.data.request_error ||
+                "Unable to submit the visa request.";
+
+        }
+
+    }).catch(function(error) {
+
+        c.loading = false;
+        c.error = "An unexpected error occurred while submitting the request.";
+        
+        // Using warn instead of error to avoid triggering the red banner if a real network error happens
+        console.warn("Visa Request Error:", error); 
+
+    });
+        
+
+};
+
+
+/* ==========================================
+   RESET
+   ========================================== */
+
+c.resetForm = function() {
+
+    c.data.form = {
+
+        request_category: "",
+        academic_major: "",
+        description: ""
+
+    };
+
+
+    c.data.documents = {};
+
+    c.data.action = "";
+
+    c.error = "";
+
+    c.success = "";
+
+    c.submitted = false;
+
+};
+}; and
+
+(function() {
+
+/*
+ * ==========================================
+ * INITIAL DATA
+ * ==========================================
+ */
+
+data.request_success = false;
+data.request_error = "";
+data.request_message = "";
+
+
+
+/*
+ * ==========================================
+ * DEFAULT FORM
+ * ==========================================
+ */
+
+data.form = {
+
+    request_category: "",
+    academic_major: "",
+    description: ""
+
+};
+
+
+data.documents = {};
+
+
+
+/*
+ * ==========================================
+ * SUBMIT REQUEST
+ * ==========================================
+ */
+
+if (
+    input &amp;&amp;
+    input.action === "submit_request"
+) {
+
+    var form = input.form || {};
+
+    var category =
+        (form.request_category || "").toString();
+
+    var major =
+        (form.academic_major || "").toString();
+
+    var description =
+        (form.description || "").toString();
+
+
+    /*
+     * --------------------------------------
+     * VALIDATION
+     * --------------------------------------
+     */
+
+    if (!category) {
+
+        data.request_error =
+            "Request category is required.";
+
+        return;
+
+    }
+
+
+    if (!major) {
+
+        data.request_error =
+            "Academic major is required.";
+
+        return;
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * GET LOGGED-IN USER
+     * --------------------------------------
+     */
+
+    var userId = gs.getUserID();
+
+
+    if (!userId) {
+
+        data.request_error =
+            "Unable to identify the logged-in student.";
+
+        return;
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * CREATE VISA CASE
+     * --------------------------------------
+     */
+
+    var visaCase = new GlideRecord(
+        "x_snc_visaguardi_0_visa_case"
+    );
+
+    visaCase.initialize();
+
+
+    /*
+     * --------------------------------------
+     * REQUEST CATEGORY
+     *
+     * We first check request_category.
+     * If your table doesn't have it, we
+     * use contact_type.
+     * --------------------------------------
+     */
+
+    if (
+        visaCase.isValidField(
+            "request_category"
+        )
+    ) {
+
+        visaCase.setValue(
+            "request_category",
+            category
+        );
+
+    }
+
+    else if (
+        visaCase.isValidField(
+            "contact_type"
+        )
+    ) {
+
+        visaCase.setValue(
+            "contact_type",
+            category
+        );
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * DESCRIPTION
+     * --------------------------------------
+     */
+
+    var completeDescription =
+        "Academic Major: " +
+        major +
+        "\n\n" +
+        "Student Visa Request Category: " +
+        category +
+        "\n\n" +
+        "Additional Notes:\n" +
+        description;
+
+
+    if (
+        visaCase.isValidField(
+            "description"
+        )
+    ) {
+
+        visaCase.setValue(
+            "description",
+            completeDescription
+        );
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * CASE STAGE
+     * --------------------------------------
+     */
+
+    if (
+        visaCase.isValidField(
+            "case_stage"
+        )
+    ) {
+
+        visaCase.setValue(
+            "case_stage",
+            "Submitted"
+        );
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * STATE
+     * --------------------------------------
+     *
+     * Because Visa Cases extends Task,
+     * state may exist.
+     */
+
+    if (
+        visaCase.isValidField(
+            "state"
+        )
+    ) {
+
+        visaCase.setValue(
+            "state",
+            "1"
+        );
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * STUDENT / REQUESTER
+     *
+     * Your exact field may differ, so
+     * check the fields dynamically.
+     * --------------------------------------
+     */
+
+    if (
+        visaCase.isValidField(
+            "student"
+        )
+    ) {
+
+        visaCase.setValue(
+            "student",
+            userId
+        );
+
+    }
+
+    else if (
+        visaCase.isValidField(
+            "opened_for"
+        )
+    ) {
+
+        visaCase.setValue(
+            "opened_for",
+            userId
+        );
+
+    }
+
+    else if (
+        visaCase.isValidField(
+            "caller_id"
+        )
+    ) {
+
+        visaCase.setValue(
+            "caller_id",
+            userId
+        );
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * CREATED BY
+     * --------------------------------------
+     *
+     * ServiceNow automatically sets
+     * sys_created_by.
+     */
+
+
+    /*
+     * --------------------------------------
+     * INSERT
+     * --------------------------------------
+     */
+
+    var newSysId =
+        visaCase.insert();
+
+
+    /*
+     * --------------------------------------
+     * CHECK RESULT
+     * --------------------------------------
+     */
+
+    if (!newSysId) {
+
+        data.request_error =
+            "The visa request could not be created.";
+
+        return;
+
+    }
+
+
+    /*
+     * --------------------------------------
+     * GET GENERATED CASE NUMBER
+     * --------------------------------------
+     */
+
+    var caseNumber =
+        visaCase.getDisplayValue("number");
+
+
+    /*
+     * --------------------------------------
+     * SUCCESS
+     * --------------------------------------
+     */
+
+    data.request_success = true;
+
+
+    data.request_message =
+        "Case " +
+        caseNumber +
+        " has been created and submitted to your advisor.";
+
+
+    /*
+     * Keep submitted information
+     */
+
+    data.form = {
+
+        request_category: category,
+
+        academic_major: major,
+
+        description: description
+
+    };
+
+}
+})(); and for my requests
+
+api.controller = function() {
+
+var c = this;
+
+/* ==========================================
+   INITIAL STATE
+   ========================================== */
+
+c.loading = true;
+c.error = "";
+c.activeTab = "all";
+c.requests = [];
+
+
+/* ==========================================
+   LOAD REQUESTS
+   ========================================== */
+
+c.loadRequests = function() {
+
+    c.loading = true;
+    c.error = "";
+    c.data.action = "load_requests";
+
+
+    c.server.update().then(function() {
+
+        c.loading = false;
+
+        // FIX: Check c.data directly instead of response.data
+        if (c.data &amp;&amp; c.data.request_error) {
+
+            c.error = c.data.request_error;
+            c.requests = [];
+            return;
+
+        }
+
+        // FIX: Read requests from c.data
+        c.requests = c.data.requests || [];
+
+    })
+    .catch(function(error) {
+
+        c.loading = false;
+        c.error = "Unable to load your visa requests.";
+        
+        // FIX: Use warn instead of error to prevent the red banner
+        console.warn("My Requests Error:", error);
+
+    });
+
+};
+
+
+/* ==========================================
+   TAB CHANGE
+   ========================================== */
+
+c.changeTab = function(tab) {
+
+    c.activeTab = tab;
+    c.loadRequests();
+
+};
+
+
+/* ==========================================
+   TRACK CASE
+   ========================================== */
+
+c.trackCase = function(request) {
+
+    if (!request || !request.sys_id) {
+        return;
+    }
+
+    /*
+     * Change "visa_case" if your
+     * Service Portal case page
+     * has a different ID.
+     */
+    window.location.href =
+        "?id=visa_case&amp;sys_id=" +
+        encodeURIComponent(request.sys_id);
+
+};
+
+
+/* ==========================================
+   INITIAL LOAD
+   ========================================== */
+
+c.loadRequests();
+}; after creating cases a student get or read his own cases but al cases coming
+
+
+b4531494-879e-4665-a6d0-ae839f1a9c2e.png
+1d6fd45d-31a4-4e47-aea1-4ff55912e94c.png
+9d0d2ee6-2da8-4939-bef7-3a0d29a15fc5.png
+10a8d37f-813a-4d61-bf2a-89df75f4ed47.png
+i am getting all cases 
+
+Wednesday 11:22 AM
+i want my html and css look like above when i click on other page it should blue and other should be normal &lt;aside class="vg-sidebar"&gt;
+
+    &lt;!-- BRAND / LOGO --&gt;
+    &lt;div class="vg-sidebar-logo"&gt;
+        &lt;span class="vg-logo-icon"&gt;🛡️&lt;/span&gt;
+        &lt;div class="vg-logo-text"&gt;
+            &lt;div class="vg-logo-title"&gt;VisaGuardian AI&lt;/div&gt;
+            &lt;div class="vg-logo-subtitle"&gt;Advisor Workspace&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- NAVIGATION --&gt;
+    &lt;nav class="vg-sidebar-nav" id="vgSidebarNav"&gt;
+
+        &lt;a href="student?id=advisor_workspace" class="vg-nav-item active" data-page="advisor_overview"&gt;
+            &lt;span class="vg-nav-icon"&gt;▦&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Overview&lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_adv_my_students" class="vg-nav-item" data-page="my_students"&gt;
+            &lt;span class="vg-nav-icon"&gt;♟&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;My Students&lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_advisor_my_cases" class="vg-nav-item" data-page="my_cases"&gt;
+            &lt;span class="vg-nav-icon"&gt;▣&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;My Cases&lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_adv_document_review" class="vg-nav-item" data-page="documents"&gt;
+            &lt;span class="vg-nav-icon"&gt;▤&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Document Review&lt;/span&gt;
+        &lt;/a&gt;
+      
+       &lt;a href="student?id=vg_adv_tasks_approvals" class="vg-nav-item" data-page="reports"&gt;
+            &lt;span class="vg-nav-icon"&gt;▥&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Tasks &amp; Approvals  &lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_adv_risk_compliance" class="vg-nav-item" data-page="risk_assessments"&gt;
+            &lt;span class="vg-nav-icon"&gt;♢&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Risk &amp; Compliance &lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_adv_ai_case_insights" class="vg-nav-item" data-page="ai_assistance"&gt;
+            &lt;span class="vg-nav-icon"&gt;✦&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;AI Case Insights &lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_advisor_notifications" class="vg-nav-item" data-page="notifications"&gt;
+            &lt;span class="vg-nav-icon"&gt;♧&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Notifications&lt;/span&gt;
+            &lt;span class="vg-notification-badge" ng-if="data.notification_count &gt; 0"&gt;
+                {{data.notification_count}}
+            &lt;/span&gt;
+        &lt;/a&gt;
+
+        &lt;a href="student?id=vg_adv_profile" class="vg-nav-item" data-page="profile"&gt;
+            &lt;span class="vg-nav-icon"&gt;♙&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Profile&lt;/span&gt;
+        &lt;/a&gt;
+
+
+        &lt;a href="student?id=vg_help_support" class="vg-nav-item" data-page="help_support"&gt;
+            &lt;span class="vg-nav-icon"&gt;?&lt;/span&gt;
+            &lt;span class="vg-nav-text"&gt;Help &amp;amp; Support&lt;/span&gt;
+        &lt;/a&gt;
+
+    &lt;/nav&gt;
+
+&lt;/aside&gt;  this is html
+
+left side blue button not coming when we click on page it should show blue color on the bar
+
+fa4597d5-1a6b-4999-859d-e0646a4aa3a0.png
+4f482003-4931-4dd6-b039-e3b3cfe1750c.png
+when i scroll up and click on help and support it is showing 1st all
+
+when i login as advisor , advisor details should get there 
+
+c88f8d5b-cf12-4b6b-9e09-681979fcbf02.png
+1f8c7ab7-78b2-477b-b594-4bc15a47af97.png
+11b2987e-c9d1-4900-a264-41dae4327892.png
+0f11fae2-99a7-4b42-9188-26124d00b530.png
+3da0030b-9c18-4f65-93f9-424c268d0641.png
+6eaadf2d-139a-428d-bca7-332105137d5f.png
+c353d222-fa91-42d4-8329-45f90f631f9a.png
+
+no data is coming
+
+
+Pasted text(20260812-164225).txt
+Document
+this is present html css
+
+.vg-workspace-container {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+color: #2b3674;
+
+$navy-bg: #0b2545;
+$card-bg: #ffffff;
+$purple-accent: #7016d0;
+$green-accent: #00b074;
+$orange-accent: #ff9f43;
+$red-accent: #ea5455;
+
+/* Hero Banner */
+.vg-hero-banner {
+background: linear-gradient(135deg, #091e3a 0%, #0d3a78 100%);
+border-radius: 12px;
+padding: 24px 30px;
+color: #ffffff;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 8px 20px rgba(9, 30, 58, 0.15);
+margin-bottom: 24px;
+flex-wrap: wrap;
+gap: 16px;
+
+.profile-header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .avatar-wrapper {
+    position: relative;
+
+    .avatar-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      color: #ffffff;
+    }
+
+    .status-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #0d3a78;
+
+      &amp;.online { background: #00b074; }
+      &amp;.busy { background: #ff9f43; }
+    }
+  }
+
+  .profile-info {
+    .name-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      h2 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 22px;
+        color: #ffffff;
+      }
+
+      .role-badge {
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 12px;
+      }
+    }
+
+    .profile-subtitle {
+      margin: 6px 0 0 0;
+      font-size: 12px;
+      opacity: 0.85;
+      color: #d1dcf0;
+    }
+  }
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .btn-hero-outline {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &amp;:hover {
+      background: #ffffff;
+      color: #0d3a78;
+    }
+  }
+
+  .btn-hero-primary {
+    background: #7016d0;
+    border: 1px solid #7016d0;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    &amp;:hover {
+      background: #5b0fb0;
+    }
+  }
+}
+}
+
+/* Metric Cards Row */
+.metric-row {
+margin-bottom: 24px;
+}
+
+.vg-metric-card {
+background: #ffffff;
+border-radius: 12px;
+padding: 20px 24px;
+display: flex;
+align-items: center;
+gap: 20px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+border: 1px solid #eef2f7;
+
+.metric-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+
+  &amp;.purple-circle { background: #f0e6ff; color: #7016d0; }
+  &amp;.orange-circle { background: #fef3d6; color: #ff9f43; }
+  &amp;.green-circle { background: #e6f4ea; color: #00b074; }
+}
+
+.metric-data {
+  display: flex;
+  flex-direction: column;
+
+  .metric-number {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #8f9bba;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .metric-subtext {
+    font-size: 11px;
+    font-weight: 600;
+  }
+}
+}
+
+.text-purple { color: #7016d0; }
+.text-orange { color: #ff9f43; }
+.text-green { color: #00b074; }
+.text-green-light { color: #34d399; }
+.text-orange-light { color: #fbbf24; }
+
+/* Cards */
+.vg-card {
+background: #ffffff;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+border: 1px solid #eef2f7;
+padding: 20px 24px;
+
+.vg-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f3f8;
+  margin-bottom: 16px;
+
+  h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1b2559;
+
+    i {
+      color: #7016d0;
+      margin-right: 8px;
+    }
+  }
+
+  .badge-purple {
+    background: #f0e6ff;
+    color: #7016d0;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+}
+}
+
+/* Info List */
+.info-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #f0f3f8;
+
+  .info-label {
+    font-size: 12px;
+    color: #8f9bba;
+    font-weight: 600;
+
+    i { margin-right: 6px; }
+  }
+
+  .info-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1b2559;
+  }
+}
+}
+
+.section-label {
+font-size: 12px;
+font-weight: 700;
+color: #8f9bba;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+margin-bottom: 8px;
+display: block;
+}
+
+.tag-cloud {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+
+.tag-pill {
+  background: #f4f7fe;
+  border: 1px solid #e0e5f2;
+  color: #2b3674;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+}
+
+/* Appointment Schedule */
+.appointment-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+
+.appointment-card {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 10px;
+  gap: 16px;
+
+  .time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+    padding-right: 12px;
+    border-right: 2px solid #e0e5f2;
+
+    .time-text {
+      font-weight: 700;
+      font-size: 12px;
+      color: #1b2559;
+    }
+
+    .duration-text {
+      font-size: 10px;
+      color: #8f9bba;
+    }
+  }
+
+  .appt-details {
+    flex-grow: 1;
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      strong {
+        font-size: 13px;
+        color: #1b2559;
+      }
+
+      .visa-badge {
+        background: #e0e7ff;
+        color: #3730a3;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    }
+
+    .appt-topic {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      color: #4a5568;
+    }
+  }
+}
+}
+
+/* Status Pill Helpers */
+.status-pill {
+display: inline-block;
+padding: 4px 10px;
+border-radius: 20px;
+font-size: 11px;
+font-weight: 700;
+
+&amp;.pill-purple { background: #f0e6ff; color: #7016d0; }
+&amp;.pill-orange { background: #fef3d6; color: #ff9f43; }
+&amp;.pill-green { background: #e6f4ea; color: #00b074; }
+&amp;.pill-red { background: #fde8e8; color: #ea5455; }
+}
+
+/* Search &amp; Table */
+.search-wrapper {
+position: relative;
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  color: #8f9bba;
+  font-size: 12px;
+}
+
+.search-input {
+  padding-left: 28px;
+  border-radius: 8px;
+  border: 1px solid #e0e5f2;
+  background: #f4f7fe;
+  font-size: 12px;
+  width: 220px;
+
+  &amp;:focus {
+    background: #ffffff;
+    border-color: #7016d0;
+  }
+}
+}
+
+.vg-table {
+margin: 0;
+
+th {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #8f9bba;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #eef2f7;
+  border-top: none;
+}
+
+td {
+  vertical-align: middle;
+  font-size: 13px;
+  color: #2b3674;
+  border-top: 1px solid #f4f7fe;
+  padding: 12px 8px;
+}
+
+.student-cell {
+  display: flex;
+  flex-direction: column;
+
+  .student-name {
+    font-weight: 700;
+    color: #1b2559;
+  }
+
+  .student-email {
+    font-size: 11px;
+    color: #8f9bba;
+  }
+}
+
+.visa-type-tag {
+  background: #f0e6ff;
+  color: #7016d0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.btn-review {
+  background: #f0e6ff;
+  color: #7016d0;
+  font-weight: 600;
+  border: 1px solid #dcd0ff;
+  border-radius: 6px;
+  padding: 4px 12px;
+
+  &amp;:hover {
+    background: #7016d0;
+    color: #ffffff;
+  }
+}
+}
+} clint script
+
+api.controller = function() {
+
+var c = this;
+
+// =========================================================
+// 1. Load profile data received from Server Script
+// =========================================================
+
+c.profile = c.data.profile || {};
+c.advisor_context = c.data.advisor_context || {};
+
+
+// =========================================================
+// 2. Check whether profile loaded successfully
+// =========================================================
+
+c.profileLoaded = function() {
+
+    return c.profile.found === true;
+
+};
+
+
+// =========================================================
+// 3. Get Advisor full name
+// =========================================================
+
+c.getFullName = function() {
+
+    return c.profile.name || 'Advisor';
+
+};
+
+
+// =========================================================
+// 4. Get User ID
+// =========================================================
+
+c.getUserName = function() {
+
+    return c.profile.user_name || 'Not available';
+
+};
+
+
+// =========================================================
+// 5. Get Email
+// =========================================================
+
+c.getEmail = function() {
+
+    return c.profile.email || 'Not available';
+
+};
+
+
+// =========================================================
+// 6. Get Job Title
+// =========================================================
+
+c.getJobTitle = function() {
+
+    return c.profile.title || 'Advisor';
+
+};
+
+
+// =========================================================
+// 7. Get Department
+// =========================================================
+
+c.getDepartment = function() {
+
+    return c.profile.department || 'Not available';
+
+};
+
+
+// =========================================================
+// 8. Get Phone
+// =========================================================
+
+c.getPhone = function() {
+
+    return c.profile.phone || 'Not available';
+
+};
+
+
+// =========================================================
+// 9. Get Mobile Phone
+// =========================================================
+
+c.getMobilePhone = function() {
+
+    return c.profile.mobile_phone || 'Not available';
+
+};
+
+
+// =========================================================
+// 10. Get Location
+// =========================================================
+
+c.getLocation = function() {
+
+    return c.profile.location || 'Not available';
+
+};
+
+
+// =========================================================
+// 11. Generate Advisor initials
+// =========================================================
+
+c.getInitials = function() {
+
+    var name = c.profile.name;
+
+    if (!name) {
+        return 'AD';
+    }
+
+    var parts = name.trim().split(/\s+/);
+
+    if (parts.length === 1) {
+        return parts[0].substring(0, 2).toUpperCase();
+    }
+
+    return (
+        parts[0].charAt(0) +
+        parts[parts.length - 1].charAt(0)
+    ).toUpperCase();
+
+};
+
+
+// =========================================================
+// 12. Check Advisor role
+// =========================================================
+
+c.isAdvisor = function() {
+
+    return c.advisor_context.is_advisor === true;
+
+};
+
+
+// =========================================================
+// 13. Get logged-in user's display name
+// =========================================================
+
+c.getLoggedInUser = function() {
+
+    return c.advisor_context.logged_in_user ||
+           c.profile.name ||
+           'Advisor';
+
+};
+
+
+// =========================================================
+// 14. Get user Sys ID
+// =========================================================
+
+c.getUserSysId = function() {
+
+    return c.advisor_context.user_sys_id ||
+           c.profile.sys_id ||
+           '';
+
+};
+
+
+// =========================================================
+// 15. Error handling
+// =========================================================
+
+c.hasError = function() {
+
+    return c.profile.error === true;
+
+};
+
+
+c.getErrorMessage = function() {
+
+    return c.profile.message ||
+           'Unable to load profile information.';
+
+};
+}; and server script
+
+(function() {
+
+// ==========================================
+// DEFAULT DATA
+// ==========================================
+
+data.advisor_found = false;
+data.error = "";
+
+data.advisor = {
+    sys_id: "",
+    user_name: "",
+    full_name: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    title: "",
+    department: "",
+    mobile_phone: "",
+    location: "",
+    last_login: ""
+};
+
+
+// ==========================================
+// CHECK LOGIN
+// ==========================================
+
+if (!gs.isLoggedIn() || gs.getUserName() == "guest") {
+
+    data.error =
+        "You must be logged in to view your advisor profile.";
+
+    return;
+}
+
+
+// ==========================================
+// GET CURRENT LOGGED-IN USER
+// ==========================================
+
+var currentUserId =
+    gs.getUserID();
+
+
+if (!currentUserId) {
+
+    data.error =
+        "Unable to identify the logged-in advisor.";
+
+    return;
+}
+
+
+// ==========================================
+// GET SYS_USER RECORD
+// ==========================================
+
+var advisor =
+    new GlideRecord("sys_user");
+
+
+if (!advisor.get(currentUserId)) {
+
+    data.error =
+        "Advisor user record could not be found.";
+
+    return;
+}
+
+
+// ==========================================
+// VERIFY ADVISOR ROLE
+// ==========================================
+
+var advisorRole =
+    "x_snc_visaguardi_0.advisor";
+
+var roleGR =
+    new GlideRecord("sys_user_has_role");
+
+roleGR.addQuery(
+    "user",
+    currentUserId
+);
+
+roleGR.addQuery(
+    "role.name",
+    advisorRole
+);
+
+roleGR.setLimit(1);
+roleGR.query();
+
+
+if (!roleGR.next()) {
+
+    data.error =
+        "The logged-in account is not an Advisor.";
+
+    return;
+}
+
+
+// ==========================================
+// BUILD ADVISOR PROFILE
+// ==========================================
+
+data.advisor_found = true;
+
+
+data.advisor.sys_id =
+    advisor.getUniqueValue();
+
+
+data.advisor.user_name =
+    advisor.getValue("user_name");
+
+
+data.advisor.full_name =
+    advisor.getDisplayValue();
+
+
+data.advisor.first_name =
+    advisor.getValue("first_name");
+
+
+data.advisor.last_name =
+    advisor.getValue("last_name");
+
+
+data.advisor.email =
+    advisor.getValue("email");
+
+
+data.advisor.title =
+    advisor.getValue("title");
+
+
+data.advisor.department =
+    advisor.getDisplayValue("department");
+
+
+data.advisor.mobile_phone =
+    advisor.getValue("mobile_phone");
+
+
+data.advisor.location =
+    advisor.getDisplayValue("location");
+
+
+data.advisor.last_login =
+    advisor.getDisplayValue("last_login");
+})();
+
+
+table name give all scripts completely
+
+
+table created with all fields
+
+user is created but details not coming in the profile
+
+
+Pasted text(20260812-175206).txt
+Document
+&lt;div class="advisor-login-page"&gt;
+
+    &lt;!-- ==========================================
+         BACKGROUND
+         ========================================== --&gt;
+
+    &lt;div class="login-background-glow glow-one"&gt;&lt;/div&gt;
+    &lt;div class="login-background-glow glow-two"&gt;&lt;/div&gt;
+
+
+    &lt;!-- ==========================================
+         MAIN LOGIN CARD
+         ========================================== --&gt;
+
+    &lt;div class="advisor-login-card"&gt;
+
+	&lt;!-- ======================================
+     BACK TO HOME
+     ====================================== --&gt;
+
+&lt;div class="advisor-back-container"&gt;
+
+    &lt;button
+        type="button"
+        class="advisor-back-button"
+        ng-click="c.goBack()"&gt;
+
+        &lt;span class="advisor-back-arrow"&gt;
+            ←
+        &lt;/span&gt;
+
+        &lt;span&gt;
+            Back to Home
+        &lt;/span&gt;
+
+    &lt;/button&gt;
+
+&lt;/div&gt;
+        &lt;!-- ======================================
+             LOGO / BRAND
+             ====================================== --&gt;
+
+        &lt;div class="advisor-login-brand"&gt;
+
+            &lt;img
+                src="/sys_attachment.do?sys_id=c252b6121ce6c3107f44ac7143096412"
+                class="advisor-login-logo"
+                alt="VisaGuardian AI"&gt;
+
+            &lt;div class="advisor-brand-info"&gt;
+
+                &lt;div class="advisor-brand-name"&gt;
+                    Visa&lt;span&gt;Guardian&lt;/span&gt; &lt;strong&gt;AI&lt;/strong&gt;
+                &lt;/div&gt;
+
+                &lt;div class="advisor-brand-subtitle"&gt;
+                    Advisor Workspace
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+
+        &lt;!-- ======================================
+             TITLE
+             ====================================== --&gt;
+
+        &lt;div class="advisor-login-heading"&gt;
+
+            &lt;h1&gt;
+                Welcome Back
+            &lt;/h1&gt;
+
+            &lt;p&gt;
+                Sign in to your Advisor Workspace
+            &lt;/p&gt;
+
+        &lt;/div&gt;
+
+
+        &lt;!-- ======================================
+             ERROR MESSAGE
+             ====================================== --&gt;
+
+        &lt;div
+            class="advisor-login-alert"
+            ng-if="c.error"&gt;
+
+            &lt;span class="advisor-alert-icon"&gt;
+                ⚠
+            &lt;/span&gt;
+
+            &lt;span&gt;
+                {{c.error}}
+            &lt;/span&gt;
+
+        &lt;/div&gt;
+
+
+        &lt;!-- ======================================
+             SUCCESS MESSAGE
+             ====================================== --&gt;
+
+        &lt;div
+            class="advisor-login-success"
+            ng-if="c.success"&gt;
+
+            &lt;span&gt;
+                ✓
+            &lt;/span&gt;
+
+            &lt;span&gt;
+                {{c.success}}
+            &lt;/span&gt;
+
+        &lt;/div&gt;
+
+
+        &lt;!-- ======================================
+             LOGIN FORM
+             ====================================== --&gt;
+
+        &lt;form
+            name="advisorLoginForm"
+            ng-submit="c.login()"
+            novalidate&gt;
+
+
+            &lt;!-- USERNAME --&gt;
+
+            &lt;div class="advisor-login-field"&gt;
+
+                &lt;label&gt;
+                    Username
+                &lt;/label&gt;
+
+                &lt;div class="advisor-input-wrapper"&gt;
+
+                    &lt;span class="advisor-input-icon"&gt;
+                        👤
+                    &lt;/span&gt;
+
+                    &lt;input
+                        type="text"
+                        ng-model="c.data.form.user_name"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+
+            &lt;!-- PASSWORD --&gt;
+
+            &lt;div class="advisor-login-field"&gt;
+
+                &lt;label&gt;
+                    Password
+                &lt;/label&gt;
+
+                &lt;div class="advisor-input-wrapper"&gt;
+
+                    &lt;span class="advisor-input-icon"&gt;
+                        🔒
+                    &lt;/span&gt;
+
+                    &lt;input
+                        type="password"
+                        ng-model="c.data.form.password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+
+            &lt;!-- OPTIONS --&gt;
+
+            &lt;div class="advisor-login-options"&gt;
+
+                &lt;label class="remember-option"&gt;
+
+                    &lt;input
+                        type="checkbox"
+                        ng-model="c.data.form.remember"&gt;
+
+                    &lt;span&gt;
+                        Remember me
+                    &lt;/span&gt;
+
+                &lt;/label&gt;
+
+        
+
+            &lt;/div&gt;
+
+
+            &lt;!-- ==================================
+                 LOGIN BUTTON
+                 ================================== --&gt;
+
+            &lt;button
+                type="submit"
+                class="advisor-login-button"
+                ng-disabled="c.loading"&gt;
+
+                &lt;span ng-if="!c.loading"&gt;
+                    Sign In
+                &lt;/span&gt;
+
+                &lt;span ng-if="c.loading"&gt;
+                    Signing In...
+                &lt;/span&gt;
+
+                &lt;span
+                    class="advisor-login-arrow"
+                    ng-if="!c.loading"&gt;
+
+                    →
+
+                &lt;/span&gt;
+
+            &lt;/button&gt;
+
+
+        &lt;/form&gt;
+
+
+        &lt;!-- ======================================
+             REGISTER
+             ====================================== --&gt;
+
+        &lt;div class="advisor-register-link"&gt;
+
+            &lt;span&gt;
+                Don't have an advisor account?
+            &lt;/span&gt;
+
+            &lt;a href="/student?id=advisor_registration"&gt;
+                Register here
+            &lt;/a&gt;
+
+        &lt;/div&gt;
+
+
+        &lt;!-- ======================================
+             SECURITY
+             ====================================== --&gt;
+
+        &lt;div class="advisor-login-security"&gt;
+
+            &lt;span&gt;
+                🔒
+            &lt;/span&gt;
+
+            Secure Advisor Authentication
+
+        &lt;/div&gt;
+
+
+    &lt;/div&gt;
+
+&lt;/div&gt; and 
+
+5021e713-d484-435c-a08c-c8a8ec58aa69.png
+6a22c4f7-364a-49bf-8df6-2d312ae90f05.png
+
+i did everyy thing but coming like this
+
+i loggid as jeevan it is coming like this
+
+Yesterday 9:54 AM
+
+Pasted text(20260813-042409).txt
+Document
+&lt;div class="vg-workspace-container"&gt; 
+   
+  &lt;!-- Hero Banner Header --&gt; 
+  &lt;div class="vg-hero-banner"&gt; 
+    &lt;div class="hero-content"&gt; 
+      &lt;h2&gt;👥 Student Directory &amp; Records&lt;/h2&gt; 
+      &lt;p&gt;VisaGuardian AI | Comprehensive international student SEVIS compliance, enrollment, and risk tracking&lt;/p&gt; 
+    &lt;/div&gt; 
+    &lt;div class="hero-actions"&gt; 
+      &lt;button class="btn btn-hero-outline" ng-click="c.addStudent()"&gt; 
+        &lt;i class="fa fa-user-plus"&gt;&lt;/i&gt; Add New Student 
+      &lt;/button&gt; 
+    &lt;/div&gt; 
+  &lt;/div&gt; 
+ 
+  &lt;!-- Metric Summary Cards --&gt; 
+  &lt;div class="row metric-row"&gt; 
+    &lt;div class="col-md-3 col-sm-6"&gt; 
+      &lt;div class="vg-metric-card"&gt; 
+        &lt;div class="metric-icon blue-circle"&gt; 
+          &lt;i class="fa fa-users"&gt;&lt;/i&gt; 
+        &lt;/div&gt; 
+        &lt;div class="metric-data"&gt; 
+          &lt;span class="metric-number text-blue"&gt;{{c.getCount('All')}}&lt;/span&gt; 
+          &lt;span class="metric-label"&gt;TOTAL STUDENTS&lt;/span&gt; 
+          &lt;span class="metric-subtext text-blue"&gt;Enrolled this term&lt;/span&gt; 
+        &lt;/div&gt; 
+      &lt;/div&gt; 
+    &lt;/div&gt; 
+ 
+    &lt;div class="col-md-3 col-sm-6"&gt; 
+      &lt;div class="vg-metric-card"&gt; 
+        &lt;div class="metric-icon green-circle"&gt; 
+          &lt;i class="fa fa-check-circle-o"&gt;&lt;/i&gt; 
+        &lt;/div&gt; 
+        &lt;div class="metric-data"&gt; 
+          &lt;span class="metric-number text-green"&gt;{{c.getCount('Active')}}&lt;/span&gt; 
+          &lt;span class="metric-label"&gt;ACTIVE / COMPLIANT&lt;/span&gt; 
+          &lt;span class="metric-subtext text-green"&gt;Good SEVIS standing&lt;/span&gt; 
+        &lt;/div&gt; 
+      &lt;/div&gt; 
+    &lt;/div&gt; 
+ 
+    &lt;div class="col-md-3 col-sm-6"&gt; 
+      &lt;div class="vg-metric-card"&gt; 
+        &lt;div class="metric-icon orange-circle"&gt; 
+          &lt;i class="fa fa-clock-o"&gt;&lt;/i&gt; 
+        &lt;/div&gt; 
+        &lt;div class="metric-data"&gt; 
+          &lt;span class="metric-number text-orange"&gt;{{c.getCount('Pending')}}&lt;/span&gt; 
+          &lt;span class="metric-label"&gt;PENDING I-20 / OPT&lt;/span&gt; 
+          &lt;span class="metric-subtext text-orange"&gt;Action required&lt;/span&gt; 
+        &lt;/div&gt; 
+      &lt;/div&gt; 
+    &lt;/div&gt; 
+ 
+    &lt;div class="col-md-3 col-sm-6"&gt; 
+      &lt;div class="vg-metric-card"&gt; 
+        &lt;div class="metric-icon red-circle"&gt; 
+          &lt;i class="fa fa-exclamation-triangle"&gt;&lt;/i&gt; 
+        &lt;/div&gt; 
+        &lt;div class="metric-data"&gt; 
+          &lt;span class="metric-number text-red"&gt;{{c.getHighRiskCount()}}&lt;/span&gt; 
+          &lt;span class="metric-label"&gt;HIGH RISK&lt;/span&gt; 
+          &lt;span class="metric-subtext text-red"&gt;Compliance alert&lt;/span&gt; 
+        &lt;/div&gt; 
+      &lt;/div&gt; 
+    &lt;/div&gt; 
+  &lt;/div&gt; 
+ 
+  &lt;!-- Main Students Table Card --&gt; 
+  &lt;div class="vg-card margin-top-lg"&gt; 
+    &lt;div class="vg-card-header"&gt; 
+      &lt;div class="header-left"&gt; 
+        &lt;h4&gt;&lt;i class="fa fa-graduation-cap"&gt;&lt;/i&gt; International Student Roster&lt;/h4&gt; 
+      &lt;/div&gt; 
+       
+      &lt;!-- Filter Pills &amp; Search Bar --&gt; 
+      &lt;div class="header-right"&gt; 
+        &lt;div class="btn-group filter-pills"&gt; 
+          &lt;button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'ALL'}" ng-click="c.setFilter('ALL')"&gt;All&lt;/button&gt; 
+          &lt;button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'Active'}" ng-click="c.setFilter('Active')"&gt;Active&lt;/button&gt; 
+          &lt;button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'Pending'}" ng-click="c.setFilter('Pending')"&gt;Pending&lt;/button&gt; 
+          &lt;button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'HighRisk'}" ng-click="c.setFilter('HighRisk')"&gt;High Risk&lt;/button&gt; 
+        &lt;/div&gt; 
+        &lt;div class="search-wrapper"&gt; 
+          &lt;i class="fa fa-search search-icon"&gt;&lt;/i&gt; 
+          &lt;input type="text" class="form-control input-sm search-input" placeholder="Search student, SEVIS ID, major..." ng-model="c.searchQuery"&gt; 
+        &lt;/div&gt; 
+      &lt;/div&gt; 
+    &lt;/div&gt; 
+ 
+    &lt;!-- Table --&gt; 
+    &lt;div class="table-responsive"&gt; 
+      &lt;table class="table vg-table"&gt; 
+        &lt;thead&gt; 
+          &lt;tr&gt; 
+            &lt;th&gt;Student Name&lt;/th&gt; 
+            &lt;th&gt;SEVIS ID&lt;/th&gt; 
+            &lt;th&gt;Visa Type&lt;/th&gt; 
+            &lt;th&gt;Major / Program&lt;/th&gt; 
+            &lt;th&gt;Status&lt;/th&gt; 
+            &lt;th&gt;Risk Level&lt;/th&gt; 
+            &lt;th class="text-right"&gt;Actions&lt;/th&gt; 
+          &lt;/tr&gt; 
+        &lt;/thead&gt; 
+        &lt;tbody&gt; 
+          &lt;tr ng-repeat="student in c.data.students | filter:c.filterStudents"&gt; 
+            &lt;td&gt; 
+              &lt;div class="student-cell"&gt; 
+                &lt;span class="student-name"&gt;{{student.name}}&lt;/span&gt; 
+                &lt;span class="student-email"&gt;{{student.email}}&lt;/span&gt; 
+              &lt;/div&gt; 
+            &lt;/td&gt; 
+            &lt;td&gt;&lt;span class="sevis-badge"&gt;{{student.sevis_id}}&lt;/span&gt;&lt;/td&gt; 
+            &lt;td&gt;&lt;span class="type-badge"&gt;{{student.visa_type}}&lt;/span&gt;&lt;/td&gt; 
+            &lt;td&gt;&lt;span class="program-text"&gt;{{student.program}}&lt;/span&gt;&lt;/td&gt; 
+            &lt;td&gt; 
+              &lt;span class="status-pill" ng-class="{'pill-green': student.status === 'Active', 'pill-orange': student.status === 'Pending', 'pill-red': student.status === 'Critical' || student.status === 'Terminated'}"&gt; 
+                {{student.status}} 
+              &lt;/span&gt; 
+            &lt;/td&gt; 
+            &lt;td&gt; 
+              &lt;span class="risk-pill" ng-class="{'risk-low': student.risk === 'Low', 'risk-med': student.risk === 'Medium', 'risk-high': student.risk === 'High'}"&gt; 
+                {{student.risk}} 
+              &lt;/span&gt; 
+            &lt;/td&gt; 
+            &lt;td class="text-right"&gt; 
+              &lt;button class="btn btn-xs btn-review" ng-click="c.viewProfile(student)"&gt; 
+                &lt;i class="fa fa-id-card-o"&gt;&lt;/i&gt; View Profile 
+              &lt;/button&gt; 
+            &lt;/td&gt; 
+          &lt;/tr&gt; 
+          &lt;tr ng-if="(c.data.students | filter:c.filterStudents).length === 0"&gt; 
+            &lt;td colspan="7" class="text-center text-muted pad-lg"&gt; 
+              &lt;em&gt;No students found matching the search criteria.&lt;/em&gt; 
+            &lt;/td&gt; 
+          &lt;/tr&gt; 
+        &lt;/tbody&gt; 
+      &lt;/table&gt; 
+    &lt;/div&gt; 
+  &lt;/div&gt; 
+&lt;/div&gt;   remove add student and sevis id coloumn for this and css  give updated css and htmll codes
+
+
+Pasted text(20260813-044128).txt
+Document
+give based on student profile script
+
+
+Pasted text(20260813-044331).txt
+Document
+
+Pasted text (2)(3).txt
+Document
+remove view profile column and updated css
+
+
+Pasted text(20260813-045145).txt
+Document
+give based on the crerate case
+
+
+Pasted text(20260813-052628).txt
+Document
+based on this give case overview 
+
+this is the name of advisor table
+
+
+Pasted text(20260813-062045).txt
+Document
+now we should add this assisantant
+
+
+Pasted text(20260813-062849).txt
+Document
+this present one in this omly add asistant what student asks according to that it should give response
+
+
+Pasted text(20260813-080349).txt
+Document
+
+Pasted text (2)(5).txt
+Document
+for dashboard this present html and css 
+
+
+Pasted text(20260813-093432).txt
+Document
+i am not getting advisor cases in dso advisor workload  
+
+
+Pasted text(20260813-093715).txt
+Document
+ in this also
+
+Today 11:42 AM
+
+Pasted text(20260814-060912).txt
+Document
+in this get student details is already there add last three also 
+
+
+Pasted text(20260814-064110).txt
+Document
+
+Pasted text (2)(9).txt
+Document
+this is current clint script and server
+
+Today 3:02 PM
+
+Pasted text(20260814-093239).txt
+Document
+in this html before descion column add more informatiom column and it should show view 
+
+
+Pasted text(20260814-093421).txt
+Document
+give updated css
+
+
+Pasted text(20260814-093653).txt
+Document
+when i click on view it should show visa information and student information and documents information update server script and give 
+
+
+Pasted text(20260814-095154).txt
+Document
+like advisor case management ,dso should get all details
+
+
+Pasted text(20260814-100101).txt
+Document
+
+Pasted text (2)(10).txt
+Document
+
+Pasted text (3).txt
+Document
+
+Pasted text (4).txt
+Document
+this present codes 
+
+
+Pasted text(20260814-100446).txt
+Document
+this script is working whrn i click on view it should navigate
+
+2a037940-6205-4825-b548-4f86b48bc46d.png
+da619636-09d6-421c-bfc4-2a952f74345c.png
+4403d943-d53d-4b3c-8173-8457a2c49499.png
+9dcfdc93-37cb-4e8f-beb3-8bf1759687c8.png
+213c54bc-859f-4eec-b230-854c1aa406d3.png
+d5d9cbb1-2f5d-49de-9851-69f40fdfcd9e.png
+a744cac5-d40f-44f4-b2bd-873d8d812776.png
+5864d0dd-eee2-4617-83d7-3512670859ea.png
+
+Pasted text(20260814-103536).txt
+Document
+how to connect the test assistant to ai chat page in service portal.
+the attached script is present server script of my page.
+connect the test assisant all information is there in that  
+
+Today 6:06 PM
+
+Pasted text(20260814-123605).txt
+Document
+give full  code without any padding and spaces on 4 sides of box 
+
+
+Pasted text(20260814-124908).txt
+Document
+for this
+
+
+Pasted text(20260814-125051).txt
+Document
+for this
+
+
+Pasted text(20260814-125226).txt
+Document
+for this
+
+
+Pasted text(20260814-125429).txt
+Document
+for this
+
+
+Pasted text(20260814-125618).txt
+Document
+for this
+
+
+Pasted text(20260814-125820).txt
+Document
+for this
+
+
+Pasted text(20260814-130056).txt
+Document
+for this
+
+
+Pasted text(20260814-130419).txt
+Document
+for this
+
+Yes. For this My Students page, I would remove only the outer page padding and keep all font sizes exactly as you provided.
+
+So:
+
+No reduction in font sizes.
+
+No reduction in card padding.
+
+No reduction in table spacing.
+
+Full-width page.
+
+Keep the header/card internal spacing.
+
+Remove the mobile 14px outer padding too.
+
+Change only these two sections:
+
+.my-students-page {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+And replace the mobile section:
+
+@media (max-width: 650px) {
+
+  .my-students-page {
+    padding: 0;
+  }
+
+  .student-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .students-header {
+    padding: 24px;
+  }
+
+  .students-header h1 {
+    font-size: 25px;
+  }
+
+  .summary-card {
+    min-height: 95px;
+  }
+
+}
+Everything else in your CSS stays exactly the same, including all font sizes such as 30px, 15px, 14px, 13px, 12px, 11px, etc.
+
+This gives you the same behavior as the other pages: no outer 4-side spacing, but normal internal spacing and font sizes preserved.
+
+
+full code
+
+.my-students-page {
+    flex-direction: column;
+  }
+
+  .student-search {
+    width: 100%;
+  }
+
+}
+
+
+/* ========================================================= */
+/* MOBILE */
+/* ========================================================= */
+
+@media (max-width: 650px) {
+
+  .my-students-page {
+    padding: 0;
+  }
+
+  .student-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .students-header {
+    padding: 24px;
+  }
+
+  .students-header h1 {
+    font-size: 25px;
+  }
+
+  .summary-card {
+    min-height: 95px;
+  }
+
+}
+This keeps all your original font sizes unchanged and only removes the outer page padding.
+
+
+
+Pasted text(20260814-130803).txt
+Document
+for this
+
+Yes. For this Case Management CSS, I removed only the outer 4-side spacing. The original page had padding: 15px, and the mobile breakpoint added another 10px. 
+
+
+Updated main container:
+
+.vg-case-management-page {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+
+    color: #2b3674;
+    background: #f7f9fc;
+
+    padding: 0;
+    margin: 0;
+    width: 100%;
+
+    min-height: 100vh;
+}
+Mobile:
+
+@media (max-width: 767px) {
+
+    .vg-case-management-page {
+        padding: 0;
+        margin: 0;
+    }
+
+    /* rest of your existing mobile CSS remains unchanged */
+
+}
+No font sizes were reduced or changed. All card, header, field, button, and internal spacing remains the same.
+
+ 
+
+
+
+Library
+/
+case_management_no_outer_padding.css
+
+
+/* =========================================================
+   VISA GUARDIAN - CASE MANAGEMENT
+   ========================================================= */
+
+.vg-case-management-page {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+
+    color: #2b3674;
+    background: #f7f9fc;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.vg-case-header {
+    position: relative;
+
+    background: linear-gradient(
+        135deg,
+        #091e3a 0%,
+        #0d3a78 100%
+    );
+
+    border-radius: 14px;
+    padding: 28px 32px 30px;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 8px 25px rgba(9, 30, 58, 0.16);
+
+    margin-bottom: 22px;
+
+    overflow: hidden;
+}
+
+
+/* subtle header glow */
+
+.vg-case-header:after {
+    content: "";
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -80px;
+    top: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.04);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.vg-case-back {
+    margin-bottom: 16px;
+}
+
+.vg-back-link {
+    color: rgba(255,255,255,0.82);
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.vg-back-link span {
+    font-size: 17px;
+    margin-right: 5px;
+}
+
+.vg-back-link:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   CASE SELECTOR DROPDOWN BAR
+   ========================================================= */
+
+.vg-case-selector-bar {
+    margin-top: 18px;
+    margin-bottom: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.vg-case-selector-bar label {
+    display: block;
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.vg-case-selector-bar .form-control {
+    max-width: 420px;
+    height: 38px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+.vg-case-selector-bar .form-control option {
+    background-color: #0d3a78;
+    color: #ffffff;
+}
+
+.vg-case-selector-bar .form-control:focus {
+    border-color: rgba(255, 255, 255, 0.5);
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+   ========================================================= */
+
+.vg-case-header-content {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+
+.vg-case-icon {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.10);
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    font-size: 27px;
+
+    flex-shrink: 0;
+}
+
+
+.vg-case-header-text {
+    min-width: 0;
+}
+
+
+.vg-case-label {
+    font-size: 10px;
+
+    letter-spacing: 1.4px;
+
+    font-weight: 800;
+
+    color: rgba(255,255,255,0.65);
+
+    margin-bottom: 4px;
+}
+
+
+.vg-case-header h1 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    font-weight: 750;
+
+    line-height: 1.2;
+}
+
+
+.vg-case-header p {
+    margin: 6px 0 0;
+
+    color: rgba(255,255,255,0.78);
+
+    font-size: 13px;
+}
+
+
+.vg-case-separator {
+    margin: 0 7px;
+
+    color: rgba(255,255,255,0.45);
+}
+
+
+/* =========================================================
+   CASE STAGE
+   ========================================================= */
+
+.vg-case-stage {
+    position: absolute;
+
+    right: 30px;
+    bottom: 30px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.10);
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+}
+
+
+.vg-stage-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #28c76f;
+
+    box-shadow:
+        0 0 0 3px rgba(40,199,111,0.15);
+}
+
+
+/* =========================================================
+   ERROR ALERT
+   ========================================================= */
+
+.vg-case-alert {
+    border-radius: 10px;
+
+    padding: 15px 18px;
+
+    margin-bottom: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.vg-case-error {
+    background: #fff1f1;
+
+    border: 1px solid #ffd6d6;
+
+    color: #c53030;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.vg-case-content {
+    width: 100%;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.vg-case-card {
+    background: #ffffff;
+
+    border: 1px solid #edf1f7;
+
+    border-radius: 13px;
+
+    padding: 23px 25px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.035);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-case-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding-bottom: 16px;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid #eef2f7;
+}
+
+
+.vg-card-eyebrow {
+    color: #0066ff;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 4px;
+}
+
+
+.vg-case-card-header h2 {
+    margin: 0;
+
+    color: #1b2559;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STUDENT AVATAR
+   ========================================================= */
+
+.vg-student-avatar {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #e8f0fe;
+
+    color: #0066ff;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    border: 1px solid #d9e7ff;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+   ========================================================= */
+
+.vg-case-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    column-gap: 28px;
+
+    row-gap: 22px;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.vg-case-field {
+    min-width: 0;
+}
+
+
+.vg-case-field label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #8f9bba;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.55px;
+
+    text-transform: uppercase;
+}
+
+
+.vg-case-value {
+    color: #1b2559;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    min-height: 19px;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   CASE STAGE BADGE
+   ========================================================= */
+
+.vg-case-stage-badge {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    background: #e8f0fe;
+
+    color: #0066ff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.vg-case-stage-badge .vg-stage-dot {
+    width: 7px;
+    height: 7px;
+
+    box-shadow: none;
+
+    background: #0066ff;
+}
+
+
+/* =========================================================
+   CASE DESCRIPTION
+   ========================================================= */
+
+.vg-case-description {
+    background: #f7f9fc;
+
+    border: 1px solid #edf1f7;
+
+    border-radius: 9px;
+
+    padding: 16px 18px;
+
+    color: #4a5568;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    min-height: 70px;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   ACTION AREA
+   ========================================================= */
+
+.vg-case-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 4px 0 20px;
+}
+
+
+.vg-case-action {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 38px;
+
+    padding: 8px 17px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Secondary */
+
+.vg-case-action.secondary {
+    background: #ffffff;
+
+    color: #0066ff;
+
+    border: 1px solid #dce5f2;
+}
+
+
+.vg-case-action.secondary:hover {
+    background: #f4f7fe;
+
+    color: #0052cc;
+
+    text-decoration: none;
+
+    border-color: #c8d8ef;
+}
+
+
+/* Primary */
+
+.vg-case-action.primary {
+    background: #0066ff;
+
+    color: #ffffff;
+
+    border: 1px solid #0066ff;
+
+    box-shadow:
+        0 4px 10px rgba(0,102,255,0.18);
+}
+
+
+.vg-case-action.primary:hover {
+    background: #0052cc;
+
+    border-color: #0052cc;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 5px 14px rgba(0,102,255,0.25);
+}
+
+
+/* =========================================================
+   EMPTY / N/A
+   ========================================================= */
+
+.vg-case-value:empty:after {
+    content: "N/A";
+    color: #a0aec0;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 991px) {
+
+    .vg-case-info-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .vg-case-stage {
+        position: static;
+
+        display: inline-flex;
+
+        margin-top: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+    .vg-case-management-page {
+        padding: 0;
+        margin: 0;
+    }
+
+
+    .vg-case-header {
+        padding: 22px;
+
+        border-radius: 11px;
+    }
+
+
+    .vg-case-header-content {
+        align-items: flex-start;
+    }
+
+
+    .vg-case-icon {
+        width: 48px;
+        height: 48px;
+
+        font-size: 22px;
+    }
+
+
+    .vg-case-header h1 {
+        font-size: 20px;
+    }
+
+
+    .vg-case-header p {
+        font-size: 12px;
+    }
+
+
+    .vg-case-stage {
+        margin-top: 18px;
+
+        width: fit-content;
+    }
+
+
+    .vg-case-card {
+        padding: 18px;
+
+        border-radius: 11px;
+    }
+
+
+    .vg-case-card-header {
+        margin-bottom: 17px;
+    }
+
+
+    .vg-case-info-grid {
+        grid-template-columns: 1fr;
+
+        row-gap: 17px;
+    }
+
+
+    .vg-case-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+
+    .vg-case-action {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .vg-case-header-content {
+        gap: 11px;
+    }
+
+
+    .vg-case-label {
+        font-size: 9px;
+    }
+
+
+    .vg-case-header h1 {
+        font-size: 18px;
+    }
+
+
+    .vg-case-header p {
+        font-size: 11px;
+    }
+
+
+    .vg-case-icon {
+        width: 43px;
+        height: 43px;
+
+        font-size: 19px;
+    }
+
+
+    .vg-case-stage {
+        font-size: 10px;
+    }
+
+
+    .vg-case-card-header h2 {
+        font-size: 15px;
+    }
+
+}
+/* =========================================================
+   NO CASES EMPTY STATE
+========================================================= */
+
+.vg-case-empty {
+
+    min-height: 420px;
+
+    background: #ffffff;
+
+    border: 1px solid #edf1f7;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 50px 30px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.035);
+
+}
+
+
+.vg-case-empty-icon {
+
+    width: 74px;
+
+    height: 74px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #e8f0fe;
+
+    border: 1px solid #d9e7ff;
+
+    font-size: 34px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.vg-case-empty h2 {
+
+    margin: 0 0 8px;
+
+    color: #1b2559;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+}
+
+
+.vg-case-empty p {
+
+    margin: 0;
+
+    color: #8f9bba;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   EMPTY STATE MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .vg-case-empty {
+
+        min-height: 350px;
+
+        padding: 35px 20px;
+
+    }
+
+}
+</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_my_cases</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>advisor My Cases</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.case = {};
+    data.student = {};
+    data.advisor = {};
+    data.all_cases = [];
+    data.error = "";
+
+    data.no_cases = false;
+
+
+    // =====================================================
+    // FIND CURRENT ADVISOR PROFILE
+    // =====================================================
+
+    var advisorProfile =
+        new GlideRecord("x_snc_visaguardi_0_advisor_profiles");
+
+    var profileFound = false;
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData("vg_advisor_sys_id");
+
+    var sessionAdvisorUserName =
+        gs.getSession().getClientData("vg_advisor_user_name");
+
+
+    // =====================================================
+    // 1. SESSION ADVISOR PROFILE SYS ID
+    // =====================================================
+
+    if (sessionAdvisorSysId) {
+
+        if (advisorProfile.get(sessionAdvisorSysId)) {
+            profileFound = true;
+        }
+
+    }
+
+
+    // =====================================================
+    // 2. SESSION ADVISOR USERNAME
+    // =====================================================
+
+    if (!profileFound && sessionAdvisorUserName) {
+
+        advisorProfile =
+            new GlideRecord("x_snc_visaguardi_0_advisor_profiles");
+
+        advisorProfile.addQuery(
+            "user.user_name",
+            sessionAdvisorUserName
+        );
+
+        advisorProfile.setLimit(1);
+        advisorProfile.query();
+
+        if (advisorProfile.next()) {
+            profileFound = true;
+        }
+
+    }
+
+
+    // =====================================================
+    // 3. CURRENT SERVICENOW USER
+    // =====================================================
+
+    if (!profileFound) {
+
+        var currentUserSysId = gs.getUserID();
+
+        if (currentUserSysId) {
+
+            advisorProfile =
+                new GlideRecord("x_snc_visaguardi_0_advisor_profiles");
+
+            advisorProfile.addQuery(
+                "user",
+                currentUserSysId
+            );
+
+            advisorProfile.setLimit(1);
+            advisorProfile.query();
+
+            if (advisorProfile.next()) {
+                profileFound = true;
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 4. USERNAME FALLBACK
+    // =====================================================
+
+    if (!profileFound) {
+
+        advisorProfile =
+            new GlideRecord("x_snc_visaguardi_0_advisor_profiles");
+
+        advisorProfile.addQuery(
+            "user.user_name",
+            gs.getUserName()
+        );
+
+        advisorProfile.setLimit(1);
+        advisorProfile.query();
+
+        if (advisorProfile.next()) {
+            profileFound = true;
+        }
+
+    }
+
+
+    // =====================================================
+    // ADVISOR NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        data.error =
+            "Advisor profile was not found for the logged-in user.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // ADVISOR IDS
+    // =====================================================
+
+    var advisorProfileSysId =
+        advisorProfile.getUniqueValue();
+
+    var advisorUserSysId =
+        advisorProfile.getValue("user") || "";
+
+
+    // =====================================================
+    // ADVISOR INFORMATION
+    // =====================================================
+
+    data.advisor = {
+
+        sys_id:
+            advisorProfileSysId,
+
+        name:
+            advisorProfile.getDisplayValue("name") ||
+            (
+                (advisorProfile.getValue("first_name") || "") +
+                " " +
+                (advisorProfile.getValue("last_name") || "")
+            ).trim() ||
+            "Advisor",
+
+        first_name:
+            advisorProfile.getValue("first_name") || "",
+
+        last_name:
+            advisorProfile.getValue("last_name") || "",
+
+        email:
+            advisorProfile.getValue("email") || "N/A",
+
+        advisor_id:
+            advisorProfile.getValue("advisor_id") || "",
+
+        department:
+            advisorProfile.getValue("department") || ""
+
+    };
+
+
+    // =====================================================
+    // GET ADVISOR VISA CASES
+    // =====================================================
+
+    var dropdownGR =
+        new GlideRecord("x_snc_visaguardi_0_visa_case");
+
+
+    /*
+     * The advisor field may contain either:
+     *
+     * 1. Advisor Profile sys_id
+     *
+     * OR
+     *
+     * 2. Linked sys_user sys_id
+     *
+     * Check both.
+     */
+
+    var advisorCondition =
+        dropdownGR.addQuery(
+            "advisor",
+            advisorProfileSysId
+        );
+
+
+    if (advisorUserSysId) {
+
+        advisorCondition.addOrCondition(
+            "advisor",
+            advisorUserSysId
+        );
+
+    }
+
+
+    dropdownGR.orderByDesc("sys_created_on");
+    dropdownGR.query();
+
+
+    // =====================================================
+    // BUILD CASE LIST
+    // =====================================================
+
+    while (dropdownGR.next()) {
+
+        var studentRef =
+            dropdownGR.getValue("student");
+
+        var studentName =
+            "Unknown Student";
+
+        var studentId =
+            "";
+
+
+        // =================================================
+        // GET STUDENT
+        // =================================================
+
+        if (studentRef) {
+
+            var studentGR =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+            if (studentGR.get(studentRef)) {
+
+                studentName =
+                    studentGR.getValue("name") || "";
+
+                if (!studentName) {
+
+                    studentName =
+                        (
+                            (studentGR.getValue("first_name") || "") +
+                            " " +
+                            (studentGR.getValue("last_name") || "")
+                        ).trim();
+
+                }
+
+                if (!studentName) {
+                    studentName = "Unknown Student";
+                }
+
+                studentId =
+                    studentGR.getValue("student_id") || "";
+
+            }
+
+        }
+
+
+        // =================================================
+        // ADD CASE
+        // =================================================
+
+        data.all_cases.push({
+
+            sys_id:
+                dropdownGR.getUniqueValue(),
+
+            student_name:
+                studentName,
+
+            student_id:
+                studentId,
+
+            display_label:
+                studentName +
+                " — " +
+                (
+                    dropdownGR.getDisplayValue("case_type") ||
+                    "Visa Case"
+                ) +
+                " (" +
+                (
+                    dropdownGR.getDisplayValue("case_stage") ||
+                    "Active"
+                ) +
+                ")"
+
+        });
+
+    }
+
+
+    // =====================================================
+    // NO CASES
+    // =====================================================
+
+    if (data.all_cases.length === 0) {
+
+        data.no_cases = true;
+
+        data.error =
+            "No visa cases found for this advisor.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // DETERMINE SELECTED CASE
+    // =====================================================
+
+    var caseSysId = null;
+
+
+    // -----------------------------------------------------
+    // 1. Check URL sys_id
+    // -----------------------------------------------------
+
+    var urlCaseSysId =
+        $sp.getParameter("sys_id");
+
+
+    if (urlCaseSysId) {
+
+        urlCaseSysId =
+            String(urlCaseSysId);
+
+        // Check whether URL case belongs to this advisor
+        for (
+            var i = 0;
+            i < data.all_cases.length;
+            i++
+        ) {
+
+            if (
+                data.all_cases[i].sys_id ===
+                urlCaseSysId
+            ) {
+
+                caseSysId =
+                    urlCaseSysId;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // 2. Check client input
+    // -----------------------------------------------------
+
+    if (
+        !caseSysId &&
+        input &&
+        input.sys_id
+    ) {
+
+        var inputCaseSysId =
+            String(input.sys_id);
+
+
+        for (
+            var j = 0;
+            j < data.all_cases.length;
+            j++
+        ) {
+
+            if (
+                data.all_cases[j].sys_id ===
+                inputCaseSysId
+            ) {
+
+                caseSysId =
+                    inputCaseSysId;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    // -----------------------------------------------------
+    // 3. AUTOMATICALLY SELECT FIRST CASE
+    // -----------------------------------------------------
+
+    if (!caseSysId) {
+
+        caseSysId =
+            data.all_cases[0].sys_id;
+
+    }
+
+
+    // =====================================================
+    // FETCH SELECTED VISA CASE
+    // =====================================================
+
+    var caseGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    if (!caseGR.get(caseSysId)) {
+
+        /*
+         * Extremely unlikely because caseSysId came
+         * directly from data.all_cases.
+         *
+         * If it happens, safely fall back to first case.
+         */
+
+        caseSysId =
+            data.all_cases[0].sys_id;
+
+        caseGR =
+            new GlideRecord(
+                "x_snc_visaguardi_0_visa_case"
+            );
+
+
+        if (!caseGR.get(caseSysId)) {
+
+            data.error =
+                "The first visa case could not be loaded.";
+
+            return;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SECURITY CHECK
+    // =====================================================
+
+    var caseAdvisor =
+        caseGR.getValue("advisor") || "";
+
+
+    var belongsToAdvisor =
+        caseAdvisor === advisorProfileSysId ||
+        caseAdvisor === advisorUserSysId;
+
+
+    if (!belongsToAdvisor) {
+
+        data.error =
+            "You do not have access to this visa case.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // CASE DATA
+    // =====================================================
+
+    data.case = {
+
+        sys_id:
+            caseGR.getUniqueValue(),
+
+        case_type:
+            caseGR.getDisplayValue("case_type") ||
+            "N/A",
+
+        visa_category:
+            caseGR.getDisplayValue("visa_category") ||
+            "N/A",
+
+        case_stage:
+            caseGR.getDisplayValue("case_stage") ||
+            "N/A",
+
+        priority:
+            caseGR.getDisplayValue("priority") ||
+            "Normal",
+
+        description:
+            caseGR.getValue("description") ||
+            "",
+
+        created_on:
+            caseGR.getDisplayValue("sys_created_on") ||
+            "",
+
+        updated_on:
+            caseGR.getDisplayValue("sys_updated_on") ||
+            ""
+
+    };
+
+
+    // =====================================================
+    // STUDENT PROFILE
+    // =====================================================
+
+    var studentSysId =
+        caseGR.getValue("student");
+
+
+    if (studentSysId) {
+
+        var selectedStudentGR =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+
+        if (
+            selectedStudentGR.get(
+                studentSysId
+            )
+        ) {
+
+            var firstName =
+                selectedStudentGR.getValue("first_name") ||
+                "";
+
+            var lastName =
+                selectedStudentGR.getValue("last_name") ||
+                "";
+
+            var selectedStudentName =
+                selectedStudentGR.getValue("name") ||
+                "";
+
+
+            if (!selectedStudentName) {
+
+                selectedStudentName =
+                    (
+                        firstName +
+                        " " +
+                        lastName
+                    ).trim();
+
+            }
+
+
+            if (!selectedStudentName) {
+                selectedStudentName =
+                    "Unknown Student";
+            }
+
+
+            data.student = {
+
+                sys_id:
+                    selectedStudentGR.getUniqueValue(),
+
+                student_id:
+                    selectedStudentGR.getValue(
+                        "student_id"
+                    ) || "N/A",
+
+                first_name:
+                    firstName,
+
+                last_name:
+                    lastName,
+
+                name:
+                    selectedStudentName,
+
+                email:
+                    selectedStudentGR.getValue(
+                        "email"
+                    ) || "N/A",
+
+                mobile_phone:
+                    selectedStudentGR.getValue(
+                        "mobile_phone"
+                    ) || "N/A",
+
+                university_name:
+                    selectedStudentGR.getValue(
+                        "university_name"
+                    ) || "N/A",
+
+                degree_program:
+                    selectedStudentGR.getValue(
+                        "degree_program"
+                    ) || "N/A",
+
+                current_visa_status:
+                    selectedStudentGR.getDisplayValue(
+                        "current_visa_status"
+                    ) || "N/A",
+
+                visa_type:
+                    selectedStudentGR.getDisplayValue(
+                        "visa_type"
+                    ) || "N/A",
+
+                sevis_id:
+                    selectedStudentGR.getValue(
+                        "sevis_id"
+                    ) || "N/A",
+
+                visa_expiry_date:
+                    selectedStudentGR.getDisplayValue(
+                        "visa_expiry_date"
+                    ) || "N/A",
+
+                passport_expiry_date:
+                    selectedStudentGR.getDisplayValue(
+                        "passport_expiry_date"
+                    ) || "N/A"
+
+            };
+
+        }
+
+    }
+
+
+    // =====================================================
+    // ASSIGNED ADVISOR
+    // =====================================================
+
+    var caseAdvisorRef =
+        caseGR.getValue("advisor");
+
+
+    if (caseAdvisorRef) {
+
+        // -------------------------------------------------
+        // Advisor field -> sys_user
+        // -------------------------------------------------
+
+        var advisorByUser =
+            new GlideRecord(
+                "x_snc_visaguardi_0_advisor_profiles"
+            );
+
+
+        advisorByUser.addQuery(
+            "user",
+            caseAdvisorRef
+        );
+
+        advisorByUser.setLimit(1);
+        advisorByUser.query();
+
+
+        if (advisorByUser.next()) {
+
+            data.advisor = {
+
+                sys_id:
+                    advisorByUser.getUniqueValue(),
+
+                name:
+                    (
+                        advisorByUser.getValue(
+                            "first_name"
+                        ) || ""
+                    ) +
+                    " " +
+                    (
+                        advisorByUser.getValue(
+                            "last_name"
+                        ) || ""
+                    ),
+
+                email:
+                    advisorByUser.getValue(
+                        "email"
+                    ) || "N/A"
+
+            };
+
+        }
+        else {
+
+            // -------------------------------------------------
+            // Advisor field -> Advisor Profile
+            // -------------------------------------------------
+
+            var advisorByProfile =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_advisor_profiles"
+                );
+
+
+            if (
+                advisorByProfile.get(
+                    caseAdvisorRef
+                )
+            ) {
+
+                data.advisor = {
+
+                    sys_id:
+                        advisorByProfile.getUniqueValue(),
+
+                    name:
+                        (
+                            advisorByProfile.getValue(
+                                "first_name"
+                            ) || ""
+                        ) +
+                        " " +
+                        (
+                            advisorByProfile.getValue(
+                                "last_name"
+                            ) || ""
+                        ),
+
+                    email:
+                        advisorByProfile.getValue(
+                            "email"
+                        ) || "N/A"
+
+                };
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SELECTED CASE ID FOR CLIENT
+    // =====================================================
+
+    data.selected_case_sys_id =
+        caseSysId;
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:31:47</sys_created_on>
+        <sys_id>7b6007cf596e43107f44df2ba8a19be6</sys_id>
+        <sys_mod_count>33</sys_mod_count>
+        <sys_name>advisor My Cases</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_7b6007cf596e43107f44df2ba8a19be6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 18:52:10</sys_updated_on>
+        <template><![CDATA[<div class="vg-case-management-page">
+
+    <!-- =====================================================
+         NO CASES
+         ===================================================== -->
+
+    <div class="vg-case-empty" ng-if="c.data.no_cases">
+
+        <div class="vg-case-empty-icon">
+            ]]>📋
+<![CDATA[        </div>
+
+        <h2>No Visa Cases Found</h2>
+
+        <p>
+            No visa cases are currently assigned to this advisor.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         CASE PAGE
+         ===================================================== -->
+
+    <div ng-if="!c.data.no_cases && c.data.case.sys_id">
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <div class="vg-case-header">
+
+            <div class="vg-case-header-content">
+
+                <div class="vg-case-icon">
+                    ]]>📋
+<![CDATA[                </div>
+
+                <div class="vg-case-header-text">
+
+                    <div class="vg-case-label">
+                        CASE MANAGEMENT
+                    </div>
+
+                    <h1>
+                        {{c.data.case.case_type || 'Visa Case'}}
+                    </h1>
+
+                    <p>
+                        {{c.data.student.name || 'Student'}}
+
+                        <span class="vg-case-separator">
+                            •
+                        </span>
+
+                        {{c.data.case.visa_category || 'N/A'}}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CASE SELECTOR
+                 ================================================= -->
+
+            <div class="vg-case-selector-bar">
+
+                <label>
+                    <i class="fa fa-exchange"></i>
+                    Switch Student Case:
+                </label>
+
+
+                <select
+                    class="form-control"
+                    ng-model="c.selectedCaseSysId"
+                    ng-change="c.switchCase(c.selectedCaseSysId)"
+                    ng-options="item.sys_id as item.display_label for item in c.data.all_cases">
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 CASE STAGE
+                 ================================================= -->
+
+            <div class="vg-case-stage">
+
+                <span class="vg-stage-dot"></span>
+
+                <span>
+                    {{c.data.case.case_stage || 'N/A'}}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ERROR
+             ================================================= -->
+
+        <div
+            class="vg-case-alert vg-case-error"
+            ng-if="c.data.error">
+
+            <span>⚠️</span>
+
+            <div>
+                {{c.data.error}}
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MAIN CONTENT
+             ================================================= -->
+
+        <div
+            class="vg-case-content"
+            ng-if="!c.data.error">
+
+
+            <!-- =================================================
+                 STUDENT INFORMATION
+                 ================================================= -->
+
+            <div class="vg-case-card">
+
+                <div class="vg-case-card-header">
+
+                    <div>
+
+                        <div class="vg-card-eyebrow">
+                            STUDENT
+                        </div>
+
+                        <h2>
+                            Student Information
+                        </h2>
+
+                    </div>
+
+
+                    <div class="vg-student-avatar">
+
+                        <span>
+                            {{(c.data.student.name | limitTo:1) || 'S'}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-info-grid">
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Student Name
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.name || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Student ID
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.student_id || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Email Address
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.email || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Mobile Phone
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.mobile_phone || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            University
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.university_name || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Degree Program
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.degree_program || 'N/A'}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 VISA INFORMATION
+                 ================================================= -->
+
+            <div class="vg-case-card">
+
+                <div class="vg-case-card-header">
+
+                    <div>
+
+                        <div class="vg-card-eyebrow">
+                            IMMIGRATION
+                        </div>
+
+                        <h2>
+                            Visa Information
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-info-grid">
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Current Visa Status
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.current_visa_status || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Visa Type
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.visa_type || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            SEVIS ID
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.sevis_id || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Visa Expiry Date
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.visa_expiry_date || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Passport Expiry Date
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.student.passport_expiry_date || 'N/A'}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CASE INFORMATION
+                 ================================================= -->
+
+            <div class="vg-case-card">
+
+                <div class="vg-case-card-header">
+
+                    <div>
+
+                        <div class="vg-card-eyebrow">
+                            CASE
+                        </div>
+
+                        <h2>
+                            Case Information
+                        </h2>
+
+                    </div>
+
+
+                    <div class="vg-case-stage-badge">
+
+                        <span class="vg-stage-dot"></span>
+
+                        {{c.data.case.case_stage || 'N/A'}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-info-grid">
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Case Type
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.case.case_type || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                 
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Case Stage
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.case.case_stage || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Priority
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.case.priority || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Created On
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.case.created_on || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Last Updated
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.case.updated_on || 'N/A'}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CASE DESCRIPTION
+                 ================================================= -->
+
+            <div class="vg-case-card">
+
+                <div class="vg-case-card-header">
+
+                    <div>
+
+                        <div class="vg-card-eyebrow">
+                            DETAILS
+                        </div>
+
+                        <h2>
+                            Case Description
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-description">
+
+                    {{c.data.case.description ||
+                    'No case description available.'}}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ADVISOR INFORMATION
+                 ================================================= -->
+
+            <div class="vg-case-card">
+
+                <div class="vg-case-card-header">
+
+                    <div>
+
+                        <div class="vg-card-eyebrow">
+                            ASSIGNMENT
+                        </div>
+
+                        <h2>
+                            Advisor Information
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-case-info-grid">
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Assigned Advisor
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.advisor.name || 'N/A'}}
+                        </div>
+
+                    </div>
+
+
+                    <div class="vg-case-field">
+
+                        <label>
+                            Advisor Email
+                        </label>
+
+                        <div class="vg-case-value">
+                            {{c.data.advisor.email || 'N/A'}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACTION
+                 ================================================= -->
+
+            <div class="vg-case-actions">
+
+                <a
+                    href="?id=vg_adv_document_review&sys_id={{c.data.case.sys_id}}"
+                    class="vg-case-action primary"
+                    role="button">
+
+                    Review Case
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>7b6007cf596e43107f44df2ba8a19be6</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 17:31:48</sys_created_on>
+        <sys_id>b36007cf596e43107f44df2ba8a19bea</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 17:31:48</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_aia_agent_tool_m2m">
+    <sn_aia_agent_tool_m2m action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <agent display_value="VisaGuardian AI Agent">ca7213061c2a43107f44ac714309643a</agent>
+        <description>Search the approved VisaGuardian Knowledge Base to retrieve relevant immigration guidance, requirements, documents, procedures, FAQs, and escalation information for international students. Use this tool before answering immigration-related questions and base responses on the retrieved approved knowledge.</description>
+        <display_mode>inline</display_mode>
+        <display_output>true</display_output>
+        <document_status/>
+        <entity>sn_aia_agent</entity>
+        <entity_id>ca7213061c2a43107f44ac714309643a</entity_id>
+        <execution_mode>copilot</execution_mode>
+        <inputs>[{"name":"search_type","description":"Search type","value":"keyword"},{"name":"query","description":"search query for retrieving relevant information from Knowledge Table"},{"name":"search_profile","value":"x_snc_visaguardi_0_visaguardian_ai_search_profile","label":"VisaGuardian AI Search Profile","description":"Search profile"},{"name":"sources","label":["Knowledge Table"],"value":["kb_knowledge"],"description":"Search sources"},{"name":"search_results_limit","value":"5","description":"Search results limit"},{"name":"document_match_threshold","value":0,"description":"Document matching threshold"}]</inputs>
+        <max_auto_executions>10</max_auto_executions>
+        <name>VisaGuardianKnowledgeSearch</name>
+        <output_transformation_strategy>summary_for_search_results</output_transformation_strategy>
+        <post_message/>
+        <post_processing_script/>
+        <pre_message/>
+        <pre_run>false</pre_run>
+        <requires_text_refined_message>false</requires_text_refined_message>
+        <requires_widget_transformation>true</requires_widget_transformation>
+        <should_display_refined_message>false</should_display_refined_message>
+        <sys_class_name>sn_aia_agent_tool_m2m</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 16:26:23</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>9cb41b0e1c2a43107f44ac71430964ee</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>VisaGuardianKnowledgeSearch</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sn_aia_agent_tool_m2m_9cb41b0e1c2a43107f44ac71430964ee</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 16:26:23</sys_updated_on>
+        <timeout/>
+        <tool display_value="AIA RAG Retriever">8021ddea2b0d52101d72fb466e91bfd1</tool>
+        <tool_attributes>{}</tool_attributes>
+        <transformation_instructions/>
+        <widgets>db0e858eff62b210f465ffffffffff2c</widgets>
+    </sn_aia_agent_tool_m2m>
+</record_update>

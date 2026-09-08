@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_user_role_contains">
+    <sys_user_role_contains action="INSERT_OR_UPDATE">
+        <contains display_value="x_snc_visaguardi_0.student" name="x_snc_visaguardi_0.student">cb250678982603107f447d1bb882e5ca</contains>
+        <role display_value="x_snc_visaguardi_0.visa_case_user" name="x_snc_visaguardi_0.visa_case_user">3612ba3898aa03107f447d1bb882e594</role>
+        <sys_class_name>sys_user_role_contains</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:05:31</sys_created_on>
+        <sys_id>13daa531a8a203107f446d9f3e09f65f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_snc_visaguardi_0.student.x_snc_visaguardi_0.visa_case_user</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_user_role_contains_13daa531a8a203107f446d9f3e09f65f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:05:31</sys_updated_on>
+    </sys_user_role_contains>
+</record_update>

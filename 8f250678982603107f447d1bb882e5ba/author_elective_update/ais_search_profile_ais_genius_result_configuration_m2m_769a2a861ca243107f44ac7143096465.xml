@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="ais_search_profile_ais_genius_result_configuration_m2m">
+    <ais_search_profile_ais_genius_result_configuration_m2m action="DELETE">
+        <genius_result_configuration display_value="">e2f92a0e1ca243107f44ac71430964e0</genius_result_configuration>
+        <order>100</order>
+        <profile display_value="VisaGuardian AI Search Profile">f1456ec21ca243107f44ac714309643d</profile>
+        <sys_class_name>ais_search_profile_ais_genius_result_configuration_m2m</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 13:22:30</sys_created_on>
+        <sys_id>769a2a861ca243107f44ac7143096465</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>.VisaGuardian AI Search Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>ais_search_profile_ais_genius_result_configuration_m2m_769a2a861ca243107f44ac7143096465</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 13:22:30</sys_updated_on>
+    </ais_search_profile_ais_genius_result_configuration_m2m>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>ais_search_profile_ais_genius_result_configuration_m2m_769a2a861ca243107f44ac7143096465</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="ais_search_profile_ais_genius_result_configuration_m2m"><ais_search_profile_ais_genius_result_configuration_m2m action="INSERT_OR_UPDATE"><genius_result_configuration display_value="">e2f92a0e1ca243107f44ac71430964e0</genius_result_configuration><order>100</order><profile display_value="VisaGuardian AI Search Profile">f1456ec21ca243107f44ac714309643d</profile><sys_class_name>ais_search_profile_ais_genius_result_configuration_m2m</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-08 13:22:30</sys_created_on><sys_id>769a2a861ca243107f44ac7143096465</sys_id><sys_mod_count>0</sys_mod_count><sys_name>.VisaGuardian AI Search Profile</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>ais_search_profile_ais_genius_result_configuration_m2m_769a2a861ca243107f44ac7143096465</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-08 13:22:30</sys_updated_on></ais_search_profile_ais_genius_result_configuration_m2m></record_update>]]></payload>
+        <payload_hash>-1495165018</payload_hash>
+        <record_name>.VisaGuardian AI Search Profile</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 13:22:31</sys_created_on>
+        <sys_id>8f9aea4e1ca243107f44ac71430964e6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fe18a15fe0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 13:22:31</sys_updated_on>
+        <type>AI Search Search Profile Genius Result C</type>
+        <update_guid>8f9aea4eb5a243101f95233c7bd515e5</update_guid>
+        <update_guid_history>8f9aea4eb5a243101f95233c7bd515e5:-1495165018</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value=".VisaGuardian AI Search Profile">efdaae4e1ca243107f44ac71430964a0</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 13:23:38</sys_created_on>
+        <sys_db_object display_value="" name="ais_search_profile_ais_genius_result_configuration_m2m">ais_search_profile_ais_genius_result_configuration_m2m</sys_db_object>
+        <sys_id>7725a7f33e3d491a88611e43448bd031</sys_id>
+        <sys_metadata>769a2a861ca243107f44ac7143096465</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>.VisaGuardian AI Search Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>ais_search_profile_ais_genius_result_configuration_m2m_769a2a861ca243107f44ac7143096465</sys_update_name>
+        <sys_update_version display_value="ais_search_profile_ais_genius_result_configuration_m2m_769a2a861ca243107f44ac7143096465">8f9aea4e1ca243107f44ac71430964e6</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 13:23:38</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

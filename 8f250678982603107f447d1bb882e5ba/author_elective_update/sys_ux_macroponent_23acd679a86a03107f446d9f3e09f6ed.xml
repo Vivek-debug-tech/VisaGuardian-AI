@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ux_macroponent">
+    <sys_ux_macroponent action="DELETE">
+        <associated_types>d8899a0473000010f7353c78caf6a750</associated_types>
+        <bundles>[]</bundles>
+        <category>page</category>
+        <component_dependencies/>
+        <composition>[
+    {
+        "definition": {
+            "id": "fb8a5d2d17d4f06ec617a39fb3fe7a60",
+            "type": "MACROPONENT"
+        },
+        "elementId": "app_analytics_center_1",
+        "elementLabel": "App Analytics Center 1",
+        "eventMappings": [],
+        "isHero": true,
+        "isHidden": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "preset": null,
+        "propertyValues": {
+            "canICreateArtifacts": {
+                "binding": {
+                    "address": [
+                        "check_if_user_can_create_artifacts_1",
+                        "output",
+                        "canICreateArtifacts"
+                    ]
+                },
+                "type": "DATA_OUTPUT_BINDING"
+            },
+            "filter": {
+                "binding": {
+                    "address": [
+                        "filter"
+                    ],
+                    "category": "props"
+                },
+                "type": "CONTEXT_BINDING"
+            },
+            "userInfo": {
+                "binding": {
+                    "address": [
+                        "user"
+                    ],
+                    "category": "session"
+                },
+                "type": "CONTEXT_BINDING"
+            }
+        },
+        "slot": null,
+        "styles": null
+    }
+]</composition>
+        <da_relay_models/>
+        <data>[
+    {
+        "definition": {
+            "id": "cc0bf2a4ff01221026fcffffffffff9f",
+            "type": "TRANSFORM"
+        },
+        "elementId": "check_if_user_can_create_artifacts_1",
+        "elementLabel": "Check if user can create artifacts 1",
+        "eventMappings": [],
+        "inputValues": {
+            "tableName": {
+                "type": "JSON_LITERAL",
+                "value": "par_dashboard"
+            }
+        },
+        "readEvaluationMode": "EAGER"
+    },
+    {
+        "definition": {
+            "id": "61ff29dffff0321065f1ffffffffffae",
+            "type": "TRANSFORM"
+        },
+        "elementId": "disable_guided_tour_auto_launch_1",
+        "elementLabel": "Disable guided tour auto launch 1",
+        "eventMappings": [],
+        "inputValues": {
+            "tour": {
+                "binding": {
+                    "address": [
+                        "tourId"
+                    ]
+                },
+                "type": "STATE_BINDING"
+            },
+            "user": {
+                "binding": {
+                    "address": [
+                        "userId"
+                    ]
+                },
+                "type": "STATE_BINDING"
+            }
+        },
+        "readEvaluationMode": "EAGER"
+    }
+]</data>
+        <description/>
+        <disable_auto_reflow>false</disable_auto_reflow>
+        <dispatched_events/>
+        <ext_controller_dep/>
+        <extends display_value="Page Template">19be392623033300f4b4c50947bf65ba</extends>
+        <extension_point/>
+        <form_factors>{
+    "custom_ff_1": {
+        "max-width": 640,
+        "reference": "macroponent"
+    }
+}</form_factors>
+        <handled_events/>
+        <interactions/>
+        <interfaces/>
+        <internal_event_mappings>{
+    "MACROPONENT_READY": [
+        {
+            "broker": null,
+            "clientScript": {
+                "payload": {
+                    "type": "JSON_LITERAL",
+                    "value": {}
+                },
+                "sysId": "ffacd679a86a03107f446d9f3e09f6f4"
+            },
+            "clientTransformScript": "",
+            "conditional": null,
+            "declarativeAction": null,
+            "event": null,
+            "operation": null,
+            "targetId": "UIzChPeggBaaemjjzAAluoeeddyRPff",
+            "type": "CLIENT_SCRIPT"
+        }
+    ]
+}</internal_event_mappings>
+        <keyboard_shortcuts>{}</keyboard_shortcuts>
+        <layout>{
+    "default": {
+        "children": null,
+        "items": [
+            {
+                "element_id": "app_analytics_center_1"
+            }
+        ],
+        "root": null,
+        "rules": null,
+        "styles": {
+            "flex-direction": "column"
+        },
+        "templateId": "5832fd4d53c31010e6bcddeeff7b12db",
+        "type": "flex"
+    },
+    "queries": [
+        {
+            "layout": {
+                "items": [],
+                "styles": {
+                    "flex-direction": "column",
+                    "height": "auto",
+                    "min-width": null
+                },
+                "type": "flex"
+            },
+            "queryId": "custom_ff_1"
+        }
+    ],
+    "version": "3.1.0"
+}</layout>
+        <macroponent_dependencies/>
+        <name>Advisor Dashboard default</name>
+        <output_prop_mapping/>
+        <props>[
+    {
+        "description": "",
+        "fieldType": "string",
+        "id": "TqvvGvQyBkaakjjmQEQuMeeOnzD",
+        "inherited": false,
+        "label": "Filter",
+        "mandatory": false,
+        "name": "filter",
+        "readOnly": false,
+        "selectable": false,
+        "typeMetadata": null,
+        "valueType": "string"
+    }
+]</props>
+        <required_sys_props/>
+        <required_translations>[ ]</required_translations>
+        <root_component/>
+        <root_component_config/>
+        <root_component_definition/>
+        <schema_version>1.0.0</schema_version>
+        <state_persistence_config/>
+        <state_properties>[
+    {
+        "description": null,
+        "fieldType": "string",
+        "initialValue": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "label": "newClientStateParam1",
+        "name": "userId",
+        "shape": "",
+        "valueType": "string"
+    },
+    {
+        "description": null,
+        "fieldType": "string",
+        "initialValue": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "label": "newClientStateParam1",
+        "name": "tourId",
+        "shape": "",
+        "valueType": "string"
+    }
+]</state_properties>
+        <style_config>{}</style_config>
+        <sys_class_name>sys_ux_macroponent</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 17:43:11</sys_created_on>
+        <sys_id>23acd679a86a03107f446d9f3e09f6ed</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Advisor Dashboard default</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_ux_macroponent_23acd679a86a03107f446d9f3e09f6ed</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 17:43:12</sys_updated_on>
+    </sys_ux_macroponent>
+    <sys_translated_text action="DELETE" query="documentkey=23acd679a86a03107f446d9f3e09f6ed"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</application>
+        <file_path/>
+        <instance_id>d3b1803093560750fb38f8284dba10c5</instance_id>
+        <instance_name>dlt-hck-8017-0005</instance_name>
+        <name>sys_ux_macroponent_23acd679a86a03107f446d9f3e09f6ed</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ux_macroponent"><sys_ux_macroponent action="INSERT_OR_UPDATE"><associated_types>d8899a0473000010f7353c78caf6a750</associated_types><bundles>[]</bundles><category>page</category><component_dependencies/><composition>[
+    {
+        "definition": {
+            "id": "fb8a5d2d17d4f06ec617a39fb3fe7a60",
+            "type": "MACROPONENT"
+        },
+        "elementId": "app_analytics_center_1",
+        "elementLabel": "App Analytics Center 1",
+        "eventMappings": [],
+        "isHero": true,
+        "isHidden": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "preset": null,
+        "propertyValues": {
+            "canICreateArtifacts": {
+                "binding": {
+                    "address": [
+                        "check_if_user_can_create_artifacts_1",
+                        "output",
+                        "canICreateArtifacts"
+                    ]
+                },
+                "type": "DATA_OUTPUT_BINDING"
+            },
+            "filter": {
+                "binding": {
+                    "address": [
+                        "filter"
+                    ],
+                    "category": "props"
+                },
+                "type": "CONTEXT_BINDING"
+            },
+            "userInfo": {
+                "binding": {
+                    "address": [
+                        "user"
+                    ],
+                    "category": "session"
+                },
+                "type": "CONTEXT_BINDING"
+            }
+        },
+        "slot": null,
+        "styles": null
+    }
+]</composition><da_relay_models/><data>[
+    {
+        "definition": {
+            "id": "cc0bf2a4ff01221026fcffffffffff9f",
+            "type": "TRANSFORM"
+        },
+        "elementId": "check_if_user_can_create_artifacts_1",
+        "elementLabel": "Check if user can create artifacts 1",
+        "eventMappings": [],
+        "inputValues": {
+            "tableName": {
+                "type": "JSON_LITERAL",
+                "value": "par_dashboard"
+            }
+        },
+        "readEvaluationMode": "EAGER"
+    },
+    {
+        "definition": {
+            "id": "61ff29dffff0321065f1ffffffffffae",
+            "type": "TRANSFORM"
+        },
+        "elementId": "disable_guided_tour_auto_launch_1",
+        "elementLabel": "Disable guided tour auto launch 1",
+        "eventMappings": [],
+        "inputValues": {
+            "tour": {
+                "binding": {
+                    "address": [
+                        "tourId"
+                    ]
+                },
+                "type": "STATE_BINDING"
+            },
+            "user": {
+                "binding": {
+                    "address": [
+                        "userId"
+                    ]
+                },
+                "type": "STATE_BINDING"
+            }
+        },
+        "readEvaluationMode": "EAGER"
+    }
+]</data><description/><disable_auto_reflow>false</disable_auto_reflow><dispatched_events/><ext_controller_dep/><extends display_value="Page Template">19be392623033300f4b4c50947bf65ba</extends><extension_point/><form_factors>{
+    "custom_ff_1": {
+        "max-width": 640,
+        "reference": "macroponent"
+    }
+}</form_factors><handled_events/><interactions/><interfaces/><internal_event_mappings>{
+    "MACROPONENT_READY": [
+        {
+            "broker": null,
+            "clientScript": {
+                "payload": {
+                    "type": "JSON_LITERAL",
+                    "value": {}
+                },
+                "sysId": "ffacd679a86a03107f446d9f3e09f6f4"
+            },
+            "clientTransformScript": "",
+            "conditional": null,
+            "declarativeAction": null,
+            "event": null,
+            "operation": null,
+            "targetId": "UIzChPeggBaaemjjzAAluoeeddyRPff",
+            "type": "CLIENT_SCRIPT"
+        }
+    ]
+}</internal_event_mappings><keyboard_shortcuts>{}</keyboard_shortcuts><layout>{
+    "default": {
+        "children": null,
+        "items": [
+            {
+                "element_id": "app_analytics_center_1"
+            }
+        ],
+        "root": null,
+        "rules": null,
+        "styles": {
+            "flex-direction": "column"
+        },
+        "templateId": "5832fd4d53c31010e6bcddeeff7b12db",
+        "type": "flex"
+    },
+    "queries": [
+        {
+            "layout": {
+                "items": [],
+                "styles": {
+                    "flex-direction": "column",
+                    "height": "auto",
+                    "min-width": null
+                },
+                "type": "flex"
+            },
+            "queryId": "custom_ff_1"
+        }
+    ],
+    "version": "3.1.0"
+}</layout><macroponent_dependencies/><name>Advisor Dashboard default</name><output_prop_mapping/><props>[
+    {
+        "description": "",
+        "fieldType": "string",
+        "id": "TqvvGvQyBkaakjjmQEQuMeeOnzD",
+        "inherited": false,
+        "label": "Filter",
+        "mandatory": false,
+        "name": "filter",
+        "readOnly": false,
+        "selectable": false,
+        "typeMetadata": null,
+        "valueType": "string"
+    }
+]</props><required_sys_props/><required_translations>[ ]</required_translations><root_component/><root_component_config/><root_component_definition/><schema_version>1.0.0</schema_version><state_persistence_config/><state_properties>[
+    {
+        "description": null,
+        "fieldType": "string",
+        "initialValue": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "label": "newClientStateParam1",
+        "name": "userId",
+        "shape": "",
+        "valueType": "string"
+    },
+    {
+        "description": null,
+        "fieldType": "string",
+        "initialValue": {
+            "type": "JSON_LITERAL",
+            "value": null
+        },
+        "label": "newClientStateParam1",
+        "name": "tourId",
+        "shape": "",
+        "valueType": "string"
+    }
+]</state_properties><style_config>{}</style_config><sys_class_name>sys_ux_macroponent</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-08-07 17:43:11</sys_created_on><sys_id>23acd679a86a03107f446d9f3e09f6ed</sys_id><sys_mod_count>2</sys_mod_count><sys_name>Advisor Dashboard default</sys_name><sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package><sys_policy/><sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope><sys_update_name>sys_ux_macroponent_23acd679a86a03107f446d9f3e09f6ed</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-08-07 17:43:12</sys_updated_on></sys_ux_macroponent><sys_translated_text action="delete_multiple" query="documentkey=23acd679a86a03107f446d9f3e09f6ed"/></record_update>]]></payload>
+        <payload_hash>-2059161308</payload_hash>
+        <record_name>Advisor Dashboard default</record_name>
+        <reverted_from/>
+        <source>07250678982603107f447d1bb882e5c1</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 17:43:12</sys_created_on>
+        <sys_id>48bc1a79a86a03107f446d9f3e09f65d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fdd5266cf0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 17:43:12</sys_updated_on>
+        <type>UX Macroponent Definition</type>
+        <update_guid>88bc1a79e66a0310a1ae696645b4d05c</update_guid>
+        <update_guid_history>88bc1a79e66a0310a1ae696645b4d05c:-2059161308,ffac1a79f56a031045175d1f60cecd23:1451074876,fbacd679d06a0310fd06c5b77bd02ff2:2010082401</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 18:41:19</sys_created_on>
+        <sys_db_object display_value="" name="sys_ux_macroponent">sys_ux_macroponent</sys_db_object>
+        <sys_id>08ed26bc4e31426888d2e8732de8b240</sys_id>
+        <sys_metadata>23acd679a86a03107f446d9f3e09f6ed</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Advisor Dashboard default</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_scope_delete display_value="">0f079a6084444574872c0e2e437d9210</sys_scope_delete>
+        <sys_update_name>sys_ux_macroponent_23acd679a86a03107f446d9f3e09f6ed</sys_update_name>
+        <sys_update_version display_value="sys_ux_macroponent_23acd679a86a03107f446d9f3e09f6ed">48bc1a79a86a03107f446d9f3e09f65d</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 18:41:19</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

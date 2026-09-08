@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="7c7dc4f2082a03107f44e71c3e403f57" label="Student Notifications" max_length="40" name="x_snc_visaguardi_0_student_notifications" type="collection">
+        <element label="Message" max_length="4000" name="message" type="string_full_utf8"/>
+        <element label="Read" max_length="40" name="read" type="boolean"/>
+        <element label="User" max_length="32" name="user" reference="sys_user" type="reference"/>
+        <element label="Case" max_length="32" name="case" reference="x_snc_visaguardi_0_visa_case" type="reference"/>
+        <element choice="3" label="Type" max_length="40" name="type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Warning" sequence="0" value="warning"/>
+                <element inactive_on_update="false" label="Success" sequence="1" value="success"/>
+                <element inactive_on_update="false" label="Info" sequence="2" value="info"/>
+                <element inactive_on_update="false" label="Danger" sequence="3" value="danger"/>
+            </choice>
+        </element>
+        <element label="Title" max_length="200" name="title" type="string"/>
+        <index name="index">
+            <element name="case"/>
+        </index>
+        <index name="index2">
+            <element name="user"/>
+        </index>
+    </element>
+</database>

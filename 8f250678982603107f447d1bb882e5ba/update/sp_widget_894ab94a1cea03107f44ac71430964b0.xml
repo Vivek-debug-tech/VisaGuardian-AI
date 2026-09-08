@@ -1,0 +1,1731 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {
+  /* widget controller */
+  var c = this;
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================&#13;
+   VISAGUARDIAN AI&#13;
+   SERVICE NOW SERVICE PORTAL WIDGET&#13;
+   ========================================================= */&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   MAIN PAGE&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-app {&#13;
+    width: 100%;&#13;
+    min-height: 100vh;&#13;
+&#13;
+    margin: 0;&#13;
+    padding: 0 0 25px 0;&#13;
+&#13;
+    box-sizing: border-box;&#13;
+&#13;
+    color: #ffffff;&#13;
+&#13;
+    font-family:&#13;
+        "Segoe UI",&#13;
+        Arial,&#13;
+        Helvetica,&#13;
+        sans-serif;&#13;
+&#13;
+    background:&#13;
+        radial-gradient(&#13;
+            circle at 74% 23%,&#13;
+            rgba(0, 95, 255, 0.17),&#13;
+            transparent 29%&#13;
+        ),&#13;
+&#13;
+        radial-gradient(&#13;
+            circle at 50% 90%,&#13;
+            rgba(78, 0, 180, 0.12),&#13;
+            transparent 35%&#13;
+        ),&#13;
+&#13;
+        linear-gradient(&#13;
+            135deg,&#13;
+            #020817 0%,&#13;
+            #030d24 48%,&#13;
+            #010611 100%&#13;
+        );&#13;
+&#13;
+    overflow: hidden;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   HEADER&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-header {&#13;
+    width: 100%;&#13;
+&#13;
+    padding:&#13;
+        27px 5% 12px;&#13;
+&#13;
+    box-sizing: border-box;&#13;
+}&#13;
+&#13;
+.vg-brand {&#13;
+    display: flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    gap: 13px;&#13;
+}&#13;
+&#13;
+&#13;
+/* SHIELD */&#13;
+&#13;
+.vg-shield {&#13;
+    width: 58px;&#13;
+    height: 70px;&#13;
+&#13;
+    position: relative;&#13;
+&#13;
+    display: flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    justify-content: center;&#13;
+&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            145deg,&#13;
+            #123d85,&#13;
+            #03132d&#13;
+        );&#13;
+&#13;
+    border:&#13;
+        2px solid #ffffff;&#13;
+&#13;
+    clip-path:&#13;
+        polygon(&#13;
+            50% 0%,&#13;
+            94% 18%,&#13;
+            89% 69%,&#13;
+            50% 100%,&#13;
+            11% 69%,&#13;
+            6% 18%&#13;
+        );&#13;
+&#13;
+    box-shadow:&#13;
+        0 0 18px&#13;
+        rgba(0, 132, 255, .65);&#13;
+}&#13;
+&#13;
+.vg-shield-inner {&#13;
+    width: 43px;&#13;
+    height: 51px;&#13;
+&#13;
+    display: flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    justify-content: center;&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        rgba(255,255,255,.85);&#13;
+&#13;
+    clip-path:&#13;
+        polygon(&#13;
+            50% 0%,&#13;
+            92% 18%,&#13;
+            86% 68%,&#13;
+            50% 100%,&#13;
+            14% 68%,&#13;
+            8% 18%&#13;
+        );&#13;
+}&#13;
+&#13;
+.vg-globe-symbol {&#13;
+    font-size: 30px;&#13;
+&#13;
+    color: #4bb2ff;&#13;
+&#13;
+    text-shadow:&#13;
+        0 0 8px&#13;
+        rgba(0,150,255,.8);&#13;
+}&#13;
+&#13;
+&#13;
+/* BRAND */&#13;
+&#13;
+.vg-brand-text {&#13;
+    display: flex;&#13;
+&#13;
+    flex-direction: column;&#13;
+}&#13;
+&#13;
+.vg-brand-name {&#13;
+    font-size: 28px;&#13;
+&#13;
+    line-height: 1;&#13;
+&#13;
+    font-weight: 700;&#13;
+&#13;
+    letter-spacing:&#13;
+        -0.6px;&#13;
+}&#13;
+&#13;
+.vg-brand-name span {&#13;
+    color: #188fff;&#13;
+}&#13;
+&#13;
+.vg-brand-name strong {&#13;
+    color: #9136ff;&#13;
+}&#13;
+&#13;
+.vg-tagline {&#13;
+    margin-top: 7px;&#13;
+&#13;
+    color: #d5dbe5;&#13;
+&#13;
+    font-size: 15px;&#13;
+&#13;
+    letter-spacing:&#13;
+        .15px;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   HERO&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-hero {&#13;
+    width: 90%;&#13;
+&#13;
+    max-width: 1400px;&#13;
+&#13;
+    min-height: 375px;&#13;
+&#13;
+    margin:&#13;
+        10px auto 0;&#13;
+&#13;
+    display: grid;&#13;
+&#13;
+    grid-template-columns:&#13;
+        46% 54%;&#13;
+&#13;
+    align-items: center;&#13;
+}&#13;
+&#13;
+&#13;
+/* LEFT */&#13;
+&#13;
+.vg-hero-left {&#13;
+    position: relative;&#13;
+&#13;
+    z-index: 10;&#13;
+&#13;
+    padding-left: 3px;&#13;
+}&#13;
+&#13;
+&#13;
+/* PLATFORM */&#13;
+&#13;
+.vg-platform {&#13;
+    display: inline-flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    gap: 8px;&#13;
+&#13;
+    padding:&#13;
+        10px 18px;&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        #087fff;&#13;
+&#13;
+    border-radius:&#13;
+        30px;&#13;
+&#13;
+    color: #26b8ff;&#13;
+&#13;
+    font-size: 15px;&#13;
+&#13;
+    background:&#13;
+        rgba(0, 88, 255, .05);&#13;
+&#13;
+    box-shadow:&#13;
+        0 0 15px&#13;
+        rgba(0,120,255,.10);&#13;
+}&#13;
+&#13;
+.vg-star {&#13;
+    font-size: 18px;&#13;
+&#13;
+    color: #32aaff;&#13;
+}&#13;
+&#13;
+&#13;
+/* HEADING */&#13;
+&#13;
+.vg-hero h1 {&#13;
+    margin:&#13;
+        25px 0 16px;&#13;
+&#13;
+    font-size:&#13;
+        clamp(&#13;
+            44px,&#13;
+            5vw,&#13;
+            68px&#13;
+        );&#13;
+&#13;
+    line-height:&#13;
+        1.04;&#13;
+&#13;
+    letter-spacing:&#13;
+        -2.5px;&#13;
+&#13;
+    font-weight:&#13;
+        750;&#13;
+}&#13;
+&#13;
+.vg-hero h1 span {&#13;
+    display: block;&#13;
+&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #1598ff 0%,&#13;
+            #3b3cff 50%,&#13;
+            #a42aff 100%&#13;
+        );&#13;
+&#13;
+    -webkit-background-clip:&#13;
+        text;&#13;
+&#13;
+    background-clip:&#13;
+        text;&#13;
+&#13;
+    -webkit-text-fill-color:&#13;
+        transparent;&#13;
+}&#13;
+&#13;
+&#13;
+/* HERO DESCRIPTION */&#13;
+&#13;
+.vg-hero-left p {&#13;
+    margin: 0;&#13;
+&#13;
+    color:&#13;
+        #d1d8e5;&#13;
+&#13;
+    font-size:&#13;
+        18px;&#13;
+&#13;
+    line-height:&#13;
+        1.8;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   GLOBE SECTION&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-hero-right {&#13;
+    height: 430px;&#13;
+&#13;
+    position: relative;&#13;
+&#13;
+    display: flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    justify-content: center;&#13;
+}&#13;
+&#13;
+&#13;
+/* GLOW */&#13;
+&#13;
+.vg-glow {&#13;
+    position: absolute;&#13;
+&#13;
+    width: 460px;&#13;
+    height: 460px;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    background:&#13;
+        radial-gradient(&#13;
+            circle,&#13;
+            rgba(0,110,255,.38),&#13;
+            rgba(0,80,255,.10) 45%,&#13;
+            transparent 72%&#13;
+        );&#13;
+&#13;
+    filter:&#13;
+        blur(18px);&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   GLOBE&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-globe {&#13;
+    width: 350px;&#13;
+    height: 350px;&#13;
+&#13;
+    position: relative;&#13;
+&#13;
+    z-index: 5;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    background:&#13;
+        radial-gradient(&#13;
+            circle at 34% 27%,&#13;
+            #075cb7 0%,&#13;
+            #06376e 22%,&#13;
+            #031b3d 50%,&#13;
+            #010a1d 78%&#13;
+        );&#13;
+&#13;
+    border:&#13;
+        2px solid&#13;
+        #168cff;&#13;
+&#13;
+    box-shadow:&#13;
+&#13;
+        0 0 25px&#13;
+        rgba(0,135,255,.85),&#13;
+&#13;
+        0 0 70px&#13;
+        rgba(0,100,255,.25),&#13;
+&#13;
+        inset 0 0 55px&#13;
+        rgba(0,119,255,.55);&#13;
+&#13;
+    overflow: hidden;&#13;
+}&#13;
+&#13;
+&#13;
+/* GLOBE LIGHT */&#13;
+&#13;
+.vg-globe-light {&#13;
+    position: absolute;&#13;
+&#13;
+    width: 150px;&#13;
+    height: 150px;&#13;
+&#13;
+    top: -40px;&#13;
+    left: -25px;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    background:&#13;
+        rgba(75,175,255,.2);&#13;
+&#13;
+    filter:&#13;
+        blur(30px);&#13;
+}&#13;
+&#13;
+&#13;
+/* LONGITUDE */&#13;
+&#13;
+.vg-longitude {&#13;
+    position: absolute;&#13;
+&#13;
+    top: -3%;&#13;
+&#13;
+    height: 106%;&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        rgba(70,170,255,.32);&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+}&#13;
+&#13;
+.vg-longitude-1 {&#13;
+    width: 42%;&#13;
+&#13;
+    left: 29%;&#13;
+}&#13;
+&#13;
+.vg-longitude-2 {&#13;
+    width: 72%;&#13;
+&#13;
+    left: 14%;&#13;
+}&#13;
+&#13;
+.vg-longitude-3 {&#13;
+    width: 20%;&#13;
+&#13;
+    left: 40%;&#13;
+}&#13;
+&#13;
+&#13;
+/* LATITUDE */&#13;
+&#13;
+.vg-latitude {&#13;
+    position: absolute;&#13;
+&#13;
+    left: -3%;&#13;
+&#13;
+    width: 106%;&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        rgba(70,170,255,.32);&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+}&#13;
+&#13;
+.vg-latitude-1 {&#13;
+    height: 42%;&#13;
+&#13;
+    top: 29%;&#13;
+}&#13;
+&#13;
+.vg-latitude-2 {&#13;
+    height: 72%;&#13;
+&#13;
+    top: 14%;&#13;
+}&#13;
+&#13;
+.vg-latitude-3 {&#13;
+    height: 18%;&#13;
+&#13;
+    top: 41%;&#13;
+}&#13;
+&#13;
+&#13;
+/* WORLD */&#13;
+&#13;
+.vg-world {&#13;
+    position: absolute;&#13;
+&#13;
+    inset: 0;&#13;
+&#13;
+    display: flex;&#13;
+&#13;
+    align-items: center;&#13;
+&#13;
+    justify-content: center;&#13;
+&#13;
+    font-size:&#13;
+        145px;&#13;
+&#13;
+    opacity:&#13;
+        .92;&#13;
+&#13;
+    filter:&#13;
+        drop-shadow(&#13;
+            0 0 13px&#13;
+            #008cff&#13;
+        );&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   ORBITS&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-orbit {&#13;
+    position: absolute;&#13;
+&#13;
+    z-index: 3;&#13;
+&#13;
+    width: 520px;&#13;
+    height: 155px;&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        rgba(38,157,255,.8);&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    box-shadow:&#13;
+        0 0 9px&#13;
+        rgba(0,135,255,.35);&#13;
+}&#13;
+&#13;
+.vg-orbit-1 {&#13;
+    transform:&#13;
+        rotate(16deg);&#13;
+}&#13;
+&#13;
+.vg-orbit-2 {&#13;
+    transform:&#13;
+        rotate(-16deg);&#13;
+}&#13;
+&#13;
+&#13;
+/* ORBIT DOTS */&#13;
+&#13;
+.vg-dot {&#13;
+    position: absolute;&#13;
+&#13;
+    z-index: 8;&#13;
+&#13;
+    width: 6px;&#13;
+    height: 6px;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    background:&#13;
+        #38aaff;&#13;
+&#13;
+    box-shadow:&#13;
+        0 0 12px&#13;
+        #008cff;&#13;
+}&#13;
+&#13;
+.dot-1 {&#13;
+    top: 115px;&#13;
+    right: 12%;&#13;
+}&#13;
+&#13;
+.dot-2 {&#13;
+    top: 205px;&#13;
+    right: 5%;&#13;
+}&#13;
+&#13;
+.dot-3 {&#13;
+    bottom: 120px;&#13;
+    left: 10%;&#13;
+}&#13;
+&#13;
+.dot-4 {&#13;
+    top: 170px;&#13;
+    left: 3%;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   PORTAL TITLE&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-portal-title {&#13;
+    width: 90%;&#13;
+&#13;
+    max-width: 1400px;&#13;
+&#13;
+    margin:&#13;
+        0 auto 20px;&#13;
+&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    justify-content:&#13;
+        center;&#13;
+&#13;
+    gap:&#13;
+        25px;&#13;
+&#13;
+    flex-wrap:&#13;
+        wrap;&#13;
+}&#13;
+&#13;
+.vg-portal-title h2 {&#13;
+    margin:&#13;
+        0;&#13;
+&#13;
+    font-size:&#13;
+        32px;&#13;
+&#13;
+    font-weight:&#13;
+        700;&#13;
+}&#13;
+&#13;
+.vg-title-line {&#13;
+    width:&#13;
+        120px;&#13;
+&#13;
+    height:&#13;
+        1px;&#13;
+}&#13;
+&#13;
+.vg-line-left {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            transparent,&#13;
+            #0b71df&#13;
+        );&#13;
+}&#13;
+&#13;
+.vg-line-right {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #0b71df,&#13;
+            transparent&#13;
+        );&#13;
+}&#13;
+&#13;
+.vg-portal-title p {&#13;
+    width:&#13;
+        100%;&#13;
+&#13;
+    margin:&#13;
+        -10px 0 0;&#13;
+&#13;
+    text-align:&#13;
+        center;&#13;
+&#13;
+    color:&#13;
+        #cbd4e2;&#13;
+&#13;
+    font-size:&#13;
+        16px;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   PORTAL CARDS&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-portals {&#13;
+    width:&#13;
+        90%;&#13;
+&#13;
+    max-width:&#13;
+        1400px;&#13;
+&#13;
+    margin:&#13;
+        0 auto;&#13;
+&#13;
+    display:&#13;
+        grid;&#13;
+&#13;
+    grid-template-columns:&#13;
+        repeat(4, 1fr);&#13;
+&#13;
+    gap:&#13;
+        22px;&#13;
+}&#13;
+&#13;
+&#13;
+/* CARD */&#13;
+&#13;
+.vg-card {&#13;
+    min-height:&#13;
+        305px;&#13;
+&#13;
+    padding:&#13;
+        19px;&#13;
+&#13;
+    box-sizing:&#13;
+        border-box;&#13;
+&#13;
+    border-radius:&#13;
+        15px;&#13;
+&#13;
+    text-align:&#13;
+        center;&#13;
+&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    flex-direction:&#13;
+        column;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            145deg,&#13;
+            rgba(7,29,62,.88),&#13;
+            rgba(2,10,24,.96)&#13;
+        );&#13;
+&#13;
+    transition:&#13;
+        transform .25s ease,&#13;
+        box-shadow .25s ease;&#13;
+}&#13;
+&#13;
+.vg-card:hover {&#13;
+    transform:&#13;
+        translateY(-7px);&#13;
+}&#13;
+&#13;
+&#13;
+/* CARD COLORS */&#13;
+&#13;
+.vg-student {&#13;
+    border:&#13;
+        1px solid&#13;
+        #078cff;&#13;
+}&#13;
+&#13;
+.vg-advisor {&#13;
+    border:&#13;
+        1px solid&#13;
+        #15db65;&#13;
+}&#13;
+&#13;
+.vg-admin {&#13;
+    border:&#13;
+        1px solid&#13;
+        #a02cff;&#13;
+}&#13;
+&#13;
+.vg-officer {&#13;
+    border:&#13;
+        1px solid&#13;
+        #ff8700;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   CARD ICON&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-card-icon {&#13;
+    width:&#13;
+        100px;&#13;
+&#13;
+    height:&#13;
+        100px;&#13;
+&#13;
+    margin-bottom:&#13;
+        8px;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    justify-content:&#13;
+        center;&#13;
+&#13;
+    font-size:&#13;
+        46px;&#13;
+}&#13;
+&#13;
+.vg-student .vg-card-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #078cff;&#13;
+&#13;
+    background:&#13;
+        rgba(0,105,255,.10);&#13;
+}&#13;
+&#13;
+.vg-advisor .vg-card-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #15db65;&#13;
+&#13;
+    background:&#13;
+        rgba(0,180,80,.10);&#13;
+}&#13;
+&#13;
+.vg-admin .vg-card-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #a02cff;&#13;
+&#13;
+    background:&#13;
+        rgba(120,0,255,.10);&#13;
+}&#13;
+&#13;
+.vg-officer .vg-card-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #ff8700;&#13;
+&#13;
+    background:&#13;
+        rgba(255,120,0,.10);&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   CARD TITLES&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-card h3 {&#13;
+    margin:&#13;
+        0;&#13;
+&#13;
+    font-size:&#13;
+        26px;&#13;
+}&#13;
+&#13;
+.vg-student h3 {&#13;
+    color:&#13;
+        #1598ff;&#13;
+}&#13;
+&#13;
+.vg-advisor h3 {&#13;
+    color:&#13;
+        #40e777;&#13;
+}&#13;
+&#13;
+.vg-admin h3 {&#13;
+    color:&#13;
+        #a943ff;&#13;
+}&#13;
+&#13;
+.vg-officer h3 {&#13;
+    color:&#13;
+        #ff9b25;&#13;
+}&#13;
+&#13;
+&#13;
+/* DIVIDER */&#13;
+&#13;
+.vg-card-divider {&#13;
+    width:&#13;
+        35px;&#13;
+&#13;
+    height:&#13;
+        2px;&#13;
+&#13;
+    margin:&#13;
+        7px 0 8px;&#13;
+}&#13;
+&#13;
+.vg-student .vg-card-divider {&#13;
+    background:&#13;
+        #1598ff;&#13;
+}&#13;
+&#13;
+.vg-advisor .vg-card-divider {&#13;
+    background:&#13;
+        #40e777;&#13;
+}&#13;
+&#13;
+.vg-admin .vg-card-divider {&#13;
+    background:&#13;
+        #a943ff;&#13;
+}&#13;
+&#13;
+.vg-officer .vg-card-divider {&#13;
+    background:&#13;
+        #ff9b25;&#13;
+}&#13;
+&#13;
+&#13;
+/* DESCRIPTION */&#13;
+&#13;
+.vg-card p {&#13;
+    max-width:&#13;
+        290px;&#13;
+&#13;
+    margin:&#13;
+        0 auto 18px;&#13;
+&#13;
+    color:&#13;
+        #e1e7ef;&#13;
+&#13;
+    font-size:&#13;
+        15px;&#13;
+&#13;
+    line-height:&#13;
+        1.55;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   BUTTONS&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-button {&#13;
+    width:&#13;
+        100%;&#13;
+&#13;
+    margin-top:&#13;
+        auto;&#13;
+&#13;
+    padding:&#13;
+        15px 22px;&#13;
+&#13;
+    box-sizing:&#13;
+        border-box;&#13;
+&#13;
+    border:&#13;
+        none;&#13;
+&#13;
+    border-radius:&#13;
+        8px;&#13;
+&#13;
+    color:&#13;
+        #ffffff !important;&#13;
+&#13;
+    text-decoration:&#13;
+        none !important;&#13;
+&#13;
+    font-size:&#13;
+        16px;&#13;
+&#13;
+    font-weight:&#13;
+        600;&#13;
+&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    justify-content:&#13;
+        space-between;&#13;
+&#13;
+    cursor:&#13;
+        pointer;&#13;
+&#13;
+    transition:&#13;
+        all .2s ease;&#13;
+}&#13;
+&#13;
+.vg-button:hover {&#13;
+    color:&#13;
+        #ffffff !important;&#13;
+&#13;
+    text-decoration:&#13;
+        none !important;&#13;
+&#13;
+    transform:&#13;
+        translateY(-1px);&#13;
+&#13;
+    filter:&#13;
+        brightness(1.15);&#13;
+}&#13;
+&#13;
+&#13;
+/* STUDENT BUTTON */&#13;
+&#13;
+.vg-student-button {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #0868e9,&#13;
+            #084fc8&#13;
+        );&#13;
+}&#13;
+&#13;
+&#13;
+/* ADVISOR */&#13;
+&#13;
+.vg-advisor-button {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #12aa50,&#13;
+            #07843c&#13;
+        );&#13;
+}&#13;
+&#13;
+&#13;
+/* ADMIN */&#13;
+&#13;
+.vg-admin-button {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #6419c7,&#13;
+            #481095&#13;
+        );&#13;
+}&#13;
+&#13;
+&#13;
+/* OFFICER */&#13;
+&#13;
+.vg-officer-button {&#13;
+    background:&#13;
+        linear-gradient(&#13;
+            90deg,&#13;
+            #df7000,&#13;
+            #b75400&#13;
+        );&#13;
+}&#13;
+&#13;
+&#13;
+/* ARROW */&#13;
+&#13;
+.vg-arrow {&#13;
+    font-size:&#13;
+        25px;&#13;
+&#13;
+    font-weight:&#13;
+        400;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   FEATURE BAR&#13;
+   ========================================================= */&#13;
+&#13;
+.vg-features {&#13;
+    width:&#13;
+        90%;&#13;
+&#13;
+    max-width:&#13;
+        1400px;&#13;
+&#13;
+    margin:&#13;
+        12px auto 0;&#13;
+&#13;
+    padding:&#13;
+        13px;&#13;
+&#13;
+    box-sizing:&#13;
+        border-box;&#13;
+&#13;
+    display:&#13;
+        grid;&#13;
+&#13;
+    grid-template-columns:&#13;
+        repeat(4, 1fr);&#13;
+&#13;
+    border-radius:&#13;
+        14px;&#13;
+&#13;
+    background:&#13;
+        rgba(4,19,43,.92);&#13;
+&#13;
+    border:&#13;
+        1px solid&#13;
+        rgba(20,92,180,.16);&#13;
+}&#13;
+&#13;
+&#13;
+/* FEATURE */&#13;
+&#13;
+.vg-feature {&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    gap:&#13;
+        14px;&#13;
+&#13;
+    padding:&#13;
+        5px 18px;&#13;
+&#13;
+    border-right:&#13;
+        1px solid&#13;
+        rgba(130,150,190,.2);&#13;
+}&#13;
+&#13;
+.vg-feature:last-child {&#13;
+    border-right:&#13;
+        none;&#13;
+}&#13;
+&#13;
+&#13;
+/* FEATURE ICON */&#13;
+&#13;
+.vg-feature-icon {&#13;
+    width:&#13;
+        58px;&#13;
+&#13;
+    min-width:&#13;
+        58px;&#13;
+&#13;
+    height:&#13;
+        58px;&#13;
+&#13;
+    border-radius:&#13;
+        50%;&#13;
+&#13;
+    display:&#13;
+        flex;&#13;
+&#13;
+    align-items:&#13;
+        center;&#13;
+&#13;
+    justify-content:&#13;
+        center;&#13;
+&#13;
+    font-size:&#13;
+        26px;&#13;
+}&#13;
+&#13;
+.vg-blue-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #078cff;&#13;
+&#13;
+    background:&#13;
+        rgba(0,110,255,.10);&#13;
+}&#13;
+&#13;
+.vg-green-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #15db65;&#13;
+&#13;
+    background:&#13;
+        rgba(0,180,80,.10);&#13;
+}&#13;
+&#13;
+.vg-purple-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #a02cff;&#13;
+&#13;
+    background:&#13;
+        rgba(130,0,255,.10);&#13;
+}&#13;
+&#13;
+.vg-orange-icon {&#13;
+    border:&#13;
+        1px solid&#13;
+        #ff8700;&#13;
+&#13;
+    background:&#13;
+        rgba(255,120,0,.10);&#13;
+}&#13;
+&#13;
+&#13;
+/* FEATURE TEXT */&#13;
+&#13;
+.vg-feature-content h4 {&#13;
+    margin:&#13;
+        0 0 4px;&#13;
+&#13;
+    font-size:&#13;
+        16px;&#13;
+}&#13;
+&#13;
+.vg-feature:nth-child(1) h4 {&#13;
+    color:&#13;
+        #18a5ff;&#13;
+}&#13;
+&#13;
+.vg-feature:nth-child(2) h4 {&#13;
+    color:&#13;
+        #40e777;&#13;
+}&#13;
+&#13;
+.vg-feature:nth-child(3) h4 {&#13;
+    color:&#13;
+        #b34dff;&#13;
+}&#13;
+&#13;
+.vg-feature:nth-child(4) h4 {&#13;
+    color:&#13;
+        #ff9b25;&#13;
+}&#13;
+&#13;
+.vg-feature-content p {&#13;
+    margin:&#13;
+        0;&#13;
+&#13;
+    color:&#13;
+        #b8c2d2;&#13;
+&#13;
+    font-size:&#13;
+        13px;&#13;
+&#13;
+    line-height:&#13;
+        1.4;&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   RESPONSIVE&#13;
+   ========================================================= */&#13;
+&#13;
+@media (max-width: 1150px) {&#13;
+&#13;
+    .vg-hero {&#13;
+        grid-template-columns:&#13;
+            1fr;&#13;
+    }&#13;
+&#13;
+    .vg-hero-left {&#13;
+        text-align:&#13;
+            center;&#13;
+    }&#13;
+&#13;
+    .vg-hero-left p {&#13;
+        margin:&#13;
+            auto;&#13;
+    }&#13;
+&#13;
+    .vg-hero-right {&#13;
+        height:&#13;
+            350px;&#13;
+    }&#13;
+&#13;
+    .vg-portals {&#13;
+        grid-template-columns:&#13;
+            repeat(2, 1fr);&#13;
+    }&#13;
+&#13;
+    .vg-features {&#13;
+        grid-template-columns:&#13;
+            repeat(2, 1fr);&#13;
+    }&#13;
+&#13;
+    .vg-feature:nth-child(2) {&#13;
+        border-right:&#13;
+            none;&#13;
+    }&#13;
+&#13;
+    .vg-feature:nth-child(-n+2) {&#13;
+        border-bottom:&#13;
+            1px solid&#13;
+            rgba(130,150,190,.2);&#13;
+    }&#13;
+}&#13;
+&#13;
+&#13;
+/* =========================================================&#13;
+   MOBILE&#13;
+   ========================================================= */&#13;
+&#13;
+@media (max-width: 650px) {&#13;
+&#13;
+    .vg-header {&#13;
+        padding:&#13;
+            20px;&#13;
+    }&#13;
+&#13;
+    .vg-brand-name {&#13;
+        font-size:&#13;
+            22px;&#13;
+    }&#13;
+&#13;
+    .vg-tagline {&#13;
+        font-size:&#13;
+            13px;&#13;
+    }&#13;
+&#13;
+    .vg-hero {&#13;
+        width:&#13;
+            92%;&#13;
+    }&#13;
+&#13;
+    .vg-hero h1 {&#13;
+        font-size:&#13;
+            42px;&#13;
+    }&#13;
+&#13;
+    .vg-hero-left p {&#13;
+        font-size:&#13;
+            16px;&#13;
+    }&#13;
+&#13;
+    .vg-globe {&#13;
+        width:&#13;
+            270px;&#13;
+&#13;
+        height:&#13;
+            270px;&#13;
+    }&#13;
+&#13;
+    .vg-glow {&#13;
+        width:&#13;
+            320px;&#13;
+&#13;
+        height:&#13;
+            320px;&#13;
+    }&#13;
+&#13;
+    .vg-orbit {&#13;
+        width:&#13;
+            370px;&#13;
+    }&#13;
+&#13;
+    .vg-portals {&#13;
+        grid-template-columns:&#13;
+            1fr;&#13;
+    }&#13;
+&#13;
+    .vg-features {&#13;
+        grid-template-columns:&#13;
+            1fr;&#13;
+    }&#13;
+&#13;
+    .vg-feature {&#13;
+        border-right:&#13;
+            none;&#13;
+&#13;
+        border-bottom:&#13;
+            1px solid&#13;
+            rgba(130,150,190,.2);&#13;
+&#13;
+        padding:&#13;
+            14px;&#13;
+    }&#13;
+&#13;
+    .vg-feature:last-child {&#13;
+        border-bottom:&#13;
+            none;&#13;
+    }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Copy of Visa_Home_page</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 09:51:18</sys_created_on>
+        <sys_id>894ab94a1cea03107f44ac71430964b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Copy of Visa_Home_page</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_894ab94a1cea03107f44ac71430964b0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 09:51:18</sys_updated_on>
+        <template><![CDATA[<div class="vg-app">
+
+    <!-- ================= HEADER ================= -->
+    <header class="vg-header">
+
+        <div class="vg-brand">
+
+            <div class="vg-shield">
+                <div class="vg-shield-inner">
+                    <span class="vg-globe-symbol">◎</span>
+                </div>
+            </div>
+
+            <div class="vg-brand-text">
+                <div class="vg-brand-name">
+                    Visa<span>Guardian</span> <strong>AI</strong>
+                </div>
+
+                <div class="vg-tagline">
+                    Secure. Smart. Seamless.
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+    <section class="vg-hero">
+
+        <!-- LEFT SIDE -->
+        <div class="vg-hero-left">
+
+            <div class="vg-platform">
+                <span class="vg-star">✦</span>
+                AI-Powered Visa Platform
+            </div>
+
+            <h1>
+                Welcome to
+                <span>VisaGuardian AI</span>
+            </h1>
+
+            <p>
+                Your trusted partner in the visa journey.<br>
+                Choose your portal to get started with a<br>
+                secure and personalized experience.
+            </p>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="vg-hero-right">
+
+            <div class="vg-glow"></div>
+
+            <!-- ORBITS -->
+            <div class="vg-orbit vg-orbit-1"></div>
+            <div class="vg-orbit vg-orbit-2"></div>
+
+            <!-- GLOBE -->
+            <div class="vg-globe">
+
+                <div class="vg-longitude vg-longitude-1"></div>
+                <div class="vg-longitude vg-longitude-2"></div>
+                <div class="vg-longitude vg-longitude-3"></div>
+
+                <div class="vg-latitude vg-latitude-1"></div>
+                <div class="vg-latitude vg-latitude-2"></div>
+                <div class="vg-latitude vg-latitude-3"></div>
+
+                <div class="vg-world">
+                    ]]>🌎
+<![CDATA[                </div>
+
+                <div class="vg-globe-light"></div>
+
+            </div>
+
+            <!-- ORBIT DOTS -->
+            <span class="vg-dot dot-1"></span>
+            <span class="vg-dot dot-2"></span>
+            <span class="vg-dot dot-3"></span>
+            <span class="vg-dot dot-4"></span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PORTAL HEADING ================= -->
+    <section class="vg-portal-title">
+
+        <div class="vg-title-line vg-line-left"></div>
+
+        <h2>Choose Your Portal</h2>
+
+        <div class="vg-title-line vg-line-right"></div>
+
+        <p>
+            Select your role to access your personalized dashboard
+        </p>
+
+    </section>
+
+
+    <!-- ================= PORTAL CARDS ================= -->
+    <section class="vg-portals">
+
+
+        <!-- ===== STUDENT ===== -->
+        <article class="vg-card vg-student">
+
+            <div class="vg-card-icon">
+                <span>]]>🎓<![CDATA[</span>
+            </div>
+
+            <h3>Student</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Apply for visas, upload documents,
+                track your applications and get
+                real-time updates.
+            </p>
+
+            <a
+                href="?id=student_login"
+                class="vg-button vg-student-button">
+
+                <span>Enter Student Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+
+        <!-- ===== VISA ADVISOR ===== -->
+        <article class="vg-card vg-advisor">
+
+            <div class="vg-card-icon">
+                <span>]]>👤<![CDATA[</span>
+            </div>
+
+            <h3>Visa Advisor</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Review student applications,
+                provide guidance and manage
+                your assigned cases.
+            </p>
+
+            <a
+                href="?id=advisor_login"
+                class="vg-button vg-advisor-button">
+
+                <span>Enter Advisor Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+
+        <!-- ===== ADMIN ===== -->
+        <article class="vg-card vg-admin">
+
+            <div class="vg-card-icon">
+                <span>⚙</span>
+            </div>
+
+            <h3>Admin</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Manage users, visa cases,
+                documents and system
+                configurations.
+            </p>
+
+            <a
+                href="?id=admin_login"
+                class="vg-button vg-admin-button">
+
+                <span>Enter Admin Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+
+        <!-- ===== VISA OFFICER ===== -->
+        <article class="vg-card vg-officer">
+
+            <div class="vg-card-icon">
+                <span>]]>🛡<![CDATA[</span>
+            </div>
+
+            <h3>Visa Officer</h3>
+
+            <div class="vg-card-divider"></div>
+
+            <p>
+                Review applications, verify
+                documents and make visa
+                decisions.
+            </p>
+
+            <a
+                href="?id=officer_login"
+                class="vg-button vg-officer-button">
+
+                <span>Enter Officer Portal</span>
+
+                <span class="vg-arrow">→</span>
+
+            </a>
+
+        </article>
+
+    </section>
+
+
+    <!-- ================= FEATURE BAR ================= -->
+    <section class="vg-features">
+
+
+        <!-- SECURE -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-blue-icon">
+                <span>]]>🛡<![CDATA[</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>Secure &amp; Compliant</h4>
+
+                <p>
+                    Enterprise-grade security<br>
+                    for your data protection.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-green-icon">
+                <span>⚡</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>AI-Powered Assistance</h4>
+
+                <p>
+                    Intelligent guidance at every<br>
+                    step of your journey.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- REAL TIME -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-purple-icon">
+                <span>◷</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>Real-time Updates</h4>
+
+                <p>
+                    Track your application status<br>
+                    in real time.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- GLOBAL -->
+        <div class="vg-feature">
+
+            <div class="vg-feature-icon vg-orange-icon">
+                <span>]]>🌐<![CDATA[</span>
+            </div>
+
+            <div class="vg-feature-content">
+
+                <h4>Global Reach</h4>
+
+                <p>
+                    Supporting students and<br>
+                    professionals worldwide.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="visa_case" label="Visa Case" language="en" table="x_snc_visaguardi_0_risk_assessment">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>visa_case</element>
+            <help/>
+            <hint/>
+            <label>Visa Case</label>
+            <language>en</language>
+            <name>x_snc_visaguardi_0_risk_assessment</name>
+            <plural>Visa Cases</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-04 18:37:18</sys_created_on>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>Visa Case</sys_name>
+            <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+            <sys_update_name>sys_documentation_x_snc_visaguardi_0_risk_assessment_visa_case_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-04 18:37:18</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $location, $timeout) {
+
+    var c = this;
+
+    var STORAGE_KEY = "vg_dso_sidebar_scroll";
+
+
+    /* =====================================================
+       GET CURRENT PAGE
+       ===================================================== */
+
+    function getCurrentPage() {
+
+        var pageId = $location.search().id;
+
+        if (!pageId) {
+            return "dso_dashboard";
+        }
+
+        return String(pageId);
+    }
+
+
+    /* =====================================================
+       ACTIVE PAGE
+       ===================================================== */
+
+    c.activePage = getCurrentPage();
+
+
+    /* =====================================================
+       CHECK ACTIVE PAGE
+       ===================================================== */
+
+    c.isActive = function(pageId) {
+
+        return c.activePage === String(pageId);
+
+    };
+
+
+    /* =====================================================
+       GET SIDEBAR NAVIGATION
+       ===================================================== */
+
+    function getSidebar() {
+
+        return document.getElementById(
+            "vgDsoNavigation"
+        );
+
+    }
+
+
+    /* =====================================================
+       SAVE SIDEBAR SCROLL POSITION
+       ===================================================== */
+
+    function saveScrollPosition() {
+
+        var sidebar = getSidebar();
+
+        if (!sidebar) {
+            return;
+        }
+
+        try {
+
+            sessionStorage.setItem(
+                STORAGE_KEY,
+                String(sidebar.scrollTop)
+            );
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to save DSO sidebar scroll position",
+                e
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       RESTORE SIDEBAR SCROLL POSITION
+       ===================================================== */
+
+    function restoreScrollPosition() {
+
+        var savedPosition;
+
+        try {
+
+            savedPosition =
+                sessionStorage.getItem(
+                    STORAGE_KEY
+                );
+
+        } catch (e) {
+
+            return;
+
+        }
+
+
+        if (
+            savedPosition === null ||
+            savedPosition === ""
+        ) {
+
+            return;
+
+        }
+
+
+        var position =
+            parseInt(
+                savedPosition,
+                10
+            );
+
+
+        if (isNaN(position)) {
+            return;
+        }
+
+
+        /*
+         * First restore
+         */
+
+        $timeout(function() {
+
+            var sidebar = getSidebar();
+
+            if (!sidebar) {
+                return;
+            }
+
+            sidebar.scrollTop = position;
+
+
+            /*
+             * Second restore.
+             * ServiceNow may render the widget
+             * again after navigation.
+             */
+
+            $timeout(function() {
+
+                var sidebarAgain =
+                    getSidebar();
+
+                if (sidebarAgain) {
+
+                    sidebarAgain.scrollTop =
+                        position;
+
+                }
+
+            }, 250);
+
+        }, 150);
+
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+       ===================================================== */
+
+    c.navigate = function(pageId, event) {
+
+        if (!pageId) {
+            return;
+        }
+
+
+        /*
+         * Stop normal <a> navigation.
+         */
+
+        if (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+        }
+
+
+        /*
+         * Save current sidebar position
+         * BEFORE changing the page.
+         */
+
+        saveScrollPosition();
+
+
+        /*
+         * Set active button immediately.
+         */
+
+        c.activePage =
+            String(pageId);
+
+
+        /*
+         * Remove focus from clicked button.
+         *
+         * This prevents the browser from trying
+         * to scroll the clicked element into view.
+         */
+
+        if (
+            event &&
+            event.currentTarget
+        ) {
+
+            try {
+
+                event.currentTarget.blur();
+
+            } catch (e) {}
+
+        }
+
+
+        /*
+         * Navigate using ServiceNow URL.
+         */
+
+        $location.search(
+            "id",
+            pageId
+        );
+
+    };
+
+
+    /* =====================================================
+       LOGOUT
+       ===================================================== */
+
+    c.logout = function(event) {
+
+        if (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+        }
+
+
+        /*
+         * Clear sidebar scroll position.
+         */
+
+        try {
+
+            sessionStorage.removeItem(
+                STORAGE_KEY
+            );
+
+        } catch (e) {}
+
+
+        /*
+         * Clear authentication tokens.
+         */
+
+        try {
+
+            localStorage.removeItem(
+                "access"
+            );
+
+            localStorage.removeItem(
+                "refresh"
+            );
+
+            localStorage.removeItem(
+                "adminToken"
+            );
+
+            localStorage.removeItem(
+                "studentToken"
+            );
+
+            localStorage.removeItem(
+                "advisorToken"
+            );
+
+            localStorage.removeItem(
+                "dsoToken"
+            );
+
+        } catch (e) {
+
+            console.warn(
+                "Unable to clear authentication data",
+                e
+            );
+
+        }
+
+
+        /*
+         * Change active page.
+         */
+
+        c.activePage =
+            "dso_login";
+
+
+        /*
+         * Navigate to login page.
+         */
+
+        $location.search(
+            "id",
+            "dso_login"
+        );
+
+    };
+
+
+    /* =====================================================
+       INITIAL RESTORE
+       ===================================================== */
+
+    restoreScrollPosition();
+
+
+    /* =====================================================
+       WATCH PAGE CHANGES
+       ===================================================== */
+
+    var locationChangeOff =
+        $scope.$on(
+            "$locationChangeSuccess",
+            function() {
+
+
+                /*
+                 * Update active button.
+                 */
+
+                c.activePage =
+                    getCurrentPage();
+
+
+                /*
+                 * Do not restore the old sidebar
+                 * position on login page.
+                 */
+
+                if (
+                    c.activePage !==
+                    "dso_login"
+                ) {
+
+                    restoreScrollPosition();
+
+                }
+
+            }
+        );
+
+
+    /* =====================================================
+       CLEANUP
+       ===================================================== */
+
+    $scope.$on(
+        "$destroy",
+        function() {
+
+            if (locationChangeOff) {
+
+                locationChangeOff();
+
+            }
+
+        }
+    );
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   DSO SIDEBAR
+   COMPACT STUDENT-STYLE DESIGN
+   ========================================================= */
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.vg-dso-sidebar {
+
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+
+    width: 350px !important;
+    height: 100vh !important;
+
+    background: #062044 !important;
+
+    color: #ffffff;
+
+    z-index: 99999 !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.vg-dso-brand {
+
+    height: 118px;
+
+    min-height: 118px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,0.10);
+}
+
+
+/* =========================================================
+   LOGO ICON
+   ========================================================= */
+
+.vg-dso-brand-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    min-width: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-right: 12px;
+
+    background: #031a39 !important;
+
+    border-radius: 12px;
+
+    font-size: 28px;
+
+    box-sizing: border-box;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   LOGO TEXT
+   ========================================================= */
+
+.vg-dso-brand-text {
+
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.vg-dso-brand-title {
+
+    font-size: 20px;
+
+    line-height: 25px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   AI
+   ========================================================= */
+
+.vg-dso-brand-title span {
+
+    color: #3294ff !important;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.vg-dso-brand-subtitle {
+
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    line-height: 17px;
+
+    color: #b9cbe2;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.vg-dso-navigation {
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding: 12px 12px 24px;
+
+    box-sizing: border-box;
+
+    overflow-anchor: none;
+
+    overscroll-behavior: contain;
+
+    scroll-behavior: auto;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255,255,255,0.25)
+        transparent;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.vg-dso-navigation::-webkit-scrollbar {
+
+    width: 5px;
+}
+
+
+.vg-dso-navigation::-webkit-scrollbar-track {
+
+    background: transparent;
+}
+
+
+.vg-dso-navigation::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(255,255,255,0.25);
+
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   NAVIGATION BUTTON
+   ========================================================= */
+
+.vg-dso-nav-item {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 48px;
+
+    min-height: 48px;
+
+    margin-bottom: 5px;
+
+    padding: 0 14px;
+
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 13px;
+
+    box-sizing: border-box;
+
+    border: 0;
+
+    border-radius: 9px !important;
+
+    background: transparent !important;
+
+    color: #ffffff !important;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 400;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    outline: none !important;
+
+    appearance: none;
+
+    -webkit-appearance: none;
+
+    text-decoration: none !important;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+
+/* =========================================================
+   NORMAL BUTTON
+   ========================================================= */
+
+.vg-dso-nav-item:not(.active) {
+
+    background: transparent !important;
+
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.vg-dso-nav-item:not(.active):hover {
+
+    background: #12365f !important;
+
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   ACTIVE BUTTON
+   ========================================================= */
+
+.vg-dso-nav-item.active {
+
+    background: #2875e8 !important;
+
+    color: #ffffff !important;
+
+    font-weight: 600;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   ACTIVE HOVER
+   ========================================================= */
+
+.vg-dso-nav-item.active:hover {
+
+    background: #2875e8 !important;
+
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.vg-dso-nav-icon {
+
+    width: 22px;
+
+    min-width: 22px;
+
+    height: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin-right: 0 !important;
+
+    color: #dceaff;
+
+    background: transparent !important;
+
+    border-radius: 0 !important;
+
+    font-size: 18px;
+
+    line-height: 1;
+}
+
+
+/* =========================================================
+   ACTIVE ICON
+   ========================================================= */
+
+.vg-dso-nav-item.active
+.vg-dso-nav-icon {
+
+    color: #ffffff;
+
+    background: transparent !important;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.vg-dso-nav-text {
+
+    flex: 1;
+
+    min-width: 0;
+
+    color: inherit;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    line-height: 20px;
+}
+
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.vg-dso-nav-item:focus {
+
+    outline: none !important;
+}
+
+
+/* =========================================================
+   KEYBOARD FOCUS
+   ========================================================= */
+
+.vg-dso-nav-item:focus-visible {
+
+    outline:
+        2px solid
+        rgba(255,255,255,0.7) !important;
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.vg-dso-sidebar-footer {
+
+    flex: 0 0 auto;
+
+    padding: 0 12px 12px;
+
+    background: #062044;
+
+    border-top: none;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.vg-dso-logout {
+
+    height: 48px;
+
+    min-height: 48px;
+
+    margin-top: 10px;
+
+    margin-bottom: 0 !important;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.10);
+
+    border-radius: 9px !important;
+
+    color: #ffffff !important;
+}
+
+
+/* =========================================================
+   LOGOUT HOVER
+   ========================================================= */
+
+.vg-dso-logout:hover {
+
+    background:
+        rgba(255,83,97,0.12) !important;
+
+    color: #ff6975 !important;
+}
+
+
+/* =========================================================
+   LOGOUT ICON
+   ========================================================= */
+
+.vg-dso-logout .vg-dso-nav-icon {
+
+    color: #dceaff !important;
+}
+
+
+/* =========================================================
+   LOGOUT ICON HOVER
+   ========================================================= */
+
+.vg-dso-logout:hover .vg-dso-nav-icon {
+
+    color: #ff6975 !important;
+}
+
+
+/* =========================================================
+   LOGOUT FOCUS
+   ========================================================= */
+
+.vg-dso-logout:focus {
+
+    outline: none !important;
+}
+
+
+.vg-dso-logout:focus-visible {
+
+    outline:
+        2px solid
+        rgba(255,105,117,0.7) !important;
+
+    outline-offset: 2px;
+}
+
+
+/* =========================================================
+   IMPORTANT
+   PAGE CONTENT STARTS AFTER SIDEBAR
+   ========================================================= */
+
+.vg-dso-sidebar ~ * {
+
+    margin-left: 350px !important;
+}
+
+
+/* =========================================================
+   COMMON SERVICENOW CONTENT WRAPPERS
+   ========================================================= */
+
+.page,
+.main-content,
+.sp-page-root,
+.body-content {
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .vg-dso-sidebar {
+
+        width: 240px !important;
+    }
+
+
+    .vg-dso-brand {
+
+        height: 105px;
+
+        min-height: 105px;
+
+        padding: 16px 17px;
+    }
+
+
+    .vg-dso-brand-icon {
+
+        width: 52px;
+
+        height: 52px;
+
+        min-width: 52px;
+
+        font-size: 25px;
+    }
+
+
+    .vg-dso-brand-title {
+
+        font-size: 18px;
+
+        line-height: 23px;
+    }
+
+
+    .vg-dso-brand-subtitle {
+
+        font-size: 11px;
+
+        line-height: 16px;
+    }
+
+
+    .vg-dso-nav-item {
+
+        height: 46px;
+
+        min-height: 46px;
+
+        padding: 0 12px;
+
+        gap: 11px;
+
+        font-size: 14px;
+    }
+
+
+    .vg-dso-nav-icon {
+
+        width: 21px;
+
+        min-width: 21px;
+
+        font-size: 17px;
+    }
+
+
+    .vg-dso-sidebar ~ * {
+
+        margin-left: 240px !important;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .vg-dso-sidebar {
+
+        width: 220px !important;
+    }
+
+
+    .vg-dso-brand {
+
+        height: 92px;
+
+        min-height: 92px;
+
+        padding: 12px 13px;
+    }
+
+
+    .vg-dso-brand-icon {
+
+        width: 46px;
+
+        height: 46px;
+
+        min-width: 46px;
+
+        margin-right: 9px;
+
+        font-size: 22px;
+
+        border-radius: 10px;
+    }
+
+
+    .vg-dso-brand-title {
+
+        font-size: 16px;
+
+        line-height: 20px;
+    }
+
+
+    .vg-dso-brand-subtitle {
+
+        font-size: 10px;
+
+        line-height: 14px;
+    }
+
+
+    .vg-dso-navigation {
+
+        padding:
+            10px 10px 20px;
+    }
+
+
+    .vg-dso-nav-item {
+
+        height: 44px;
+
+        min-height: 44px;
+
+        padding: 0 11px;
+
+        gap: 10px;
+
+        font-size: 13px;
+
+        border-radius: 8px !important;
+    }
+
+
+    .vg-dso-nav-icon {
+
+        width: 20px;
+
+        min-width: 20px;
+
+        height: 20px;
+
+        font-size: 16px;
+    }
+
+
+    .vg-dso-sidebar ~ * {
+
+        margin-left: 220px !important;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>dso_side_bar</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>dso side bar</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 07:38:43</sys_created_on>
+        <sys_id>b1424adf29e603107f44d6fee5fae338</sys_id>
+        <sys_mod_count>37</sys_mod_count>
+        <sys_name>dso side bar</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_b1424adf29e603107f44d6fee5fae338</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 07:48:56</sys_updated_on>
+        <template><![CDATA[<!-- =========================================================
+     VISAGUARDIAN AI
+     DSO COMPLIANCE COMMAND CENTER
+     SIDEBAR
+     ========================================================= -->
+
+<aside class="vg-dso-sidebar">
+
+    <!-- =====================================================
+         BRAND
+         ===================================================== -->
+
+    <div class="vg-dso-brand">
+
+        <div class="vg-dso-brand-icon">
+            ]]>🛡
+<![CDATA[        </div>
+
+        <div class="vg-dso-brand-text">
+
+            <div class="vg-dso-brand-title">
+                VisaGuardian <span>AI</span>
+            </div>
+
+            <div class="vg-dso-brand-subtitle">
+                DSO Compliance Command Center
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NAVIGATION
+         ===================================================== -->
+
+    <nav
+        class="vg-dso-navigation"
+        id="vgDsoNavigation"
+    >
+
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <a
+            href="student?id=dso_dashboard"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('dso_dashboard')}"
+            ng-click="c.navigate('dso_dashboard', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>🏠
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             STUDENTS
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_students"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_students')}"
+            ng-click="c.navigate('vg_dso_students', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>👥
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Students
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             VISA CASES
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_visa_cases"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_visa_cases')}"
+            ng-click="c.navigate('vg_dso_visa_cases', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>📁
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Visa Cases
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             COMPLIANCE OVERVIEW
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_complaince_overview"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_complaince_overview')}"
+            ng-click="c.navigate('vg_dso_complaince_overview', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>🛡
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Compliance Overview
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             UPCOMING DEADLINES
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_upcoming_deadlines"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_upcoming_deadlines')}"
+            ng-click="c.navigate('vg_dso_upcoming_deadlines', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ⏰
+            </span>
+
+            <span class="vg-dso-nav-text">
+                Upcoming Deadlines
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             RISK & SLA ANALYTICS
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_risk_assessments"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_risk_assessments')}"
+            ng-click="c.navigate('vg_dso_risk_assessments', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ⚠️
+            </span>
+
+            <span class="vg-dso-nav-text">
+                Risk &amp; SLA Analytics
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             ADVISOR WORKLOAD
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_advisor_workload"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_advisor_workload')}"
+            ng-click="c.navigate('vg_dso_advisor_workload', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>👨<![CDATA[‍]]>💼
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Advisor Workload
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             REPORTS & INSIGHTS
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_reports_sights"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_reports_sights')}"
+            ng-click="c.navigate('vg_dso_reports_sights', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>📊
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Reports &amp; Insights
+            </span>
+
+        </a>
+
+
+      
+
+
+        <!-- =================================================
+             PROFILE
+             ================================================= -->
+
+        <a
+            href="student?id=dso_profile"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('dso_profile')}"
+            ng-click="c.navigate('dso_profile', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ]]>👤
+<![CDATA[            </span>
+
+            <span class="vg-dso-nav-text">
+                Profile
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             HELP & SUPPORT
+             ================================================= -->
+
+        <a
+            href="student?id=vg_dso_help_support"
+            class="vg-dso-nav-item"
+            ng-class="{'active': c.isActive('vg_dso_help_support')}"
+            ng-click="c.navigate('vg_dso_help_support', $event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ❓
+            </span>
+
+            <span class="vg-dso-nav-text">
+                Help &amp; Support
+            </span>
+
+        </a>
+
+
+    </nav>
+
+
+    <!-- =====================================================
+         LOGOUT
+         ===================================================== -->
+
+    <div class="vg-dso-sidebar-footer">
+
+        <a
+            href="student?id=dso_login"
+            class="vg-dso-nav-item vg-dso-logout"
+            ng-click="c.logout($event)"
+        >
+
+            <span class="vg-dso-nav-icon">
+                ↪
+            </span>
+
+            <span class="vg-dso-nav-text">
+                Logout
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>b1424adf29e603107f44d6fee5fae338</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 07:38:43</sys_created_on>
+        <sys_id>fd424adf29e603107f44d6fee5fae33b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 07:38:43</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

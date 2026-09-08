@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function() {
+  	var c = this;
+  	
+	var rejectNote = "";
+	c.resolveCase = function() {
+		if (c.data.resolutionAction == "accept") 
+			acceptResolution();
+		else if (c.data.resolutionAction == "reject") {
+			rejectNote = c.data.rejectResolutionNote.trim();
+			rejectResolution();
+		}
+		$('#acceptRejectModal').modal('hide');
+	}
+	
+	acceptResolution = function() {
+		c.server.get({
+			action: 'sendResponse',
+			purpose: 'accept',
+			state: 7,
+			acceptResolutionNote: 'Resolution accepted, request closed.'
+		});
+	};
+	
+	rejectResolution = function() {
+		c.server.get({
+			action: 'sendResponse',
+			purpose: 'reject',
+			state: 2,
+			state_reason: 1,
+			rejectResolutionNote : rejectNote
+		});
+	};
+	
+	var cancelNote = "";
+	c.cancelUR = function() {
+		cancelNote = c.data.cancelNotes.trim();
+		c.server.get({
+			action: 'cancel', 
+			cancelNote: cancelNote
+		});
+		$('#cancelModal').modal('hide');
+	}
+	
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.dropdown {&#13;
+  display: block;&#13;
+  text-align: center;&#13;
+}&#13;
+&#13;
+.dropdown-item {&#13;
+    padding: 10px 15px;&#13;
+    display: block;&#13;
+    color: #293E40;&#13;
+}&#13;
+&#13;
+.show {&#13;
+    display: block !important;&#13;
+}&#13;
+&#13;
+.backdrop {&#13;
+    position: fixed;&#13;
+    left: 0;&#13;
+    right: 0;&#13;
+    top: 0;&#13;
+    bottom: 0;&#13;
+    background: black;&#13;
+    opacity: 0.5;&#13;
+}&#13;
+&#13;
+.icon-cross:before {&#13;
+	content: "\f153";&#13;
+	font-size: 6px;&#13;
+	height: 13px;&#13;
+	width: 13px;&#13;
+	background: #000000;&#13;
+	border-radius: 50%;&#13;
+	color: white;&#13;
+	line-height: 2;&#13;
+}&#13;
+&#13;
+.fa-close {&#13;
+  margin-top: 20px;&#13;
+  cursor: pointer;&#13;
+}&#13;
+&#13;
+.actions-pad {&#13;
+  padding-right: 2px !important;&#13;
+}&#13;
+&#13;
+.modal-body textarea {&#13;
+	resize: none !important;&#13;
+	box-sizing: border-box;&#13;
+	border-radius: 4px;&#13;
+	border: 1px solid #CCCCCC;&#13;
+}&#13;
+&#13;
+.modalPosition {&#13;
+  top : 30%;&#13;
+  right : 3%;&#13;
+  outline : none;&#13;
+}&#13;
+&#13;
+.modalTitle {&#13;
+  font-size: 17px !important;&#13;
+  font-weight: 600;&#13;
+  letter-spacing: 0;&#13;
+  padding-top: 10px;&#13;
+  text-align: left;&#13;
+  color: black;&#13;
+}&#13;
+&#13;
+.modalHeader {&#13;
+  border-bottom: 0px;&#13;
+  padding-top: 8px;&#13;
+  padding-bottom: 8px;&#13;
+} &#13;
+&#13;
+.modalBody {&#13;
+  padding-top: 20px;&#13;
+  padding-bottom: 20px;&#13;
+  padding-right: 20px;&#13;
+}&#13;
+&#13;
+.crossButton {&#13;
+  font-size: 12px;&#13;
+}&#13;
+&#13;
+.controls-radio input {&#13;
+  position: absolute;&#13;
+  opacity: 0;&#13;
+  cursor: pointer;&#13;
+}&#13;
+&#13;
+/* Hide the browser's default radio button */&#13;
+.container input {&#13;
+  position: absolute;&#13;
+  opacity: 0;&#13;
+  cursor: pointer;&#13;
+}&#13;
+&#13;
+/* Create a custom radio button */&#13;
+.checkmark {&#13;
+  position: absolute;&#13;
+  top: 0;&#13;
+  left: 0;&#13;
+  height: 20px;&#13;
+  width: 20px;&#13;
+  background-color: #fff;&#13;
+  border-radius: 100px;&#13;
+  border: 1px solid #BDC0C4&#13;
+}&#13;
+&#13;
+/* When the radio button is checked, add a blue background */&#13;
+.controls-radio input:checked ~ .checkmark {&#13;
+  background-color: #fff;&#13;
+  border: 1px solid #BDC0C4&#13;
+}&#13;
+&#13;
+.textMargin {&#13;
+  margin-left: 5px;&#13;
+  margin-bottom: 15px;&#13;
+  text-align: left;&#13;
+}&#13;
+&#13;
+/* Create the indicator (the dot/circle - hidden when not checked) */&#13;
+.checkmark:after {&#13;
+  content: "";&#13;
+  position: absolute;&#13;
+  display: none;&#13;
+}&#13;
+&#13;
+/* Show the indicator (dot/circle) when checked */&#13;
+.controls-radio input:checked ~ .checkmark:after {&#13;
+  display: block;&#13;
+}&#13;
+&#13;
+/* Style the indicator (dot/circle) */&#13;
+.controls-radio .checkmark:after {&#13;
+ 	top: 4px;&#13;
+	left: 4px;&#13;
+	width: 10px;&#13;
+	height: 10px;&#13;
+	border-radius: 100px;&#13;
+	background: #1C796B;&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description>This is an action widget for Universal Request that contains "Accept Resolution and Reject Resolution" options. </description>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+
+}]]></link>
+        <name>Copy of Action Widget for UR</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  	var tableName = $sp.getParameter('table');
+	var sysId = $sp.getParameter('sys_id');
+	
+	var record = sn_std_tkt_api.TicketConfig.getTicketRecord(tableName, sysId);
+	data.canRead = (record !== null && record.isValid() && record.canRead());
+	if (!data.canRead)
+		return;
+	
+	data.valid = false;
+	data.showCancel = false;
+	var hasPrimaryTask = record.primary_task;
+	var state = record.state;
+	var stateReason = record.state_reason;
+	if (tableName === 'universal_request' && !hasPrimaryTask && record.active) {
+		if (state == UniversalRequestStateSNC.AWAITING_RESPONSE_FROM_USER && stateReason == UniversalRequestStateSNC.STATE_REASON.AWAITING_RESPONSE_FROM_USER.ACCEPT_RESOLUTION)
+			data.valid = true;
+		else {
+			var universalRequestUtils = new UniversalRequestUtilsSNC();
+			var taskGR = new GlideRecord(universalRequestUtils.TABLES.TASK);
+			taskGR.query("universal_request",sysId);
+			if(!taskGR.next())
+				data.showCancel = true;
+		}
+	}
+	
+	if (input && input.action === 'sendResponse' ) {
+		var universalGr = new GlideRecord(tableName);
+		var acceptNotes;
+		if (universalGr.get(sysId)) {
+			universalGr.setValue('state', input.state);
+			if (input.purpose === 'accept') {
+				acceptNotes = input.acceptResolutionNote;
+				universalGr.comments = acceptNotes;
+			}
+			
+			else if (input.purpose === 'reject') {
+				universalGr.setValue('state_reason', input.state_reason);
+				var rejectNotes = gs.getMessage('[code]<b> Reason for rejection: </b>[/code] ') + input.rejectResolutionNote;
+				universalGr.comments = rejectNotes;
+			}
+			var flag = universalGr.update();
+			if (input.purpose === 'accept' && flag)
+				gs.addInfoMessage(acceptNotes);
+		}
+		return;
+	}
+	
+	if(input && input.action === 'cancel') {
+		var universalGr = new GlideRecord(tableName);
+		if(universalGr.get(sysId)) {
+			universalGr.setValue('state', UniversalRequestStateSNC.CANCELED);
+			var cancelNotes = input.cancelNote;
+			if(cancelNotes) {
+				universalGr.comments = cancelNotes;
+				var canceled = universalGr.update();
+				if (canceled)
+					gs.addInfoMessage(gs.getMessage('{0} has been canceled',record.number));
+			}
+			else {
+				gs.addErrorMessage(gs.getMessage("Please enter reason for closing request"));
+				return;
+			}
+		}
+	}
+	
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 18:09:04</sys_created_on>
+        <sys_id>a03c2fc21c2e43107f44ac7143096455</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Copy of Action Widget for UR</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_a03c2fc21c2e43107f44ac7143096455</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 18:09:04</sys_updated_on>
+        <template><![CDATA[<div class="dropdown" ng-if="data.valid">
+  <div class="col-xs-8 actions-pad text-center">
+    	<button class="btn btn-primary" data-toggle="modal" data-backdrop="false" data-target="#acceptRejectModal">${Accept/reject resolution} </button>
+  </div> 
+  <div class="modal fade" id="acceptRejectModal" tabindex="-1" role="dialog" aria-label="${Accept/Reject actions modal}">
+    <div class="backdrop"></div>
+    <div class="modal-dialog modalPosition" role="document">
+        <div class="modal-content">
+            <div class="modal-header modalHeader">
+                <button data-dismiss="GlideModal" class="btn btn-icon close crossButton icon-cross" data-dismiss="modal">
+                    <span class="sr-only">${Close}</span>
+                </button>
+                <h1 class="modal-title modalTitle">${Do you accept or reject the resolution?}</h1>
+            </div>
+            <div class="modal-body modalBody" aria-hidden="true">
+              	<div class="radio" ng-init="c.data.resolutionAction='accept'">
+                  	<label class="controls-radio textMargin">
+                      <input type="radio" name="resolutionAction" value="accept" ng-model="c.data.resolutionAction" checked>
+                      ${Yes, I accept the resolution. Close this request.}
+                      <span class="checkmark"></span>
+                  </label>
+              	</div>
+              	<div class="radio">
+                  	<label class="controls-radio textMargin">
+                      <input type="radio" name="resolutionAction" value="reject" ng-model="c.data.resolutionAction">
+                      ${No, I do not accept the resolution. I still need help.}
+                      <span class="checkmark"></span>
+	              		</label>
+              	</div>
+              	<textarea maxlength="4000" ng-show="c.data.resolutionAction=='reject'" placeholder="${Please tell us what help you need?}" id="rejectResolutionNote" class="form-control" rows="5" ng-model="c.data.rejectResolutionNote"></textarea>
+              </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${Cancel}</button>
+                <button type="button" class="btn btn-primary" ng-disabled="c.data.resolutionAction == 'reject' && !c.data.rejectResolutionNote" ng-click="c.resolveCase()">${ {{c.data.resolutionAction == "accept" ? "Accept": "Reject"}} resolution}</button>
+            </div>
+        </div>
+    </div>
+	</div>
+</div>
+<div class="dropdown" ng-if="data.showCancel">
+  <div class="col-xs-8 actions-pad text-center">
+    	<button class="btn btn-default" data-toggle="modal" data-backdrop="false" data-target="#cancelModal">${Close} </button>
+  </div> 
+  <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-label="${Cancel Modal}">
+    <div class="backdrop"></div>
+     <div class="modal-dialog modalPosition" role="document">
+        <div class="modal-content">
+          <div class="modal-body" style="padding:0">
+            <div class="modal-header" style="padding-top:0; padding-bottom:0">
+              <h1 class="h3 pull-left">${Close request}</h1>
+              <span class="pull-right">
+                    <i class="fa fa-close pull-right text-base" autofocus="true" tabindex="0" data-dismiss="modal" aria-label="Close" role="button">
+                    </i>
+                  </span>
+            </div>
+          	<div class="modal-body modalBody" align="left">
+          <label class="field-label">
+                <span class="field-decorations">
+              		<span ng-class="{'mandatory-filled': c.data.cancelNotes}" class="fa fa-asterisk mandatory" aria-hidden="false">
+                </span>
+                  </span>
+                  <span id="requestCloseReason" class="ng-binding"> ${Reason for closing request}
+                </span>
+              </label>
+              	<div class="text">
+                  <textarea maxlength="4000" placeholder="${}" id="cancelNote" class="form-control" rows="3" ng-model="c.data.cancelNotes" aria-required="true" aria-labelledby="requestCloseReason"></textarea>
+              	</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">${Cancel}</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!c.data.cancelNotes" ng-click="c.cancelUR()">${Close Request}</button>
+            </div>
+        	</div>
+       </div>
+    </div>
+</div>
+]]></template>
+    </sp_widget>
+</record_update>

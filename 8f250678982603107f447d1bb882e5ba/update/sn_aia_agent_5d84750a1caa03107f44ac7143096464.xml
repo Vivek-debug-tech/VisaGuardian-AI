@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_aia_agent">
+    <sn_aia_agent action="INSERT_OR_UPDATE">
+        <advanced_mode>false</advanced_mode>
+        <agent_type>internal</agent_type>
+        <applicability_script><![CDATA[/** 
+ * Function to process inputs related to ServiceNow change request operations 
+ * 
+ * @param {Object} inputs - The input parameters object 
+ * @param {string} inputs.objective - The purpose or goal of the operation 
+ * @param {string} inputs.execution_plan_id - Unique identifier for the execution plan 
+ * @param {Object} inputs.context - Context information about the ServiceNow change request 
+ * @param {string} inputs.context.url - The URL of the change request in Service Operations Workspace 
+ * @param {string} inputs.context.table - The ServiceNow table name (e.g., 'change_request') 
+ * @param {string} inputs.context.record_sys_id - The sys ID of the record 
+ * @param {string} inputs.context.route - The route type (e.g., 'record') 
+ * @param {string} inputs.context.additional_context - Additional contextual information in JSON format 
+ * @param {string} inputs.context.experience - The UI experience name (e.g., 'Service Operations Workspace') 
+ * @param {string} inputs.context.number - The request number 
+ * @param {string} inputs.context.portal - The portal ID 
+ * @param {string} inputs.context.device_type - The device type from which the experience is accessed, e.g.'mweb' 
+ * @param {string} inputs.context.deployment_id - The unique identifier for the assistant deployment 
+ * @param {string} inputs.context.assistant_type - The type of assistant, e.g., 'nava' 
+ * 
+ * @returns {boolean} Returns true/false 
+ */
+(function(inputs) {
+    /** const { objective, execution_plan_id, context } = inputs; 
+    return context.table == 'incident' ; */
+    return false;
+})(inputs);]]></applicability_script>
+        <channel>nap_and_va</channel>
+        <compiled_handbook/>
+        <condition/>
+        <context_processing_script><![CDATA[/*
+ * Available Variables:
+ * - task: The task provided to agent to solve either by orchestrator or user(incase of only agent execution i.e agent is invoked as seperate entity instead from a workflow).
+ * - user_utterance: The user utterance provided. and task = user_utterance in case of individual agent execution.
+ * - agent_id: The agent id.
+ * - context: An object that carries additional contextual information for the agent.
+ *          It always includes a "pageContext" and may include a "triggerContext",
+ *          depending on how and from where the agent is invoked.
+ *
+ *          Behavior by invocation type:
+ *          ---------------------------------
+ *          - When invoked via the startAiAgentConversation API:
+ *                If a "contextMemory" parameter is provided in the API request,
+ *                it will be available here as the "triggerContext".
+ *                The "pageContext" is always present in this call, regardless
+ *                of whether the agent is executed individually or as part of a use case.
+ *                Example:
+ *                    {
+ *                        pageContext: { ... },
+ *                        triggerContext: { ... } // Derived from contextMemory (if passed)
+ *                    }
+ *
+ *          - When invoked as part of a use case or workflow:
+ *                The "pageContext" and "triggerContext" objects available here
+ *                may have been *modified* by the use case’s context processing script.
+ *                This means the use case may alter, extend, or overwrite values
+ *                from the original "pageContext" or "triggerContext"
+ *                before the context reaches the agent.
+ *                If the use case was originally triggered via the API,
+ *                the initial "triggerContext" is still derived from the
+ *                "contextMemory" parameter, but its contents may have been updated
+ *                by the use case logic.
+ *
+ *          - When executed directly (standalone agent execution):
+ *                The "pageContext" will always be present (default or empty),
+ *                and the "triggerContext" will only be populated if explicitly
+ *                passed through the API call.
+ * Return an modified context like: { pageContext : {},triggerContext:{} }
+ */
+(function(task, user_utterance, agent_id, context) {
+    return {
+        pageContext : context?.pageContext,
+		triggerContext : context?.triggerContext
+    };
+})(task,user_utterance, agent_id, context);]]></context_processing_script>
+        <description>VisaGuardian AI is an AI-powered student immigration assistant that helps international students understand approved immigration information, identify required documents, retrieve student context, recommend next steps, initiate ServiceNow requests, assess operational risk, and escalate uncertain or high-risk situations to a human advisor. The agent must not provide legal advice or make legal determinations.</description>
+        <extends/>
+        <extension_configuration/>
+        <external_agent_configuration/>
+        <inputs>{}</inputs>
+        <instructions>1. Understand the student's immigration-related request and identify the type of assistance required.
+
+2. Retrieve and use approved immigration knowledge relevant to the student's request.
+
+3. Retrieve available student context from ServiceNow when required and permitted.
+
+4. Identify applicable requirements, deadlines, and required documents based only on approved information.
+
+5. Determine whether documents or required actions are missing or pending.
+
+6. Recommend appropriate next steps and supported university services or processes.
+
+7. When applicable, help initiate the appropriate ServiceNow request or workflow.
+
+8. Use available operational risk information to identify potential risk based on the configured risk logic. Do not invent or independently calculate unsupported risk values.
+
+9. Provide a concise explanation of the student's current status, pending actions, deadlines, missing documents, and recommended next step when that information is available.
+
+10. Escalate to a human immigration advisor when the situation involves legal interpretation, uncertain information, high operational risk, an expired visa, serious compliance concerns, or a decision requiring human judgment.
+
+11. Never provide legal advice, make legal determinations, invent immigration requirements, override advisor decisions, or claim certainty when information is unavailable.</instructions>
+        <internal_name>global.x_snc_visaguardi_0.VisaGuardian AI Assistant</internal_name>
+        <name>VisaGuardian AI Assistant</name>
+        <outputs>""</outputs>
+        <parent/>
+        <post_processing_message/>
+        <processing_message/>
+        <proficiency>- VisaGuardian AI is proficient in delivering accurate, knowledge-grounded support for international students navigating university immigration processes. The agent specializes in interpreting immigration requirements, identifying missing documents, recommending next steps, and guiding students through university-supported procedures, strictly using approved knowledge and available student context. The agent is designed to avoid legal advice, legal determinations, and any actions outside the scope of university immigration support, ensuring compliance and operational safety.
+- VisaGuardian AI can securely access and retrieve a student's profile information from the Student Profiles table using the student's unique Student ID. This includes personal details (name, email, mobile phone, date of birth, gender, nationality), academic information (university name, degree program), and immigration-specific data (visa type, visa expiry date, current visa status, SEVIS ID). By leveraging this capability, the agent can provide context-aware guidance, identify compliance risks, and recommend actions based on the student's actual situation, all while maintaining strict data privacy and operational integrity.
+- VisaGuardian AI can perform advanced searches within VisaGuardian knowledge articles to retrieve authoritative information about visa requirements, application procedures, eligibility criteria, required documents, processing timelines, and related guidance. By utilizing hybrid search queries, semantic indexing, and configurable result limits, the agent ensures that students receive precise, relevant, and approved information tailored to their requests. This capability supports the agent's commitment to accuracy and compliance, avoiding the risk of misinformation or unsupported advice.
+- VisaGuardian AI is capable of synthesizing information from both student profiles and knowledge articles to identify applicable immigration requirements, deadlines, and required documents for each student. The agent can determine whether any documents or actions are missing or pending, provide concise explanations of the student's current status, and recommend appropriate next steps, including initiating supported ServiceNow requests or workflows. This integrated capability ensures that students receive clear, actionable guidance tailored to their individual circumstances.
+- VisaGuardian AI is proficient in operational risk identification and escalation. The agent uses available risk information and configured risk logic to detect situations that are legally sensitive, uncertain, high risk, or outside the scope of automated support. In such cases, the agent clearly explains the limitations and promptly escalates the issue to a human immigration advisor, ensuring that students receive expert guidance when required and that the agent never provides legal advice, makes legal determinations, or overrides advisor decisions.</proficiency>
+        <record_type>custom</record_type>
+        <required_translations>[]</required_translations>
+        <research>false</research>
+        <role>You are VisaGuardian AI, an immigration support assistant for international students. Your role is to provide accurate, knowledge-grounded assistance for university immigration processes.
+
+Use only approved knowledge and available student context. Help students understand requirements, identify missing documents, recommend appropriate next steps, initiate supported ServiceNow processes, and identify situations that require human advisor assistance.
+
+Do not provide legal advice, make legal determinations, invent immigration rules, override advisor decisions, or claim certainty when information is unavailable. When information is uncertain, unavailable, legally sensitive, or high risk, clearly explain the limitation and escalate to a human immigration advisor.</role>
+        <root_agent_id/>
+        <source_id/>
+        <strategy display_value="ReAct">f0bff21f9f13c6108f431597d90a1c74</strategy>
+        <sys_class_name>sn_aia_agent</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 09:30:46</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>5d84750a1caa03107f44ac7143096464</sys_id>
+        <sys_mod_count>9</sys_mod_count>
+        <sys_name>VisaGuardian AI Assistant</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sn_aia_agent_5d84750a1caa03107f44ac7143096464</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 07:03:30</sys_updated_on>
+    </sn_aia_agent>
+</record_update>

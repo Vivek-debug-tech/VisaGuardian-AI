@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_cs_context_profile_skill">
+    <sys_cs_context_profile_skill action="INSERT_OR_UPDATE">
+        <context_profile display_value="Now Assist Panel - Developer (default)">eeaa2607b7c422102d71c5e1de11a9e5</context_profile>
+        <skill_id display_value="Get AI Case Summary">48600d3729e607107f44d6fee5fae38b</skill_id>
+        <sys_class_name>sys_cs_context_profile_skill</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-13 16:07:48</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>09608d3729e607107f44d6fee5fae347</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_cs_context_profile_skill_09608d3729e607107f44d6fee5fae347</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-13 16:07:48</sys_updated_on>
+    </sys_cs_context_profile_skill>
+</record_update>

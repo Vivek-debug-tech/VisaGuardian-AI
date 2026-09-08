@@ -1,0 +1,2388 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, spModal) {
+  var c = this;
+
+  // Save profile changes to ServiceNow backend
+  c.saveProfile = function() {
+    c.server.get({
+      action: 'update_profile',
+      user: c.data.user
+    }).then(function(response) {
+      if (response.data.success) {
+        spModal.alert('Profile details and notification preferences successfully updated!');
+      }
+    });
+  };
+
+  // Trigger password update dialog/redirect
+  c.changePassword = function() {
+    spModal.alert('Redirecting to ServiceNow Password Reset Service Portal Page...');
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   DSO PROFILE &amp; SETTINGS
+   PREMIUM ENTERPRISE THEME
+   ========================================================= */
+
+.vg-profile-container {
+
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  color: #173f6d;
+
+  background:
+    linear-gradient(
+      180deg,
+      #f7f9fc 0%,
+      #f2f6fb 100%
+    );
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+
+.vg-profile-container *,
+.vg-profile-container *::before,
+.vg-profile-container *::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.vg-profile-container .vg-hero-banner {
+
+  position: relative;
+
+  min-height: 126px;
+
+  padding: 27px 38px;
+
+  margin-bottom: 28px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #081e3a 0%,
+      #123f77 55%,
+      #236abd 100%
+    );
+
+  border-radius: 17px;
+
+  box-shadow:
+    0 12px 30px
+    rgba(9, 35, 65, .16);
+}
+
+
+/* Decorative circles */
+
+.vg-profile-container .vg-hero-banner::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  right: -105px;
+  top: -165px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,.055);
+}
+
+
+.vg-profile-container .vg-hero-banner::after {
+
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: 20%;
+  bottom: -145px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(74,153,255,.07);
+}
+
+
+/* =========================================================
+   HERO CONTENT
+   ========================================================= */
+
+.vg-profile-container .hero-content {
+
+  position: relative;
+
+  z-index: 2;
+}
+
+
+.vg-profile-container .hero-eyebrow {
+
+  margin-bottom: 7px;
+
+  color:
+    rgba(255,255,255,.75);
+
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    1.2px;
+}
+
+
+.vg-profile-container .hero-eyebrow i {
+
+  margin-right:
+    6px;
+
+  color:
+    #8fc1ff;
+}
+
+
+.vg-profile-container .hero-content h2 {
+
+  margin:
+    0 0 6px;
+
+  color:
+    #ffffff;
+
+  font-size:
+    27px;
+
+  line-height:
+    1.2;
+
+  font-weight:
+    750;
+
+  letter-spacing:
+    -.4px;
+}
+
+
+.vg-profile-container .hero-content p {
+
+  margin:
+    0;
+
+  max-width:
+    850px;
+
+  color:
+    rgba(255,255,255,.78);
+
+  font-size:
+    13px;
+
+  line-height:
+    1.5;
+}
+
+
+/* =========================================================
+   HERO BUTTON
+   ========================================================= */
+
+.vg-profile-container .btn-hero-outline {
+
+  position:
+    relative;
+
+  z-index:
+    5;
+
+  padding:
+    10px 19px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.38);
+
+  border-radius:
+    9px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  color:
+    #ffffff;
+
+  font-size:
+    12px;
+
+  font-weight:
+    700;
+
+  transition:
+    all .2s ease;
+}
+
+
+.vg-profile-container .btn-hero-outline:hover {
+
+  background:
+    #ffffff;
+
+  color:
+    #123f77;
+
+  border-color:
+    #ffffff;
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 6px 15px
+    rgba(0,0,0,.15);
+}
+
+
+/* =========================================================
+   MAIN CARDS
+   ========================================================= */
+
+.vg-profile-container .vg-card {
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid
+    #e1e8f1;
+
+  border-radius:
+    17px;
+
+  box-shadow:
+    0 7px 22px
+    rgba(31,62,98,.055);
+
+  margin-bottom:
+    22px;
+}
+
+
+/* =========================================================
+   DSO PROFILE CARD
+   ========================================================= */
+
+.vg-profile-container .dso-profile-card {
+
+  padding:
+    32px 28px 22px;
+
+  text-align:
+    center;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.vg-profile-container .profile-avatar-wrapper {
+
+  position:
+    relative;
+
+  display:
+    inline-block;
+
+  margin-bottom:
+    13px;
+}
+
+
+.vg-profile-container .profile-avatar-large {
+
+  width:
+    112px;
+
+  height:
+    112px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1767ef,
+      #0755d9
+    );
+
+  color:
+    #ffffff;
+
+  font-size:
+    36px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    .5px;
+
+  border:
+    5px solid
+    #edf4ff;
+
+  box-shadow:
+    0 9px 24px
+    rgba(37,99,235,.20);
+}
+
+
+.vg-profile-container .status-indicator {
+
+  position:
+    absolute;
+
+  width:
+    20px;
+
+  height:
+    20px;
+
+  right:
+    3px;
+
+  bottom:
+    5px;
+
+  border:
+    3px solid
+    #ffffff;
+
+  border-radius:
+    50%;
+
+  background:
+    #cbd5e1;
+}
+
+
+.vg-profile-container .status-indicator.status-online {
+
+  background:
+    #08b778;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(8,183,120,.12);
+}
+
+
+/* =========================================================
+   DSO NAME
+   ========================================================= */
+
+.vg-profile-container .dso-name {
+
+  margin:
+    0 0 9px;
+
+  color:
+    #173f6d;
+
+  font-size:
+    24px;
+
+  font-weight:
+    750;
+
+  line-height:
+    1.25;
+}
+
+
+/* =========================================================
+   ROLE BADGE
+   ========================================================= */
+
+.vg-profile-container .role-badge {
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  gap:
+    6px;
+
+  padding:
+    6px 13px;
+
+  border-radius:
+    20px;
+
+  background:
+    #eaf2ff;
+
+  color:
+    #2563eb;
+
+  font-size:
+    11px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .role-badge i {
+
+  font-size:
+    11px;
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS
+   ========================================================= */
+
+.vg-profile-container .account-status {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    9px;
+
+  margin:
+    19px 0;
+
+  padding:
+    10px;
+
+  border-radius:
+    9px;
+
+  background:
+    #f1faf6;
+}
+
+
+.vg-profile-container .status-dot {
+
+  width:
+    8px;
+
+  height:
+    8px;
+
+  border-radius:
+    50%;
+
+  background:
+    #08b778;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(8,183,120,.10);
+}
+
+
+.vg-profile-container .account-status div {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    flex-start;
+}
+
+
+.vg-profile-container .account-status strong {
+
+  color:
+    #087f59;
+
+  font-size:
+    11px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .account-status span {
+
+  color:
+    #78908a;
+
+  font-size:
+    10px;
+}
+
+
+/* =========================================================
+   SEVIS AUTHORIZATION
+   ========================================================= */
+
+.vg-profile-container .sevis-badge-box {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    13px;
+
+  padding:
+    14px;
+
+  text-align:
+    left;
+
+  border:
+    1px solid
+    #dce7f7;
+
+  border-radius:
+    11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f5f8ff,
+      #f8faff
+    );
+}
+
+
+.vg-profile-container .sevis-icon {
+
+  width:
+    42px;
+
+  height:
+    42px;
+
+  min-width:
+    42px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    10px;
+
+  background:
+    #e7f0ff;
+
+  color:
+    #2563eb;
+
+  font-size:
+    17px;
+}
+
+
+.vg-profile-container .sevis-content {
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+}
+
+
+.vg-profile-container .sevis-content strong {
+
+  color:
+    #173f6d;
+
+  font-size:
+    12px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .sevis-content p {
+
+  margin:
+    3px 0;
+
+  color:
+    #8293a9;
+
+  font-size:
+    10px;
+}
+
+
+.vg-profile-container .sevis-content span {
+
+  color:
+    #2563eb;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.vg-profile-container .profile-divider {
+
+  height:
+    1px;
+
+  margin:
+    21px 0;
+
+  background:
+    #e7edf4;
+}
+
+
+/* =========================================================
+   PROFILE STATS
+   ========================================================= */
+
+.vg-profile-container .profile-stats {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+}
+
+
+.vg-profile-container .stat-box {
+
+  flex:
+    1;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+}
+
+
+.vg-profile-container .stat-divider {
+
+  width:
+    1px;
+
+  height:
+    40px;
+
+  background:
+    #e4eaf1;
+}
+
+
+.vg-profile-container .stat-number {
+
+  display:
+    block;
+
+  font-size:
+    25px;
+
+  line-height:
+    30px;
+
+  font-weight:
+    800;
+}
+
+
+.vg-profile-container .stat-label {
+
+  margin-top:
+    4px;
+
+  color:
+    #8b9aae;
+
+  font-size:
+    9px;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    .65px;
+}
+
+
+/* =========================================================
+   COLORS
+   ========================================================= */
+
+.vg-profile-container .text-blue {
+
+  color:
+    #2563eb !important;
+}
+
+
+.vg-profile-container .text-green {
+
+  color:
+    #08a66c !important;
+}
+
+
+/* =========================================================
+   PROFILE FOOTER
+   ========================================================= */
+
+.vg-profile-container .profile-card-footer {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  gap:
+    7px;
+
+  margin-top:
+    22px;
+
+  padding-top:
+    15px;
+
+  border-top:
+    1px solid
+    #edf1f5;
+
+  color:
+    #8998aa;
+
+  font-size:
+    9px;
+
+  line-height:
+    1.4;
+}
+
+
+.vg-profile-container .profile-card-footer i {
+
+  color:
+    #08a66c;
+}
+
+
+/* =========================================================
+   SETTINGS CARD
+   ========================================================= */
+
+.vg-profile-container .settings-card {
+
+  padding:
+    27px 30px 0;
+}
+
+
+/* =========================================================
+   SETTINGS SECTION
+   ========================================================= */
+
+.vg-profile-container .settings-section {
+
+  padding-bottom:
+    25px;
+}
+
+
+.vg-profile-container .notification-section {
+
+  padding-top:
+    4px;
+}
+
+
+.vg-profile-container .security-section {
+
+  padding-top:
+    4px;
+
+  padding-bottom:
+    20px;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.vg-profile-container .section-header {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+}
+
+
+.vg-profile-container .section-icon {
+
+  width:
+    38px;
+
+  height:
+    38px;
+
+  min-width:
+    38px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    10px;
+
+  font-size:
+    15px;
+}
+
+
+.vg-profile-container .blue-icon {
+
+  background:
+    #eaf2ff;
+
+  color:
+    #2563eb;
+}
+
+
+.vg-profile-container .orange-icon {
+
+  background:
+    #fff3df;
+
+  color:
+    #e58b18;
+}
+
+
+.vg-profile-container .green-icon {
+
+  background:
+    #e8f8ee;
+
+  color:
+    #08a66c;
+}
+
+
+.vg-profile-container .section-header h4 {
+
+  margin:
+    0;
+
+  color:
+    #173f6d;
+
+  font-size:
+    16px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .section-header p {
+
+  margin:
+    3px 0 0;
+
+  color:
+    #8999ad;
+
+  font-size:
+    10px;
+}
+
+
+/* =========================================================
+   SECTION DIVIDER
+   ========================================================= */
+
+.vg-profile-container .settings-divider {
+
+  height:
+    1px;
+
+  margin:
+    17px 0 20px;
+
+  background:
+    #e7edf4;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.vg-profile-container .dso-form {
+
+  padding:
+    0 4px;
+}
+
+
+.vg-profile-container .form-row {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    175px minmax(0,1fr);
+
+  align-items:
+    center;
+
+  gap:
+    18px;
+
+  margin-bottom:
+    15px;
+}
+
+
+.vg-profile-container .form-row:last-child {
+
+  margin-bottom:
+    0;
+}
+
+
+.vg-profile-container .form-row label {
+
+  margin:
+    0;
+
+  color:
+    #365879;
+
+  font-size:
+    12px;
+
+  font-weight:
+    650;
+
+  text-align:
+    right;
+}
+
+
+.vg-profile-container .form-value {
+
+  width:
+    100%;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.vg-profile-container .vg-input {
+
+  width:
+    100%;
+
+  height:
+    42px;
+
+  padding:
+    0 13px;
+
+  border:
+    1px solid
+    #dbe4ee;
+
+  border-radius:
+    9px;
+
+  background:
+    #f7f9fc;
+
+  color:
+    #294a6d;
+
+  font-size:
+    12px;
+
+  box-shadow:
+    none;
+
+  transition:
+    all .18s ease;
+}
+
+
+.vg-profile-container .vg-input:hover {
+
+  border-color:
+    #cbd8e6;
+}
+
+
+.vg-profile-container .vg-input:focus {
+
+  background:
+    #ffffff;
+
+  border-color:
+    #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37,99,235,.08);
+
+  outline:
+    none;
+}
+
+
+/* =========================================================
+   PREFERENCES
+   ========================================================= */
+
+.vg-profile-container .preference-item {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    25px;
+
+  padding:
+    15px 0;
+
+  border-bottom:
+    1px solid
+    #edf1f5;
+}
+
+
+.vg-profile-container .preference-item:last-child {
+
+  border-bottom:
+    none;
+}
+
+
+.vg-profile-container .preference-info {
+
+  flex:
+    1;
+}
+
+
+.vg-profile-container .preference-title {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    9px;
+}
+
+
+.vg-profile-container .preference-title strong {
+
+  color:
+    #173f6d;
+
+  font-size:
+    13px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .preference-info p {
+
+  margin:
+    5px 0 0 31px;
+
+  max-width:
+    700px;
+
+  color:
+    #8998aa;
+
+  font-size:
+    10px;
+
+  line-height:
+    1.5;
+}
+
+
+.vg-profile-container .preference-status-icon {
+
+  width:
+    24px;
+
+  height:
+    24px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    7px;
+
+  font-size:
+    10px;
+}
+
+
+.vg-profile-container .red-status {
+
+  background:
+    #feecee;
+
+  color:
+    #df414e;
+}
+
+
+.vg-profile-container .blue-status {
+
+  background:
+    #eaf2ff;
+
+  color:
+    #2563eb;
+}
+
+
+/* =========================================================
+   TOGGLE SWITCH
+   ========================================================= */
+
+.vg-profile-container .switch {
+
+  position:
+    relative;
+
+  display:
+    inline-block;
+
+  width:
+    48px;
+
+  height:
+    26px;
+
+  min-width:
+    48px;
+
+  margin:
+    0;
+}
+
+
+.vg-profile-container .switch input {
+
+  width:
+    0;
+
+  height:
+    0;
+
+  opacity:
+    0;
+}
+
+
+.vg-profile-container .switch .slider {
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  cursor:
+    pointer;
+
+  background:
+    #d9e1ea;
+
+  border-radius:
+    30px;
+
+  transition:
+    all .25s ease;
+}
+
+
+.vg-profile-container .switch .slider:before {
+
+  content:
+    "";
+
+  position:
+    absolute;
+
+  width:
+    20px;
+
+  height:
+    20px;
+
+  left:
+    3px;
+
+  top:
+    3px;
+
+  background:
+    #ffffff;
+
+  border-radius:
+    50%;
+
+  box-shadow:
+    0 2px 5px
+    rgba(0,0,0,.15);
+
+  transition:
+    all .25s ease;
+}
+
+
+.vg-profile-container .switch input:checked + .slider {
+
+  background:
+    #2563eb;
+
+  box-shadow:
+    0 3px 10px
+    rgba(37,99,235,.22);
+}
+
+
+.vg-profile-container .switch input:checked + .slider:before {
+
+  transform:
+    translateX(22px);
+}
+
+
+/* =========================================================
+   SECURITY
+   ========================================================= */
+
+.vg-profile-container .security-content {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  padding:
+    13px 15px;
+
+  background:
+    #f8fafd;
+
+  border:
+    1px solid
+    #e4ebf2;
+
+  border-radius:
+    11px;
+}
+
+
+.vg-profile-container .security-info {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+}
+
+
+.vg-profile-container .security-icon {
+
+  width:
+    38px;
+
+  height:
+    38px;
+
+  min-width:
+    38px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border-radius:
+    10px;
+
+  background:
+    #e8f8ee;
+
+  color:
+    #08a66c;
+}
+
+
+.vg-profile-container .security-info strong {
+
+  display:
+    block;
+
+  color:
+    #173f6d;
+
+  font-size:
+    12px;
+
+  font-weight:
+    750;
+}
+
+
+.vg-profile-container .security-info p {
+
+  margin:
+    3px 0 0;
+
+  color:
+    #8998aa;
+
+  font-size:
+    10px;
+}
+
+
+/* =========================================================
+   SECURITY BUTTON
+   ========================================================= */
+
+.vg-profile-container .btn-security {
+
+  padding:
+    9px 14px;
+
+  border:
+    1px solid
+    #d5e0eb;
+
+  border-radius:
+    8px;
+
+  background:
+    #ffffff;
+
+  color:
+    #2563eb;
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+  transition:
+    all .18s ease;
+}
+
+
+.vg-profile-container .btn-security:hover {
+
+  background:
+    #eaf2ff;
+
+  border-color:
+    #bcd0eb;
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* =========================================================
+   SETTINGS FOOTER
+   ========================================================= */
+
+.vg-profile-container .settings-footer {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    15px;
+
+  margin:
+    0 -30px;
+
+  padding:
+    15px 30px;
+
+  border-top:
+    1px solid
+    #e4ebf2;
+
+  background:
+    #fafcff;
+
+  border-radius:
+    0 0 17px 17px;
+}
+
+
+.vg-profile-container .footer-security {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  color:
+    #7f91a6;
+
+  font-size:
+    10px;
+}
+
+
+.vg-profile-container .footer-security i {
+
+  color:
+    #08a66c;
+}
+
+
+.vg-profile-container .btn-save {
+
+  padding:
+    10px 18px;
+
+  border:
+    1px solid
+    #2563eb;
+
+  border-radius:
+    9px;
+
+  background:
+    #2563eb;
+
+  color:
+    #ffffff;
+
+  font-size:
+    11px;
+
+  font-weight:
+    750;
+
+  transition:
+    all .18s ease;
+}
+
+
+.vg-profile-container .btn-save:hover {
+
+  background:
+    #1d55d4;
+
+  border-color:
+    #1d55d4;
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 5px 14px
+    rgba(37,99,235,.18);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+  .vg-profile-container {
+
+    padding:
+      16px;
+  }
+
+  .vg-profile-container .form-row {
+
+    grid-template-columns:
+      145px minmax(0,1fr);
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .vg-profile-container {
+
+    padding:
+      12px;
+  }
+
+  .vg-profile-container .vg-hero-banner {
+
+    min-height:
+      145px;
+
+    padding:
+      22px;
+
+    flex-direction:
+      column;
+
+    align-items:
+      flex-start;
+
+    gap:
+      17px;
+
+    border-radius:
+      14px;
+  }
+
+  .vg-profile-container .hero-content h2 {
+
+    font-size:
+      22px;
+  }
+
+  .vg-profile-container .hero-content p {
+
+    font-size:
+      11px;
+  }
+
+  .vg-profile-container .settings-card {
+
+    padding:
+      22px 20px 0;
+  }
+
+  .vg-profile-container .form-row {
+
+    display:
+      block;
+
+    margin-bottom:
+      17px;
+  }
+
+  .vg-profile-container .form-row label {
+
+    display:
+      block;
+
+    margin-bottom:
+      7px;
+
+    text-align:
+      left;
+  }
+
+  .vg-profile-container .preference-item {
+
+    align-items:
+      flex-start;
+  }
+
+  .vg-profile-container .security-content {
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .vg-profile-container .settings-footer {
+
+    margin:
+      0 -20px;
+
+    padding:
+      15px 20px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .vg-profile-container .dso-profile-card {
+
+    padding:
+      25px 18px 20px;
+  }
+
+  .vg-profile-container .profile-avatar-large {
+
+    width:
+      96px;
+
+    height:
+      96px;
+
+    font-size:
+      30px;
+  }
+
+  .vg-profile-container .dso-name {
+
+    font-size:
+      21px;
+  }
+
+  .vg-profile-container .section-header h4 {
+
+    font-size:
+      14px;
+  }
+
+  .vg-profile-container .settings-footer {
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .vg-profile-container .btn-save {
+
+    width:
+      100%;
+  }
+
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>dso_profile</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>dso Profile</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* Dynamic DSO Profile Data Engine */
+  var userSysId = gs.getUserID();
+  var grUser = new GlideRecord('sys_user');
+
+  // Handle server updates
+  if (input && input.action === 'update_profile') {
+    if (grUser.get(userSysId)) {
+      grUser.setValue('name', input.user.name);
+      grUser.setValue('email', input.user.email);
+      grUser.setValue('title', input.user.title);
+      data.success = grUser.update() ? true : false;
+    } else {
+      data.success = true; // Fallback success for mock state
+    }
+    return;
+  }
+
+  // Retrieve User Record
+  if (grUser.get(userSysId)) {
+    var name = grUser.getDisplayValue('name');
+    var initials = name.split(' ').map(function(n) { return n[0]; }).join('').toUpperCase().substr(0, 2);
+
+    data.user = {
+      sys_id: userSysId,
+      name: name,
+      initials: initials || "DS",
+      email: grUser.getValue('email') || "dso.officer@university.edu",
+      title: grUser.getValue('title') || "Senior DSO Advisor",
+      department: grUser.getDisplayValue('department') || "International Student & Scholar Services",
+      location: grUser.getDisplayValue('location') || "Global Education Center, Suite 300",
+      sevis_id: "DSO-S208149",
+      active: true,
+      active_cases: 18,
+      approved_this_month: 24,
+      notify_sla: true,
+      notify_compliance: true
+    };
+  } else {
+    // Fallback Sample Profile
+    data.user = {
+      sys_id: "501",
+      name: gs.getUserDisplayName() || "Jane Doe",
+      initials: "JD",
+      email: "j.doe@university.edu",
+      title: "Senior DSO Officer",
+      department: "International Student & Scholar Services (ISSS)",
+      location: "Main Campus, Admin Building, Rm 204",
+      sevis_id: "DSO-S208149",
+      active: true,
+      active_cases: 16,
+      approved_this_month: 22,
+      notify_sla: true,
+      notify_compliance: true
+    };
+  }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:54:38</sys_created_on>
+        <sys_id>0d7aad5b292603107f44d6fee5fae342</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>dso Profile</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_0d7aad5b292603107f44d6fee5fae342</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 15:51:24</sys_updated_on>
+        <template><![CDATA[<div class="vg-profile-container">
+
+  <!-- =====================================================
+       HERO
+       ===================================================== -->
+  <div class="vg-hero-banner">
+
+    <div class="hero-content">
+
+      <div class="hero-eyebrow">
+        <i class="fa fa-shield"></i>
+        VISA GUARDIAN AI
+      </div>
+
+      <h2>DSO Profile & Settings</h2>
+
+      <p>
+        Manage your Designated School Official profile, SEVIS authorization,
+        notification preferences, and account security.
+      </p>
+
+    </div>
+
+    <div class="hero-actions">
+
+      <button
+        type="button"
+        class="btn btn-hero-outline"
+        ng-click="c.saveProfile()">
+
+        <i class="fa fa-save"></i>
+        Save Changes
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN PROFILE LAYOUT
+       ===================================================== -->
+  <div class="row profile-layout">
+
+    <!-- ===================================================
+         LEFT : DSO IDENTITY CARD
+         =================================================== -->
+    <div class="col-md-4">
+
+      <div class="vg-card dso-profile-card">
+
+        <!-- Avatar -->
+        <div class="profile-avatar-wrapper">
+
+          <div class="profile-avatar-large">
+            {{c.data.user.initials || 'DSO'}}
+          </div>
+
+          <span
+            class="status-indicator"
+            ng-class="{'status-online': c.data.user.active}">
+          </span>
+
+        </div>
+
+
+        <!-- Name -->
+        <h3 class="dso-name">
+          {{c.data.user.name || 'Designated School Official'}}
+        </h3>
+
+
+        <!-- Role -->
+        <div class="role-badge">
+          <i class="fa fa-user-shield"></i>
+          Designated School Official
+        </div>
+
+
+        <!-- Account Status -->
+        <div class="account-status">
+
+          <span class="status-dot"></span>
+
+          <div>
+            <strong>Active DSO Account</strong>
+            <span>Authorized & verified</span>
+          </div>
+
+        </div>
+
+
+        <!-- SEVIS Authorization -->
+        <div class="sevis-badge-box">
+
+          <div class="sevis-icon">
+            <i class="fa fa-certificate"></i>
+          </div>
+
+          <div class="sevis-content">
+
+            <strong>SEVIS Authorized DSO</strong>
+
+            <p>
+              Official school immigration officer
+            </p>
+
+            <span>
+              ID: {{c.data.user.sevis_id || 'DSO-S208149'}}
+            </span>
+
+          </div>
+
+        </div>
+
+
+        
+
+
+
+        <!-- Profile Footer -->
+        <div class="profile-card-footer">
+
+          <i class="fa fa-lock"></i>
+
+          <span>
+            Your profile is protected by VisaGuardian security controls.
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         RIGHT : SETTINGS
+         =================================================== -->
+    <div class="col-md-8">
+
+      <div class="vg-card settings-card">
+
+
+        <!-- =================================================
+             PERSONAL DETAILS
+             ================================================= -->
+        <div class="settings-section">
+
+          <div class="section-header">
+
+            <div class="section-icon blue-icon">
+              <i class="fa fa-user"></i>
+            </div>
+
+            <div>
+              <h4>Personal & Department Details</h4>
+
+              <p>
+                Your official DSO contact and organizational information.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div class="settings-divider"></div>
+
+
+          <form class="dso-form">
+
+            <!-- Full Name -->
+            <div class="form-row">
+
+              <label>
+                Full Name
+              </label>
+
+              <div class="form-value">
+
+                <input
+                  type="text"
+                  class="form-control vg-input"
+                  ng-model="c.data.user.name"
+                  placeholder="Enter DSO name">
+
+              </div>
+
+            </div>
+
+
+            <!-- Email -->
+            <div class="form-row">
+
+              <label>
+                Email Address
+              </label>
+
+              <div class="form-value">
+
+                <input
+                  type="email"
+                  class="form-control vg-input"
+                  ng-model="c.data.user.email"
+                  placeholder="Enter official email">
+
+              </div>
+
+            </div>
+
+
+            <!-- Department -->
+            <div class="form-row">
+
+              <label>
+                Department / Unit
+              </label>
+
+              <div class="form-value">
+
+                <input
+                  type="text"
+                  class="form-control vg-input"
+                  ng-model="c.data.user.department"
+                  placeholder="Enter department">
+
+              </div>
+
+            </div>
+
+
+            <!-- Office -->
+            <div class="form-row">
+
+              <label>
+                Office Location
+              </label>
+
+              <div class="form-value">
+
+                <input
+                  type="text"
+                  class="form-control vg-input"
+                  ng-model="c.data.user.location"
+                  placeholder="Enter office location">
+
+              </div>
+
+            </div>
+
+          </form>
+
+        </div>
+
+
+        <!-- =================================================
+             NOTIFICATION PREFERENCES
+             ================================================= -->
+        <div class="settings-section notification-section">
+
+          <div class="section-header">
+
+            <div class="section-icon orange-icon">
+              <i class="fa fa-bell"></i>
+            </div>
+
+            <div>
+
+              <h4>
+                VisaGuardian Notification Preferences
+              </h4>
+
+              <p>
+                Control the alerts you receive for critical student cases.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="settings-divider"></div>
+
+
+          <!-- SLA Alert -->
+          <div class="preference-item">
+
+            <div class="preference-info">
+
+              <div class="preference-title">
+
+                <span class="preference-status-icon red-status">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+
+                <strong>
+                  Critical SLA Risk Alerts
+                </strong>
+
+              </div>
+
+              <p>
+                Receive immediate notifications when student cases
+                approach a critical SLA breach.
+              </p>
+
+            </div>
+
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                ng-model="c.data.user.notify_sla">
+
+              <span class="slider round"></span>
+
+            </label>
+
+          </div>
+
+
+          <!-- Compliance Alert -->
+          <div class="preference-item">
+
+            <div class="preference-info">
+
+              <div class="preference-title">
+
+                <span class="preference-status-icon blue-status">
+                  <i class="fa fa-shield"></i>
+                </span>
+
+                <strong>
+                  SEVIS Compliance Anomaly Flags
+                </strong>
+
+              </div>
+
+              <p>
+                Receive alerts when VisaGuardian AI detects
+                potential compliance discrepancies.
+              </p>
+
+            </div>
+
+
+            <label class="switch">
+
+              <input
+                type="checkbox"
+                ng-model="c.data.user.notify_compliance">
+
+              <span class="slider round"></span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SECURITY
+             ================================================= -->
+        <div class="settings-section security-section">
+
+          <div class="section-header">
+
+            <div class="section-icon green-icon">
+              <i class="fa fa-lock"></i>
+            </div>
+
+            <div>
+
+              <h4>
+                Security & Authentication
+              </h4>
+
+              <p>
+                Manage your DSO account credentials and security.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="settings-divider"></div>
+
+
+          <div class="security-content">
+
+            <div class="security-info">
+
+              <div class="security-icon">
+                <i class="fa fa-key"></i>
+              </div>
+
+              <div>
+
+                <strong>
+                  Account Credentials
+                </strong>
+
+                <p>
+                  Update your password or authentication credentials.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="btn btn-security"
+              ng-click="c.changePassword()">
+
+              <i class="fa fa-key"></i>
+              Update Credentials
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SAVE FOOTER
+             ================================================= -->
+        <div class="settings-footer">
+
+          <div class="footer-security">
+
+            <i class="fa fa-check-circle"></i>
+
+            <span>
+              Changes are protected and securely stored.
+            </span>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn btn-save"
+            ng-click="c.saveProfile()">
+
+            <i class="fa fa-save"></i>
+            Save Changes
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>0d7aad5b292603107f44d6fee5fae342</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-12 05:54:38</sys_created_on>
+        <sys_id>4d7aad5b292603107f44d6fee5fae345</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-12 05:54:38</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

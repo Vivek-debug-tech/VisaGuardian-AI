@@ -1,0 +1,3222 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $location, $sce, $http) {
+
+    var c = this;
+
+    c.data.loading = true;
+
+    c.data.error = "";
+
+    c.data.case = {};
+
+    c.data.student = {};
+
+    c.data.advisor = {};
+
+    c.data.documents = [];
+
+    c.selectedDocument = null;
+
+    c.showDocumentViewer = false;
+
+    c.documentLoading = false;
+
+    c.documentError = "";
+
+    c.blobUrl = null;
+
+
+    /* =====================================================
+       GET CASE SYS_ID
+       ===================================================== */
+
+    var caseSysId =
+        $location.search().sys_id;
+
+
+    if (!caseSysId) {
+
+        c.data.loading = false;
+
+        c.data.error =
+            "No visa case was selected.";
+
+        return;
+    }
+
+
+    /* =====================================================
+       LOAD CASE
+       ===================================================== */
+
+    c.server.get({
+
+        action: "load_case",
+
+        case_sys_id: caseSysId
+
+    }).then(
+
+        function(response) {
+
+            c.data.loading = false;
+
+            if (
+                response &&
+                response.data
+            ) {
+
+                if (
+                    response.data.success
+                ) {
+
+                    c.data.case =
+                        response.data.case || {};
+
+                    c.data.student =
+                        response.data.student || {};
+
+                    c.data.advisor =
+                        response.data.advisor || {};
+
+                    c.data.documents =
+                        response.data.documents || [];
+
+                    c.data.error = "";
+
+                } else {
+
+                    c.data.error =
+                        response.data.error ||
+                        "Unable to load student information.";
+                }
+
+            } else {
+
+                c.data.error =
+                    "No response received from server.";
+            }
+
+        },
+
+        function(error) {
+
+            c.data.loading = false;
+
+            console.error(
+                "VisaGuardian Student Information Error:",
+                error
+            );
+
+            c.data.error =
+                "Unable to load case information.";
+        }
+    );
+
+
+    /* =====================================================
+       VIEW DOCUMENT
+       ===================================================== */
+
+    c.viewDocument = function(document) {
+
+        if (!document) {
+
+            alert(
+                "No document was selected."
+            );
+
+            return;
+        }
+
+
+        if (!document.attachment_sys_id) {
+
+            alert(
+                "The document file is not available."
+            );
+
+            return;
+        }
+
+
+        if (c.blobUrl) {
+
+            try {
+
+                URL.revokeObjectURL(
+                    c.blobUrl
+                );
+
+            } catch (e) {}
+
+            c.blobUrl = null;
+        }
+
+
+        c.selectedDocument =
+            angular.copy(document);
+
+        c.showDocumentViewer = true;
+
+        c.documentLoading = true;
+
+        c.documentError = "";
+
+
+        var attachmentUrl =
+            "/sys_attachment.do?sys_id=" +
+            encodeURIComponent(
+                document.attachment_sys_id
+            );
+
+
+        $http({
+
+            method: "GET",
+
+            url: attachmentUrl,
+
+            responseType: "arraybuffer",
+
+            cache: false
+
+        }).then(
+
+            function(response) {
+
+                var contentType =
+                    document.attachment_content_type ||
+                    response.headers("Content-Type") ||
+                    "application/octet-stream";
+
+
+                /*
+                 * Remove charset if returned
+                 */
+
+                if (
+                    contentType.indexOf(";") !== -1
+                ) {
+
+                    contentType =
+                        contentType.split(";")[0];
+                }
+
+
+                var blob =
+                    new Blob(
+                        [response.data],
+                        {
+                            type: contentType
+                        }
+                    );
+
+
+                c.blobUrl =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+
+                c.selectedDocument.viewer_url =
+                    $sce.trustAsResourceUrl(
+                        c.blobUrl
+                    );
+
+
+                c.documentLoading = false;
+
+            },
+
+            function(error) {
+
+                console.error(
+                    "VisaGuardian Document Preview Error:",
+                    error
+                );
+
+                c.documentLoading = false;
+
+                c.documentError =
+                    "Unable to preview this document. Please check that the attachment exists.";
+
+            }
+        );
+
+    };
+
+
+    /* =====================================================
+       CLOSE DOCUMENT VIEWER
+       ===================================================== */
+
+    c.closeDocumentViewer = function() {
+
+        c.showDocumentViewer = false;
+
+        c.selectedDocument = null;
+
+        c.documentLoading = false;
+
+        c.documentError = "";
+
+
+        if (c.blobUrl) {
+
+            try {
+
+                URL.revokeObjectURL(
+                    c.blobUrl
+                );
+
+            } catch (e) {}
+
+            c.blobUrl = null;
+        }
+    };
+
+
+    /* =====================================================
+       OPEN DOCUMENT
+       FALLBACK FOR NON-PREVIEWABLE FILES
+       ===================================================== */
+
+    c.openDocument = function(document) {
+
+        if (
+            !document ||
+            !document.attachment_sys_id
+        ) {
+
+            return;
+        }
+
+
+        var url =
+            "/sys_attachment.do?sys_id=" +
+            encodeURIComponent(
+                document.attachment_sys_id
+            );
+
+
+        window.open(
+            url,
+            "_blank"
+        );
+    };
+
+
+    /* =====================================================
+       DOCUMENT ICON
+       ===================================================== */
+
+    c.getDocumentIcon = function(document) {
+
+        if (!document) {
+
+            return "fa-file-o";
+        }
+
+
+        var type =
+            String(
+                document.attachment_content_type ||
+                ""
+            ).toLowerCase();
+
+
+        if (
+            type.indexOf("pdf") !== -1
+        ) {
+
+            return "fa-file-pdf-o";
+        }
+
+
+        if (
+            type.indexOf("image") !== -1
+        ) {
+
+            return "fa-file-image-o";
+        }
+
+
+        if (
+            type.indexOf("word") !== -1 ||
+            type.indexOf("document") !== -1
+        ) {
+
+            return "fa-file-word-o";
+        }
+
+
+        if (
+            type.indexOf("excel") !== -1 ||
+            type.indexOf("spreadsheet") !== -1
+        ) {
+
+            return "fa-file-excel-o";
+        }
+
+
+        if (
+            type.indexOf("powerpoint") !== -1 ||
+            type.indexOf("presentation") !== -1
+        ) {
+
+            return "fa-file-powerpoint-o";
+        }
+
+
+        return "fa-file-o";
+    };
+
+
+    /* =====================================================
+       IS PDF
+       ===================================================== */
+
+    c.isPdf = function(document) {
+
+        if (!document) {
+
+            return false;
+        }
+
+
+        return String(
+            document.attachment_content_type ||
+            ""
+        )
+        .toLowerCase()
+        .indexOf("pdf") !== -1;
+    };
+
+
+    /* =====================================================
+       IS IMAGE
+       ===================================================== */
+
+    c.isImage = function(document) {
+
+        if (!document) {
+
+            return false;
+        }
+
+
+        return String(
+            document.attachment_content_type ||
+            ""
+        )
+        .toLowerCase()
+        .indexOf("image") !== -1;
+    };
+
+
+    /* =====================================================
+       STATUS CLASS
+       ===================================================== */
+
+    c.getStatusClass = function(status) {
+
+        var value =
+            String(status || "")
+            .toLowerCase();
+
+
+        if (
+            value.indexOf("approved") !== -1
+        ) {
+
+            return "status-approved";
+        }
+
+
+        if (
+            value.indexOf("rejected") !== -1
+        ) {
+
+            return "status-rejected";
+        }
+
+
+        if (
+            value.indexOf("pending") !== -1 ||
+            value.indexOf("submitted") !== -1 ||
+            value.indexOf("review") !== -1
+        ) {
+
+            return "status-pending";
+        }
+
+
+        return "status-default";
+    };
+
+
+    /* =====================================================
+       BACK TO VISA CASES
+       ===================================================== */
+
+    c.goBack = function() {
+
+        $location.search({
+
+            id: "vg_dso_visa_cases"
+
+        });
+
+    };
+
+
+    /* =====================================================
+       CLEANUP
+       ===================================================== */
+
+    $scope.$on(
+        "$destroy",
+        function() {
+
+            if (c.blobUrl) {
+
+                try {
+
+                    URL.revokeObjectURL(
+                        c.blobUrl
+                    );
+
+                } catch (e) {}
+
+                c.blobUrl = null;
+            }
+
+
+            c.selectedDocument = null;
+
+            c.showDocumentViewer = false;
+
+        }
+    );
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   DSO STUDENT INFORMATION
+   PREMIUM SERVICE PORTAL UI
+   ========================================================= */
+
+.vg-student-page {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #f4f7fb;
+    color: #172b4d;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.vg-student-page *,
+.vg-student-page *::before,
+.vg-student-page *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.vg-loading {
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    color: #315f9b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vg-loading i {
+    font-size: 25px;
+    color: #2872c8;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-error {
+    margin: 24px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff7f7;
+    border: 1px solid #f2cccc;
+    border-left: 4px solid #dc3545;
+    border-radius: 10px;
+    color: #a52832;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vg-error i {
+    font-size: 18px;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.vg-page-header {
+    position: relative;
+    min-height: 175px;
+    padding: 27px 34px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            135deg,
+            #081d36 0%,
+            #0d315b 42%,
+            #165da8 100%
+        );
+    color: #ffffff;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 10px 35px rgba(12, 43, 79, 0.18);
+}
+
+.vg-page-header::before {
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 330px;
+    right: 100px;
+    top: -230px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.045);
+}
+
+.vg-page-header::after {
+    content: "";
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    right: -60px;
+    bottom: -150px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+}
+
+.vg-header-left {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.vg-back-button {
+    width: fit-content;
+    padding: 6px 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: rgba(255,255,255,0.72);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vg-back-button:hover {
+    color: #ffffff;
+    transform: translateX(-3px);
+}
+
+.vg-back-button i {
+    margin-right: 7px;
+}
+
+/* =========================================================
+   HEADER TITLE
+   ========================================================= */
+
+.vg-header-left &gt; div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.vg-header-left &gt; div:last-child::before {
+    content: "\f007";
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    font-family: FontAwesome;
+    font-size: 20px;
+}
+
+.vg-header-left h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 27px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+.vg-header-left p {
+    margin: 6px 0 0;
+    color: rgba(255,255,255,0.68);
+    font-size: 13px;
+}
+
+/* =========================================================
+   CASE NUMBER
+   ========================================================= */
+
+.vg-case-number {
+    position: relative;
+    z-index: 3;
+    padding: 11px 16px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.17);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.07);
+}
+
+.vg-case-number span {
+    margin-right: 7px;
+    color: rgba(255,255,255,0.55);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.vg-case-number strong {
+    color: #ffffff;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-size: 12px;
+}
+
+/* =========================================================
+   SECTION CARDS
+   ========================================================= */
+
+.vg-section-card {
+    width: calc(100% - 48px);
+    margin: 24px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow:
+        0 2px 5px rgba(19, 44, 72, 0.025),
+        0 10px 30px rgba(19, 44, 72, 0.045);
+    transition: all 0.2s ease;
+}
+
+.vg-section-card:hover {
+    border-color: #d7e1ec;
+    box-shadow:
+        0 4px 8px rgba(19, 44, 72, 0.03),
+        0 14px 34px rgba(19, 44, 72, 0.055);
+}
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.vg-section-header {
+    min-height: 78px;
+    padding: 17px 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #edf1f5;
+    background: linear-gradient(to bottom,#ffffff,#fbfcfe);
+}
+
+.vg-section-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.vg-section-icon {
+    width: 39px;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.vg-section-icon.blue {
+    background: #edf5ff;
+    color: #286ac1;
+    border: 1px solid #dceafd;
+}
+
+.vg-section-icon.purple {
+    background: #f2efff;
+    color: #7154c8;
+    border: 1px solid #e3dcff;
+}
+
+.vg-section-icon.orange {
+    background: #fff5e8;
+    color: #c98224;
+    border: 1px solid #f8e4c7;
+}
+
+.vg-section-icon.green {
+    background: #eaf9f1;
+    color: #1c9860;
+    border: 1px solid #d2efdf;
+}
+
+.vg-section-header h2 {
+    margin: 0;
+    color: #172f52;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.1px;
+}
+
+.vg-section-header p {
+    margin: 4px 0 0;
+    color: #8997aa;
+    font-size: 11px;
+}
+
+/* =========================================================
+   INFORMATION GRID
+   ========================================================= */
+
+.vg-info-grid {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+}
+
+.vg-info-item {
+    min-height: 84px;
+    padding: 17px 21px;
+    border-right: 1px solid #edf1f5;
+    border-bottom: 1px solid #edf1f5;
+    transition: background 0.18s ease;
+}
+
+.vg-info-item:hover {
+    background: #fbfdff;
+}
+
+.vg-info-item:nth-child(4n) {
+    border-right: 0;
+}
+
+.vg-info-item:nth-last-child(-n+4) {
+    border-bottom: 0;
+}
+
+.vg-info-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #8a98aa;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.vg-info-value {
+    display: block;
+    color: #253c5b;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.vg-info-value.case-id {
+    color: #2466b9;
+    font-family: "SFMono-Regular",Consolas,monospace;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.vg-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.vg-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    margin-right: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.vg-status.approved {
+    color: #16864b;
+    background: #eaf8f0;
+    border: 1px solid #ccebd9;
+}
+
+.vg-status.rejected {
+    color: #c4323d;
+    background: #fff0f1;
+    border: 1px solid #f2cdd1;
+}
+
+.vg-status.pending {
+    color: #a26d0b;
+    background: #fff7e5;
+    border: 1px solid #f0dfb7;
+}
+
+/* =========================================================
+   ADVISOR
+   ========================================================= */
+
+.vg-advisor-box {
+    min-height: 92px;
+    padding: 18px 23px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.vg-advisor-avatar {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#fff1dc,#fff8ee);
+    border: 1px solid #f3dfc1;
+    color: #c47c1d;
+    font-size: 20px;
+}
+
+.vg-advisor-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.vg-advisor-name {
+    color: #253b59;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.vg-advisor-email {
+    margin-top: 4px;
+    color: #8997a9;
+    font-size: 11px;
+}
+
+.vg-advisor-status {
+    padding: 7px 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 20px;
+    background: #f3f5f8;
+    border: 1px solid #e2e7ed;
+    color: #7d8b9d;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.vg-advisor-status.assigned {
+    background: #eaf8f0;
+    border-color: #cee9d9;
+    color: #16864b;
+}
+
+/* =========================================================
+   DOCUMENT COUNT
+   ========================================================= */
+
+.vg-document-count {
+    min-width: 78px;
+    padding: 7px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 20px;
+    background: #edf8f2;
+    border: 1px solid #d5eee0;
+    color: #218957;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.vg-document-count span {
+    color: #5d7b6a;
+    font-weight: 600;
+}
+
+/* =========================================================
+   DOCUMENT LIST
+   ========================================================= */
+
+.vg-documents-list {
+    width: 100%;
+}
+
+.vg-document-row {
+    position: relative;
+    min-height: 78px;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #edf1f5;
+    background: #ffffff;
+    transition: all 0.18s ease;
+}
+
+.vg-document-row:last-child {
+    border-bottom: 0;
+}
+
+.vg-document-row:hover {
+    background: #f9fcff;
+    padding-left: 25px;
+}
+
+.vg-document-row::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: background 0.18s ease;
+}
+
+.vg-document-row:hover::before {
+    background: #2870c5;
+}
+
+/* =========================================================
+   DOCUMENT ICON
+   ========================================================= */
+
+.vg-document-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: #edf5ff;
+    border: 1px solid #d9e7f8;
+    color: #2870c5;
+    font-size: 18px;
+}
+
+.vg-document-icon.pdf {
+    background: #fff0f0;
+    border-color: #f5d2d2;
+    color: #d44343;
+}
+
+.vg-document-icon.image {
+    background: #edf9f3;
+    border-color: #d5eee0;
+    color: #22915d;
+}
+
+/* =========================================================
+   DOCUMENT DETAILS
+   ========================================================= */
+
+.vg-document-details {
+    min-width: 0;
+    flex: 1;
+}
+
+.vg-document-name {
+    color: #243a59;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vg-document-type {
+    margin-top: 4px;
+    color: #8a98aa;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   DOCUMENT ACTION
+   ========================================================= */
+
+.vg-document-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.vg-view-document-button {
+    min-width: 76px;
+    height: 34px;
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d2dfef;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #286ac1;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.vg-view-document-button i {
+    margin-right: 6px;
+}
+
+.vg-view-document-button:hover {
+    background: #286ac1;
+    border-color: #286ac1;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 13px rgba(40,106,193,0.2);
+}
+
+.vg-view-document-button:active {
+    transform: translateY(0);
+}
+
+.vg-no-file {
+    padding: 7px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 6px;
+    background: #f3f5f7;
+    color: #8a96a5;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   EMPTY DOCUMENT STATE
+   ========================================================= */
+
+.vg-no-documents {
+    padding: 55px 25px;
+    text-align: center;
+    background: linear-gradient(to bottom,#ffffff,#fbfcfe);
+}
+
+.vg-no-document-icon {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f0f4f8;
+    color: #a7b4c4;
+    font-size: 25px;
+}
+
+.vg-no-documents h3 {
+    margin: 14px 0 5px;
+    color: #354c6b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.vg-no-documents p {
+    margin: 0;
+    color: #8b98aa;
+    font-size: 12px;
+}
+
+/* =========================================================
+   DOCUMENT VIEWER OVERLAY
+   ========================================================= */
+
+.vg-document-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6,20,36,0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: vgOverlayIn 0.2s ease;
+}
+
+@keyframes vgOverlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   DOCUMENT MODAL
+   ========================================================= */
+
+.vg-document-modal {
+    width: 100%;
+    max-width: 1500px;
+    height: calc(100vh - 44px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 13px;
+    box-shadow:
+        0 30px 90px rgba(0,0,0,0.42),
+        0 5px 20px rgba(0,0,0,0.15);
+    animation: vgModalIn 0.22s ease;
+}
+
+@keyframes vgModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.vg-document-modal-header {
+    min-height: 68px;
+    padding: 0 17px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: #ffffff;
+    border-bottom: 1px solid #e3e8ef;
+    box-shadow: 0 2px 9px rgba(18,42,69,0.05);
+    z-index: 3;
+}
+
+.vg-document-modal-title {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vg-modal-file-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: #edf5ff;
+    border: 1px solid #d9e7f8;
+    color: #286ac1;
+    font-size: 17px;
+}
+
+.vg-modal-file-name {
+    max-width: 720px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #172f52;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.vg-modal-file-type {
+    margin-top: 3px;
+    color: #8a98aa;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   CLOSE
+   ========================================================= */
+
+.vg-document-close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #77869a;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.vg-document-close:hover {
+    background: #f0f3f7;
+    color: #172f52;
+}
+
+/* =========================================================
+   DOCUMENT CONTENT
+   ========================================================= */
+
+.vg-document-content {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #e9edf2;
+}
+
+/* =========================================================
+   PDF
+   ========================================================= */
+
+.vg-document-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: block;
+    border: 0;
+    background: #ffffff;
+}
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.vg-image-preview {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    background:
+        radial-gradient(
+            circle at center,
+            #ffffff 0%,
+            #e7ecf2 100%
+        );
+}
+
+.vg-image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.18);
+}
+
+/* =========================================================
+   DOCUMENT LOADING
+   ========================================================= */
+
+.vg-document-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 13px;
+    background: rgba(255,255,255,0.96);
+    color: #286ac1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vg-document-loading i {
+    font-size: 23px;
+}
+
+/* =========================================================
+   DOCUMENT ERROR
+   ========================================================= */
+
+.vg-document-error {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    background: #ffffff;
+    color: #b42318;
+    font-size: 13px;
+    text-align: center;
+}
+
+.vg-document-error i {
+    font-size: 28px;
+}
+
+/* =========================================================
+   UNSUPPORTED FILE
+   ========================================================= */
+
+.vg-unsupported-file {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    background: #ffffff;
+}
+
+.vg-large-file-icon {
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 17px;
+    background: #edf5ff;
+    border: 1px solid #d9e7f8;
+    color: #286ac1;
+    font-size: 31px;
+}
+
+.vg-unsupported-file h3 {
+    margin: 17px 0 6px;
+    color: #253b59;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.vg-unsupported-file p {
+    margin: 0 0 18px;
+    color: #8997a9;
+    font-size: 12px;
+}
+
+.vg-open-document-button {
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 7px;
+    background: #286ac1;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.vg-open-document-button:hover {
+    background: #1e579f;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(40,106,193,0.22);
+}
+
+.vg-open-document-button i {
+    margin-right: 6px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .vg-info-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+
+    .vg-info-item:nth-child(4n) {
+        border-right: 1px solid #edf1f5;
+    }
+
+    .vg-info-item:nth-child(2n) {
+        border-right: 0;
+    }
+
+    .vg-info-item:nth-last-child(-n+4) {
+        border-bottom: 1px solid #edf1f5;
+    }
+
+    .vg-info-item:nth-last-child(-n+2) {
+        border-bottom: 0;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .vg-page-header {
+        min-height: auto;
+        padding: 23px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .vg-section-card {
+        width: calc(100% - 20px);
+        margin: 10px;
+    }
+
+    .vg-section-header {
+        padding: 15px;
+    }
+
+    .vg-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vg-info-item,
+    .vg-info-item:nth-child(2n),
+    .vg-info-item:nth-child(4n) {
+        border-right: 0;
+        border-bottom: 1px solid #edf1f5;
+    }
+
+    .vg-info-item:last-child {
+        border-bottom: 0;
+    }
+
+    .vg-document-row {
+        padding: 13px 15px;
+    }
+
+    .vg-document-row:hover {
+        padding-left: 18px;
+    }
+
+    .vg-document-overlay {
+        padding: 7px;
+    }
+
+    .vg-document-modal {
+        height: calc(100vh - 14px);
+        border-radius: 9px;
+    }
+
+    .vg-modal-file-name {
+        max-width: 220px;
+    }
+
+    .vg-document-modal-header {
+        min-height: 62px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>dso_student_info</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>dso student info</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    /*
+     * =====================================================
+     * TABLES
+     * =====================================================
+     */
+
+    var CASE_TABLE = "x_snc_visaguardi_0_visa_case";
+    var DOCUMENT_TABLE = "x_snc_visaguardi_0_visa_document";
+
+
+    /*
+     * =====================================================
+     * INITIAL DATA
+     * =====================================================
+     */
+
+    data.success = false;
+    data.error = "";
+    data.case = {};
+    data.student = {};
+    data.advisor = {};
+    data.documents = [];
+
+
+    /*
+     * =====================================================
+     * HELPER - GET VALUE
+     * =====================================================
+     */
+
+    function getValue(gr, field) {
+        if (!gr || !gr.isValidField(field)) {
+            return "";
+        }
+        return gr.getValue(field) || "";
+    }
+
+
+    /*
+     * =====================================================
+     * HELPER - GET DISPLAY VALUE
+     * =====================================================
+     */
+
+    function getDisplay(gr, field) {
+        if (!gr || !gr.isValidField(field)) {
+            return "";
+        }
+        return gr.getDisplayValue(field) || "";
+    }
+
+
+    /*
+     * =====================================================
+     * HELPER - FIRST AVAILABLE VALUE
+     * =====================================================
+     */
+
+    function firstValue(gr, fields) {
+        for (var i = 0; i < fields.length; i++) {
+            var value = getValue(gr, fields[i]);
+            if (value) {
+                return value;
+            }
+        }
+        return "";
+    }
+
+
+    /*
+     * =====================================================
+     * HELPER - FIRST AVAILABLE DISPLAY VALUE
+     * =====================================================
+     */
+
+    function firstDisplay(gr, fields) {
+        for (var i = 0; i < fields.length; i++) {
+            var value = getDisplay(gr, fields[i]);
+            if (value) {
+                return value;
+            }
+        }
+        return "";
+    }
+
+
+    /*
+     * =====================================================
+     * LOAD CASE
+     * =====================================================
+     */
+
+    if (input && input.action === "load_case") {
+
+        var caseSysId = String(input.case_sys_id || "").trim();
+
+        if (!caseSysId) {
+            data.error = "Case ID is missing.";
+            return;
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * GET VISA CASE
+         * -------------------------------------------------
+         */
+
+        var caseGR = new GlideRecord(CASE_TABLE);
+
+        if (!caseGR.isValid()) {
+            data.error = "Visa Case table is not available.";
+            return;
+        }
+
+        if (!caseGR.get(caseSysId)) {
+            data.error = "Visa case could not be found.";
+            return;
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * CASE ID
+         * -------------------------------------------------
+         */
+
+        var caseNumber = firstValue(caseGR, [
+            "number",
+            "case_id",
+            "u_case_id"
+        ]);
+
+
+        /*
+         * -------------------------------------------------
+         * CASE TYPE
+         * -------------------------------------------------
+         */
+
+        var caseType = firstDisplay(caseGR, [
+            "case_type",
+            "type",
+            "u_case_type"
+        ]);
+
+        if (!caseType) {
+            caseType = firstValue(caseGR, [
+                "case_type",
+                "type",
+                "u_case_type"
+            ]);
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * VISA CATEGORY
+         * -------------------------------------------------
+         */
+
+        var visaCategory = firstDisplay(caseGR, [
+            "visa_category",
+            "visa_type",
+            "u_visa_category",
+            "u_visa_type"
+        ]);
+
+        if (!visaCategory) {
+            visaCategory = firstValue(caseGR, [
+                "visa_category",
+                "visa_type",
+                "u_visa_category",
+                "u_visa_type"
+            ]);
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * PRIORITY
+         * -------------------------------------------------
+         */
+
+        var priority = firstDisplay(caseGR, [
+            "priority",
+            "u_priority"
+        ]);
+
+        if (!priority) {
+            priority = firstValue(caseGR, [
+                "priority",
+                "u_priority"
+            ]);
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * STATUS
+         * -------------------------------------------------
+         */
+
+        var status = firstDisplay(caseGR, [
+            "status",
+            "state",
+            "u_status"
+        ]);
+
+        if (!status) {
+            status = firstValue(caseGR, [
+                "status",
+                "state",
+                "u_status"
+            ]);
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * CASE STATUS
+         * -------------------------------------------------
+         */
+
+        var caseStatus = firstDisplay(caseGR, [
+            "case_status",
+            "u_case_status",
+            "state"
+        ]);
+
+        if (!caseStatus) {
+            caseStatus = firstValue(caseGR, [
+                "case_status",
+                "u_case_status"
+            ]);
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * CREATED / UPDATED
+         * -------------------------------------------------
+         */
+
+        var createdOn = firstValue(caseGR, [
+            "sys_created_on",
+            "created_on"
+        ]);
+
+        var updatedOn = firstValue(caseGR, [
+            "sys_updated_on",
+            "updated_on"
+        ]);
+
+
+        /*
+         * -------------------------------------------------
+         * CASE OBJECT
+         * -------------------------------------------------
+         */
+
+        data.case = {
+            sys_id: caseGR.getUniqueValue(),
+            case_id: caseNumber || "Not Available",
+            case_type: caseType || "Not Available",
+            visa_category: visaCategory || "Not Available",
+            priority: priority || "Not Available",
+            status: status || "Not Available",
+            case_status: caseStatus || "Not Available",
+            created_on: createdOn || "Not Available",
+            updated_on: updatedOn || "Not Available"
+        };
+
+
+        /*
+         * =================================================
+         * STUDENT
+         * =================================================
+         */
+
+        var studentGR = null;
+        var studentTable = "x_snc_visaguardi_0_student_profile";
+
+        var studentFields = [
+            "student",
+            "student_profile",
+            "student_id",
+            "u_student",
+            "requested_for",
+            "u_requested_for"
+        ];
+
+        for (var sf = 0; sf < studentFields.length && !studentGR; sf++) {
+            var studentField = studentFields[sf];
+
+            if (!caseGR.isValidField(studentField)) {
+                continue;
+            }
+
+            var studentRefValue = getValue(caseGR, studentField);
+            if (!studentRefValue) {
+                continue;
+            }
+
+            var profileStudent = new GlideRecord(studentTable);
+            if (profileStudent.isValid() && profileStudent.get(studentRefValue)) {
+                studentGR = profileStudent;
+                break;
+            }
+
+            var userStudent = new GlideRecord("sys_user");
+            if (userStudent.isValid() && userStudent.get(studentRefValue)) {
+                var userName = userStudent.getValue("user_name");
+
+                if (userName) {
+                    var profileByUsername = new GlideRecord(studentTable);
+                    profileByUsername.addQuery("user_name", userName);
+                    profileByUsername.setLimit(1);
+                    profileByUsername.query();
+
+                    if (profileByUsername.next()) {
+                        studentGR = profileByUsername;
+                        break;
+                    }
+                }
+
+                studentGR = userStudent;
+            }
+
+            var profileByStudentId = new GlideRecord(studentTable);
+            if (profileByStudentId.isValid() && profileByStudentId.isValidField("student_id")) {
+                profileByStudentId.addQuery("student_id", studentRefValue);
+                profileByStudentId.setLimit(1);
+                profileByStudentId.query();
+
+                if (profileByStudentId.next()) {
+                    studentGR = profileByStudentId;
+                    break;
+                }
+            }
+
+            var profileByUserName = new GlideRecord(studentTable);
+            if (profileByUserName.isValid() && profileByUserName.isValidField("user_name")) {
+                profileByUserName.addQuery("user_name", studentRefValue);
+                profileByUserName.setLimit(1);
+                profileByUserName.query();
+
+                if (profileByUserName.next()) {
+                    studentGR = profileByUserName;
+                    break;
+                }
+            }
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * 2. STUDENT EMAIL FALLBACK
+         * -------------------------------------------------
+         */
+
+        if (!studentGR) {
+            var studentEmail = firstValue(caseGR, [
+                "student_email",
+                "u_student_email"
+            ]);
+
+            if (studentEmail) {
+                var emailStudent = new GlideRecord(studentTable);
+                if (emailStudent.isValid() && emailStudent.isValidField("email")) {
+                    emailStudent.addQuery("email", studentEmail);
+                    emailStudent.setLimit(1);
+                    emailStudent.query();
+
+                    if (emailStudent.next()) {
+                        studentGR = emailStudent;
+                    }
+                }
+
+                if (!studentGR) {
+                    var emailUser = new GlideRecord("sys_user");
+                    emailUser.addQuery("email", studentEmail);
+                    emailUser.setLimit(1);
+                    emailUser.query();
+
+                    if (emailUser.next()) {
+                        studentGR = emailUser;
+                    }
+                }
+            }
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * 3. BUILD STUDENT DATA
+         * -------------------------------------------------
+         */
+
+        if (studentGR) {
+            var studentFirstName = getValue(studentGR, "first_name");
+            var studentLastName = getValue(studentGR, "last_name");
+
+            var studentName = firstValue(studentGR, [
+                "name",
+                "student_name",
+                "full_name"
+            ]);
+
+            if (!studentName) {
+                studentName = (studentFirstName + " " + studentLastName).trim();
+            }
+
+            if (!studentName) {
+                studentName = getDisplay(studentGR, "user");
+            }
+
+            if (!studentName) {
+                studentName = getValue(studentGR, "user_name");
+            }
+
+            data.student = {
+                sys_id: studentGR.getUniqueValue(),
+                name: studentName || "Not Available",
+                first_name: studentFirstName || "",
+                last_name: studentLastName || "",
+                student_id: firstValue(studentGR, [
+                    "student_id",
+                    "student_number",
+                    "roll_number",
+                    "user_name",
+                    "employee_number"
+                ]) || "",
+                email: firstValue(studentGR, [
+                    "email",
+                    "email_address"
+                ]) || "",
+                phone: firstValue(studentGR, [
+                    "mobile_number",
+                    "mobile_phone",
+                    "phone"
+                ]) || "",
+                program: firstDisplay(studentGR, [
+                    "degree_program",
+                    "program",
+                    "course"
+                ]) || firstValue(studentGR, [
+                    "degree_program",
+                    "program",
+                    "course"
+                ]) || "",
+                degree_program: firstDisplay(studentGR, [
+                    "degree_program",
+                    "program",
+                    "course"
+                ]) || firstValue(studentGR, [
+                    "degree_program",
+                    "program",
+                    "course"
+                ]) || "",
+                degree_level: firstDisplay(studentGR, [
+                    "degree_level",
+                    "level"
+                ]) || firstValue(studentGR, [
+                    "degree_level",
+                    "level"
+                ]) || "",
+                university: firstDisplay(studentGR, [
+                    "university_name",
+                    "university"
+                ]) || firstValue(studentGR, [
+                    "university_name",
+                    "university"
+                ]) || "",
+                university_name: firstDisplay(studentGR, [
+                    "university_name",
+                    "university"
+                ]) || firstValue(studentGR, [
+                    "university_name",
+                    "university"
+                ]) || "",
+                current_semester: firstDisplay(studentGR, [
+                    "current_semester",
+                    "semester"
+                ]) || firstValue(studentGR, [
+                    "current_semester",
+                    "semester"
+                ]) || "",
+                intake_year: firstValue(studentGR, [
+                    "intake_year"
+                ]) || "",
+                current_visa_status: firstDisplay(studentGR, [
+                    "current_visa_status",
+                    "visa_status"
+                ]) || firstValue(studentGR, [
+                    "current_visa_status",
+                    "visa_status"
+                ]) || "",
+                visa_type: firstDisplay(studentGR, [
+                    "visa_type",
+                    "visa_category"
+                ]) || firstValue(studentGR, [
+                    "visa_type",
+                    "visa_category"
+                ]) || "",
+                sevis_id: firstValue(studentGR, [
+                    "sevis_id",
+                    "sevis"
+                ]) || "",
+                visa_expiry_date: firstValue(studentGR, [
+                    "visa_expiry_date",
+                    "visa_expiration_date"
+                ]) || "",
+                passport_expiry_date: firstValue(studentGR, [
+                    "passport_expiry_date",
+                    "passport_expiration_date"
+                ]) || ""
+            };
+        } else {
+            data.student = {
+                name: firstValue(caseGR, [
+                    "student_name",
+                    "u_student_name"
+                ]) || "Not Available",
+                student_id: firstValue(caseGR, [
+                    "student_id",
+                    "u_student_id"
+                ]) || "",
+                email: firstValue(caseGR, [
+                    "student_email",
+                    "u_student_email"
+                ]) || "",
+                phone: firstValue(caseGR, [
+                    "student_phone",
+                    "u_student_phone"
+                ]) || "",
+                program: firstValue(caseGR, [
+                    "degree_program",
+                    "program",
+                    "u_degree_program"
+                ]) || "",
+                university: firstValue(caseGR, [
+                    "university_name",
+                    "university",
+                    "u_university_name"
+                ]) || ""
+            };
+        }
+
+
+        /*
+         * =================================================
+         * ADVISOR
+         * =================================================
+         */
+
+        var advisorGR = null;
+        var advisorTable = "x_snc_visaguardi_0_advisor_profiles";
+
+        var advisorFields = [
+            "assigned_to",
+            "advisor",
+            "assigned_advisor",
+            "u_advisor",
+            "u_assigned_advisor"
+        ];
+
+
+        /*
+         * -------------------------------------------------
+         * 1. FIND ADVISOR REFERENCE FIELD
+         * -------------------------------------------------
+         */
+
+        for (var af = 0; af < advisorFields.length && !advisorGR; af++) {
+            var currentAdvisorField = advisorFields[af];
+
+            if (!caseGR.isValidField(currentAdvisorField)) {
+                continue;
+            }
+
+            var advisorSysId = getValue(caseGR, currentAdvisorField);
+            if (!advisorSysId) {
+                continue;
+            }
+
+            var advisorProfile = new GlideRecord(advisorTable);
+            if (advisorProfile.isValid() && advisorProfile.get(advisorSysId)) {
+                advisorGR = advisorProfile;
+                break;
+            }
+
+            var advisorUser = new GlideRecord("sys_user");
+            if (advisorUser.isValid() && advisorUser.get(advisorSysId)) {
+                var advisorUserName = advisorUser.getValue("user_name");
+
+                if (advisorUserName) {
+                    var profileByAdvisorUser = new GlideRecord(advisorTable);
+                    if (profileByAdvisorUser.isValid() && profileByAdvisorUser.isValidField("user")) {
+                        profileByAdvisorUser.addQuery("user", advisorSysId);
+                        profileByAdvisorUser.setLimit(1);
+                        profileByAdvisorUser.query();
+
+                        if (profileByAdvisorUser.next()) {
+                            advisorGR = profileByAdvisorUser;
+                            break;
+                        }
+                    }
+
+                    if (!advisorGR) {
+                        var profileByAdvisorName = new GlideRecord(advisorTable);
+                        if (profileByAdvisorName.isValid() && profileByAdvisorName.isValidField("user_name")) {
+                            profileByAdvisorName.addQuery("user_name", advisorUserName);
+                            profileByAdvisorName.setLimit(1);
+                            profileByAdvisorName.query();
+
+                            if (profileByAdvisorName.next()) {
+                                advisorGR = profileByAdvisorName;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!advisorGR) {
+                    advisorGR = advisorUser;
+                }
+            }
+        }
+
+
+        /*
+         * -------------------------------------------------
+         * 2. BUILD ADVISOR DATA
+         * -------------------------------------------------
+         */
+
+        if (advisorGR) {
+            var advisorFirstName = getValue(advisorGR, "first_name");
+            var advisorLastName = getValue(advisorGR, "last_name");
+
+            var advisorName = firstValue(advisorGR, [
+                "name",
+                "advisor_name",
+                "full_name"
+            ]);
+
+            if (!advisorName) {
+                advisorName = (advisorFirstName + " " + advisorLastName).trim();
+            }
+
+            if (!advisorName) {
+                advisorName = getDisplay(advisorGR, "user");
+            }
+
+            if (!advisorName) {
+                advisorName = getValue(advisorGR, "user_name");
+            }
+
+            data.advisor = {
+                sys_id: advisorGR.getUniqueValue(),
+                name: advisorName || "No advisor assigned",
+                first_name: advisorFirstName || "",
+                last_name: advisorLastName || "",
+                email: firstValue(advisorGR, [
+                    "email",
+                    "email_address"
+                ]) || "N/A",
+                phone: firstValue(advisorGR, [
+                    "mobile_number",
+                    "mobile_phone",
+                    "phone"
+                ]) || "N/A",
+                department: firstDisplay(advisorGR, [
+                    "department"
+                ]) || firstValue(advisorGR, [
+                    "department"
+                ]) || ""
+            };
+        } else {
+            var displayAdvisorName = "";
+            var displayAdvisorEmail = "";
+
+            for (var df = 0; df < advisorFields.length; df++) {
+                if (caseGR.isValidField(advisorFields[df])) {
+                    displayAdvisorName = caseGR.getDisplayValue(advisorFields[df]) || "";
+                    if (displayAdvisorName) {
+                        break;
+                    }
+                }
+            }
+
+            data.advisor = {
+                name: displayAdvisorName || "No advisor assigned",
+                email: displayAdvisorEmail || "N/A",
+                phone: "N/A",
+                department: ""
+            };
+        }
+
+
+        /*
+         * =================================================
+         * DOCUMENTS
+         * =================================================
+         */
+
+        data.documents = [];
+
+        var docGR = new GlideRecord(DOCUMENT_TABLE);
+
+        if (docGR.isValid()) {
+            if (docGR.isValidField("visa_case")) {
+                docGR.addQuery("visa_case", caseGR.getUniqueValue());
+                docGR.orderBy("sys_created_on");
+                docGR.query();
+
+                while (docGR.next()) {
+                    var documentSysId = docGR.getUniqueValue();
+
+                    var documentName = firstDisplay(docGR, [
+                        "name",
+                        "document_name",
+                        "file_name",
+                        "u_document_name"
+                    ]);
+
+                    if (!documentName) {
+                        documentName = firstValue(docGR, [
+                            "name",
+                            "document_name",
+                            "file_name",
+                            "u_document_name"
+                        ]);
+                    }
+
+                    var documentType = firstDisplay(docGR, [
+                        "document_type",
+                        "type",
+                        "u_document_type"
+                    ]);
+
+                    if (!documentType) {
+                        documentType = firstValue(docGR, [
+                            "document_type",
+                            "type",
+                            "u_document_type"
+                        ]);
+                    }
+
+                    var documentStatus = firstDisplay(docGR, [
+                        "status",
+                        "document_status",
+                        "u_status"
+                    ]);
+
+                    if (!documentStatus) {
+                        documentStatus = firstValue(docGR, [
+                            "status",
+                            "document_status",
+                            "u_status"
+                        ]);
+                    }
+
+                    var attachmentSysId = "";
+                    var attachmentFileName = "";
+                    var attachmentContentType = "";
+
+                    var attachmentGR = new GlideRecord("sys_attachment");
+                    attachmentGR.addQuery("table_name", DOCUMENT_TABLE);
+                    attachmentGR.addQuery("table_sys_id", documentSysId);
+                    attachmentGR.orderByDesc("sys_created_on");
+                    attachmentGR.setLimit(1);
+                    attachmentGR.query();
+
+                    if (attachmentGR.next()) {
+                        attachmentSysId = attachmentGR.getUniqueValue();
+                        attachmentFileName = getValue(attachmentGR, "file_name");
+                        attachmentContentType = getValue(attachmentGR, "content_type");
+                    }
+
+                    var documentUrl = firstValue(docGR, [
+                        "url",
+                        "document_url",
+                        "u_url"
+                    ]);
+
+                    data.documents.push({
+                        sys_id: documentSysId,
+                        name: documentName || attachmentFileName || "Document",
+                        document_type: documentType || "Document",
+                        status: documentStatus || "",
+                        attachment_sys_id: attachmentSysId,
+                        attachment_file_name: attachmentFileName,
+                        attachment_content_type: attachmentContentType,
+                        file_url: documentUrl || "",
+                        has_file: !!attachmentSysId
+                    });
+                }
+            }
+        }
+
+        /*
+         * =================================================
+         * SUCCESS
+         * =================================================
+         */
+
+        data.success = true;
+    }
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 09:56:28</sys_created_on>
+        <sys_id>5ff4bc4401fe03107f44f465f0501345</sys_id>
+        <sys_mod_count>15</sys_mod_count>
+        <sys_name>dso student info</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_5ff4bc4401fe03107f44f465f0501345</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 20:03:40</sys_updated_on>
+        <template><![CDATA[<div class="vg-student-page">
+
+    <!-- ===================================================== -->
+    <!-- LOADING -->
+    <!-- ===================================================== -->
+
+    <div
+        class="vg-loading"
+        ng-if="c.data.loading">
+
+        <i class="fa fa-spinner fa-spin"></i>
+
+        <span>
+            Loading student information...
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ERROR -->
+    <!-- ===================================================== -->
+
+    <div
+        class="vg-error"
+        ng-if="
+            !c.data.loading &&
+            c.data.error
+        ">
+
+        <i class="fa fa-exclamation-circle"></i>
+
+        <span>
+            {{c.data.error}}
+        </span>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <div
+        ng-if="
+            !c.data.loading &&
+            !c.data.error
+        ">
+
+
+        <!-- ================================================= -->
+        <!-- TOP HEADER -->
+        <!-- ================================================= -->
+
+        <div class="vg-page-header">
+
+            <div class="vg-header-left">
+
+                <button
+                    type="button"
+                    class="vg-back-button"
+                    ng-click="c.goBack()">
+
+                    <i class="fa fa-arrow-left"></i>
+
+                </button>
+
+                <div>
+
+                    <h1>
+                        Student Information
+                    </h1>
+
+                    <p>
+                        Visa case and student details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-case-number"
+                 ng-if="c.data.case.case_id">
+
+                <span>
+                    CASE
+                </span>
+
+                <strong>
+                    {{c.data.case.case_id}}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- STUDENT INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="vg-section-card">
+
+            <div class="vg-section-header">
+
+                <div class="vg-section-title">
+
+                    <div class="vg-section-icon blue">
+                        <i class="fa fa-user"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Student Information
+                        </h2>
+
+                        <p>
+                            Personal and academic information
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-info-grid">
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Student Name
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.name || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Student ID
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.student_id || c.data.student.roll_number || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Email
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.email || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Phone
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.phone || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Program
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.program || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        University
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.student.university || "Not available"}}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- VISA CASE INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="vg-section-card">
+
+            <div class="vg-section-header">
+
+                <div class="vg-section-title">
+
+                    <div class="vg-section-icon purple">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Visa Case Information
+                        </h2>
+
+                        <p>
+                            Current visa case details
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-info-grid">
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Case ID
+                    </span>
+
+                    <span class="vg-info-value case-id">
+                        {{c.data.case.case_id || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Case Type
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.case.case_type || c.data.case.type || "Not available"}}
+                    </span>
+
+                </div>
+
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Priority
+                    </span>
+
+                    <span class="vg-info-value">
+
+                        {{c.data.case.priority || "Not available"}}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Status
+                    </span>
+
+                    <span
+                        class="vg-status"
+                        ng-class="{
+                            'approved': c.data.case.status === 'Approved' ||
+                                        c.data.case.status === 'DSO Approved',
+                            'rejected': c.data.case.status === 'Rejected' ||
+                                        c.data.case.status === 'DSO Rejected',
+                            'pending': c.data.case.status !== 'Approved' &&
+                                       c.data.case.status !== 'DSO Approved' &&
+                                       c.data.case.status !== 'Rejected' &&
+                                       c.data.case.status !== 'DSO Rejected'
+                        }">
+
+                        {{c.data.case.status || "Not available"}}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Case Status
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.case.case_status || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Created On
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.case.created_on || "Not available"}}
+                    </span>
+
+                </div>
+
+
+                <div class="vg-info-item">
+
+                    <span class="vg-info-label">
+                        Last Updated
+                    </span>
+
+                    <span class="vg-info-value">
+                        {{c.data.case.updated_on || "Not available"}}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- ADVISOR INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="vg-section-card">
+
+            <div class="vg-section-header">
+
+                <div class="vg-section-title">
+
+                    <div class="vg-section-icon orange">
+                        <i class="fa fa-user-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Advisor Information
+                        </h2>
+
+                        <p>
+                            Assigned visa advisor
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-advisor-box">
+
+                <div class="vg-advisor-avatar">
+
+                    <i class="fa fa-user"></i>
+
+                </div>
+
+
+                <div class="vg-advisor-details">
+
+                    <div class="vg-advisor-name">
+
+                        {{c.data.advisor.name || "No advisor assigned"}}
+
+                    </div>
+
+                    <div class="vg-advisor-email">
+
+                        {{c.data.advisor.email || "N/A"}}
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-advisor-status"
+                     ng-class="{
+                        'assigned': c.data.advisor.name &&
+                                    c.data.advisor.name !== 'No advisor assigned'
+                     }">
+
+                    <i class="fa"
+                       ng-class="{
+                           'fa-check-circle': c.data.advisor.name &&
+                                              c.data.advisor.name !== 'No advisor assigned',
+                           'fa-clock-o': !c.data.advisor.name ||
+                                        c.data.advisor.name === 'No advisor assigned'
+                       }">
+                    </i>
+
+                    {{c.data.advisor.name &&
+                      c.data.advisor.name !== "No advisor assigned"
+                      ? "Assigned"
+                      : "Not Assigned"}}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- DOCUMENTS -->
+        <!-- ================================================= -->
+
+        <div class="vg-section-card">
+
+            <div class="vg-section-header">
+
+                <div class="vg-section-title">
+
+                    <div class="vg-section-icon green">
+                        <i class="fa fa-file-text-o"></i>
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Submitted Documents
+                        </h2>
+
+                        <p>
+                            Documents associated with this visa case
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-document-count">
+
+                    {{c.data.documents.length || 0}}
+
+                    <span>
+                        Documents
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- DOCUMENT LIST -->
+            <!-- ============================================= -->
+
+            <div
+                class="vg-documents-list"
+                ng-if="c.data.documents.length > 0">
+
+
+                <div
+                    class="vg-document-row"
+                    ng-repeat="document in c.data.documents track by document.sys_id">
+
+
+                    <!-- DOCUMENT ICON -->
+
+                    <div
+                        class="vg-document-icon"
+                        ng-class="{
+                            'pdf':
+                                c.isPdf(document),
+
+                            'image':
+                                c.isImage(document)
+                        }">
+
+                        <i
+                            class="fa"
+                            ng-class="c.getDocumentIcon(document)">
+                        </i>
+
+                    </div>
+
+
+                    <!-- DOCUMENT INFORMATION -->
+
+                    <div class="vg-document-details">
+
+                        <div class="vg-document-name">
+
+                            {{document.name || document.label || "Document"}}
+
+                        </div>
+
+
+                        <div class="vg-document-type">
+
+                            {{document.document_type || document.label || "Visa Document"}}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- VIEW BUTTON -->
+
+                    <div class="vg-document-action">
+
+                        <button
+                            type="button"
+                            class="vg-view-document-button"
+                            ng-if="document.has_file"
+                            ng-click="c.viewDocument(document)">
+
+                            <i class="fa fa-eye"></i>
+
+                            View
+
+                        </button>
+
+
+                        <span
+                            class="vg-no-file"
+                            ng-if="!document.has_file">
+
+                            <i class="fa fa-file-o"></i>
+
+                            File unavailable
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- NO DOCUMENTS -->
+            <!-- ============================================= -->
+
+            <div
+                class="vg-no-documents"
+                ng-if="!c.data.documents.length">
+
+                <div class="vg-no-document-icon">
+
+                    <i class="fa fa-folder-open-o"></i>
+
+                </div>
+
+                <h3>
+                    No documents submitted
+                </h3>
+
+                <p>
+                    No documents are currently associated with this visa case.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- DOCUMENT VIEWER MODAL -->
+    <!-- ===================================================== -->
+
+    <div
+        class="vg-document-overlay"
+        ng-if="c.showDocumentViewer"
+        ng-click="c.closeDocumentViewer()">
+
+
+        <div
+            class="vg-document-modal"
+            ng-click="$event.stopPropagation()">
+
+
+            <!-- ============================================= -->
+            <!-- MODAL HEADER -->
+            <!-- ============================================= -->
+
+            <div class="vg-document-modal-header">
+
+
+                <div class="vg-document-modal-title">
+
+
+                    <div class="vg-modal-file-icon">
+
+                        <i
+                            class="fa"
+                            ng-class="c.getDocumentIcon(c.selectedDocument)">
+                        </i>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="vg-modal-file-name">
+
+                            {{c.selectedDocument.name || "Document"}}
+
+                        </div>
+
+
+                        <div class="vg-modal-file-type">
+
+                            {{c.selectedDocument.attachment_file_name || c.selectedDocument.name}}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="vg-document-close"
+                    ng-click="c.closeDocumentViewer()">
+
+                    <i class="fa fa-times"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- DOCUMENT CONTENT -->
+            <!-- ============================================= -->
+
+            <div class="vg-document-content">
+
+
+                <!-- LOADING -->
+
+                <div
+                    class="vg-document-loading"
+                    ng-if="c.documentLoading">
+
+                    <i class="fa fa-spinner fa-spin"></i>
+
+                    <span>
+                        Opening document...
+                    </span>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                <div
+                    class="vg-document-error"
+                    ng-if="
+                        !c.documentLoading &&
+                        c.documentError
+                    ">
+
+                    <i class="fa fa-exclamation-circle"></i>
+
+                    <span>
+                        {{c.documentError}}
+                    </span>
+
+                </div>
+
+
+                <!-- PDF -->
+
+                <iframe
+                    ng-if="
+                        !c.documentLoading &&
+                        !c.documentError &&
+                        c.isPdf(c.selectedDocument)
+                    "
+                    class="vg-document-frame"
+                    ng-src="{{c.selectedDocument.viewer_url}}"
+                    frameborder="0">
+                </iframe>
+
+
+                <!-- IMAGE -->
+
+                <div
+                    class="vg-image-preview"
+                    ng-if="
+                        !c.documentLoading &&
+                        !c.documentError &&
+                        c.isImage(c.selectedDocument)
+                    ">
+
+                    <img
+                        ng-src="{{c.selectedDocument.viewer_url}}"
+                        alt="{{c.selectedDocument.name}}">
+
+                </div>
+
+
+                <!-- OTHER FILE -->
+
+                <div
+                    class="vg-unsupported-file"
+                    ng-if="
+                        !c.documentLoading &&
+                        !c.documentError &&
+                        !c.isPdf(c.selectedDocument) &&
+                        !c.isImage(c.selectedDocument)
+                    ">
+
+                    <div class="vg-large-file-icon">
+
+                        <i class="fa fa-file-o"></i>
+
+                    </div>
+
+                    <h3>
+                        {{c.selectedDocument.name}}
+                    </h3>
+
+                    <p>
+                        This file type cannot be previewed directly in the browser.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="vg-open-document-button"
+                        ng-click="c.openDocument(c.selectedDocument)">
+
+                        <i class="fa fa-external-link"></i>
+
+                        Open Document
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>5ff4bc4401fe03107f44f465f0501345</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 09:56:28</sys_created_on>
+        <sys_id>5bf4308401fe03107f44f465f05013b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 09:56:28</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

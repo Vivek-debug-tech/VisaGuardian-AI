@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="c2613d9b296603107f44d6fee5fae36c" label="Request Type Configuration" max_length="40" name="x_snc_visaguardi_0_request_type_configuration" type="collection">
+        <element choice="3" label="Request Type" max_length="255" name="request_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Visa Renewal" sequence="3" value="visa_renewal"/>
+                <element inactive_on_update="false" label="General Immigration Support" sequence="7" value="general_immigration_support"/>
+                <element inactive_on_update="false" label="New Visa Application" sequence="0" value="new_visa_application"/>
+                <element inactive_on_update="false" label="Visa Extension" sequence="4" value="visa_extension"/>
+                <element inactive_on_update="false" label="OPT Application" sequence="1" value="opt_application"/>
+                <element inactive_on_update="false" label="SEVIS Update" sequence="5" value="sevis_update"/>
+                <element inactive_on_update="false" label="Status Change" sequence="6" value="status_change"/>
+                <element inactive_on_update="false" label="CPT Application" sequence="2" value="cpt_application"/>
+            </choice>
+        </element>
+        <element label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Default Due Dates" max_length="40" name="default_due_dates" type="integer"/>
+        <element label="Display Order" max_length="40" name="display_order" type="integer"/>
+        <element label="Description" max_length="40" name="description" type="string"/>
+    </element>
+</database>

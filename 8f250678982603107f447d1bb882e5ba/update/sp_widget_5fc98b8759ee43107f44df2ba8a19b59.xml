@@ -1,0 +1,1354 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window) {
+  var c = this;
+  c.currentFilter = 'ALL';
+  c.searchQuery = '';
+
+  c.setFilter = function(filter) {
+    c.currentFilter = filter;
+  };
+
+  c.filterNotifications = function(item) {
+    var matchesFilter = true;
+    if (c.currentFilter === 'Unread') matchesFilter = !item.read;
+    else if (c.currentFilter === 'Urgent') matchesFilter = (item.priority === 'Urgent');
+    else if (c.currentFilter === 'SEVIS') matchesFilter = (item.category === 'SEVIS' || item.category === 'Visa');
+
+    if (!matchesFilter) return false;
+
+    if (!c.searchQuery) return true;
+    var q = c.searchQuery.toLowerCase();
+    return (
+      (item.title && item.title.toLowerCase().indexOf(q) !== -1) ||
+      (item.description && item.description.toLowerCase().indexOf(q) !== -1) ||
+      (item.student_name && item.student_name.toLowerCase().indexOf(q) !== -1) ||
+      (item.student_id && item.student_id.toLowerCase().indexOf(q) !== -1)
+    );
+  };
+
+  c.getUnreadCount = function() {
+    if (!c.data.notifications) return 0;
+    return c.data.notifications.filter(function(n) { return !n.read; }).length;
+  };
+
+  c.getUnreadUrgentCount = function() {
+    if (!c.data.notifications) return 0;
+    return c.data.notifications.filter(function(n) { return !n.read && n.priority === 'Urgent'; }).length;
+  };
+
+  c.getAiFlagCount = function() {
+    if (!c.data.notifications) return 0;
+    return c.data.notifications.filter(function(n) { return n.type === 'AI'; }).length;
+  };
+
+  c.toggleRead = function(item) {
+    item.read = !item.read;
+  };
+
+  c.markAllRead = function() {
+    if (c.data.notifications) {
+      c.data.notifications.forEach(function(n) { n.read = true; });
+    }
+  };
+
+  c.takeAction = function(item) {
+    $window.alert("Navigating to: " + item.title + " (" + (item.case_id || item.student_name) + ")");
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.vg-workspace-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #2b3674;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+
+  /* Hero Banner */
+  .vg-hero-banner {
+    background: linear-gradient(135deg, #091e3a 0%, #0d3a78 100%);
+    border-radius: 12px;
+    padding: 24px 30px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(9, 30, 58, 0.15);
+    margin-bottom: 24px;
+
+    .hero-content {
+      h2 {
+        margin: 0 0 6px 0;
+        font-weight: 700;
+        font-size: 24px;
+        color: #ffffff;
+      }
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.85;
+      }
+    }
+
+    .btn-hero-outline {
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+
+      &amp;:hover {
+        background: #ffffff;
+        color: #0d3a78;
+      }
+    }
+  }
+
+  /* Metric Cards Row */
+  .metric-row {
+    margin-bottom: 24px;
+  }
+
+  .vg-metric-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #eef2f7;
+
+    .metric-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+
+      &amp;.blue-circle {
+        background: #e8f0fe;
+        color: #0066ff;
+      }
+
+      &amp;.orange-circle {
+        background: #fef3d6;
+        color: #ff9f43;
+      }
+
+      &amp;.green-circle {
+        background: #e6f4ea;
+        color: #00b074;
+      }
+
+      &amp;.red-circle {
+        background: #fde8e8;
+        color: #ea5455;
+      }
+    }
+
+    .metric-data {
+      display: flex;
+      flex-direction: column;
+
+      .metric-number {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 3px;
+      }
+
+      .metric-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #8f9bba;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+
+      .metric-subtext {
+        font-size: 11px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  /* Colors */
+  .text-blue {
+    color: #0066ff;
+  }
+
+  .text-orange {
+    color: #ff9f43;
+  }
+
+  .text-green {
+    color: #00b074;
+  }
+
+  .text-red {
+    color: #ea5455;
+  }
+
+  /* Main Card Container */
+  .vg-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #eef2f7;
+    padding: 20px 24px;
+
+    .vg-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f3f8;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1b2559;
+
+        i {
+          color: #0066ff;
+          margin-right: 8px;
+        }
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .filter-pills {
+        background: #f4f7fe;
+        padding: 3px;
+        border-radius: 8px;
+
+        .btn {
+          border: none;
+          background: transparent;
+          color: #8f9bba;
+          font-weight: 600;
+          font-size: 12px;
+          border-radius: 6px;
+          padding: 5px 12px;
+
+          &amp;.active {
+            background: #ffffff;
+            color: #0066ff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+          }
+        }
+      }
+
+      .search-wrapper {
+        position: relative;
+
+        .search-icon {
+          position: absolute;
+          left: 10px;
+          top: 9px;
+          color: #8f9bba;
+          font-size: 12px;
+        }
+
+        .search-input {
+          padding-left: 28px;
+          border-radius: 8px;
+          border: 1px solid #e0e5f2;
+          background: #f4f7fe;
+          font-size: 12px;
+          width: 230px;
+
+          &amp;:focus {
+            background: #ffffff;
+            border-color: #0066ff;
+          }
+        }
+      }
+    }
+  }
+
+  /* Notifications Feed */
+  .notifications-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #f0f3f8;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &amp;:hover {
+      background: #fafcff;
+      border-color: #d6e4ff;
+    }
+
+    &amp;.is-unread {
+      background: #f8faff;
+      border-left: 4px solid #0066ff;
+    }
+
+    &amp;.border-urgent {
+      border-left: 4px solid #ea5455;
+    }
+
+    .notif-icon-col {
+      margin-right: 16px;
+      flex-shrink: 0;
+
+      .notif-badge-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+
+        &amp;.badge-red {
+          background: #fde8e8;
+          color: #ea5455;
+        }
+
+        &amp;.badge-orange {
+          background: #fef3d6;
+          color: #ff9f43;
+        }
+
+        &amp;.badge-blue {
+          background: #e8f0fe;
+          color: #0066ff;
+        }
+
+        &amp;.badge-green {
+          background: #e6f4ea;
+          color: #00b074;
+        }
+      }
+    }
+
+    .notif-body-col {
+      flex-grow: 1;
+
+      .notif-title-row {
+        margin-bottom: 4px;
+
+        .notif-title {
+          font-weight: 700;
+          font-size: 14px;
+          color: #1b2559;
+          margin-right: 8px;
+        }
+
+        .notif-type-tag {
+          font-size: 11px;
+          font-weight: 600;
+          background: #f4f7fe;
+          color: #4318ff;
+          padding: 2px 8px;
+          border-radius: 4px;
+          margin-right: 8px;
+        }
+
+        .unread-dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: #0066ff;
+        }
+
+        .notif-time {
+          font-size: 12px;
+          color: #8f9bba;
+        }
+      }
+
+      .notif-description {
+        margin: 4px 0 8px 0;
+        font-size: 13px;
+        color: #4a5568;
+        line-height: 1.4;
+      }
+
+      .notif-meta-row {
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        color: #8f9bba;
+
+        i {
+          margin-right: 4px;
+        }
+
+        strong {
+          color: #1b2559;
+        }
+      }
+    }
+
+    .notif-action-col {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 16px;
+      flex-shrink: 0;
+
+      .btn-review {
+        background: #f4f7fe;
+        color: #0066ff;
+        font-weight: 600;
+        border: 1px solid #e0e5f2;
+        border-radius: 6px;
+        padding: 5px 12px;
+        font-size: 12px;
+
+        &amp;:hover {
+          background: #0066ff;
+          color: #ffffff;
+        }
+      }
+
+      .btn-toggle-read {
+        background: transparent;
+        border: none;
+        color: #8f9bba;
+        font-size: 14px;
+        padding: 5px;
+
+        &amp;:hover {
+          color: #1b2559;
+        }
+      }
+    }
+  }
+
+  .pad-lg {
+    padding: 30px !important;
+  }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>advisor_notifications</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>advisor Notifications</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.notifications = [];
+    data.error = "";
+    data.authenticated = false;
+
+
+    // =====================================================
+    // GET CURRENT LOGGED-IN ADVISOR
+    // SAME LOGIC AS YOUR WORKING ADVISOR DASHBOARD
+    // =====================================================
+
+    var userSysId = gs.getUserID();
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData("vg_advisor_sys_id");
+
+    if (sessionAdvisorSysId) {
+        userSysId = sessionAdvisorSysId;
+    }
+
+
+    if (!userSysId) {
+
+        data.error =
+            "Unable to identify the logged-in advisor.";
+
+        return;
+
+    }
+
+
+    data.authenticated = true;
+
+
+    // =====================================================
+    // HANDLE NOTIFICATION ACTIONS
+    // =====================================================
+
+    /*
+     * At this stage notifications are generated from
+     * Visa Cases, so read/unread state is maintained
+     * on the client.
+     *
+     * Later, if you create a notification table, we can
+     * make read/unread persistent.
+     */
+
+
+    // =====================================================
+    // GET ONLY THIS ADVISOR'S VISA CASES
+    // =====================================================
+
+    var caseGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    caseGR.addQuery(
+        "advisor",
+        userSysId
+    );
+
+
+    caseGR.orderByDesc(
+        "sys_created_on"
+    );
+
+
+    caseGR.query();
+
+
+    // =====================================================
+    // PROCESS ADVISOR CASES
+    // =====================================================
+
+    while (caseGR.next()) {
+
+
+        // =================================================
+        // CASE INFORMATION
+        // =================================================
+
+        var caseSysId =
+            caseGR.getUniqueValue();
+
+
+        var studentSysId =
+            caseGR.getValue("student");
+
+
+        var studentName =
+            caseGR.getDisplayValue("student") ||
+            "Unknown Student";
+
+
+        var studentId =
+            "N/A";
+
+
+        // =================================================
+        // STUDENT PROFILE
+        // =================================================
+
+        if (studentSysId) {
+
+            var studentGR =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+
+            if (studentGR.get(studentSysId)) {
+
+                studentId =
+                    studentGR.getValue("student_id") ||
+                    "N/A";
+
+
+                var profileName =
+                    studentGR.getValue("name") ||
+                    "";
+
+
+                if (profileName) {
+
+                    studentName =
+                        profileName;
+
+                }
+                else {
+
+                    var firstName =
+                        studentGR.getValue("first_name") ||
+                        "";
+
+
+                    var lastName =
+                        studentGR.getValue("last_name") ||
+                        "";
+
+
+                    var fullName =
+                        (
+                            firstName +
+                            " " +
+                            lastName
+                        ).trim();
+
+
+                    if (fullName) {
+
+                        studentName =
+                            fullName;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        // =================================================
+        // CASE TYPE
+        // =================================================
+
+        var caseType =
+            caseGR.getDisplayValue("case_type") ||
+            "Visa";
+
+
+        // =================================================
+        // CASE STAGE
+        // =================================================
+
+        var caseStage =
+            caseGR.getDisplayValue("case_stage") ||
+            "";
+
+
+        // =================================================
+        // STATUS
+        // =================================================
+
+        var status =
+            caseGR.getDisplayValue("status") ||
+            "";
+
+
+        // =================================================
+        // CASE ID
+        // =================================================
+
+        var caseNumber =
+            caseGR.getDisplayValue("number") ||
+            caseGR.getUniqueValue();
+
+
+        // =================================================
+        // CREATED TIME
+        // =================================================
+
+        var createdTime =
+            caseGR.getValue("sys_created_on");
+
+
+        var timeAgo =
+            "Recently";
+
+
+        if (createdTime) {
+
+            var created =
+                new GlideDateTime(
+                    createdTime
+                );
+
+
+            var now =
+                new GlideDateTime();
+
+
+            var difference =
+                now.getNumericValue() -
+                created.getNumericValue();
+
+
+            var minutes =
+                Math.floor(
+                    difference /
+                    60000
+                );
+
+
+            if (minutes < 1) {
+
+                timeAgo =
+                    "Just now";
+
+            }
+            else if (minutes < 60) {
+
+                timeAgo =
+                    minutes +
+                    " min ago";
+
+            }
+            else if (minutes < 1440) {
+
+                timeAgo =
+                    Math.floor(
+                        minutes / 60
+                    ) +
+                    " hr ago";
+
+            }
+            else {
+
+                timeAgo =
+                    Math.floor(
+                        minutes / 1440
+                    ) +
+                    " day(s) ago";
+
+            }
+
+        }
+
+
+        // =================================================
+        // DEADLINE INFORMATION
+        // =================================================
+
+        var daysLeft =
+            999;
+
+
+        var deadline =
+            "";
+
+
+        if (
+            caseGR.isValidField("due_date") &&
+            caseGR.getValue("due_date")
+        ) {
+
+            deadline =
+                caseGR.getDisplayValue(
+                    "due_date"
+                );
+
+
+            var due =
+                new GlideDateTime(
+                    caseGR.getValue("due_date")
+                );
+
+
+            var current =
+                new GlideDateTime();
+
+
+            var difference =
+                due.getNumericValue() -
+                current.getNumericValue();
+
+
+            daysLeft =
+                Math.ceil(
+                    difference /
+                    86400000
+                );
+
+        }
+
+
+        // =================================================
+        // 1. OVERDUE DEADLINE
+        // =================================================
+
+        if (daysLeft < 0) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_overdue",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "SEVIS Deadline Overdue",
+
+                description:
+                    "The compliance deadline for " +
+                    studentName +
+                    " has passed. Immediate advisor action is required.",
+
+                category:
+                    "SEVIS",
+
+                priority:
+                    "Urgent",
+
+                type:
+                    "Alert",
+
+                icon:
+                    "fa-exclamation-triangle",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                deadline:
+                    deadline,
+
+                read:
+                    false,
+
+                action_label:
+                    "Review Case"
+
+            });
+
+        }
+
+
+        // =================================================
+        // 2. DEADLINE WITHIN 48 HOURS
+        // =================================================
+
+        else if (daysLeft <= 2) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_deadline",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "SEVIS Deadline Approaching",
+
+                description:
+                    studentName +
+                    " has a compliance deadline approaching within 48 hours.",
+
+                category:
+                    "SEVIS",
+
+                priority:
+                    "Urgent",
+
+                type:
+                    "Alert",
+
+                icon:
+                    "fa-clock-o",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                deadline:
+                    deadline,
+
+                read:
+                    false,
+
+                action_label:
+                    "Review Case"
+
+            });
+
+        }
+
+
+        // =================================================
+        // 3. PENDING CASE
+        // =================================================
+
+        if (
+            status.toLowerCase().indexOf("pending") >= 0 ||
+            caseStage.toLowerCase().indexOf("pending") >= 0
+        ) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_pending",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "Visa Case Pending Review",
+
+                description:
+                    "The visa case for " +
+                    studentName +
+                    " is waiting for advisor review.",
+
+                category:
+                    "Visa",
+
+                priority:
+                    "Medium",
+
+                type:
+                    "Reminder",
+
+                icon:
+                    "fa-file-text-o",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                read:
+                    false,
+
+                action_label:
+                    "Review Case"
+
+            });
+
+        }
+
+
+        // =================================================
+        // 4. UNDER REVIEW
+        // =================================================
+
+        if (
+            status.toLowerCase().indexOf("review") >= 0 ||
+            caseStage.toLowerCase().indexOf("review") >= 0
+        ) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_review",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "Compliance Review Required",
+
+                description:
+                    "The case for " +
+                    studentName +
+                    " requires advisor compliance review.",
+
+                category:
+                    "SEVIS",
+
+                priority:
+                    "Medium",
+
+                type:
+                    "Compliance",
+
+                icon:
+                    "fa-shield",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                read:
+                    false,
+
+                action_label:
+                    "Review Case"
+
+            });
+
+        }
+
+
+        // =================================================
+        // 5. NOTICE SENT
+        // =================================================
+
+        if (
+            status.toLowerCase().indexOf("notice") >= 0
+        ) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_notice",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "Student Notice Sent",
+
+                description:
+                    "An official compliance notice has been sent for " +
+                    studentName +
+                    ".",
+
+
+                category:
+                    "SEVIS",
+
+                priority:
+                    "Low",
+
+                type:
+                    "Success",
+
+                icon:
+                    "fa-paper-plane",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                read:
+                    false,
+
+                action_label:
+                    "View Case"
+
+            });
+
+        }
+
+
+        // =================================================
+        // 6. COMPLETED / RESOLVED
+        // =================================================
+
+        if (
+            status.toLowerCase().indexOf("resolved") >= 0 ||
+            status.toLowerCase().indexOf("completed") >= 0 ||
+            caseStage.toLowerCase().indexOf("completed") >= 0
+        ) {
+
+            data.notifications.push({
+
+                id:
+                    caseSysId +
+                    "_resolved",
+
+                sys_id:
+                    caseSysId,
+
+                title:
+                    "Compliance Case Resolved",
+
+                description:
+                    "The compliance case for " +
+                    studentName +
+                    " has been resolved successfully.",
+
+                category:
+                    "Visa",
+
+                priority:
+                    "Low",
+
+                type:
+                    "Success",
+
+                icon:
+                    "fa-check-circle",
+
+                student_name:
+                    studentName,
+
+                student_id:
+                    studentId,
+
+                case_id:
+                    caseNumber,
+
+                time_ago:
+                    timeAgo,
+
+                read:
+                    false,
+
+                action_label:
+                    "View Case"
+
+            });
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SORT NOTIFICATIONS
+    // URGENT FIRST
+    // =====================================================
+
+    data.notifications.sort(
+        function(a, b) {
+
+            var priorityValue = {
+
+                "Urgent": 1,
+
+                "Medium": 2,
+
+                "Low": 3
+
+            };
+
+
+            return (
+                priorityValue[a.priority] -
+                priorityValue[b.priority]
+            );
+
+        }
+    );
+
+
+    // =====================================================
+    // DEBUG
+    // =====================================================
+
+    data.debug = {
+
+        advisor_sys_id:
+            userSysId,
+
+        advisor_name:
+            gs.getUserName(),
+
+        session_advisor_sys_id:
+            sessionAdvisorSysId || "",
+
+        notification_count:
+            data.notifications.length
+
+    };
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 18:12:44</sys_created_on>
+        <sys_id>5fc98b8759ee43107f44df2ba8a19b59</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>advisor Notifications</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_5fc98b8759ee43107f44df2ba8a19b59</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 13:18:20</sys_updated_on>
+        <template><![CDATA[<div class="vg-workspace-container">
+  
+  <!-- Hero Banner Header -->
+  <div class="vg-hero-banner">
+    <div class="hero-content">
+      <h2>]]>🔔<![CDATA[ Notifications & Compliance Alerts</h2>
+      <p>Visa Advisor | Real-time SEVIS updates, expiring I-20 reminders, and AI compliance flags</p>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-hero-outline" ng-click="c.markAllRead()">
+        <i class="fa fa-check-circle-o"></i> Mark All as Read
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Summary Cards -->
+  <div class="row metric-row">
+    <div class="col-md-4 col-sm-4">
+      <div class="vg-metric-card">
+        <div class="metric-icon red-circle">
+          <i class="fa fa-exclamation-circle"></i>
+        </div>
+        <div class="metric-data">
+          <span class="metric-number text-red">{{c.getUnreadUrgentCount()}}</span>
+          <span class="metric-label">URGENT ALERTS</span>
+          <span class="metric-subtext text-red">Requires action within 48 hrs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-4">
+      <div class="vg-metric-card">
+        <div class="metric-icon orange-circle">
+          <i class="fa fa-bell-o"></i>
+        </div>
+        <div class="metric-data">
+          <span class="metric-number text-orange">{{c.getUnreadCount()}}</span>
+          <span class="metric-label">UNREAD NOTIFICATIONS</span>
+          <span class="metric-subtext text-orange">Across all student cases</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-4">
+      <div class="vg-metric-card">
+        <div class="metric-icon blue-circle">
+          <i class="fa fa-magic"></i>
+        </div>
+        <div class="metric-data">
+          <span class="metric-number text-blue">{{c.getAiFlagCount()}}</span>
+          <span class="metric-label">AI VERIFICATIONS</span>
+          <span class="metric-subtext text-blue">System flagged matches</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Notification Card & Feed -->
+  <div class="vg-card margin-top-lg">
+    <div class="vg-card-header">
+      <div class="header-left">
+        <h4><i class="fa fa-list"></i> Activity Stream & Reminders</h4>
+      </div>
+      
+      <!-- Filter Pills & Search Bar -->
+      <div class="header-right">
+        <div class="btn-group filter-pills">
+          <button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'ALL'}" ng-click="c.setFilter('ALL')">All</button>
+          <button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'Unread'}" ng-click="c.setFilter('Unread')">Unread</button>
+          <button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'Urgent'}" ng-click="c.setFilter('Urgent')">Urgent</button>
+          <button type="button" class="btn btn-sm" ng-class="{'active': c.currentFilter === 'SEVIS'}" ng-click="c.setFilter('SEVIS')">SEVIS & Visa</button>
+        </div>
+        <div class="search-wrapper">
+          <i class="fa fa-search search-icon"></i>
+          <input type="text" class="form-control input-sm search-input" placeholder="Search notifications, student..." ng-model="c.searchQuery">
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="notifications-feed">
+      <div class="notification-item" ng-repeat="item in c.data.notifications | filter:c.filterNotifications" ng-class="{'is-unread': !item.read, 'border-urgent': item.priority === 'Urgent'}">
+        <div class="notif-icon-col">
+          <div class="notif-badge-icon" ng-class="{'badge-red': item.priority === 'Urgent', 'badge-orange': item.priority === 'Medium', 'badge-blue': item.priority === 'Low' || item.type === 'AI', 'badge-green': item.type === 'Success'}">
+            <i class="fa" ng-class="item.icon"></i>
+          </div>
+        </div>
+
+        <div class="notif-body-col">
+          <div class="notif-title-row">
+            <span class="notif-title">{{item.title}}</span>
+            <span class="notif-type-tag">{{item.category}}</span>
+            <span class="unread-dot" ng-if="!item.read"></span>
+            <span class="notif-time pull-right"><i class="fa fa-clock-o"></i> {{item.time_ago}}</span>
+          </div>
+
+          <p class="notif-description">{{item.description}}</p>
+
+          <div class="notif-meta-row">
+            <span class="notif-student-info" ng-if="item.student_name">
+              <i class="fa fa-user"></i> <strong>{{item.student_name}}</strong> ({{item.student_id}})
+            </span>
+            <span class="notif-case-id" ng-if="item.case_id">
+              <i class="fa fa-folder-o"></i> {{item.case_id}}
+            </span>
+          </div>
+        </div>
+
+        <div class="notif-action-col">
+          <button class="btn btn-xs btn-review" ng-click="c.takeAction(item)">
+            {{item.action_label || 'View Case'}}
+          </button>
+          <button class="btn btn-xs btn-toggle-read" title="{{item.read ? 'Mark as unread' : 'Mark as read'}}" ng-click="c.toggleRead(item)">
+            <i class="fa" ng-class="item.read ? 'fa-envelope-open-o' : 'fa-envelope'"></i>
+          </button>
+        </div>
+      </div>
+
+      <div ng-if="(c.data.notifications | filter:c.filterNotifications).length === 0" class="text-center text-muted pad-lg">
+        <i class="fa fa-bell-slash-o fa-2x margin-bottom-sm"></i>
+        <p><em>No notifications match your current filter.</em></p>
+      </div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>5fc98b8759ee43107f44df2ba8a19b59</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-11 18:12:44</sys_created_on>
+        <sys_id>63c98b8759ee43107f44df2ba8a19b5d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-11 18:12:44</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

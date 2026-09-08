@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_action_type_definition">
+    <sys_hub_action_type_definition action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <action_status/>
+        <action_template/>
+        <active>true</active>
+        <annotation>Provides personalized AI recommendations based on the current student's visa case.</annotation>
+        <attributes>{labelCacheCleanUpExecuted=true}</attributes>
+        <authored_on_release_version>29000</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <compiler_build/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Generates personalized visa case recommendations for the currently logged-in student using their student context, visa case context, and AI case summary.</description>
+        <flow_priority/>
+        <ih_action>false</ih_action>
+        <internal_name>get_ai_recommendations</internal_name>
+        <label_cache/>
+        <latest_snapshot/>
+        <master_snapshot/>
+        <master_snapshot_digest/>
+        <name>Get AI Recommendations</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <state>draft</state>
+        <sys_class_name>sys_hub_action_type_definition</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-14 15:18:58</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1bcef9c801ba43107f44f465f0501378</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get AI Recommendations</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_hub_action_type_definition_1bcef9c801ba43107f44f465f0501378</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 15:18:58</sys_updated_on>
+        <system_level>false</system_level>
+        <type/>
+    </sys_hub_action_type_definition>
+    <sys_translated_text action="delete_multiple" query="documentkey=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_variable_value action="delete_multiple" query="document_key=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_step_instance action="delete_multiple" query="action=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_action_input action="delete_multiple" query="model=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_action_output action="delete_multiple" query="model=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_action_status_metadata action="delete_multiple" query="action_type_id=1bcef9c801ba43107f44f465f0501378"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_action_input_1bcef9c801ba43107f44f465f0501378"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_action_output_1bcef9c801ba43107f44f465f0501378"/>
+    <sys_hub_action_plan action="delete_multiple" query="action_id=1bcef9c801ba43107f44f465f0501378"/>
+</record_update>

@@ -1,0 +1,2323 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, $window, $location, $timeout) {
+
+    var c = this;
+
+    c.loading = false;
+    c.error = "";
+    c.showPassword = false;
+
+		// ==========================================
+// BACK TO HOME
+// ==========================================
+
+c.goBack = function() {
+
+    $window.location.href =
+        "student?id=visa_home_page";
+
+};
+    c.login = function() {
+
+        c.error = "";
+
+        var username =
+            (c.data.username || "").trim();
+
+        var password =
+            c.data.password || "";
+
+
+        if (!username || !password) {
+
+            c.error =
+                "Please enter your DSO User ID and password.";
+
+            return;
+
+        }
+
+
+        c.loading = true;
+
+
+        c.server.update().then(function() {
+
+            c.loading = false;
+
+
+            // FIX: Check c.data directly instead of response.data
+            if (c.data.login_success) {
+
+                /*
+                 * Login successful.
+                 * Redirect to DSO dashboard.
+                 */
+
+                // FIX: Use $window instead of standard window
+                $window.location.href = "/student?id=dso_dashboard";
+
+            } else {
+
+                // FIX: Check c.data directly
+                c.error =
+                    c.data.login_error ||
+                    "Invalid DSO credentials.";
+
+            }
+
+        }).catch(function(error) {
+
+            c.loading = false;
+
+            c.error =
+                "Unable to complete login. Please try again.";
+
+            console.error(error);
+
+        });
+
+    };
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISAGUARDIAN AI
+   DSO OFFICER LOGIN
+   PREMIUM DARK BLUE ENTERPRISE UI
+   MATCHES STUDENT LOGIN THEME
+   ========================================================= */
+
+
+/* =========================================================
+   MAIN PAGE
+   ========================================================= */
+
+.dso-login-page {
+
+    min-height: 100vh;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 40px 25px;
+
+    box-sizing: border-box;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #ffffff;
+
+    background:
+
+        radial-gradient(
+            circle at 20% 15%,
+            rgba(0, 108, 255, .16),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 82% 25%,
+            rgba(32, 71, 255, .13),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(105, 0, 230, .10),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #020817 0%,
+            #03132d 48%,
+            #020918 100%
+        );
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+.guardian-bg-glow {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    filter: blur(60px);
+}
+
+
+.guardian-glow-one {
+
+    width: 420px;
+    height: 420px;
+
+    top: -200px;
+    left: -150px;
+
+    background:
+        rgba(0, 120, 255, .12);
+}
+
+
+.guardian-glow-two {
+
+    width: 500px;
+    height: 500px;
+
+    right: -220px;
+    bottom: -250px;
+
+    background:
+        rgba(93, 0, 255, .10);
+}
+
+
+/* =========================================================
+   BACKGROUND LINES
+   ========================================================= */
+
+.guardian-bg-lines {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .45;
+
+    background-image:
+
+        linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(45, 145, 255, .09) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            35deg,
+            transparent 0%,
+            rgba(0, 194, 255, .06) 48%,
+            transparent 49%
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(35, 125, 230, .035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            0deg,
+            rgba(35, 125, 230, .025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 100%,
+        100% 100%,
+        80px 80px,
+        80px 80px;
+}
+
+
+/* =========================================================
+   PARTICLES
+   ========================================================= */
+
+.guardian-particle {
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #35aaff;
+
+    box-shadow:
+        0 0 12px
+        rgba(0, 150, 255, .85);
+
+    opacity: .8;
+}
+
+
+.particle-one {
+
+    top: 18%;
+
+    left: 15%;
+}
+
+
+.particle-two {
+
+    top: 28%;
+
+    right: 16%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-three {
+
+    bottom: 20%;
+
+    left: 9%;
+
+    width: 4px;
+    height: 4px;
+}
+
+
+.particle-four {
+
+    bottom: 14%;
+
+    right: 20%;
+}
+
+/* =========================================================
+   LOGIN CARD
+   ========================================================= */
+
+.dso-login-card {
+
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    border:
+        1px solid
+        rgba(91, 163, 255, .25);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(9, 31, 62, .97),
+            rgba(3, 15, 34, .98)
+        );
+
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
+
+    box-shadow:
+
+        0 30px 90px
+        rgba(0, 0, 0, .48),
+
+        0 0 45px
+        rgba(0, 110, 255, .10),
+
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+
+    animation:
+        dsoCardEnter .55s ease both;
+}
+
+
+/* =========================================================
+   CARD TOP GLOW
+   ========================================================= */
+
+.dso-login-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 420px;
+
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0, 125, 255, .16),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CARD BOTTOM LINE
+   ========================================================= */
+
+.dso-login-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 12%;
+
+    width: 76%;
+
+    height: 1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(25, 145, 255, .45),
+            rgba(120, 45, 255, .45),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   CARD ANIMATION
+   ========================================================= */
+
+@keyframes dsoCardEnter {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(.98);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   BACK BUTTON CONTAINER
+   ========================================================= */
+
+.dso-back-container {
+
+    position: relative;
+
+    z-index: 3;
+
+    padding:
+        20px 22px 0;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.dso-back-button {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        #8db4dc;
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        all .22s ease;
+}
+
+
+.dso-back-button:hover {
+
+    color:
+        #42aaff;
+
+    background:
+        rgba(0, 110, 255, .08);
+
+    border-color:
+        rgba(40, 145, 255, .16);
+
+    transform:
+        translateX(-2px);
+}
+
+
+.dso-back-button:active {
+
+    transform:
+        translateX(-4px);
+}
+
+
+.dso-back-button:focus {
+
+    outline:
+        none;
+}
+
+
+/* =========================================================
+   BACK ICON
+   ========================================================= */
+
+.dso-back-arrow {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        25px;
+
+    height:
+        25px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(0, 110, 255, .10);
+
+    color:
+        #38aaff;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.dso-logo {
+
+    position: relative;
+
+    z-index: 2;
+
+    text-align:
+        center;
+
+    padding:
+        22px 38px 22px;
+}
+
+
+/* =========================================================
+   LOGO IMAGE CONTAINER
+   ========================================================= */
+
+.dso-shield {
+
+    width:
+        76px;
+
+    height:
+        76px;
+
+    margin:
+        0 auto 8px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    overflow:
+        hidden;
+
+    background:
+        transparent;
+
+    border:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   LOGO IMAGE
+   ========================================================= */
+
+.dso-shield img {
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    display:
+        block;
+
+    object-fit:
+        contain;
+
+    filter:
+
+        drop-shadow(
+            0 0 7px
+            rgba(0, 150, 255, .70)
+        )
+
+        drop-shadow(
+            0 0 18px
+            rgba(0, 105, 255, .30)
+        );
+
+    transition:
+        transform .3s ease,
+        filter .3s ease;
+}
+
+
+.dso-shield:hover img {
+
+    transform:
+        scale(1.05);
+
+    filter:
+
+        drop-shadow(
+            0 0 9px
+            rgba(0, 170, 255, .85)
+        )
+
+        drop-shadow(
+            0 0 22px
+            rgba(0, 110, 255, .40)
+        );
+}
+
+
+/* =========================================================
+   BRAND NAME
+   ========================================================= */
+
+.dso-logo h1 {
+
+    margin:
+        0;
+
+    font-size:
+        27px;
+
+    line-height:
+        1;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.8px;
+
+    color:
+        #ffffff;
+
+    white-space:
+        nowrap;
+}
+
+
+.dso-logo h1 span {
+
+    color:
+        #1598ff;
+}
+
+
+.dso-logo h1 strong {
+
+    color:
+        #963cff;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.dso-logo p {
+
+    margin:
+        5px 0 0;
+
+    color:
+        #8298b4;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   LOGIN HEADING
+   ========================================================= */
+
+.dso-login-heading {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+    text-align:
+        center;
+
+    padding:
+        17px 38px 22px;
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.dso-login-heading h2 {
+
+    margin:
+        0;
+
+    color:
+        #f4f8ff;
+
+    font-size:
+        24px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -.4px;
+}
+
+
+/* =========================================================
+   HEADING SUBTITLE
+   ========================================================= */
+
+.dso-login-heading p {
+
+    margin:
+        7px 0 12px;
+
+    color:
+        #8298b4;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   SECURITY STATUS
+   ========================================================= */
+
+.dso-login-heading::after {
+
+    content:
+        "●  Secure Authentication";
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    padding:
+        6px 11px;
+
+    border:
+        1px solid
+        rgba(38, 203, 119, .20);
+
+    border-radius:
+        20px;
+
+    background:
+        rgba(20, 190, 105, .055);
+
+    color:
+        #77b99a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+
+    letter-spacing:
+        .2px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.dso-error {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    margin:
+        0 32px 18px;
+
+    padding:
+        11px 13px;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        10px;
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(220, 40, 60, .08);
+
+    border:
+        1px solid
+        rgba(255, 90, 105, .25);
+
+    color:
+        #ff9da7;
+
+    font-size:
+        12px;
+
+    line-height:
+        18px;
+}
+
+
+/* =========================================================
+   LOGIN FORM
+   ========================================================= */
+
+.dso-login-card form {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    padding:
+        0 32px;
+}
+
+
+/* =========================================================
+   FORM FIELD
+   ========================================================= */
+
+.dso-field {
+
+    margin-bottom:
+        19px;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.dso-field label {
+
+    display:
+        block;
+
+    margin-bottom:
+        8px;
+
+    color:
+        #d6e2f0;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    letter-spacing:
+        .15px;
+}
+
+
+/* =========================================================
+   REQUIRED STAR
+   ========================================================= */
+
+.dso-field label span {
+
+    color:
+        #ff6372;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.dso-input {
+
+    position:
+        relative;
+}
+
+
+/* =========================================================
+   INPUT ICON
+   ========================================================= */
+
+.dso-input &gt; span {
+
+    position:
+        absolute;
+
+    left:
+        15px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        6px;
+
+    color:
+        #52a9ee;
+
+    background:
+        rgba(0, 120, 255, .08);
+
+    font-size:
+        12px;
+
+    pointer-events:
+        none;
+
+    z-index:
+        2;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.dso-input input {
+
+    width:
+        100%;
+
+    height:
+        50px;
+
+    padding:
+        10px 14px 10px 50px;
+
+    box-sizing:
+        border-box;
+
+    border:
+        1px solid
+        rgba(91, 137, 184, .25);
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(5, 25, 52, .72);
+
+    color:
+        #eaf4ff;
+
+    font-size:
+        13px;
+
+    outline:
+        none;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.025);
+
+    transition:
+        border-color .22s ease,
+        box-shadow .22s ease,
+        background .22s ease;
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+   ========================================================= */
+
+.dso-input input::placeholder {
+
+    color:
+        #647d9a;
+}
+
+
+/* =========================================================
+   INPUT HOVER
+   ========================================================= */
+
+.dso-input input:hover {
+
+    border-color:
+        rgba(91, 157, 220, .45);
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+.dso-input input:focus {
+
+    background:
+        rgba(7, 34, 68, .88);
+
+    border-color:
+        rgba(30, 148, 255, .85);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(20, 130, 255, .09),
+
+        0 0 18px
+        rgba(0, 120, 255, .07);
+}
+
+
+/* =========================================================
+   PASSWORD TOGGLE
+   ========================================================= */
+
+.password-toggle {
+
+    position:
+        absolute;
+
+    right:
+        10px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    padding:
+        5px 7px;
+
+    border:
+        none;
+
+    border-radius:
+        5px;
+
+    background:
+        transparent;
+
+    color:
+        #35a6ff;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    z-index:
+        3;
+
+    transition:
+        all .2s ease;
+}
+
+
+.password-toggle:hover {
+
+    background:
+        rgba(0, 120, 255, .10);
+
+    color:
+        #72c4ff;
+}
+
+
+.password-toggle:focus {
+
+    outline:
+        none;
+}
+
+
+/* =========================================================
+   PASSWORD INPUT EXTRA SPACE
+   ========================================================= */
+
+.dso-input input[type="password"],
+.dso-input input[type="text"] {
+
+    padding-right:
+        60px;
+}
+
+
+/* =========================================================
+   OPTIONS
+   ========================================================= */
+
+.dso-options {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    margin:
+        2px 0 21px;
+
+    color:
+        #7188a2;
+
+    font-size:
+        12px;
+}
+
+
+/* =========================================================
+   REMEMBER ME
+   ========================================================= */
+
+.dso-options label {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+
+    margin:
+        0;
+
+    font-weight:
+        500;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   CHECKBOX
+   ========================================================= */
+
+.dso-options input[type="checkbox"] {
+
+    width:
+        15px;
+
+    height:
+        15px;
+
+    margin:
+        0;
+
+    accent-color:
+        #1478df;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================================
+   SECURE LOGIN
+   ========================================================= */
+
+.dso-options &gt; span {
+
+    color:
+        #35a6ff;
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.dso-login-button {
+
+    width:
+        100%;
+
+    height:
+        51px;
+
+    border:
+        none;
+
+    border-radius:
+        9px;
+
+    background:
+
+        linear-gradient(
+            100deg,
+            #0876df,
+            #1455d0,
+            #6332df
+        );
+
+    background-size:
+        180% 100%;
+
+    color:
+        #ffffff;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        .15px;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+
+        0 9px 25px
+        rgba(0, 105, 230, .22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.12);
+
+    transition:
+        all .28s ease;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   BUTTON SHINE
+   ========================================================= */
+
+.dso-login-button::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        -100%;
+
+    width:
+        65%;
+
+    height:
+        100%;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.16),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left .55s ease;
+}
+
+
+.dso-login-button:hover::before {
+
+    left:
+        140%;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
+.dso-login-button:hover {
+
+    background-position:
+        100% 0;
+
+    box-shadow:
+
+        0 12px 30px
+        rgba(0, 110, 255, .30),
+
+        0 0 20px
+        rgba(80, 50, 255, .10);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   BUTTON ACTIVE
+   ========================================================= */
+
+.dso-login-button:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   BUTTON DISABLED
+   ========================================================= */
+
+.dso-login-button:disabled {
+
+    opacity:
+        .60;
+
+    cursor:
+        not-allowed;
+
+    transform:
+        none;
+
+    box-shadow:
+        none;
+}
+
+
+/* =========================================================
+   BUTTON CONTENT
+   ========================================================= */
+
+.dso-login-button .button-content {
+
+    height:
+        100%;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        10px;
+
+    position:
+        relative;
+
+    z-index:
+        2;
+}
+
+
+/* =========================================================
+   BUTTON ARROW
+   ========================================================= */
+
+.dso-login-button .button-arrow {
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.10);
+
+    transition:
+        transform .25s ease;
+}
+
+
+.dso-login-button:hover .button-arrow {
+
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading-content {
+
+    opacity:
+        .95;
+}
+
+
+/* =========================================================
+   FORM SECURITY NOTE
+   ========================================================= */
+
+.dso-form-security {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    margin:
+        13px 0 21px;
+
+    color:
+        #607995;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   SECURITY ICON
+   ========================================================= */
+
+.dso-form-security i {
+
+    color:
+        #35aaff;
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.dso-other-login {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    margin-top:
+        3px;
+
+    padding:
+        18px 32px 22px;
+
+    text-align:
+        center;
+
+    background:
+        rgba(3, 17, 38, .72);
+
+    border-top:
+        1px solid
+        rgba(91, 137, 184, .12);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        6px;
+
+    color:
+        #687f9b;
+
+    font-size:
+        11px;
+
+    line-height:
+        18px;
+}
+
+
+/* =========================================================
+   FOOTER LINKS
+   ========================================================= */
+
+.dso-other-login a {
+
+    color:
+        #35a6ff;
+
+    font-size:
+        12px;
+
+    font-weight:
+        650;
+
+    text-decoration:
+        none;
+
+    transition:
+        color .2s ease;
+}
+
+
+.dso-other-login a:hover {
+
+    color:
+        #72c4ff;
+
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   FOOTER SEPARATOR
+   ========================================================= */
+
+.dso-other-login .separator {
+
+    color:
+        #355978;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .dso-login-page {
+
+        padding:
+            20px 14px;
+    }
+
+
+    .dso-login-card {
+
+        max-width:
+            100%;
+
+        border-radius:
+            18px;
+    }
+
+
+    .dso-back-container {
+
+        padding:
+            15px 17px 0;
+    }
+
+
+    .dso-logo {
+
+        padding:
+            18px 20px 20px;
+    }
+
+
+    .dso-shield {
+
+        width:
+            65px;
+
+        height:
+            65px;
+    }
+
+
+    .dso-shield img {
+
+        width:
+            62px;
+
+        height:
+            62px;
+    }
+
+
+    .dso-logo h1 {
+
+        font-size:
+            23px;
+    }
+
+
+    .dso-login-heading {
+
+        padding:
+            15px 20px 20px;
+    }
+
+
+    .dso-login-heading h2 {
+
+        font-size:
+            21px;
+    }
+
+
+    .dso-login-card form {
+
+        padding:
+            0 20px;
+    }
+
+
+    .dso-error {
+
+        margin-left:
+            20px;
+
+        margin-right:
+            20px;
+    }
+
+
+    .dso-other-login {
+
+        padding:
+            17px 20px 21px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .dso-login-page {
+
+        padding:
+            10px;
+    }
+
+
+    .dso-login-card {
+
+        border-radius:
+            16px;
+    }
+
+
+    .dso-back-container {
+
+        padding:
+            14px 15px 0;
+    }
+
+
+    .dso-logo {
+
+        padding:
+            18px 15px 18px;
+    }
+
+
+    .dso-shield {
+
+        width:
+            58px;
+
+        height:
+            58px;
+    }
+
+
+    .dso-shield img {
+
+        width:
+            55px;
+
+        height:
+            55px;
+    }
+
+
+    .dso-login-heading {
+
+        padding:
+            15px 15px 17px;
+    }
+
+
+    .dso-login-card form {
+
+        padding:
+            0 15px;
+    }
+
+
+    .dso-other-login {
+
+        padding-left:
+            12px;
+
+        padding-right:
+            12px;
+    }
+}
+
+/* =========================================================
+   SECURITY FOOTER NOTE (Centered)
+   ========================================================= */
+
+.dso-security {
+    position: relative;
+    z-index: 3;
+    margin-top: 22px;
+    padding: 16px 32px;
+    text-align: center;
+    color: #607995;
+    font-size: 10px;
+    letter-spacing: .3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>dso_login</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>DSO Login</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    data.login_success = false;
+    data.login_error = "";
+
+
+    /* ==========================================
+       FIXED DSO CREDENTIALS
+       ========================================== */
+
+    var DSO_USERNAME = "dso";
+    var DSO_PASSWORD = "DSO@12345";
+
+
+    /* ==========================================
+       ONLY RUN LOGIN WHEN FORM IS SUBMITTED
+       ========================================== */
+
+    if (!input) {
+
+        return;
+
+    }
+
+
+    var username =
+        (input.username || "").trim();
+
+    var password =
+        input.password || "";
+
+
+    /* ==========================================
+       EMPTY CREDENTIALS
+       ========================================== */
+
+    if (!username || !password) {
+
+        data.login_error =
+            "Please enter User ID and password.";
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       CHECK FIXED CREDENTIALS
+       ========================================== */
+
+    if (
+        username !== DSO_USERNAME ||
+        password !== DSO_PASSWORD
+    ) {
+
+        data.login_error =
+            "Invalid DSO User ID or password.";
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       FIND DSO USER
+       ========================================== */
+
+    var userGR =
+        new GlideRecord("sys_user");
+
+    userGR.addQuery(
+        "user_name",
+        DSO_USERNAME
+    );
+
+    userGR.setLimit(1);
+
+    userGR.query();
+
+
+    if (!userGR.next()) {
+
+        data.login_error =
+            "DSO account was not found in ServiceNow.";
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       CHECK ACTIVE
+       ========================================== */
+
+    if (!userGR.active) {
+
+        data.login_error =
+            "The DSO account is inactive.";
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       CHECK DSO ROLE
+       ========================================== */
+
+    var roleGR =
+        new GlideRecord("sys_user_has_role");
+
+    roleGR.addQuery(
+        "user",
+        userGR.getUniqueValue()
+    );
+
+    roleGR.addQuery(
+        "role.name",
+        "x_snc_visaguardi_0.dso"
+    );
+
+    roleGR.setLimit(1);
+
+    roleGR.query();
+
+
+    if (!roleGR.next()) {
+
+        data.login_error =
+            "This account does not have the DSO role.";
+
+        return;
+
+    }
+
+
+    /* ==========================================
+       SUCCESS
+       ========================================== */
+
+    data.login_success = true;
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 13:25:29</sys_created_on>
+        <sys_id>94e4f7de1c2207107f44ac7143096415</sys_id>
+        <sys_mod_count>18</sys_mod_count>
+        <sys_name>DSO Login</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_94e4f7de1c2207107f44ac7143096415</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 16:39:15</sys_updated_on>
+        <template><![CDATA[<div class="dso-login-page">
+
+<!-- ============================================
+         BACKGROUND
+         ============================================ -->
+
+    <div class="guardian-bg-lines"></div>
+
+    <div class="guardian-bg-glow guardian-glow-one"></div>
+    <div class="guardian-bg-glow guardian-glow-two"></div>
+
+    <!-- Decorative particles -->
+    <span class="guardian-particle particle-one"></span>
+    <span class="guardian-particle particle-two"></span>
+    <span class="guardian-particle particle-three"></span>
+    <span class="guardian-particle particle-four"></span>
+
+    <div class="dso-login-card">
+
+
+        <!-- ======================================
+             BACK TO HOME
+             ====================================== -->
+
+        <div class="dso-back-container">
+
+            <button
+                type="button"
+                class="dso-back-button"
+                ng-click="c.goBack()">
+
+                <span class="dso-back-arrow">
+                    ←
+                </span>
+
+                <span>
+                    Back to Home
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- ======================================
+             LOGO
+             ====================================== -->
+
+        <div class="dso-logo">
+
+            <div class="dso-shield">
+                <img
+            src="x_snc_visaguardi_0.visahomepagelogo.jpg"
+            alt="VisaGuardian AI">
+            </div>
+
+            <div>
+
+                <h1>
+                    Visa<span>Guardian</span> AI
+                </h1>
+
+                <p>
+                    DSO Officer Portal
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             TITLE
+             ====================================== -->
+
+        <div class="dso-login-heading">
+
+            <h2>
+                Welcome Back
+            </h2>
+
+            <p>
+                Sign in to your DSO workspace
+            </p>
+
+        </div>
+
+
+        <!-- ======================================
+             ERROR
+             ====================================== -->
+
+        <div
+            class="dso-error"
+            ng-if="c.error">
+
+            ⚠ {{c.error}}
+
+        </div>
+
+
+        <!-- ======================================
+             LOGIN FORM
+             ====================================== -->
+
+        <form ng-submit="c.login()">
+
+
+            <!-- USERNAME -->
+
+            <div class="dso-field">
+
+                <label>
+                    DSO User ID
+                </label>
+
+                <div class="dso-input">
+
+                    <span>
+                        ]]>👤
+<![CDATA[                    </span>
+
+                    <input
+                        type="text"
+                        ng-model="c.data.username"
+                        placeholder="Enter DSO user ID"
+                        autocomplete="username"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="dso-field">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="dso-input">
+
+                    <span>
+                        ]]>🔒
+<![CDATA[                    </span>
+
+                    <input
+                        type="{{c.showPassword ? 'text' : 'password'}}"
+                        ng-model="c.data.password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required>
+
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        ng-click="c.showPassword = !c.showPassword">
+
+                        {{c.showPassword ? 'Hide' : 'Show'}}
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ======================================
+                 REMEMBER
+                 ====================================== -->
+
+            <div class="dso-options">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        ng-model="c.data.remember">
+
+                    Remember me
+
+                </label>
+
+                <span>
+                    DSO Secure Login
+                </span>
+
+            </div>
+
+
+            <!-- ======================================
+                 LOGIN BUTTON
+                 ====================================== -->
+
+            <button
+                type="submit"
+                class="dso-login-button"
+                ng-disabled="c.loading">
+
+                <span ng-if="!c.loading">
+
+                    Sign In to DSO Portal
+
+                </span>
+
+                <span ng-if="c.loading">
+
+                    Signing in...
+
+                </span>
+
+            </button>
+
+        </form>
+
+
+        <!-- ======================================
+             SECURITY
+             ====================================== -->
+
+        <div class="dso-security">
+
+            ]]>🔐<![CDATA[ Authorized DSO access only
+
+        </div>
+
+
+        <!-- ======================================
+             OTHER LOGIN
+             ====================================== -->
+
+        <div class="dso-other-login">
+
+            <span>
+                Not a DSO?
+            </span>
+
+            <a href="?id=login_page">
+                Student Login
+            </a>
+
+            <span>
+                •
+            </span>
+
+            <a href="?id=advisor_login">
+                Advisor Login
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>94e4f7de1c2207107f44ac7143096415</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 13:25:29</sys_created_on>
+        <sys_id>94e4f7de1c2207107f44ac7143096418</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 13:25:29</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

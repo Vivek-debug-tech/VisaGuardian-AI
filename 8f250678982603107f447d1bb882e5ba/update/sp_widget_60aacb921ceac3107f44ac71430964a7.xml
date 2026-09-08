@@ -1,0 +1,3962 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope) {
+
+    var c = this;
+
+
+    // =====================================================
+    // DONUT CHART
+    // =====================================================
+
+    c.getDonutStyle = function() {
+
+        var total =
+            Number(c.data.total_cases || 0);
+
+        var pending =
+            Number(c.data.pending_cases || 0);
+
+        var review =
+            Number(c.data.review_cases || 0);
+
+
+        if (total === 0) {
+
+            return {
+                background: "#e8edf3"
+            };
+
+        }
+
+
+        var pendingPercent =
+            (pending / total) * 100;
+
+        var reviewPercent =
+            (review / total) * 100;
+
+        var reviewEnd =
+            pendingPercent +
+            reviewPercent;
+
+
+        return {
+
+            background:
+                "conic-gradient(" +
+                "#246bd4 0 " +
+                pendingPercent +
+                "%, " +
+                "#e98b20 " +
+                pendingPercent +
+                "% " +
+                reviewEnd +
+                "%, " +
+                "#2d9c52 " +
+                reviewEnd +
+                "% 100%)"
+
+        };
+
+    };
+
+
+    // =====================================================
+    // STATUS CLASS
+    // =====================================================
+
+    c.getStatusClass = function(status) {
+
+        if (!status) {
+            return "";
+        }
+
+
+        var value =
+            String(status).toLowerCase();
+
+
+        if (
+            value.indexOf("pending") !== -1
+        ) {
+
+            return "pending";
+
+        }
+
+
+        if (
+            value.indexOf("review") !== -1
+        ) {
+
+            return "review";
+
+        }
+
+
+        if (
+            value.indexOf("completed") !== -1 ||
+            value.indexOf("resolved") !== -1
+        ) {
+
+            return "completed";
+
+        }
+
+
+        if (
+            value.indexOf("approved") !== -1
+        ) {
+
+            return "approved";
+
+        }
+
+
+        if (
+            value.indexOf("rejected") !== -1
+        ) {
+
+            return "rejected";
+
+        }
+
+
+        return "";
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   VISA GUARDIAN AI
+   ADVISOR WORKSPACE DASHBOARD
+   PREMIUM ENTERPRISE THEME
+   ========================================================= */
+
+
+/* =========================================================
+   ROOT DASHBOARD
+   ========================================================= */
+
+.vg-dashboard {
+
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f5f9ff 0%,
+            #f8fbff 45%,
+            #f3f7fc 100%
+        );
+
+    color: #193b60;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-dashboard-header {
+
+    min-height: 130px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 25px 30px;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #062b59 0%,
+            #073b73 48%,
+            #0b5594 100%
+        );
+
+    border:
+        1px solid
+        rgba(39,145,255,.25);
+
+    box-shadow:
+        0 12px 35px
+        rgba(6,43,89,.18);
+
+    color: #ffffff;
+}
+
+
+/* Decorative glow */
+
+.vg-dashboard-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    right: -80px;
+    top: -120px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(45,151,255,.14);
+
+    pointer-events: none;
+}
+
+
+.vg-dashboard-header::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    left: 35%;
+
+    bottom: -95px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.035);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   PROFILE AREA
+   ========================================================= */
+
+.vg-profile-area {
+
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   AVATAR
+   ========================================================= */
+
+.vg-avatar {
+
+    width: 72px;
+    height: 72px;
+
+    min-width: 72px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-right: 18px;
+
+    overflow: hidden;
+
+    border:
+        3px solid
+        rgba(255,255,255,.75);
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #eaf3ff
+        );
+
+    color: #0b4f8f;
+
+    font-size: 27px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 6px 18px
+        rgba(0,0,0,.15);
+}
+
+
+.vg-avatar img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   PROFILE INFORMATION
+   ========================================================= */
+
+.vg-profile-info h2 {
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    line-height: 1.2;
+
+    font-weight: 750;
+
+    letter-spacing: -.4px;
+}
+
+
+.vg-profile-info p {
+
+    margin: 8px 0 0;
+
+    color: #c7ddf3;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.vg-profile-info p span {
+
+    margin:
+        0 8px;
+
+    color:
+        #75b8f5;
+}
+
+
+/* =========================================================
+   PROFILE META
+   ========================================================= */
+
+.vg-profile-meta {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 38px;
+
+    position: relative;
+
+    z-index: 2;
+
+    text-align: right;
+}
+
+
+.vg-profile-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+}
+
+
+.vg-profile-item span {
+
+    color:
+        #8eb7dc;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.vg-profile-item strong {
+
+    margin-top: 5px;
+
+    color:
+        #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.vg-error {
+
+    margin-top: 15px;
+
+    padding:
+        13px 16px;
+
+    border:
+        1px solid
+        #f1b5b5;
+
+    border-radius:
+        10px;
+
+    background:
+        #fff5f5;
+
+    color:
+        #b42323;
+
+    font-size:
+        13px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(180,35,35,.06);
+}
+
+
+/* =========================================================
+   KPI SECTION
+   ========================================================= */
+
+.vg-kpi-row {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap:
+        18px;
+
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   KPI CARD
+   ========================================================= */
+
+.vg-kpi-card {
+
+    min-height:
+        138px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        22px;
+
+    box-sizing:
+        border-box;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #dce8f4;
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(255,255,255,.96);
+
+    box-shadow:
+        0 5px 18px
+        rgba(19,60,100,.055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.vg-kpi-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #176bd4,
+            #39a0ff
+        );
+
+    opacity:
+        .85;
+}
+
+
+.vg-kpi-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #c8ddf3;
+
+    box-shadow:
+        0 10px 26px
+        rgba(19,75,125,.10);
+}
+
+
+/* =========================================================
+   KPI ICON
+   ========================================================= */
+
+.vg-kpi-icon {
+
+    width:
+        60px;
+
+    height:
+        60px;
+
+    min-width:
+        60px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-right:
+        17px;
+
+    border-radius:
+        16px;
+
+    font-size:
+        23px;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.vg-kpi-card:hover
+.vg-kpi-icon {
+
+    transform:
+        scale(1.05);
+}
+
+
+/* =========================================================
+   KPI COLORS
+   ========================================================= */
+
+.vg-kpi-icon.blue {
+
+    background:
+        linear-gradient(
+            145deg,
+            #e8f2ff,
+            #dcecff
+        );
+
+    color:
+        #176bd4;
+}
+
+
+.vg-kpi-icon.orange {
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff4df,
+            #ffead0
+        );
+
+    color:
+        #e8891d;
+}
+
+
+.vg-kpi-icon.purple {
+
+    background:
+        linear-gradient(
+            145deg,
+            #f1ebff,
+            #e8ddff
+        );
+
+    color:
+        #7650c5;
+}
+
+
+.vg-kpi-icon.green {
+
+    background:
+        linear-gradient(
+            145deg,
+            #e8f8ee,
+            #d9f2e3
+        );
+
+    color:
+        #299b51;
+}
+
+
+/* =========================================================
+   KPI DATA
+   ========================================================= */
+
+.vg-kpi-data {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    min-width:
+        0;
+}
+
+
+.vg-kpi-data strong {
+
+    color:
+        #103e70;
+
+    font-size:
+        32px;
+
+    line-height:
+        1;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        -.5px;
+}
+
+
+.vg-kpi-data span {
+
+    margin-top:
+        7px;
+
+    color:
+        #355676;
+
+    font-size:
+        11px;
+
+    font-weight:
+        750;
+
+    letter-spacing:
+        .6px;
+
+    text-transform:
+        uppercase;
+}
+
+
+.vg-kpi-data small {
+
+    margin-top:
+        5px;
+
+    color:
+        #8799ab;
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
+.vg-main-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap:
+        18px;
+
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   GENERAL CARD
+   ========================================================= */
+
+.vg-card {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #dce8f4;
+
+    border-radius:
+        14px;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 5px 18px
+        rgba(19,60,100,.05);
+
+    transition:
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+
+.vg-card:hover {
+
+    box-shadow:
+        0 9px 25px
+        rgba(19,60,100,.08);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.vg-card-header {
+
+    min-height:
+        58px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        0 20px;
+
+    border-bottom:
+        1px solid
+        #e7eef6;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+.vg-card-header h3 {
+
+    margin:
+        0;
+
+    color:
+        #123f6d;
+
+    font-size:
+        16px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-card-header h3 i {
+
+    margin-right:
+        9px;
+
+    color:
+        #176ed8;
+
+    font-size:
+        17px;
+}
+
+
+.vg-card-header p {
+
+    margin:
+        4px 0 0;
+
+    color:
+        #8496a8;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.vg-summary {
+
+    min-height:
+        185px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    padding:
+        24px;
+}
+
+
+/* =========================================================
+   DONUT
+   ========================================================= */
+
+.vg-donut {
+
+    width:
+        118px;
+
+    height:
+        118px;
+
+    min-width:
+        118px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    box-shadow:
+        0 5px 18px
+        rgba(35,125,83,.08);
+}
+
+
+.vg-donut-center {
+
+    width:
+        76px;
+
+    height:
+        76px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 2px 7px
+        rgba(20,60,100,.05);
+}
+
+
+.vg-donut-center strong {
+
+    color:
+        #123f6d;
+
+    font-size:
+        21px;
+
+    font-weight:
+        750;
+}
+
+
+.vg-donut-center span {
+
+    margin-top:
+        2px;
+
+    color:
+        #8495a6;
+
+    font-size:
+        9px;
+}
+
+
+/* =========================================================
+   SUMMARY LIST
+   ========================================================= */
+
+.vg-summary-list {
+
+    flex:
+        1;
+
+    margin-left:
+        25px;
+}
+
+
+.vg-summary-list div {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    padding:
+        8px 0;
+
+    color:
+        #5c7085;
+
+    font-size:
+        11px;
+
+    border-bottom:
+        1px solid
+        #f1f4f7;
+}
+
+
+.vg-summary-list div:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.vg-summary-list strong {
+
+    color:
+        #1c446d;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   DOTS
+   ========================================================= */
+
+.dot {
+
+    width:
+        8px;
+
+    height:
+        8px;
+
+    display:
+        inline-block;
+
+    margin-right:
+        8px;
+
+    border-radius:
+        50%;
+}
+
+
+.dot.blue {
+
+    background:
+        #2875e8;
+}
+
+
+.dot.orange {
+
+    background:
+        #ef941f;
+}
+
+
+.dot.purple {
+
+    background:
+        #7b55cb;
+}
+
+
+.dot.green {
+
+    background:
+        #2ea158;
+}
+
+
+/* =========================================================
+   STAT LIST
+   ========================================================= */
+
+.vg-stat-list {
+
+    padding:
+        15px 20px;
+}
+
+
+.vg-stat-list div {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    padding:
+        12px 0;
+
+    border-bottom:
+        1px solid
+        #edf2f7;
+
+    color:
+        #587087;
+
+    font-size:
+        12px;
+}
+
+
+.vg-stat-list div:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.vg-stat-list strong {
+
+    color:
+        #174572;
+
+    font-size:
+        14px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   STATUS COLORS
+   ========================================================= */
+
+.risk-text {
+
+    color:
+        #e04a4a !important;
+}
+
+
+.approved-text {
+
+    color:
+        #229651 !important;
+}
+
+
+.rejected-text {
+
+    color:
+        #e04a4a !important;
+}
+
+
+/* =========================================================
+   RECENT CASES
+   ========================================================= */
+
+.vg-recent-card {
+
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   CASE COUNT
+   ========================================================= */
+
+.vg-case-count {
+
+    padding:
+        6px 11px;
+
+    border:
+        1px solid
+        #d7e7fb;
+
+    border-radius:
+        8px;
+
+    background:
+        #edf5ff;
+
+    color:
+        #1769d2;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.vg-case-table {
+
+    margin:
+        0;
+
+    width:
+        100%;
+}
+
+
+.vg-case-table th {
+
+    padding:
+        13px 18px;
+
+    border-top:
+        none;
+
+    border-bottom:
+        1px solid
+        #dfe8f1;
+
+    color:
+        #71859a;
+
+    background:
+        #f7faff;
+
+    font-size:
+        10px;
+
+    font-weight:
+        750;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .55px;
+}
+
+
+.vg-case-table td {
+
+    padding:
+        16px 18px;
+
+    vertical-align:
+        middle;
+
+    border-top:
+        1px solid
+        #edf2f7;
+
+    color:
+        #45617b;
+
+    font-size:
+        12px;
+
+    transition:
+        background .15s ease;
+}
+
+
+.vg-case-table tbody tr {
+
+    transition:
+        background .15s ease;
+}
+
+
+.vg-case-table tbody tr:hover td {
+
+    background:
+        #f8fbff;
+}
+
+
+/* =========================================================
+   STUDENT
+   ========================================================= */
+
+.vg-student {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+}
+
+
+.vg-student strong {
+
+    color:
+        #123f6d;
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.vg-student small {
+
+    margin-top:
+        4px;
+
+    color:
+        #899aaa;
+
+    font-size:
+        10px;
+}
+
+
+/* =========================================================
+   CASE STAGE
+   ========================================================= */
+
+.vg-stage {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        6px 10px;
+
+    border:
+        1px solid
+        #dbe8f6;
+
+    border-radius:
+        7px;
+
+    background:
+        #eff5fc;
+
+    color:
+        #2e628f;
+
+    font-size:
+        10px;
+
+    font-weight:
+        650;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.vg-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-width:
+        38px;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        20px;
+
+    background:
+        #eef2f6;
+
+    color:
+        #657587;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   STATUS VARIANTS
+   ========================================================= */
+
+.vg-status.pending {
+
+    background:
+        #fff3df;
+
+    color:
+        #d98217;
+}
+
+
+.vg-status.review {
+
+    background:
+        #f0eaff;
+
+    color:
+        #704bb5;
+}
+
+
+.vg-status.completed {
+
+    background:
+        #e7f7ed;
+
+    color:
+        #298f4b;
+}
+
+
+.vg-status.approved {
+
+    background:
+        #e7f7ed;
+
+    color:
+        #298f4b;
+}
+
+
+.vg-status.rejected {
+
+    background:
+        #fff0f0;
+
+    color:
+        #d44848;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-empty {
+
+    padding:
+        45px !important;
+
+    text-align:
+        center;
+
+    color:
+        #8997a6 !important;
+}
+
+
+/* =========================================================
+   ADVISOR PROFILE
+   ========================================================= */
+
+.vg-advisor-details {
+
+    margin-top:
+        20px;
+}
+
+
+/* =========================================================
+   PROFILE CARD HEADER
+   ========================================================= */
+
+.vg-advisor-details .vg-card-header {
+
+    min-height:
+        62px;
+}
+
+
+/* =========================================================
+   PROFILE GRID
+   ========================================================= */
+
+.vg-details-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        0;
+
+    padding:
+        8px;
+}
+
+
+/* =========================================================
+   PROFILE ITEM
+   ========================================================= */
+
+.vg-details-grid &gt; div {
+
+    min-height:
+        82px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    padding:
+        15px 18px;
+
+    border-right:
+        1px solid
+        #edf2f7;
+
+    border-bottom:
+        1px solid
+        #edf2f7;
+
+    box-sizing:
+        border-box;
+
+    transition:
+        background .15s ease;
+}
+
+
+.vg-details-grid &gt; div:hover {
+
+    background:
+        #f8fbff;
+}
+
+
+/* =========================================================
+   PROFILE LABEL
+   ========================================================= */
+
+.vg-details-grid label {
+
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    color:
+        #7c90a5;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .65px;
+}
+
+
+/* =========================================================
+   PROFILE VALUE
+   ========================================================= */
+
+.vg-details-grid span {
+
+    color:
+        #214b73;
+
+    font-size:
+        13px;
+
+    font-weight:
+        500;
+
+    word-break:
+        break-word;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.vg-dashboard::-webkit-scrollbar {
+
+    width:
+        7px;
+}
+
+
+.vg-dashboard::-webkit-scrollbar-track {
+
+    background:
+        #edf3f9;
+}
+
+
+.vg-dashboard::-webkit-scrollbar-thumb {
+
+    background:
+        #b7c9db;
+
+    border-radius:
+        10px;
+}
+
+
+.vg-dashboard::-webkit-scrollbar-thumb:hover {
+
+    background:
+        #8faac3;
+}
+
+
+/* =========================================================
+   RESPONSIVE - 1200px
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+    .vg-dashboard {
+
+        padding:
+            16px 18px 30px;
+    }
+
+
+    .vg-kpi-row {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .vg-main-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .vg-main-grid .vg-card:first-child {
+
+        grid-column:
+            span 2;
+    }
+
+
+    .vg-profile-meta {
+
+        gap:
+            22px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 900px
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .vg-dashboard-header {
+
+        min-height:
+            120px;
+
+        padding:
+            22px;
+    }
+
+
+    .vg-profile-meta {
+
+        display:
+            none;
+    }
+
+
+    .vg-main-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-main-grid .vg-card:first-child {
+
+        grid-column:
+            auto;
+    }
+
+
+    .vg-details-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 700px
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .vg-dashboard {
+
+        padding:
+            12px 12px 25px;
+    }
+
+
+    .vg-dashboard-header {
+
+        min-height:
+            105px;
+
+        padding:
+            18px;
+
+        border-radius:
+            13px;
+    }
+
+
+    .vg-avatar {
+
+        width:
+            56px;
+
+        height:
+            56px;
+
+        min-width:
+            56px;
+
+        margin-right:
+            13px;
+
+        font-size:
+            21px;
+    }
+
+
+    .vg-profile-info h2 {
+
+        font-size:
+            20px;
+    }
+
+
+    .vg-profile-info p {
+
+        font-size:
+            11px;
+    }
+
+
+    .vg-kpi-row {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            12px;
+    }
+
+
+    .vg-kpi-card {
+
+        min-height:
+            110px;
+    }
+
+
+    .vg-summary {
+
+        min-height:
+            170px;
+
+        padding:
+            18px;
+    }
+
+
+    .vg-donut {
+
+        width:
+            95px;
+
+        height:
+            95px;
+
+        min-width:
+            95px;
+    }
+
+
+    .vg-donut-center {
+
+        width:
+            62px;
+
+        height:
+            62px;
+    }
+
+
+    .vg-summary-list {
+
+        margin-left:
+            18px;
+    }
+
+
+    .vg-details-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-details-grid &gt; div {
+
+        border-right:
+            none;
+    }
+
+
+    .vg-case-table {
+
+        min-width:
+            720px;
+    }
+
+
+    .vg-recent-card {
+
+        overflow-x:
+            auto;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 480px
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .vg-dashboard {
+
+        padding:
+            8px 8px 20px;
+    }
+
+
+    .vg-dashboard-header {
+
+        padding:
+            16px;
+
+        border-radius:
+            11px;
+    }
+
+
+    .vg-avatar {
+
+        width:
+            48px;
+
+        height:
+            48px;
+
+        min-width:
+            48px;
+    }
+
+
+    .vg-profile-info h2 {
+
+        font-size:
+            17px;
+    }
+
+
+    .vg-profile-info p {
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-kpi-card {
+
+        padding:
+            17px;
+    }
+
+
+    .vg-kpi-icon {
+
+        width:
+            50px;
+
+        height:
+            50px;
+
+        min-width:
+            50px;
+
+        margin-right:
+            13px;
+    }
+
+
+    .vg-kpi-data strong {
+
+        font-size:
+            27px;
+    }
+
+
+    .vg-summary {
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+    }
+
+
+    .vg-summary-list {
+
+        width:
+            100%;
+
+        margin:
+            18px 0 0;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>advisor_dashboard</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Advisor Dashboard</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function () {
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.advisor = null;
+
+    data.error = "";
+
+    data.success = "";
+
+    data.edit_mode = false;
+
+
+    // =====================================================
+    // CASE COUNTERS
+    // =====================================================
+
+    data.total_cases = 0;
+
+    data.pending_cases = 0;
+
+    data.review_cases = 0;
+
+    data.completed_cases = 0;
+
+    data.approved_cases = 0;
+
+    data.rejected_cases = 0;
+
+
+    // =====================================================
+    // STUDENT COUNTERS
+    // =====================================================
+
+    data.total_students = 0;
+
+    data.active_students = 0;
+
+    data.at_risk_students = 0;
+
+    data.review_students = 0;
+
+
+    // =====================================================
+    // RECENT CASES
+    // =====================================================
+
+    data.recent_cases = [];
+
+
+    // =====================================================
+    // FIND LOGGED-IN ADVISOR
+    // =====================================================
+
+    var advisor =
+        new GlideRecord(
+            "x_snc_visaguardi_0_advisor_profiles"
+        );
+
+    var profileFound = false;
+
+
+    var sessionAdvisorSysId =
+        gs.getSession().getClientData(
+            "vg_advisor_sys_id"
+        );
+
+
+    var sessionAdvisorUserName =
+        gs.getSession().getClientData(
+            "vg_advisor_user_name"
+        );
+
+
+    // =====================================================
+    // 1. SESSION ADVISOR SYS ID
+    // =====================================================
+
+    if (sessionAdvisorSysId) {
+
+        if (
+            advisor.get(
+                sessionAdvisorSysId
+            )
+        ) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 2. SESSION USERNAME
+    // =====================================================
+
+    if (
+        !profileFound &&
+        sessionAdvisorUserName
+    ) {
+
+        advisor =
+            new GlideRecord(
+                "x_snc_visaguardi_0_advisor_profiles"
+            );
+
+
+        advisor.addQuery(
+            "user.user_name",
+            sessionAdvisorUserName
+        );
+
+
+        advisor.setLimit(1);
+
+        advisor.query();
+
+
+        if (advisor.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 3. SERVICENOW LOGGED-IN USER
+    // =====================================================
+
+    if (!profileFound) {
+
+        var userSysId =
+            gs.getUserID();
+
+
+        if (userSysId) {
+
+            advisor =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_advisor_profiles"
+                );
+
+
+            advisor.addQuery(
+                "user",
+                userSysId
+            );
+
+
+            advisor.setLimit(1);
+
+            advisor.query();
+
+
+            if (advisor.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 4. USERNAME FALLBACK
+    // =====================================================
+
+    if (!profileFound) {
+
+        advisor =
+            new GlideRecord(
+                "x_snc_visaguardi_0_advisor_profiles"
+            );
+
+
+        advisor.addQuery(
+            "user.user_name",
+            gs.getUserName()
+        );
+
+
+        advisor.setLimit(1);
+
+        advisor.query();
+
+
+        if (advisor.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PROFILE NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        data.error =
+            "Advisor profile was not found for the logged-in user.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // ADVISOR SYS IDS
+    // =====================================================
+
+    var advisorProfileSysId =
+        advisor.getUniqueValue();
+
+
+    var advisorUserSysId =
+        advisor.getValue(
+            "user"
+        ) || "";
+
+
+    // =====================================================
+    // RESOLVE ADVISOR NAME
+    // =====================================================
+
+    var advisorFirstName =
+        advisor.getValue(
+            "first_name"
+        ) || "";
+
+
+    var advisorLastName =
+        advisor.getValue(
+            "last_name"
+        ) || "";
+
+
+    var advisorFullName =
+        (
+            advisorFirstName +
+            " " +
+            advisorLastName
+        ).trim();
+
+
+    var advisorName =
+        advisor.getDisplayValue(
+            "name"
+        ) || "";
+
+
+    // =====================================================
+    // NAME FALLBACK 1
+    // =====================================================
+
+    if (!advisorName) {
+
+        advisorName =
+            advisorFullName;
+
+    }
+
+
+    // =====================================================
+    // NAME FALLBACK 2
+    // =====================================================
+
+    if (!advisorName) {
+
+        advisorName =
+            advisor.getDisplayValue(
+                "user"
+            ) || "";
+
+    }
+
+
+    // =====================================================
+    // FINAL NAME FALLBACK
+    // =====================================================
+
+    if (!advisorName) {
+
+        advisorName =
+            "Advisor";
+
+    }
+
+
+    // =====================================================
+    // ADVISOR DATA
+    // =====================================================
+
+    data.advisor = {
+
+        sys_id:
+            advisorProfileSysId,
+
+
+        name:
+            advisorName,
+
+
+        first_name:
+            advisorFirstName,
+
+
+        last_name:
+            advisorLastName,
+
+
+        email:
+            advisor.getValue(
+                "email"
+            ) || "",
+
+
+        advisor_id:
+            advisor.getValue(
+                "advisor_id"
+            ) || "",
+
+
+        department:
+            advisor.getValue(
+                "department"
+            ) || "",
+
+
+        mobile_phone:
+            advisor.getValue(
+                "mobile_number"
+            ) || "",
+
+
+        user_name:
+            advisor.getDisplayValue(
+                "user"
+            ) || "",
+
+
+        created_on:
+            advisor.getValue(
+                "sys_created_on"
+            )
+                ? new GlideDateTime(
+                    advisor.getValue(
+                        "sys_created_on"
+                    )
+                )
+                    .getDate()
+                    .getByFormat(
+                        "MMM dd, yyyy"
+                    )
+                : ""
+
+    };
+
+
+    // =====================================================
+    // VISA CASE TABLE
+    // =====================================================
+
+    var caseGR =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    // =====================================================
+    // FIND CASES FOR CURRENT ADVISOR
+    // =====================================================
+
+    var advisorCondition =
+        caseGR.addQuery(
+            "advisor",
+            advisorProfileSysId
+        );
+
+
+    // =====================================================
+    // SUPPORT SYS_USER REFERENCE
+    // =====================================================
+
+    if (advisorUserSysId) {
+
+        advisorCondition.addOrCondition(
+            "advisor",
+            advisorUserSysId
+        );
+
+    }
+
+
+    // =====================================================
+    // ORDER BY LATEST
+    // =====================================================
+
+    caseGR.orderByDesc(
+        "sys_created_on"
+    );
+
+
+    caseGR.query();
+
+
+    // =====================================================
+    // UNIQUE STUDENTS
+    // =====================================================
+
+    var students = {};
+
+    var activeStudents = {};
+
+    var riskStudents = {};
+
+    var reviewStudents = {};
+
+
+    // =====================================================
+    // PROCESS CASES
+    // =====================================================
+
+    while (caseGR.next()) {
+
+
+        // =================================================
+        // TOTAL CASES
+        // =================================================
+
+        data.total_cases++;
+
+
+        // =================================================
+        // CASE STAGE
+        // =================================================
+
+        var stage =
+            caseGR.getValue(
+                "case_stage"
+            ) || "";
+
+
+        var stageLower =
+            String(
+                stage
+            )
+                .trim()
+                .toLowerCase();
+
+
+        // =================================================
+        // CASE STATUS
+        // =================================================
+
+        var status =
+            caseGR.getValue(
+                "status"
+            ) || "";
+
+
+        var statusLower =
+            String(
+                status
+            )
+                .trim()
+                .toLowerCase();
+
+
+        // =================================================
+        // PENDING
+        // =================================================
+
+        if (
+
+            stageLower == "pending" ||
+
+            statusLower == "pending"
+
+        ) {
+
+            data.pending_cases++;
+
+        }
+
+
+        // =================================================
+        // REVIEW
+        // =================================================
+
+        if (
+
+            stageLower == "review" ||
+
+            stageLower == "under_review" ||
+
+            stageLower == "under review" ||
+
+            statusLower == "review" ||
+
+            statusLower == "under_review" ||
+
+            statusLower == "under review" ||
+
+            statusLower == "in_progress" ||
+
+            statusLower == "in progress"
+
+        ) {
+
+            data.review_cases++;
+
+        }
+
+
+        // =================================================
+        // COMPLETED CASE
+        // =================================================
+        //
+        // DSO + ADVISOR decisions are both final.
+        //
+        // =================================================
+
+        var completed =
+
+            stageLower == "completed" ||
+
+            statusLower == "completed" ||
+
+            stageLower == "closed" ||
+
+            statusLower == "closed" ||
+
+            stageLower == "resolved" ||
+
+            statusLower == "resolved" ||
+
+            stageLower == "approved" ||
+
+            statusLower == "approved" ||
+
+            stageLower == "rejected" ||
+
+            statusLower == "rejected" ||
+
+            stageLower == "advisor approved" ||
+
+            statusLower == "advisor approved" ||
+
+            stageLower == "advisor rejected" ||
+
+            statusLower == "advisor rejected" ||
+
+            stageLower == "dso approved" ||
+
+            statusLower == "dso approved" ||
+
+            stageLower == "dso rejected" ||
+
+            statusLower == "dso rejected";
+
+
+        if (completed) {
+
+            data.completed_cases++;
+
+        }
+
+
+        // =================================================
+        // APPROVED
+        // =================================================
+
+        var approved =
+
+            stageLower == "approved" ||
+
+            statusLower == "approved" ||
+
+            stageLower == "advisor approved" ||
+
+            statusLower == "advisor approved" ||
+
+            stageLower == "dso approved" ||
+
+            statusLower == "dso approved";
+
+
+        if (approved) {
+
+            data.approved_cases++;
+
+        }
+
+
+        // =================================================
+        // REJECTED
+        // =================================================
+
+        var rejected =
+
+            stageLower == "rejected" ||
+
+            statusLower == "rejected" ||
+
+            stageLower == "advisor rejected" ||
+
+            statusLower == "advisor rejected" ||
+
+            stageLower == "dso rejected" ||
+
+            statusLower == "dso rejected";
+
+
+        if (rejected) {
+
+            data.rejected_cases++;
+
+        }
+
+
+        // =================================================
+        // STUDENT REFERENCE
+        // =================================================
+
+        var studentSysId =
+            caseGR.getValue(
+                "student"
+            );
+
+
+        if (!studentSysId) {
+
+            continue;
+
+        }
+
+
+        // =================================================
+        // UNIQUE STUDENT
+        // =================================================
+
+        students[
+            studentSysId
+        ] = true;
+
+
+        // =================================================
+        // ACTIVE STUDENT
+        // =================================================
+
+        if (!completed) {
+
+            activeStudents[
+                studentSysId
+            ] = true;
+
+        }
+
+
+        // =================================================
+        // AT RISK
+        // =================================================
+
+        if (
+
+            stageLower == "risk" ||
+
+            stageLower == "high_risk" ||
+
+            stageLower == "high risk" ||
+
+            statusLower == "risk" ||
+
+            statusLower == "high_risk" ||
+
+            statusLower == "high risk"
+
+        ) {
+
+            riskStudents[
+                studentSysId
+            ] = true;
+
+        }
+
+
+        // =================================================
+        // REVIEW STUDENT
+        // =================================================
+
+        if (
+
+            stageLower == "review" ||
+
+            stageLower == "under_review" ||
+
+            stageLower == "under review" ||
+
+            statusLower == "review" ||
+
+            statusLower == "under_review" ||
+
+            statusLower == "under review"
+
+        ) {
+
+            reviewStudents[
+                studentSysId
+            ] = true;
+
+        }
+
+
+        // =================================================
+        // RECENT CASES
+        // =================================================
+
+        if (
+            data.recent_cases.length < 10
+        ) {
+
+
+            // =============================================
+            // STUDENT NAME
+            // =============================================
+
+            var studentName =
+                caseGR.getDisplayValue(
+                    "student"
+                ) ||
+                "Unknown Student";
+
+
+            var studentId = "";
+
+
+            // =============================================
+            // LOAD STUDENT PROFILE
+            // =============================================
+
+            if (studentSysId) {
+
+                var studentGR =
+                    new GlideRecord(
+                        "x_snc_visaguardi_0_student_profile"
+                    );
+
+
+                if (
+                    studentGR.get(
+                        studentSysId
+                    )
+                ) {
+
+                    studentId =
+                        studentGR.getValue(
+                            "student_id"
+                        ) || "";
+
+
+                    var profileName =
+                        studentGR.getValue(
+                            "name"
+                        ) || "";
+
+
+                    if (profileName) {
+
+                        studentName =
+                            profileName;
+
+                    }
+
+                    else {
+
+                        var firstName =
+                            studentGR.getValue(
+                                "first_name"
+                            ) || "";
+
+
+                        var lastName =
+                            studentGR.getValue(
+                                "last_name"
+                            ) || "";
+
+
+                        var fullName =
+                            (
+                                firstName +
+                                " " +
+                                lastName
+                            ).trim();
+
+
+                        if (fullName) {
+
+                            studentName =
+                                fullName;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+            // =============================================
+            // CASE TYPE
+            // =============================================
+
+            var displayCaseType =
+                caseGR.getDisplayValue(
+                    "case_type"
+                ) || "";
+
+
+            if (!displayCaseType) {
+
+                displayCaseType =
+                    caseGR.getValue(
+                        "case_type"
+                    ) || "";
+
+            }
+
+
+            // =============================================
+            // CASE STAGE
+            // =============================================
+
+            var displayCaseStage =
+                caseGR.getDisplayValue(
+                    "case_stage"
+                ) || "";
+
+
+            if (!displayCaseStage) {
+
+                displayCaseStage =
+                    caseGR.getValue(
+                        "case_stage"
+                    ) || "";
+
+            }
+
+
+            // =============================================
+            // STATUS
+            // =============================================
+
+            var displayStatus =
+                caseGR.getDisplayValue(
+                    "status"
+                ) || "";
+
+
+            if (!displayStatus) {
+
+                displayStatus =
+                    caseGR.getValue(
+                        "status"
+                    ) || "";
+
+            }
+
+
+            // =============================================
+            // STATUS FALLBACK TO STAGE
+            // =============================================
+
+            if (!displayStatus) {
+
+                displayStatus =
+                    displayCaseStage ||
+                    "N/A";
+
+            }
+
+
+            // =============================================
+            // CREATED
+            // =============================================
+
+            var createdDate =
+                caseGR.getDisplayValue(
+                    "sys_created_on"
+                ) || "";
+
+
+            // =============================================
+            // CASE ADVISOR
+            // =============================================
+            //
+            // Normally this is the logged-in advisor.
+            // We still resolve the case reference so that
+            // the correct advisor name is returned.
+            //
+            // =============================================
+
+            var caseAdvisorName =
+                advisorName;
+
+            var caseAdvisorEmail =
+                data.advisor.email || "";
+
+
+            var caseAdvisorSysId =
+                "";
+
+
+            if (
+                caseGR.isValidField(
+                    "advisor"
+                )
+            ) {
+
+                caseAdvisorSysId =
+                    caseGR.getValue(
+                        "advisor"
+                    ) || "";
+
+            }
+
+
+            // =============================================
+            // IF CASE HAS ADVISOR, LOAD PROFILE
+            // =============================================
+
+            if (caseAdvisorSysId) {
+
+                var caseAdvisorGR =
+                    new GlideRecord(
+                        "x_snc_visaguardi_0_advisor_profiles"
+                    );
+
+
+                if (
+                    caseAdvisorGR.get(
+                        caseAdvisorSysId
+                    )
+                ) {
+
+                    var caseAdvisorFirst =
+                        caseAdvisorGR.getValue(
+                            "first_name"
+                        ) || "";
+
+
+                    var caseAdvisorLast =
+                        caseAdvisorGR.getValue(
+                            "last_name"
+                        ) || "";
+
+
+                    var caseAdvisorFull =
+                        (
+                            caseAdvisorFirst +
+                            " " +
+                            caseAdvisorLast
+                        ).trim();
+
+
+                    caseAdvisorName =
+                        caseAdvisorGR.getDisplayValue(
+                            "name"
+                        ) || "";
+
+
+                    if (!caseAdvisorName) {
+
+                        caseAdvisorName =
+                            caseAdvisorFull;
+
+                    }
+
+
+                    if (!caseAdvisorName) {
+
+                        caseAdvisorName =
+                            caseAdvisorGR.getDisplayValue(
+                                "user"
+                            ) || "";
+
+                    }
+
+
+                    caseAdvisorEmail =
+                        caseAdvisorGR.getValue(
+                            "email"
+                        ) || "";
+
+                }
+
+            }
+
+
+            // =============================================
+            // PUSH RECENT CASE
+            // =============================================
+
+            data.recent_cases.push({
+
+                sys_id:
+                    caseGR.getUniqueValue(),
+
+
+                student_name:
+                    studentName,
+
+
+                student_id:
+                    studentId,
+
+
+                case_type:
+                    displayCaseType ||
+                    "N/A",
+
+
+                case_stage:
+                    displayCaseStage ||
+                    "N/A",
+
+
+                status:
+                    displayStatus ||
+                    "N/A",
+
+
+                advisor_name:
+                    caseAdvisorName ||
+                    "Not Assigned",
+
+
+                advisor_email:
+                    caseAdvisorEmail ||
+                    "",
+
+
+                created:
+                    createdDate
+
+            });
+
+        }
+
+    }
+
+
+    // =====================================================
+    // TOTAL UNIQUE STUDENTS
+    // =====================================================
+
+    for (
+        var studentKey in students
+    ) {
+
+        if (
+            students.hasOwnProperty(
+                studentKey
+            )
+        ) {
+
+            data.total_students++;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // ACTIVE STUDENTS
+    // =====================================================
+
+    for (
+        var activeKey in activeStudents
+    ) {
+
+        if (
+            activeStudents.hasOwnProperty(
+                activeKey
+            )
+        ) {
+
+            data.active_students++;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // AT-RISK STUDENTS
+    // =====================================================
+
+    for (
+        var riskKey in riskStudents
+    ) {
+
+        if (
+            riskStudents.hasOwnProperty(
+                riskKey
+            )
+        ) {
+
+            data.at_risk_students++;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // REVIEW STUDENTS
+    // =====================================================
+
+    for (
+        var reviewKey in reviewStudents
+    ) {
+
+        if (
+            reviewStudents.hasOwnProperty(
+                reviewKey
+            )
+        ) {
+
+            data.review_students++;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // DEBUG
+    // =====================================================
+
+    data.debug = {
+
+        advisor_profile_sys_id:
+            advisorProfileSysId,
+
+
+        advisor_user_sys_id:
+            advisorUserSysId,
+
+
+        advisor_name:
+            advisorName,
+
+
+        advisor_first_name:
+            advisorFirstName,
+
+
+        advisor_last_name:
+            advisorLastName,
+
+
+        advisor_email:
+            data.advisor.email,
+
+
+        total_cases:
+            data.total_cases,
+
+
+        pending_cases:
+            data.pending_cases,
+
+
+        review_cases:
+            data.review_cases,
+
+
+        completed_cases:
+            data.completed_cases,
+
+
+        approved_cases:
+            data.approved_cases,
+
+
+        rejected_cases:
+            data.rejected_cases,
+
+
+        total_students:
+            data.total_students,
+
+
+        active_students:
+            data.active_students,
+
+
+        at_risk_students:
+            data.at_risk_students,
+
+
+        review_students:
+            data.review_students
+
+    };
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:20:54</sys_created_on>
+        <sys_id>60aacb921ceac3107f44ac71430964a7</sys_id>
+        <sys_mod_count>19</sys_mod_count>
+        <sys_name>Advisor Dashboard</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_60aacb921ceac3107f44ac71430964a7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 20:23:38</sys_updated_on>
+        <template><![CDATA[<div class="vg-dashboard">
+
+    <!-- =====================================================
+         HEADER / ADVISOR PROFILE
+    ====================================================== -->
+
+    <div class="vg-dashboard-header">
+
+        <div class="vg-profile-area">
+
+            <div class="vg-avatar">
+
+                <span ng-if="!c.data.advisor.photo">
+                    {{(c.data.advisor.first_name || 'A').charAt(0)}}
+                </span>
+
+                <img
+                    ng-if="c.data.advisor.photo"
+                    ng-src="{{c.data.advisor.photo}}"
+                    alt="Advisor Photo">
+            </div>
+
+
+            <div class="vg-profile-info">
+
+                <h2>
+                    Welcome back,
+                    {{c.data.advisor.first_name || c.data.advisor.name}}
+                </h2>
+
+                <p>
+                    Visa Advisor
+
+                    <span>|</span>
+
+                    {{c.data.advisor.department || 'Visa Advisory'}}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="vg-profile-meta">
+
+            <div class="vg-profile-item">
+
+                <span>ADVISOR ID</span>
+
+                <strong>
+                    {{c.data.advisor.advisor_id || 'N/A'}}
+                </strong>
+
+            </div>
+
+
+            <div class="vg-profile-item">
+
+                <span>EMAIL</span>
+
+                <strong>
+                    {{c.data.advisor.email || 'N/A'}}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        class="vg-error"
+        ng-if="c.data.error">
+
+        {{c.data.error}}
+
+    </div>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ====================================================== -->
+
+    <div class="vg-kpi-row">
+
+
+        <!-- TOTAL CASES -->
+
+        <div class="vg-kpi-card">
+
+            <div class="vg-kpi-icon blue">
+                <i class="fa fa-folder-open"></i>
+            </div>
+
+            <div class="vg-kpi-data">
+
+                <strong>
+                    {{c.data.total_cases}}
+                </strong>
+
+                <span>
+                    TOTAL CASES
+                </span>
+
+                <small>
+                    Assigned to you
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING -->
+
+        <div class="vg-kpi-card">
+
+            <div class="vg-kpi-icon orange">
+                <i class="fa fa-clock-o"></i>
+            </div>
+
+            <div class="vg-kpi-data">
+
+                <strong>
+                    {{c.data.pending_cases}}
+                </strong>
+
+                <span>
+                    PENDING CASES
+                </span>
+
+                <small>
+                    Awaiting action
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- REVIEW -->
+
+        <div class="vg-kpi-card">
+
+            <div class="vg-kpi-icon purple">
+                <i class="fa fa-search"></i>
+            </div>
+
+            <div class="vg-kpi-data">
+
+                <strong>
+                    {{c.data.review_cases}}
+                </strong>
+
+                <span>
+                    IN REVIEW
+                </span>
+
+                <small>
+                    Requires attention
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="vg-kpi-card">
+
+            <div class="vg-kpi-icon green">
+                <i class="fa fa-check"></i>
+            </div>
+
+            <div class="vg-kpi-data">
+
+                <strong>
+                    {{c.data.completed_cases}}
+                </strong>
+
+                <span>
+                    COMPLETED
+                </span>
+
+                <small>
+                    Successfully completed
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN GRID
+    ====================================================== -->
+
+    <div class="vg-main-grid">
+
+
+        <!-- =================================================
+             CASE SUMMARY
+        ================================================== -->
+
+        <div class="vg-card">
+
+            <div class="vg-card-header">
+
+                <h3>
+                    <i class="fa fa-pie-chart"></i>
+                    Case Summary
+                </h3>
+
+            </div>
+
+
+            <div class="vg-summary">
+
+                <div
+                    class="vg-donut"
+                    ng-style="c.getDonutStyle()">
+
+                    <div class="vg-donut-center">
+
+                        <strong>
+                            {{c.data.total_cases}}
+                        </strong>
+
+                        <span>
+                            Cases
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="vg-summary-list">
+
+
+                    <div>
+
+                        <span>
+                            <i class="dot blue"></i>
+                            Total Students
+                        </span>
+
+                        <strong>
+                            {{c.data.total_students}}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            <i class="dot orange"></i>
+                            Pending
+                        </span>
+
+                        <strong>
+                            {{c.data.pending_cases}}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            <i class="dot purple"></i>
+                            In Review
+                        </span>
+
+                        <strong>
+                            {{c.data.review_cases}}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            <i class="dot green"></i>
+                            Completed
+                        </span>
+
+                        <strong>
+                            {{c.data.completed_cases}}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STUDENT SUMMARY
+        ================================================== -->
+
+        <div class="vg-card">
+
+            <div class="vg-card-header">
+
+                <h3>
+                    <i class="fa fa-users"></i>
+                    My Students
+                </h3>
+
+            </div>
+
+
+            <div class="vg-stat-list">
+
+
+                <div>
+
+                    <span>
+                        Total Students
+                    </span>
+
+                    <strong>
+                        {{c.data.total_students}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Active Students
+                    </span>
+
+                    <strong>
+                        {{c.data.active_students}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span class="risk-text">
+                        At Risk
+                    </span>
+
+                    <strong class="risk-text">
+                        {{c.data.at_risk_students}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Students in Review
+                    </span>
+
+                    <strong>
+                        {{c.data.review_students}}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CASE STATUS
+        ================================================== -->
+
+        <div class="vg-card">
+
+            <div class="vg-card-header">
+
+                <h3>
+                    <i class="fa fa-balance-scale"></i>
+                    Case Status
+                </h3>
+
+            </div>
+
+
+            <div class="vg-stat-list">
+
+
+                <div>
+
+                    <span>
+                        Pending
+                    </span>
+
+                    <strong>
+                        {{c.data.pending_cases}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        In Review
+                    </span>
+
+                    <strong>
+                        {{c.data.review_cases}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span class="approved-text">
+                        Approved
+                    </span>
+
+                    <strong class="approved-text">
+                        {{c.data.approved_cases}}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span class="rejected-text">
+                        Rejected
+                    </span>
+
+                    <strong class="rejected-text">
+                        {{c.data.rejected_cases}}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECENT CASES
+    ====================================================== -->
+
+    <div class="vg-card vg-recent-card">
+
+        <div class="vg-card-header">
+
+            <div>
+
+                <h3>
+                    <i class="fa fa-folder-open"></i>
+                    My Recent Cases
+                </h3>
+
+                <p>
+                    Latest visa cases assigned to you
+                </p>
+
+            </div>
+
+            <span class="vg-case-count">
+                {{c.data.total_cases}} Cases
+            </span>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table vg-case-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Case Type
+                        </th>
+
+                        <th>
+                            Case Stage
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Created
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr
+                        ng-repeat="caseItem in c.data.recent_cases track by caseItem.sys_id">
+
+
+                        <td>
+
+                            <div class="vg-student">
+
+                                <strong>
+                                    {{caseItem.student_name}}
+                                </strong>
+
+                                <small>
+                                    {{caseItem.student_id}}
+                                </small>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            {{caseItem.case_type}}
+                        </td>
+
+
+                        <td>
+
+                            <span class="vg-stage">
+                                {{caseItem.case_stage}}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="vg-status"
+                                ng-class="c.getStatusClass(caseItem.status)">
+
+                                {{caseItem.status}}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            {{caseItem.created}}
+                        </td>
+
+                    </tr>
+
+
+                    <tr
+                        ng-if="!c.data.recent_cases.length">
+
+                        <td
+                            colspan="5"
+                            class="vg-empty">
+
+                            No visa cases are currently assigned
+                            to this advisor.
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADVISOR INFORMATION
+    ====================================================== -->
+
+    <div class="vg-card vg-advisor-details">
+
+        <div class="vg-card-header">
+
+            <h3>
+                <i class="fa fa-user-circle"></i>
+                Advisor Profile
+            </h3>
+
+        </div>
+
+
+        <div class="vg-details-grid">
+
+
+            <div>
+
+                <label>
+                    Name
+                </label>
+
+                <span>
+                    {{c.data.advisor.name || 'N/A'}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Advisor ID
+                </label>
+
+                <span>
+                    {{c.data.advisor.advisor_id || 'N/A'}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Department
+                </label>
+
+                <span>
+                    {{c.data.advisor.department || 'N/A'}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Email
+                </label>
+
+                <span>
+                    {{c.data.advisor.email || 'N/A'}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Mobile
+                </label>
+
+                <span>
+                    {{c.data.advisor.mobile_phone || 'N/A'}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <label>
+                    Username
+                </label>
+
+                <span>
+                    {{c.data.advisor.user_name || 'N/A'}}
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>60aacb921ceac3107f44ac71430964a7</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-09 10:20:55</sys_created_on>
+        <sys_id>28aa03d21ceac3107f44ac71430964f6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-09 10:20:55</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

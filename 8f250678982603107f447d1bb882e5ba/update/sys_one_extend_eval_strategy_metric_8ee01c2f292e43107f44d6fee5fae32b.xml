@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_one_extend_eval_strategy_metric">
+    <sys_one_extend_eval_strategy_metric action="INSERT_OR_UPDATE">
+        <active>false</active>
+        <definition display_value="Correctness Metric (Now LLM)">cbf929b27fe242100a03b6257d866548</definition>
+        <eval_strategy display_value="Default">6ce0982f292e43107f44d6fee5fae3f5</eval_strategy>
+        <gen_ai_config display_value="OneExtend Capability Definition: Correctness Metric (Now LLM)">c834087d7f5202100a03b6257d866503</gen_ai_config>
+        <metric_name>Correctness Metric</metric_name>
+        <sys_class_name>sys_one_extend_eval_strategy_metric</sys_class_name>
+        <sys_created_by>system</sys_created_by>
+        <sys_created_on>2026-08-12 18:01:52</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>8ee01c2f292e43107f44d6fee5fae32b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Correctness Metric</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sys_one_extend_eval_strategy_metric_8ee01c2f292e43107f44d6fee5fae32b</sys_update_name>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-08-12 18:01:52</sys_updated_on>
+    </sys_one_extend_eval_strategy_metric>
+</record_update>

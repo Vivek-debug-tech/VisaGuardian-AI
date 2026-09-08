@@ -1,0 +1,4015 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope) {
+
+    var c = this;
+
+
+    // =====================================================
+    // VARIABLES
+    // =====================================================
+
+    c.ai_question = "";
+
+
+    // =====================================================
+    // PAGE NAVIGATION
+    // =====================================================
+
+    c.openPage = function(pageId) {
+
+        if (!pageId) {
+            return;
+        }
+
+
+        window.location.href =
+            "?id=" +
+            encodeURIComponent(pageId);
+
+    };
+
+
+    // =====================================================
+    // OPEN CASE DETAILS
+    // =====================================================
+
+    c.openCase = function(sysId) {
+
+        if (!sysId) {
+            return;
+        }
+
+
+        window.location.href =
+            "?id=case_details&sys_id=" +
+            encodeURIComponent(sysId);
+
+    };
+
+
+    // =====================================================
+    // ASK AI
+    // =====================================================
+
+    c.askAI = function(question) {
+
+        if (!question) {
+            return;
+        }
+
+
+        question =
+            String(question).trim();
+
+
+        if (!question) {
+            return;
+        }
+
+
+        // Save question
+
+        sessionStorage.setItem(
+            "vg_ai_question",
+            question
+        );
+
+
+        // Open AI page
+
+        window.location.href =
+            "?id=vg_ai_chat";
+
+    };
+
+
+    // =====================================================
+    // ENTER KEY
+    // =====================================================
+
+    c.checkAIEnter = function(event) {
+
+        if (
+            event.which === 13 ||
+            event.keyCode === 13
+        ) {
+
+            event.preventDefault();
+
+
+            c.askAI(
+                c.ai_question
+            );
+
+        }
+
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>/* =========================================================
+   SERVICENOW / CONTAINER OVERRIDES (EDGE-TO-EDGE)
+   ========================================================= */
+
+/* Remove default ServiceNow widget padding/margins */
+:host, 
+.page-container, 
+.container, 
+.row, 
+.col-xs-12 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* =========================================================
+   ROOT DASHBOARD
+   ========================================================= */
+
+.vg-dashboard {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100vh;
+    margin: 0 !important;
+    padding: 0 !important; /* Set padding to 0 to eliminate space on all 4 sides */
+    box-sizing: border-box;
+
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    color: #193b60;
+
+    background:
+        radial-gradient(
+            circle at 92% 4%,
+            rgba(37, 121, 226, 0.08),
+            transparent 24%
+        ),
+        radial-gradient(
+            circle at 4% 90%,
+            rgba(104, 62, 190, 0.055),
+            transparent 25%
+        ),
+        linear-gradient(
+            145deg,
+            #f8fbff 0%,
+            #f3f7fc 48%,
+            #edf4fa 100%
+        );
+
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   GLOBAL BOX SIZING
+   ========================================================= */
+
+.vg-dashboard *,
+.vg-dashboard *::before,
+.vg-dashboard *::after {
+
+    box-sizing: border-box;
+}
+
+
+.vg-dashboard button,
+.vg-dashboard input {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   SUBTLE BACKGROUND GRID
+   ========================================================= */
+
+.vg-dashboard::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .20;
+
+    background-image:
+
+        linear-gradient(
+            rgba(28, 103, 175, .025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(28, 103, 175, .025) 1px,
+            transparent 1px
+        );
+
+    background-size: 42px 42px;
+
+    z-index: 0;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.vg-dashboard-header {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 28px;
+
+    padding: 4px 2px;
+}
+
+
+/* =========================================================
+   WELCOME LABEL
+   ========================================================= */
+
+.vg-welcome-label {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-bottom: 10px;
+
+    padding: 6px 12px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #edf5ff,
+            #f2f0ff
+        );
+
+    border:
+        1px solid #d6e6f7;
+
+    color: #3977ad;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 2px 7px
+        rgba(30,90,150,.04);
+}
+
+
+/* =========================================================
+   WELCOME HEADING
+   ========================================================= */
+
+.vg-welcome h1 {
+
+    margin: 0;
+
+    color: #153e69;
+
+    font-size: 34px;
+
+    line-height: 42px;
+
+    font-weight: 750;
+
+    letter-spacing: -.7px;
+}
+
+
+.vg-welcome h1 span {
+
+    background:
+        linear-gradient(
+            90deg,
+            #176bc1,
+            #315fd1,
+            #673db1
+        );
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+
+/* =========================================================
+   WELCOME SUBTITLE
+   ========================================================= */
+
+.vg-welcome p {
+
+    margin: 7px 0 0;
+
+    color: #8192a5;
+
+    font-size: 13px;
+
+    line-height: 20px;
+}
+
+
+/* =========================================================
+   HEADER RIGHT
+   ========================================================= */
+
+.vg-header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   LIVE COMPLIANCE
+   ========================================================= */
+
+.vg-compliance-live {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px 16px;
+
+    border:
+        1px solid #d6e5ef;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,.92);
+
+    color: #637a91;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    box-shadow:
+        0 5px 15px
+        rgba(25,65,100,.055);
+}
+
+
+.vg-live-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #32aa6b;
+
+    box-shadow:
+        0 0 0 5px
+        rgba(50,170,107,.11),
+
+        0 0 9px
+        rgba(50,170,107,.35);
+}
+
+
+/* =========================================================
+   BELL BUTTON
+   ========================================================= */
+
+.vg-bell-button {
+
+    position: relative;
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid #d6e4ee;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #35698f;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(25,65,100,.06);
+
+    transition:
+        all .22s ease;
+}
+
+
+.vg-bell-button:hover {
+
+    color: #176bc1;
+
+    border-color: #9fc3df;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(25,65,100,.10);
+}
+
+
+.vg-bell-count {
+
+    position: absolute;
+
+    top: -6px;
+
+    right: -6px;
+
+    min-width: 20px;
+
+    height: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ec5260,
+            #d93649
+        );
+
+    border:
+        2px solid #f5f9fd;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 3px 8px
+        rgba(200,40,60,.18);
+}
+
+
+/* =========================================================
+   OVERVIEW GRID
+   ========================================================= */
+
+.vg-overview-grid {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 27px;
+}
+
+
+/* =========================================================
+   OVERVIEW CARD
+   ========================================================= */
+
+.vg-overview-card {
+
+    position: relative;
+
+    min-height: 190px;
+
+    padding: 21px;
+
+    overflow: hidden;
+
+    border:
+        1px solid #d8e5ef;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #fbfdff
+        );
+
+    box-shadow:
+        0 6px 18px
+        rgba(25,64,100,.065);
+
+    cursor: pointer;
+
+    transition:
+        transform .24s ease,
+        box-shadow .24s ease,
+        border-color .24s ease;
+}
+
+
+/* decorative glow */
+
+.vg-overview-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+
+    height: 110px;
+
+    right: -50px;
+
+    bottom: -55px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(30,120,210,.045);
+
+    pointer-events: none;
+}
+
+
+.vg-overview-card:hover {
+
+    transform: translateY(-4px);
+
+    border-color: #a8c7df;
+
+    box-shadow:
+        0 13px 28px
+        rgba(25,64,100,.105);
+}
+
+
+/* =========================================================
+   CARD COLOR STRIPE
+   ========================================================= */
+
+.vg-overview-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 0;
+
+    width: 4px;
+
+    height: 100%;
+
+    border-radius: 14px 0 0 14px;
+}
+
+
+.vg-card-compliance::before {
+
+    background:
+        linear-gradient(
+            180deg,
+            #35b576,
+            #26965f
+        );
+}
+
+
+.vg-card-request::before {
+
+    background:
+        linear-gradient(
+            180deg,
+            #398bd0,
+            #216cb0
+        );
+}
+
+
+.vg-card-deadline::before {
+
+    background:
+        linear-gradient(
+            180deg,
+            #f1b052,
+            #df8b21
+        );
+}
+
+
+.vg-card-action::before {
+
+    background:
+        linear-gradient(
+            180deg,
+            #8a6ac5,
+            #6544a9
+        );
+}
+
+
+/* =========================================================
+   OVERVIEW TOP
+   ========================================================= */
+
+.vg-overview-card-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.vg-overview-label {
+
+    color: #71859a;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    letter-spacing: .15px;
+}
+
+
+/* =========================================================
+   OVERVIEW ICON
+   ========================================================= */
+
+.vg-overview-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 17px;
+
+    transition:
+        transform .22s ease;
+}
+
+
+.vg-overview-card:hover
+.vg-overview-icon {
+
+    transform:
+        scale(1.07);
+}
+
+
+.vg-card-compliance .vg-overview-icon {
+
+    background:
+        #e7f7ee;
+
+    color:
+        #2d9b68;
+}
+
+
+.vg-card-request .vg-overview-icon {
+
+    background:
+        #e8f2fc;
+
+    color:
+        #337fbd;
+}
+
+
+.vg-card-deadline .vg-overview-icon {
+
+    background:
+        #fff2dd;
+
+    color:
+        #d78c26;
+}
+
+
+.vg-card-action .vg-overview-icon {
+
+    background:
+        #f0ebfb;
+
+    color:
+        #765cb0;
+}
+
+
+/* =========================================================
+   OVERVIEW VALUE
+   ========================================================= */
+
+.vg-overview-value {
+
+    margin-top: 4px;
+
+    color: #173f67;
+
+    font-size: 24px;
+
+    line-height: 31px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.vg-card-compliance .vg-overview-value {
+
+    color: #218451;
+}
+
+
+.vg-overview-sub {
+
+    margin-top: 6px;
+
+    color: #8192a3;
+
+    font-size: 11px;
+
+    line-height: 18px;
+}
+
+
+.vg-blue-text {
+
+    color: #3978aa;
+}
+
+
+.vg-orange-text {
+
+    color: #d88c25;
+}
+
+
+/* =========================================================
+   OVERVIEW CASE
+   ========================================================= */
+
+.vg-overview-case {
+
+    margin-top: 12px;
+
+    color: #8a9aaa;
+
+    font-size: 10px;
+}
+
+
+.vg-overview-case strong {
+
+    color: #5d7389;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PROGRESS BAR
+   ========================================================= */
+
+.vg-mini-progress {
+
+    height: 6px;
+
+    margin-top: 16px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background:
+        #e7edf3;
+}
+
+
+.vg-mini-progress-fill {
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #32a96b,
+            #42bb7b
+        );
+
+    box-shadow:
+        0 0 8px
+        rgba(50,169,107,.20);
+
+    transition:
+        width .4s ease;
+}
+
+
+/* =========================================================
+   MAIN SECTION
+   ========================================================= */
+
+.vg-main-section {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(390px, .85fr);
+
+    gap: 20px;
+
+    margin-bottom: 27px;
+}
+
+
+/* =========================================================
+   QUICK SECTION
+   ========================================================= */
+
+.vg-quick-section {
+
+    min-width: 0;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.vg-section-header {
+
+    margin-bottom: 13px;
+}
+
+
+.vg-section-header &gt; div &gt; span {
+
+    color: #4b85b4;
+
+    font-size: 10px;
+
+    font-weight: 850;
+
+    letter-spacing: 1.15px;
+}
+
+
+.vg-section-header h2 {
+
+    margin: 5px 0 0;
+
+    color: #173f67;
+
+    font-size: 24px;
+
+    line-height: 31px;
+
+    font-weight: 750;
+
+    letter-spacing: -.25px;
+}
+
+
+/* =========================================================
+   QUICK GRID
+   ========================================================= */
+
+.vg-quick-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   QUICK ACTION CARD
+   ========================================================= */
+
+.vg-quick-card {
+
+    position: relative;
+
+    min-height: 148px;
+
+    padding: 18px;
+
+    text-align: left;
+
+    border:
+        1px solid #d9e6ef;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #fbfdff
+        );
+
+    box-shadow:
+        0 5px 14px
+        rgba(25,64,100,.055);
+
+    cursor: pointer;
+
+    transition:
+        transform .23s ease,
+        box-shadow .23s ease,
+        border-color .23s ease;
+}
+
+
+.vg-quick-card:hover {
+
+    transform:
+        translateY(-4px);
+
+    border-color:
+        #9fc1dd;
+
+    box-shadow:
+        0 12px 24px
+        rgba(25,64,100,.10);
+}
+
+
+/* =========================================================
+   QUICK ICON
+   ========================================================= */
+
+.vg-quick-icon {
+
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 11px;
+
+    font-size: 18px;
+
+    transition:
+        transform .23s ease;
+}
+
+
+.vg-quick-card:hover
+.vg-quick-icon {
+
+    transform:
+        scale(1.08);
+}
+
+
+.vg-icon-blue {
+
+    background: #e8f2fc;
+
+    color: #337fbd;
+}
+
+
+.vg-icon-ai {
+
+    background: #eee9fc;
+
+    color: #6852a7;
+}
+
+
+.vg-icon-indigo {
+
+    background: #e9eff9;
+
+    color: #456b9e;
+}
+
+
+.vg-icon-cyan {
+
+    background: #e5f7f8;
+
+    color: #278b96;
+}
+
+
+.vg-icon-purple {
+
+    background: #f0eafb;
+
+    color: #7156a6;
+}
+
+
+.vg-icon-green {
+
+    background: #e7f7ee;
+
+    color: #318e67;
+}
+
+
+/* =========================================================
+   QUICK TEXT
+   ========================================================= */
+
+.vg-quick-card strong {
+
+    display: block;
+
+    max-width: 90%;
+
+    color: #244666;
+
+    font-size: 13px;
+
+    line-height: 18px;
+
+    font-weight: 750;
+}
+
+
+.vg-quick-card small {
+
+    display: block;
+
+    margin-top: 6px;
+
+    color: #8798a8;
+
+    font-size: 10px;
+
+    line-height: 15px;
+}
+
+
+/* =========================================================
+   QUICK ARROW
+   ========================================================= */
+
+.vg-quick-arrow {
+
+    position: absolute;
+
+    right: 15px;
+
+    bottom: 13px;
+
+    color: #397db5;
+
+    font-size: 17px;
+
+    opacity: 0;
+
+    transform:
+        translateX(-5px);
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+}
+
+
+.vg-quick-card:hover
+.vg-quick-arrow {
+
+    opacity: 1;
+
+    transform:
+        translateX(0);
+}
+
+
+/* =========================================================
+   AI ASSISTANT CARD
+   ========================================================= */
+
+.vg-ai-card {
+
+    min-width: 0;
+
+    padding: 21px;
+
+    border:
+        1px solid #d3e2ee;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #f8fbff 58%,
+            #f7f5ff 100%
+        );
+
+    box-shadow:
+        0 7px 20px
+        rgba(25,64,100,.075);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+/* AI decorative glow */
+
+.vg-ai-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+
+    height: 170px;
+
+    top: -95px;
+
+    right: -70px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(109,73,207,.12),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   AI HEADER
+   ========================================================= */
+
+.vg-ai-card-header {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 16px;
+}
+
+
+.vg-ai-avatar {
+
+    width: 50px;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-right: 12px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf2ff,
+            #eeeafd
+        );
+
+    border:
+        1px solid #d8e4f4;
+
+    font-size: 22px;
+
+    box-shadow:
+        0 5px 12px
+        rgba(65,70,160,.08);
+}
+
+
+/* =========================================================
+   AI TITLE
+   ========================================================= */
+
+.vg-ai-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+.vg-ai-title h2 {
+
+    margin: 0;
+
+    color: #1a426c;
+
+    font-size: 19px;
+
+    font-weight: 750;
+}
+
+
+.vg-ai-card-header p {
+
+    margin: 4px 0 0;
+
+    color: #8a99a8;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   AI STATUS
+   ========================================================= */
+
+.vg-ai-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 8px;
+
+    border-radius: 12px;
+
+    background:
+        #e8f7ee;
+
+    color:
+        #398a62;
+
+    font-size: 8px;
+
+    font-weight: 750;
+}
+
+
+.vg-ai-status i {
+
+    width: 5px;
+
+    height: 5px;
+
+    display: block;
+
+    border-radius: 50%;
+
+    background: #36a76a;
+
+    box-shadow:
+        0 0 5px
+        rgba(54,167,106,.4);
+}
+
+
+/* =========================================================
+   AI WELCOME MESSAGE
+   ========================================================= */
+
+.vg-ai-welcome {
+
+    position: relative;
+
+    z-index: 1;
+
+    padding: 14px;
+
+    margin-bottom: 13px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #edf6ff,
+            #f1f5ff
+        );
+
+    border:
+        1px solid #d8e8f5;
+
+    color: #365a7c;
+
+    font-size: 11px;
+
+    line-height: 17px;
+}
+
+
+.vg-ai-welcome strong {
+
+    color: #285478;
+
+    font-weight: 750;
+}
+
+
+.vg-ai-welcome p {
+
+    margin: 3px 0 0;
+
+    color: #74899d;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   AI EXAMPLES
+   ========================================================= */
+
+.vg-ai-examples {
+
+    position: relative;
+
+    z-index: 1;
+}
+
+
+.vg-ai-examples label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #687f94;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+
+.vg-ai-examples button {
+
+    width: 100%;
+
+    min-height: 38px;
+
+    margin-bottom: 7px;
+
+    padding: 8px 12px;
+
+    text-align: left;
+
+    border:
+        1px solid #d9e5ef;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #3c709d;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+
+.vg-ai-examples button:hover {
+
+    background:
+        #f3f8fd;
+
+    border-color:
+        #9fc3df;
+
+    transform:
+        translateX(2px);
+}
+
+
+/* =========================================================
+   AI INPUT
+   ========================================================= */
+
+.vg-ai-input {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+
+    margin-top: 10px;
+}
+
+
+.vg-ai-input input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    height: 43px;
+
+    padding: 0 13px;
+
+    border:
+        1px solid #d2e0eb;
+
+    border-right: 0;
+
+    border-radius: 9px 0 0 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #304d67;
+
+    font-size: 10px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.vg-ai-input input:focus {
+
+    border-color:
+        #5b96c8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(60,140,210,.08);
+}
+
+
+.vg-ai-input button {
+
+    width: 49px;
+
+    height: 43px;
+
+    border: 0;
+
+    border-radius: 0 9px 9px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #267bc3,
+            #276bc0
+        );
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        all .2s ease;
+}
+
+
+.vg-ai-input button:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1767ad,
+            #2555aa
+        );
+
+    box-shadow:
+        0 5px 13px
+        rgba(35,105,180,.18);
+}
+
+
+/* =========================================================
+   BOTTOM SECTION
+   ========================================================= */
+
+.vg-bottom-section {
+
+    position: relative;
+
+    z-index: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.42fr)
+        minmax(360px, .88fr);
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   BOTTOM CARD
+   ========================================================= */
+
+.vg-bottom-card {
+
+    overflow: hidden;
+
+    border:
+        1px solid #d8e5ef;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 6px 18px
+        rgba(25,64,100,.06);
+}
+
+
+/* =========================================================
+   BOTTOM HEADER
+   ========================================================= */
+
+.vg-bottom-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 16px 19px;
+
+    border-bottom:
+        1px solid #e3ebf1;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+
+.vg-bottom-header h2 {
+
+    margin: 0;
+
+    color: #244765;
+
+    font-size: 17px;
+
+    font-weight: 750;
+}
+
+
+.vg-bottom-header h2 span {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 23px;
+
+    height: 22px;
+
+    margin-left: 6px;
+
+    padding: 0 6px;
+
+    border-radius: 12px;
+
+    background:
+        #eaf3fc;
+
+    color:
+        #347bb8;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.vg-bottom-header button {
+
+    border: 0;
+
+    background: transparent;
+
+    color: #2775b5;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        color .18s ease;
+}
+
+
+.vg-bottom-header button:hover {
+
+    color:
+        #145b96;
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   REQUEST TABLE WRAPPER
+   ========================================================= */
+
+.vg-request-table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* =========================================================
+   REQUEST TABLE
+   ========================================================= */
+
+.vg-request-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+.vg-request-table th {
+
+    padding:
+        12px 15px;
+
+    text-align: left;
+
+    background:
+        #f7fafd;
+
+    color:
+        #788d9f;
+
+    font-size:
+        9px;
+
+    font-weight:
+        850;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .45px;
+
+    border-bottom:
+        1px solid #e2e9ef;
+}
+
+
+.vg-request-table td {
+
+    padding:
+        14px 15px;
+
+    color:
+        #60778d;
+
+    font-size:
+        10px;
+
+    border-bottom:
+        1px solid #edf1f4;
+}
+
+
+.vg-request-table tbody tr {
+
+    transition:
+        background .18s ease;
+}
+
+
+.vg-request-table tbody tr:hover {
+
+    background:
+        #f8fbfe;
+}
+
+
+.vg-request-table tbody tr:last-child td {
+
+    border-bottom:
+        0;
+}
+
+
+/* =========================================================
+   REQUEST LINK
+   ========================================================= */
+
+.vg-request-table td a {
+
+    color:
+        #2475b7;
+
+    font-weight:
+        750;
+
+    text-decoration:
+        none;
+
+    transition:
+        color .18s ease;
+}
+
+
+.vg-request-table td a:hover {
+
+    color:
+        #124f87;
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   REQUEST STATUS
+   ========================================================= */
+
+.vg-request-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        5px 10px;
+
+    border-radius:
+        13px;
+
+    background:
+        #edf4fb;
+
+    color:
+        #4b79a4;
+
+    font-size:
+        9px;
+
+    font-weight:
+        750;
+
+    border:
+        1px solid
+        #e0ebf5;
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+   ========================================================= */
+
+.vg-notifications {
+
+    padding:
+        3px 18px;
+}
+
+
+.vg-notification {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    padding:
+        14px 0;
+
+    border-bottom:
+        1px solid #edf1f4;
+
+    transition:
+        background .18s ease;
+}
+
+
+.vg-notification:last-child {
+
+    border-bottom:
+        0;
+}
+
+
+.vg-notification-icon {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    min-width:
+        38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-right:
+        11px;
+
+    border-radius:
+        50%;
+
+    background:
+        #eef4f9;
+
+    font-size:
+        14px;
+
+    border:
+        1px solid
+        #e1eaf1;
+}
+
+
+.vg-notification-body {
+
+    min-width:
+        0;
+}
+
+
+.vg-notification-body p {
+
+    margin:
+        0;
+
+    color:
+        #526b82;
+
+    font-size:
+        10px;
+
+    line-height:
+        16px;
+}
+
+
+.vg-notification-body span {
+
+    display:
+        block;
+
+    margin-top:
+        3px;
+
+    color:
+        #9aa8b5;
+
+    font-size:
+        9px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.vg-no-data {
+
+    padding:
+        30px 12px !important;
+
+    text-align:
+        center;
+
+    color:
+        #98a7b4 !important;
+
+    font-size:
+        10px !important;
+}
+
+
+/* =========================================================
+   SERVICENOW CONTAINER RESET
+   ========================================================= */
+
+.vg-dashboard {
+
+    margin-left:
+        0 !important;
+
+    margin-right:
+        0 !important;
+}
+
+
+.vg-dashboard .panel,
+.vg-dashboard .panel-body {
+
+    border:
+        0 !important;
+
+    box-shadow:
+        none !important;
+
+    background:
+        transparent !important;
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1500px) {
+
+    .vg-dashboard {
+
+        padding-left:
+            48px;
+
+        padding-right:
+            48px;
+    }
+
+
+    .vg-overview-card {
+
+        min-height:
+            200px;
+    }
+
+
+    .vg-quick-card {
+
+        min-height:
+            155px;
+    }
+}
+
+
+/* =========================================================
+   DESKTOP / LAPTOP
+   ========================================================= */
+
+@media (max-width: 1250px) {
+
+    .vg-dashboard {
+
+        padding:
+            26px 28px 45px;
+    }
+
+
+    .vg-overview-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .vg-main-section {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-bottom-section {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .vg-dashboard {
+
+        padding:
+            22px 20px 40px;
+    }
+
+
+    .vg-dashboard-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            15px;
+    }
+
+
+    .vg-header-right {
+
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+    }
+
+
+    .vg-quick-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .vg-dashboard {
+
+        padding:
+            17px 13px 30px;
+    }
+
+
+    .vg-welcome h1 {
+
+        font-size:
+            26px;
+
+        line-height:
+            34px;
+    }
+
+
+    .vg-welcome p {
+
+        font-size:
+            12px;
+    }
+
+
+    .vg-compliance-live {
+
+        padding:
+            9px 12px;
+
+        font-size:
+            10px;
+    }
+
+
+    .vg-overview-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            13px;
+    }
+
+
+    .vg-overview-card {
+
+        min-height:
+            175px;
+    }
+
+
+    .vg-quick-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-quick-card {
+
+        min-height:
+            135px;
+    }
+
+
+    .vg-bottom-section {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .vg-bottom-card {
+
+        border-radius:
+            11px;
+    }
+
+
+    .vg-request-table {
+
+        min-width:
+            600px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .vg-dashboard {
+
+        padding:
+            14px 10px 25px;
+    }
+
+
+    .vg-welcome-label {
+
+        font-size:
+            9px;
+    }
+
+
+    .vg-welcome h1 {
+
+        font-size:
+            23px;
+
+        line-height:
+            30px;
+    }
+
+
+    .vg-header-right {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .vg-compliance-live {
+
+        justify-content:
+            center;
+    }
+
+
+    .vg-overview-value {
+
+        font-size:
+            22px;
+    }
+
+
+    .vg-section-header h2 {
+
+        font-size:
+            21px;
+    }
+
+
+    .vg-ai-card {
+
+        padding:
+            16px;
+    }
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>vg_student_landing</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>VG Student Landing</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+
+    // =====================================================
+    // INITIAL DATA
+    // =====================================================
+
+    data.student_name = "";
+    data.first_name = "";
+
+    data.compliance_score = 0;
+    data.compliance_status = "Checking";
+    data.compliance_message = "Loading compliance information...";
+
+    data.active_request_type = "None";
+    data.active_request_status = "No active request";
+    data.active_case_number = "—";
+
+    data.deadline_title = "None";
+    data.deadline_days = 0;
+    data.deadline_date = "No upcoming deadline";
+
+    data.pending_action = "None";
+    data.pending_message = "You're all caught up!";
+
+    data.requests = [];
+    data.notifications = [];
+    data.notification_count = 0;
+
+
+    // =====================================================
+    // 1. FIND CURRENT STUDENT PROFILE
+    // =====================================================
+
+    var student =
+        new GlideRecord("x_snc_visaguardi_0_student_profile");
+
+    var profileFound = false;
+
+
+    // -----------------------------------------------------
+    // SESSION STUDENT SYS ID
+    // -----------------------------------------------------
+
+    var sessionStudentSysId =
+        gs.getSession().getClientData("vg_student_sys_id");
+
+
+    // -----------------------------------------------------
+    // SESSION STUDENT USER NAME
+    // -----------------------------------------------------
+
+    var sessionStudentUserName =
+        gs.getSession().getClientData("vg_student_user_name");
+
+
+    // =====================================================
+    // METHOD 1
+    // SESSION STUDENT SYS ID
+    // =====================================================
+
+    if (sessionStudentSysId) {
+
+        if (student.get(sessionStudentSysId)) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // METHOD 2
+    // SESSION USER NAME
+    // =====================================================
+
+    if (!profileFound && sessionStudentUserName) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            sessionStudentUserName
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+
+        if (student.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // METHOD 3
+    // SERVICENOW USER REFERENCE
+    // =====================================================
+
+    if (!profileFound) {
+
+        var currentUserId =
+            gs.getUserID();
+
+
+        if (currentUserId) {
+
+            student =
+                new GlideRecord(
+                    "x_snc_visaguardi_0_student_profile"
+                );
+
+            student.addQuery(
+                "user",
+                currentUserId
+            );
+
+            student.setLimit(1);
+
+            student.query();
+
+
+            if (student.next()) {
+
+                profileFound = true;
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // METHOD 4
+    // SERVICENOW USER NAME
+    // =====================================================
+
+    if (!profileFound) {
+
+        student =
+            new GlideRecord(
+                "x_snc_visaguardi_0_student_profile"
+            );
+
+        student.addQuery(
+            "user_name",
+            gs.getUserName()
+        );
+
+        student.setLimit(1);
+
+        student.query();
+
+
+        if (student.next()) {
+
+            profileFound = true;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PROFILE NOT FOUND
+    // =====================================================
+
+    if (!profileFound) {
+
+        data.student_name =
+            gs.getUserDisplayName();
+
+        data.first_name =
+            gs.getUser().getFirstName() ||
+            gs.getUserDisplayName();
+
+        data.compliance_status =
+            "Profile Not Found";
+
+        data.compliance_message =
+            "Student profile could not be located.";
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // 2. STUDENT NAME
+    // =====================================================
+
+    data.first_name =
+        student.getValue("first_name") ||
+        student.getDisplayValue("name") ||
+        gs.getUser().getFirstName();
+
+
+    data.student_name =
+        student.getDisplayValue("name") ||
+        student.getValue("full_name") ||
+        (
+            student.getValue("first_name") +
+            " " +
+            student.getValue("last_name")
+        );
+
+
+    // =====================================================
+    // IMPORTANT
+    // THIS IS THE STUDENT PROFILE SYS ID
+    // =====================================================
+
+    var studentProfileSysId =
+        student.getUniqueValue();
+
+
+    // =====================================================
+    // 3. VISA CASES
+    // =====================================================
+
+    var gr =
+        new GlideRecord(
+            "x_snc_visaguardi_0_visa_case"
+        );
+
+
+    if (!gr.isValid()) {
+
+        gs.error(
+            "VisaGuardian Dashboard: Visa Case table is invalid."
+        );
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // FILTER CASES USING STUDENT PROFILE
+    // =====================================================
+
+    if (gr.isValidField("student")) {
+
+        gr.addQuery(
+            "student",
+            studentProfileSysId
+        );
+
+    }
+
+    else {
+
+        gs.error(
+            "VisaGuardian Dashboard: Student reference field not found on Visa Case."
+        );
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // SORT
+    // =====================================================
+
+    gr.orderByDesc("sys_updated_on");
+
+    gr.query();
+
+
+    // =====================================================
+    // CONTROL VARIABLES
+    // =====================================================
+
+    var firstActive = true;
+
+    var firstDeadline = true;
+
+    var hasPendingAction = false;
+
+    var hasOverdueDeadline = false;
+
+    var totalCases = 0;
+
+    var completedCases = 0;
+
+
+    // =====================================================
+    // PROCESS STUDENT CASES
+    // =====================================================
+
+    while (gr.next()) {
+
+
+        totalCases++;
+
+
+        // =================================================
+        // CASE NUMBER
+        // =================================================
+
+        var number =
+            gr.getDisplayValue("number");
+
+
+        if (!number) {
+
+            number =
+                gr.getUniqueValue();
+
+        }
+
+
+        // =================================================
+        // REQUEST TYPE
+        // =================================================
+
+        var type =
+            "Visa Request";
+
+
+        if (
+            gr.isValidField("request_type") &&
+            gr.getDisplayValue("request_type")
+        ) {
+
+            type =
+                gr.getDisplayValue("request_type");
+
+        }
+
+        else if (
+            gr.isValidField("contact_type") &&
+            gr.getDisplayValue("contact_type")
+        ) {
+
+            type =
+                gr.getDisplayValue("contact_type");
+
+        }
+
+
+        // =================================================
+        // STATUS
+        // =================================================
+
+        var status =
+            "Submitted";
+
+
+        if (
+            gr.isValidField("case_stage") &&
+            gr.getDisplayValue("case_stage")
+        ) {
+
+            status =
+                gr.getDisplayValue("case_stage");
+
+        }
+
+        else if (
+            gr.isValidField("state") &&
+            gr.getDisplayValue("state")
+        ) {
+
+            status =
+                gr.getDisplayValue("state");
+
+        }
+
+
+        // =================================================
+        // LOWERCASE STATUS
+        // =================================================
+
+        var lowerStatus =
+            String(status).toLowerCase();
+
+
+        // =================================================
+        // STATUS CLASS
+        // =================================================
+
+        var statusClass =
+            "status-info";
+
+
+        if (
+            lowerStatus.indexOf("review") >= 0
+        ) {
+
+            statusClass =
+                "status-review";
+
+        }
+
+        else if (
+            lowerStatus.indexOf("complete") >= 0 ||
+            lowerStatus.indexOf("approved") >= 0
+        ) {
+
+            statusClass =
+                "status-completed";
+
+        }
+
+        else if (
+            lowerStatus.indexOf("pending") >= 0
+        ) {
+
+            statusClass =
+                "status-pending";
+
+        }
+
+
+        // =================================================
+        // UPDATED DATE
+        // =================================================
+
+        var updated =
+            gr.getDisplayValue("sys_updated_on");
+
+
+        // =================================================
+        // ADD REQUEST TO TABLE
+        // =================================================
+
+        if (data.requests.length < 5) {
+
+            data.requests.push({
+
+                sys_id:
+                    gr.getUniqueValue(),
+
+                number:
+                    number,
+
+                type:
+                    type,
+
+                status:
+                    status,
+
+                status_class:
+                    statusClass,
+
+                updated:
+                    updated
+
+            });
+
+        }
+
+
+        // =================================================
+        // DETERMINE CLOSED
+        // =================================================
+
+        var isClosed = false;
+
+
+        if (
+            lowerStatus.indexOf("closed") >= 0 ||
+            lowerStatus.indexOf("complete") >= 0 ||
+            lowerStatus.indexOf("approved") >= 0 ||
+            lowerStatus.indexOf("rejected") >= 0 ||
+            lowerStatus.indexOf("cancelled") >= 0
+        ) {
+
+            isClosed = true;
+
+            completedCases++;
+
+        }
+
+
+        // =================================================
+        // ACTIVE REQUEST
+        // =================================================
+
+        if (
+            firstActive &&
+            !isClosed
+        ) {
+
+            firstActive = false;
+
+
+            data.active_request_type =
+                type;
+
+
+            data.active_request_status =
+                status;
+
+
+            data.active_case_number =
+                number;
+
+        }
+
+
+        // =================================================
+        // DETERMINE PENDING ACTION
+        // =================================================
+
+        if (!isClosed) {
+
+            if (
+                lowerStatus.indexOf("review") >= 0 ||
+                lowerStatus.indexOf("pending") >= 0 ||
+                lowerStatus.indexOf("document") >= 0 ||
+                lowerStatus.indexOf("action") >= 0
+            ) {
+
+                hasPendingAction = true;
+
+            }
+
+        }
+
+
+        // =================================================
+        // DEADLINE
+        // =================================================
+
+        if (
+            gr.isValidField("due_date") &&
+            !gr.due_date.nil()
+        ) {
+
+
+            var dueDate =
+                new GlideDateTime(
+                    gr.getValue("due_date")
+                );
+
+
+            var now =
+                new GlideDateTime();
+
+
+            var milliseconds =
+                dueDate.getNumericValue() -
+                now.getNumericValue();
+
+
+            var days =
+                Math.ceil(
+                    milliseconds /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            // -------------------------------------------------
+            // OVERDUE
+            // -------------------------------------------------
+
+            if (days < 0) {
+
+                hasOverdueDeadline = true;
+
+            }
+
+
+            // -------------------------------------------------
+            // UPCOMING DEADLINE
+            // -------------------------------------------------
+
+            if (
+                firstDeadline &&
+                days >= 0
+            ) {
+
+                firstDeadline = false;
+
+
+                data.deadline_title =
+                    type;
+
+
+                data.deadline_days =
+                    days;
+
+
+                data.deadline_date =
+                    gr.getDisplayValue(
+                        "due_date"
+                    );
+
+            }
+
+        }
+
+    }
+
+
+    // =====================================================
+    // 4. PENDING ACTION
+    // =====================================================
+
+    if (hasOverdueDeadline) {
+
+        data.pending_action =
+            "Overdue";
+
+
+        data.pending_message =
+            "Immediate attention required.";
+
+    }
+
+    else if (hasPendingAction) {
+
+        var activeStatus =
+            String(
+                data.active_request_status
+            ).toLowerCase();
+
+
+        if (
+            activeStatus.indexOf("review") >= 0
+        ) {
+
+            data.pending_action =
+                "Advisor Review";
+
+
+            data.pending_message =
+                "Action required.";
+
+        }
+
+        else if (
+            activeStatus.indexOf("document") >= 0
+        ) {
+
+            data.pending_action =
+                "Documents";
+
+
+            data.pending_message =
+                "Documents required.";
+
+        }
+
+        else {
+
+            data.pending_action =
+                "Pending";
+
+
+            data.pending_message =
+                "Action required.";
+
+        }
+
+    }
+
+    else {
+
+        data.pending_action =
+            "None";
+
+
+        data.pending_message =
+            "You're all caught up!";
+
+    }
+
+
+    // =====================================================
+    // 5. REAL COMPLIANCE STATUS
+    // =====================================================
+
+    /*
+     * Compliance is determined from the student's
+     * actual visa cases.
+     *
+     * No hard-coded "87" or "On Track" value.
+     */
+
+    if (totalCases === 0) {
+
+        data.compliance_status =
+            "No Requests";
+
+        data.compliance_message =
+            "No visa requests found.";
+
+        data.compliance_score =
+            100;
+
+    }
+
+    else if (hasOverdueDeadline) {
+
+        data.compliance_status =
+            "Action Required";
+
+        data.compliance_message =
+            "You have an overdue deadline.";
+
+        data.compliance_score =
+            50;
+
+    }
+
+    else if (hasPendingAction) {
+
+        data.compliance_status =
+            "Attention Needed";
+
+        data.compliance_message =
+            "One or more actions need attention.";
+
+        data.compliance_score =
+            75;
+
+    }
+
+    else {
+
+        data.compliance_status =
+            "On Track";
+
+        data.compliance_message =
+            "All current requirements are on track.";
+
+        data.compliance_score =
+            100;
+
+    }
+
+
+    // =====================================================
+    // 6. ACTIVE REQUEST FALLBACK
+    // =====================================================
+
+    if (firstActive) {
+
+        data.active_request_type =
+            "None";
+
+        data.active_request_status =
+            "No active request";
+
+        data.active_case_number =
+            "—";
+
+    }
+
+
+    // =====================================================
+    // 7. DEADLINE FALLBACK
+    // =====================================================
+
+    if (firstDeadline) {
+
+        data.deadline_title =
+            "None";
+
+        data.deadline_days =
+            0;
+
+        data.deadline_date =
+            "No upcoming deadline";
+
+    }
+
+
+    // =====================================================
+    // 8. NOTIFICATION - ACTIVE CASE
+    // =====================================================
+
+    if (
+        data.active_request_type != "None"
+    ) {
+
+        data.notifications.push({
+
+            icon:
+                "]]>📄<![CDATA[",
+
+            icon_class:
+                "notification-blue",
+
+            text:
+                "Your case " +
+                data.active_case_number +
+                " is currently " +
+                data.active_request_status +
+                ".",
+
+            time:
+                "Recently"
+
+        });
+
+    }
+
+
+    // =====================================================
+    // 9. DEADLINE NOTIFICATION
+    // =====================================================
+
+    if (
+        data.deadline_title != "None" &&
+        data.deadline_days >= 0 &&
+        data.deadline_days <= 30
+    ) {
+
+        data.notifications.push({
+
+            icon:
+                "⏰",
+
+            icon_class:
+                "notification-orange",
+
+            text:
+                data.deadline_title +
+                " deadline expires in " +
+                data.deadline_days +
+                " days.",
+
+            time:
+                "Upcoming"
+
+        });
+
+    }
+
+
+    // =====================================================
+    // 10. REQUEST COUNT NOTIFICATION
+    // =====================================================
+
+    if (
+        data.requests.length > 0
+    ) {
+
+        data.notifications.push({
+
+            icon:
+                "]]>📋<![CDATA[",
+
+            icon_class:
+                "notification-green",
+
+            text:
+                "You have " +
+                data.requests.length +
+                " recent visa request(s).",
+
+            time:
+                "Updated recently"
+
+        });
+
+    }
+
+
+    // =====================================================
+    // 11. NOTIFICATION COUNT
+    // =====================================================
+
+    data.notification_count =
+        data.notifications.length;
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:43:26</sys_created_on>
+        <sys_id>fa83f139a8e203107f446d9f3e09f69a</sys_id>
+        <sys_mod_count>21</sys_mod_count>
+        <sys_name>VG Student Landing</sys_name>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sp_widget_fa83f139a8e203107f446d9f3e09f69a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-14 12:22:16</sys_updated_on>
+        <template><![CDATA[<div class="vg-dashboard">
+
+    <!-- =====================================================
+         DASHBOARD HEADER
+         ===================================================== -->
+
+    <div class="vg-dashboard-header">
+
+        <div class="vg-welcome">
+
+            <div class="vg-welcome-label">
+                ]]>🎓<![CDATA[ STUDENT PORTAL
+            </div>
+
+            <h1>
+                Welcome back,
+                <span>{{c.data.student_name}}</span>! ]]>👋
+<![CDATA[            </h1>
+
+            <p>
+                Here's your compliance overview.
+            </p>
+
+        </div>
+
+
+        <div class="vg-header-right">
+
+            <div class="vg-compliance-live">
+
+                <span class="vg-live-dot"></span>
+
+                Compliance Monitoring Active
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         OVERVIEW CARDS
+         ===================================================== -->
+
+    <div class="vg-overview-grid">
+
+
+        <!-- COMPLIANCE -->
+
+        <div
+            class="vg-overview-card vg-card-compliance"
+            ng-click="c.openPage('vg_digital_twin')">
+
+            <div class="vg-overview-card-top">
+
+                <span class="vg-overview-label">
+                    Compliance Status
+                </span>
+
+                <span class="vg-overview-icon">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </span>
+
+            </div>
+
+            <div class="vg-overview-value">
+                {{c.data.compliance_status}}
+            </div>
+
+            <div class="vg-overview-sub">
+                {{c.data.compliance_message}}
+            </div>
+
+            <div class="vg-mini-progress">
+
+                <div
+                    class="vg-mini-progress-fill"
+                    ng-style="{
+                        'width': c.data.compliance_score + '%'
+                    }">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE REQUEST -->
+
+        <div
+            class="vg-overview-card vg-card-request"
+            ng-click="c.openPage('vg_my_requests')">
+
+            <div class="vg-overview-card-top">
+
+                <span class="vg-overview-label">
+                    Active Request
+                </span>
+
+                <span class="vg-overview-icon">
+                    <span class="glyphicon glyphicon-file"></span>
+                </span>
+
+            </div>
+
+            <div class="vg-overview-value">
+
+                {{c.data.active_request_type}}
+
+            </div>
+
+            <div class="vg-overview-sub vg-blue-text">
+
+                {{c.data.active_request_status}}
+
+            </div>
+
+            <div class="vg-overview-case">
+
+                Case:
+                <strong>
+                    {{c.data.active_case_number}}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- UPCOMING DEADLINE -->
+
+        <div
+            class="vg-overview-card vg-card-deadline"
+            ng-click="c.openPage('vg_deadlines')">
+
+            <div class="vg-overview-card-top">
+
+                <span class="vg-overview-label">
+                    Upcoming Deadline
+                </span>
+
+                <span class="vg-overview-icon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+
+            </div>
+
+            <div class="vg-overview-value">
+
+                {{c.data.deadline_title}}
+
+            </div>
+
+            <div class="vg-overview-sub vg-orange-text">
+
+                {{c.data.deadline_days}} days left
+
+            </div>
+
+            <div class="vg-overview-case">
+
+                Expires on
+                <strong>
+                    {{c.data.deadline_date}}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING ACTION -->
+
+        <div
+            class="vg-overview-card vg-card-action"
+            ng-click="c.openPage('vg_my_requests')">
+
+            <div class="vg-overview-card-top">
+
+                <span class="vg-overview-label">
+                    Pending Action
+                </span>
+
+                <span class="vg-overview-icon">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </span>
+
+            </div>
+
+            <div class="vg-overview-value">
+
+                {{c.data.pending_action}}
+
+            </div>
+
+            <div class="vg-overview-sub">
+
+                {{c.data.pending_message}}
+
+            </div>
+
+            <div class="vg-overview-case">
+
+                Review your requests
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN TWO COLUMN SECTION
+         ===================================================== -->
+
+    <div class="vg-main-section">
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+             ================================================= -->
+
+        <div class="vg-quick-section">
+
+            <div class="vg-section-header">
+
+                <div>
+
+                    <span>
+                        QUICK ACTIONS
+                    </span>
+
+                    <h2>
+                        What would you like to do today?
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="vg-quick-grid">
+
+
+                <!-- START NEW REQUEST -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_create_case')">
+
+                    <div class="vg-quick-icon vg-icon-blue">
+
+                        <span class="glyphicon glyphicon-plus"></span>
+
+                    </div>
+
+                    <strong>
+                        Start New Request
+                    </strong>
+
+                    <small>
+                        I-20, OPT, CPT & more
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- AI -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_ai_chat')">
+
+                    <div class="vg-quick-icon vg-icon-ai">
+                        ]]>🤖
+<![CDATA[                    </div>
+
+                    <strong>
+                        Ask VisaGuardian AI
+                    </strong>
+
+                    <small>
+                        Get instant guidance
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- REQUESTS -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_my_requests')">
+
+                    <div class="vg-quick-icon vg-icon-indigo">
+
+                        <span class="glyphicon glyphicon-folder-open"></span>
+
+                    </div>
+
+                    <strong>
+                        View My Requests
+                    </strong>
+
+                    <small>
+                        Track your cases
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- DOCUMENTS -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_doc_upload')">
+
+                    <div class="vg-quick-icon vg-icon-cyan">
+
+                        <span class="glyphicon glyphicon-cloud-upload"></span>
+
+                    </div>
+
+                    <strong>
+                        Upload Documents
+                    </strong>
+
+                    <small>
+                        Upload supporting docs
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- DEADLINES -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_deadlines')">
+
+                    <div class="vg-quick-icon vg-icon-purple">
+
+                        <span class="glyphicon glyphicon-calendar"></span>
+
+                    </div>
+
+                    <strong>
+                        View Deadlines
+                    </strong>
+
+                    <small>
+                        Important dates & alerts
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- KNOWLEDGE -->
+
+                <button
+                    type="button"
+                    class="vg-quick-card"
+                    ng-click="c.openPage('vg_knowledge_base')">
+
+                    <div class="vg-quick-icon vg-icon-green">
+
+                        <span class="glyphicon glyphicon-book"></span>
+
+                    </div>
+
+                    <strong>
+                        Knowledge Base
+                    </strong>
+
+                    <small>
+                        Guides & FAQs
+                    </small>
+
+                    <span class="vg-quick-arrow">
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             VISA GUARDIAN AI
+             ================================================= -->
+
+        <div class="vg-ai-card">
+
+            <div class="vg-ai-card-header">
+
+                <div class="vg-ai-avatar">
+                    ]]>🤖
+<![CDATA[                </div>
+
+                <div>
+
+                    <div class="vg-ai-title">
+
+                        <h2>
+                            VisaGuardian AI
+                        </h2>
+
+                        <span class="vg-ai-status">
+                            <i></i>
+                            AI Assistant
+                        </span>
+
+                    </div>
+
+                    <p>
+                        Your intelligent immigration assistant
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI MESSAGE -->
+
+            <div class="vg-ai-welcome">
+
+                <strong>
+                    Hi {{c.data.first_name}}! ]]>👋
+<![CDATA[                </strong>
+
+                <p>
+                    How can I help you today?
+                </p>
+
+            </div>
+
+
+            <!-- EXAMPLES -->
+
+            <div class="vg-ai-examples">
+
+                <label>
+                    Examples you can ask me:
+                </label>
+
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.askAI('How do I apply for OPT?')
+                    ">
+
+                    How do I apply for OPT?
+
+                </button>
+
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.askAI('Can I work off campus?')
+                    ">
+
+                    Can I work off campus?
+
+                </button>
+
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.askAI('What is a travel signature?')
+                    ">
+
+                    What is a travel signature?
+
+                </button>
+
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.askAI('My I-20 is expiring, what next?')
+                    ">
+
+                    My I-20 is expiring, what next?
+
+                </button>
+
+            </div>
+
+
+            <!-- AI INPUT -->
+
+            <div class="vg-ai-input">
+
+                <input
+                    type="text"
+                    ng-model="c.ai_question"
+                    placeholder="Type your question..."
+                    ng-keypress="c.checkAIEnter($event)" />
+
+                <button
+                    type="button"
+                    ng-click="c.askAI(c.ai_question)">
+
+                    <span class="glyphicon glyphicon-send"></span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BOTTOM SECTION
+         ===================================================== -->
+
+    <div class="vg-bottom-section">
+
+
+        <!-- =================================================
+             MY REQUESTS
+             ================================================= -->
+
+        <div class="vg-bottom-card">
+
+            <div class="vg-bottom-header">
+
+                <div>
+
+                    <h2>
+                        My Requests
+
+                        <span>
+                            {{c.data.requests.length}}
+                        </span>
+
+                    </h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.openPage('vg_my_requests')
+                    ">
+
+                    View All
+
+                </button>
+
+            </div>
+
+
+            <div class="vg-request-table-wrapper">
+
+                <table class="vg-request-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Case ID
+                            </th>
+
+                            <th>
+                                Request Type
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Last Updated
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr
+                            ng-repeat="
+                                request in c.data.requests
+                            ">
+
+                            <td>
+
+                                <a
+                                    href=""
+                                    ng-click="
+                                        c.openCase(request.sys_id)
+                                    ">
+
+                                    {{request.number}}
+
+                                </a>
+
+                            </td>
+
+                            <td>
+
+                                {{request.type}}
+
+                            </td>
+
+                            <td>
+
+                                <span
+                                    class="vg-request-status"
+                                    ng-class="
+                                        request.status_class
+                                    ">
+
+                                    {{request.status}}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {{request.updated}}
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr
+                            ng-if="
+                                c.data.requests.length === 0
+                            ">
+
+                            <td
+                                colspan="4"
+                                class="vg-no-data">
+
+                                No requests found.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NOTIFICATIONS
+             ================================================= -->
+
+        <div class="vg-bottom-card">
+
+            <div class="vg-bottom-header">
+
+                <h2>
+                    Notifications
+                </h2>
+
+                <button
+                    type="button"
+                    ng-click="
+                        c.openPage('vg_notifications')
+                    ">
+
+                    View All
+
+                </button>
+
+            </div>
+
+
+            <div class="vg-notifications">
+
+                <div
+                    class="vg-notification"
+                    ng-repeat="
+                        notification in c.data.notifications
+                    ">
+
+
+                    <div
+                        class="vg-notification-icon"
+                        ng-class="
+                            notification.icon_class
+                        ">
+
+                        {{notification.icon}}
+
+                    </div>
+
+
+                    <div class="vg-notification-body">
+
+                        <p>
+                            {{notification.text}}
+                        </p>
+
+                        <span>
+                            {{notification.time}}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    ng-if="
+                        c.data.notifications.length === 0
+                    "
+                    class="vg-no-data">
+
+                    No new notifications.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>fa83f139a8e203107f446d9f3e09f69a</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:43:26</sys_created_on>
+        <sys_id>ba83f139a8e203107f446d9f3e09f69f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:43:26</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

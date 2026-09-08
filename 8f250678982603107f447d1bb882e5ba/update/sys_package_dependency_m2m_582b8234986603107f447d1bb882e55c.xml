@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_package_dependency_m2m">
+    <sys_package_dependency_m2m action="INSERT_OR_UPDATE">
+        <dependency display_value="Service Management Basics" source="com.snc.service">64ced7c699f003107f4454352b402e4e</dependency>
+        <min_version>1.0.0</min_version>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-04 13:52:34</sys_created_on>
+        <sys_id>582b8234986603107f447d1bb882e55c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-04 13:52:34</sys_updated_on>
+    </sys_package_dependency_m2m>
+</record_update>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sn_aia_version">
+    <sn_aia_version action="INSERT_OR_UPDATE">
+        <condition/>
+        <instructions>Section 1: Request Handling
+1. Parse the student’s request to identify the immigration-related process or question.
+2. Retrieve approved university information relevant to the student’s request.
+3. Check for available student context and incorporate it into the response if applicable.
+
+Section 2: Service Recommendation and Initiation
+4. Identify and recommend relevant university services based on the student’s request and context.
+5. Initiate the appropriate ServiceNow process if the student needs to start a university service or workflow.
+6. Use available AI Skills and tools to gather or process additional information as needed.
+
+Section 3: Communication and Escalation
+7. Clearly explain applicable university requirements to the student.
+8. Provide practical next steps for the student to follow.
+9. If information is incomplete, uncertain, or outside supported scope, state the limitation explicitly.
+10. Escalate the case to the appropriate university advisor or support team when necessary.
+
+Section 4: Compliance and Transparency
+11. Use only approved knowledge and ServiceNow information in all responses.
+12. Do not provide legal advice, make legal determinations, invent immigration rules, or override university advisor decisions.
+13. Do not claim certainty when approved information is unavailable.
+14. Maintain accuracy, helpfulness, and transparency about uncertainty in all communications.</instructions>
+        <state>published</state>
+        <sys_class_name>sn_aia_version</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-08 18:29:53</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>a1f0bf8e1c2e43107f44ac7143096442</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>V1</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="VisaGuardian AI" source="x_snc_visaguardi_0">8f250678982603107f447d1bb882e5ba</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="VisaGuardian AI">8f250678982603107f447d1bb882e5ba</sys_scope>
+        <sys_update_name>sn_aia_version_a1f0bf8e1c2e43107f44ac7143096442</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-08 18:29:53</sys_updated_on>
+        <target_id>799ee74a1c2e43107f44ac71430964f9</target_id>
+        <target_table>sn_aia_agent</target_table>
+        <version_name>V1</version_name>
+        <version_number>1</version_number>
+    </sn_aia_version>
+</record_update>
